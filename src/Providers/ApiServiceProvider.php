@@ -73,12 +73,18 @@ class ApiServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        Route::prefix('/manager/api')
+        $managerDir = 'manager';
+
+        if (!Route::has('manager')) {
+            Route::prefix($managerDir)
+                ->name('manager')
+                ->any('/', fn() => abort(404));
+        }
+
+        Route::prefix($managerDir . '/api')
             ->name('manager.api.')
             ->group(function (): void {
                 $controllersNamespace = 'Team64j\LaravelManagerApi\Http\Controllers';
-
-                Route::any('/', fn() => '');
 
                 Collection::make(
                     require_once $this->app->basePath('vendor/composer/autoload_classmap.php')
@@ -116,7 +122,11 @@ class ApiServiceProvider extends ServiceProvider
                             )->middleware($route['middleware'] ?? 'manager.auth:manager');
                         }
 
-                        Route::middleware(['manager.auth:manager'])->apiResource($path, $controller, $controllerClass->getRouteOptions());
+                        Route::middleware(['manager.auth:manager'])->apiResource(
+                            $path,
+                            $controller,
+                            $controllerClass->getRouteOptions()
+                        );
                     });
             });
     }

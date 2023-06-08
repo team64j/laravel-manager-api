@@ -18,15 +18,16 @@ class AuthController extends Controller
      * @var array
      */
     protected array $routeOptions = [
-        'only' => ''
+        'only' => '',
     ];
 
     protected array $routes = [
         [
             'method' => 'post',
             'uri' => '/',
-            'action' => [self::class, 'login']
-        ]
+            'action' => [self::class, 'login'],
+            'middleware' => [],
+        ],
     ];
 
     /**
@@ -64,7 +65,7 @@ class AuthController extends Controller
 
         auth('manager')->login(auth('manager')->user(), $request->boolean('remember'));
 
-        return $this->createNewToken((string)$token);
+        return $this->createNewToken((string) $token);
     }
 
     /**
