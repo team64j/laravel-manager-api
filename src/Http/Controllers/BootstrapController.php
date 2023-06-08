@@ -62,7 +62,7 @@ class BootstrapController extends Controller
             ],
             'lexicon' => Lang::get('global'),
             'menu' => $this->getMenu(),
-            'css' => file_get_contents(__DIR__ . '/../../../dist/styles.css'),
+            'css' => file_get_contents(__DIR__ . '/../../../public/styles.css'),
         ]);
     }
 
