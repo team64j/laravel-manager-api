@@ -9,14 +9,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
 use Team64j\LaravelManagerApi\Models\UserAttribute;
 
 class BootstrapController extends Controller
 {
+    /**
+     * @var string
+     */
     protected string $route = 'bootstrap';
 
+    /**
+     * @var array
+     */
     protected array $routes = [
         [
             'method' => 'get',
@@ -25,11 +32,28 @@ class BootstrapController extends Controller
         ],
     ];
 
+    /**
+     * @var array
+     */
     protected array $routeOptions = [
         'only' => ['index']
     ];
 
     /**
+     * @OA\Get(
+     *     path="/bootstrap",
+     *     summary="Глобальные данные для формирования админ панели",
+     *     tags={"Bootstrap"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     *
      * @param BootstrapRequest $request
      *
      * @return BootstrapResource
@@ -62,7 +86,7 @@ class BootstrapController extends Controller
             ],
             'lexicon' => Lang::get('global'),
             'menu' => $this->getMenu(),
-            'css' => file_get_contents(__DIR__ . '/../../../public/styles.css'),
+            'css' => is_file($css = __DIR__ . '/../../../public/css/styles.css') ? file_get_contents($css) : '',
         ]);
     }
 
@@ -573,6 +597,20 @@ class BootstrapController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/bootstrap/select-pages",
+     *     summary="Список доступных страниц-компонентов",
+     *     tags={"Bootstrap"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     *
      * @return array
      */
     public function selectPages(): array

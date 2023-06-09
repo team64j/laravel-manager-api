@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteHtmlSnippet;
 use Team64j\LaravelManagerApi\Http\Requests\ChunkRequest;
@@ -40,6 +41,25 @@ class ChunkController extends Controller
     ];
 
     /**
+     * @OA\Get(
+     *     path="/chunks",
+     *     summary="Получение списка чанков с пагинацией",
+     *     tags={"Chunk"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ChunkRequest $request
      * @param ChunkLayout $layout
      *
@@ -127,6 +147,24 @@ class ChunkController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/chunks",
+     *     summary="Создание нового чанка",
+     *     tags={"Chunk"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ChunkRequest $request
      *
      * @return ChunkResource
@@ -139,6 +177,19 @@ class ChunkController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/chunks/{id}",
+     *     summary="Чтение чанка",
+     *     tags={"Chunk"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ChunkRequest $request
      * @param string $chunk
      * @param ChunkLayout $layout
@@ -159,6 +210,24 @@ class ChunkController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/chunks/{id}",
+     *     summary="Обновление чанка",
+     *     tags={"Chunk"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ChunkRequest $request
      * @param SiteHtmlSnippet $chunk
      *
@@ -172,6 +241,19 @@ class ChunkController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/chunks/{id}",
+     *     summary="Удаление чанка",
+     *     tags={"Chunk"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ChunkRequest $request
      * @param SiteHtmlSnippet $chunk
      *
@@ -185,6 +267,22 @@ class ChunkController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/chunks/list",
+     *     summary="Получение списка чанков с пагинацией для меню",
+     *     tags={"Chunk"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="integer")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ChunkRequest $request
      *
      * @return AnonymousResourceCollection
@@ -232,6 +330,23 @@ class ChunkController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/chunks/tree",
+     *     summary="Получение списка чанков с пагинацией для древовидного меню",
+     *     tags={"Chunk"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer", default="-1")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ChunkRequest $request
      *
      * @return AnonymousResourceCollection
@@ -295,7 +410,7 @@ class ChunkController extends Controller
                         'folder' => true,
                     ];
 
-                    if (in_array((int) $item->id, $opened, true)) {
+                    if (in_array($item->id, $opened, true)) {
                         $result = $item->chunks()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());

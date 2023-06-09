@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use OpenApi\Annotations as OA;
 
 class AuthController extends Controller
 {
@@ -21,6 +20,9 @@ class AuthController extends Controller
         'only' => '',
     ];
 
+    /**
+     * @var array
+     */
     protected array $routes = [
         [
             'method' => 'post',
@@ -31,18 +33,40 @@ class AuthController extends Controller
     ];
 
     /**
-     * Create a new AuthController instance.
+     * @OA\Post(
+     *     path="/auth",
+     *     summary="Авторизация",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"username", "password"},
+     *             properties={
+     *                 @OA\Property(
+     *                     property="username",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="remember",
+     *                     type="boolean",
+     *                     nullable=true,
+     *                 ),
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('manager.auth:manager', [
-            'except' => ['login', 'logout', 'auth', 'store'],
-        ]);
-    }
-
-    /**
      * @param Request $request
      *
      * @return JsonResponse
@@ -59,41 +83,15 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if (!$token = auth('manager')->attempt($validator->validated())) {
+        $guard = auth(Config::get('manager-api.guard.provider'));
+
+        if (!$token = $guard->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        auth('manager')->login(auth('manager')->user(), $request->boolean('remember'));
+        $guard->login($guard->user(), $request->boolean('remember'));
 
         return $this->createNewToken((string) $token);
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return Application|JsonResponse|RedirectResponse|Redirector
-     */
-    public function logout(Request $request): JsonResponse|Redirector|Application|RedirectResponse
-    {
-        if ($request->isMethod('get')) {
-            auth('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return redirect(route('manager.login'));
-        }
-
-        auth('manager')->logout();
-
-        return response()->json(['message' => 'User successfully signed out']);
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public function refresh(): JsonResponse
-    {
-        return $this->createNewToken(auth('manager')->refresh());
     }
 
     /**
@@ -101,7 +99,7 @@ class AuthController extends Controller
      */
     public function user(): JsonResponse
     {
-        return response()->json(auth('manager')->user());
+        return response()->json(auth(Config::get('manager-api.guard.provider'))->user());
     }
 
     /**
@@ -116,9 +114,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('manager')->factory()->getTTL() * 60,
-            'user' => auth('manager')->user(),
-            'redirect' => url('manager'),
+            'expires_in' => auth(Config::get('manager-api.guard.provider'))->factory()->getTTL() * 60,
+            'user' => auth(Config::get('manager-api.guard.provider'))->user(),
         ]);
     }
 }

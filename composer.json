@@ -18,6 +18,9 @@
     "tymon/jwt-auth": "^2.0",
     "team64j/laravel-evolution": "^1.0.0"
   },
+  "require-dev": {
+    "zircote/swagger-php": "^4.7"
+  },
   "autoload": {
     "psr-4": {
       "Team64j\\LaravelManagerApi\\": "src"

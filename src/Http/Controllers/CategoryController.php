@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
 use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
@@ -47,6 +48,25 @@ class CategoryController extends Controller
     ];
 
     /**
+     * @OA\Get(
+     *     path="/categories",
+     *     summary="Получение списка категорий с пагинацией",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      * @param CategoryLayout $layout
      *
@@ -119,6 +139,24 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/categories",
+     *     summary="Создание новой категории",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      *
      * @return CategoryResource
@@ -131,6 +169,19 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/categories/{id}",
+     *     summary="Чтение категории",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      * @param string $category
      * @param CategoryLayout $layout
@@ -151,6 +202,24 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/categories/{id}",
+     *     summary="Обновление категории",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      * @param Category $category
      *
@@ -164,6 +233,19 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/categories/{id}",
+     *     summary="Удаление категории",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      * @param Category $category
      *
@@ -177,6 +259,19 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/categories/sort",
+     *     summary="Получение списка категорий для сортировки",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      * @param CategoryLayout $layout
      *
@@ -199,6 +294,23 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/categories/select",
+     *     summary="Получение списка категорий для выбора",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="integer")),
+     *         @OA\Parameter (name="itemNew", in="query", @OA\Schema(type="string", default="newcategory")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      *
      * @return AnonymousResourceCollection
@@ -210,7 +322,7 @@ class CategoryController extends Controller
         return TemplateResource::collection(
             Collection::make()
                 ->add([
-                    'key' => (string) $request->input('itemNew', 'newcategory'),
+                    'key' => (string)$request->input('itemNew', 'newcategory'),
                     'value' => Lang::get('global.cm_create_new_category'),
                 ])
                 ->add([
@@ -235,6 +347,24 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/categories/tree",
+     *     summary="Получение списка категорий с пагинацией для древовидного меню",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      *
      * @return AnonymousResourceCollection
@@ -270,6 +400,22 @@ class CategoryController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/categories/list",
+     *     summary="Получение списка категорий с пагинацией для меню",
+     *     tags={"Category"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="integer")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param CategoryRequest $request
      *
      * @return AnonymousResourceCollection

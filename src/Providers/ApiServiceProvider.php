@@ -13,20 +13,11 @@ use Illuminate\Support\Str;
 use Team64j\LaravelEvolution\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Contracts\Http\Controller as ControllerContract;
 use Team64j\LaravelManagerApi\Http\Middleware\Authenticate;
-use Team64j\LaravelManagerApi\Http\Middleware\RedirectIfAuthenticated;
 use Team64j\LaravelManagerApi\Models\Permissions;
 use Team64j\LaravelManagerApi\Models\User;
 
 class ApiServiceProvider extends ServiceProvider
 {
-    /**
-     * @var array
-     */
-    protected array $middlewareAliases = [
-        'manager.guest' => RedirectIfAuthenticated::class,
-        'manager.auth' => Authenticate::class,
-    ];
-
     /**
      * @return void
      */
@@ -63,9 +54,7 @@ class ApiServiceProvider extends ServiceProvider
 
         $method = method_exists($router, 'aliasMiddleware') ? 'aliasMiddleware' : 'middleware';
 
-        foreach ($this->middlewareAliases as $alias => $middleware) {
-            $router->$method($alias, $middleware);
-        }
+        $router->$method(Config::get('manager-api.guard.provider') . '.auth', Authenticate::class);
     }
 
     /**
@@ -73,25 +62,24 @@ class ApiServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        $managerDir = 'manager';
+        $apiPath = Config::get('manager-api.uri', 'manager/api');
 
-        if (!Route::has('manager')) {
-            Route::prefix($managerDir)
-                ->name('manager')
-                ->any('/', fn() => abort(404));
-        }
+        Route::prefix($apiPath)
+            ->name('manager.api')
+            ->any('/', fn() => abort(404));
 
-        Route::prefix($managerDir . '/api')
+        Route::prefix($apiPath)
             ->name('manager.api.')
             ->group(function (): void {
                 $controllersNamespace = 'Team64j\LaravelManagerApi\Http\Controllers';
+                $guard = Config::get('manager-api.guard.provider');
 
                 Collection::make(
                     require_once $this->app->basePath('vendor/composer/autoload_classmap.php')
                 )
                     ->keys()
                     ->filter(fn($controller) => Str::contains($controller, $controllersNamespace))
-                    ->map(function ($controller) use ($controllersNamespace) {
+                    ->map(function ($controller) use ($controllersNamespace, $guard) {
                         $path = Str::of($controller)
                             ->replace($controllersNamespace, '\\')
                             ->replaceLast('Controller', '')
@@ -119,10 +107,10 @@ class ApiServiceProvider extends ServiceProvider
                                 [$route['method']],
                                 $path . '/' . $route['uri'],
                                 $route['action']
-                            )->middleware($route['middleware'] ?? 'manager.auth:manager');
+                            )->middleware($route['middleware'] ?? $guard . '.auth:' . $guard);
                         }
 
-                        Route::middleware(['manager.auth:manager'])->apiResource(
+                        Route::middleware([$guard . '.auth:' . $guard])->apiResource(
                             $path,
                             $controller,
                             $controllerClass->getRouteOptions()
@@ -136,9 +124,12 @@ class ApiServiceProvider extends ServiceProvider
      */
     protected function mergeConfig(): void
     {
-        $auth = require realpath(__DIR__ . '/../../config/auth.php');
-        Config::set('auth.guards.manager', $auth['guards']['manager']);
-        Config::set('auth.providers.manager', $auth['providers']['manager']);
+        $this->mergeConfigFrom(__DIR__ . '/../../config/manager-api.php', 'manager-api');
+
+        $guard = Config::get('manager-api.guard.provider');
+
+        Config::set('auth.guards.' . $guard, Config::get('manager-api.guard'));
+        Config::set('auth.providers.' . $guard, Config::get('manager-api.provider'));
     }
 
     /**
