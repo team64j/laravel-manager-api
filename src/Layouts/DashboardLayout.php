@@ -30,7 +30,7 @@ class DashboardLayout extends Layout
         return Tabs::make()
             ->setId('tree')
             ->setUid('TREE')
-            ->setClass('h-full !bg-cms-800')
+            ->setClass('h-full !bg-gray-800')
             ->isWatch()
             ->isLoadOnce()
             ->addTab(
@@ -675,7 +675,7 @@ class DashboardLayout extends Layout
                             'attrs' => [
                                 'label' => Lang::get('global.welcome_title'),
                                 'icon' => 'fa fa-home',
-                                'class' => 'lg:min-h-[15rem] content-baseline bg-white dark:bg-cms-700 hover:shadow-lg transition',
+                                'class' => 'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             ],
                             'slots' => [
                                 'default' => [
@@ -708,7 +708,7 @@ class DashboardLayout extends Layout
                             'attrs' => [
                                 'label' => Lang::get('global.onlineusers_title'),
                                 'icon' => 'fa fa-user',
-                                'class' => 'lg:min-h-[15rem] content-baseline bg-white dark:bg-cms-700 hover:shadow-lg transition',
+                                'class' => 'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             ],
                             'slots' => [
                                 'default' => [
@@ -743,7 +743,7 @@ class DashboardLayout extends Layout
                             'attrs' => [
                                 'label' => Lang::get('global.activity_title'),
                                 'icon' => 'fa fa-pencil',
-                                'class' => 'hover:shadow-lg bg-white dark:bg-cms-700 transition overflow-hidden',
+                                'class' => 'hover:shadow-lg bg-white dark:bg-gray-700 transition overflow-hidden',
                             ],
                             'slots' => [
                                 'default' => [
@@ -779,7 +779,7 @@ class DashboardLayout extends Layout
                             'attrs' => [
                                 'label' => Lang::get('global.modx_news'),
                                 'icon' => 'fa fa-rss',
-                                'class' => 'overflow-hidden bg-white dark:bg-cms-700 hover:shadow-lg transition',
+                                'class' => 'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             ],
                             'slots' => [
                                 'default' => [
@@ -813,7 +813,7 @@ class DashboardLayout extends Layout
                             'attrs' => [
                                 'label' => Lang::get('global.modx_security_notices'),
                                 'icon' => 'fa fa-exclamation-triangle',
-                                'class' => 'overflow-hidden bg-white dark:bg-cms-700 hover:shadow-lg transition',
+                                'class' => 'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             ],
                             'slots' => [
                                 'default' => [

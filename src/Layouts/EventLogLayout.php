@@ -70,7 +70,7 @@ class EventLogLayout extends Layout
             'component' => 'RenderString',
             'attrs' => [
                 'string' => '
-                <div class="py-4 bg-white dark:bg-cms-700">
+                <div class="py-4 bg-white dark:bg-gray-700">
                   <div class="data data-event-log mb-4">
                     <table>
                       <thead>
