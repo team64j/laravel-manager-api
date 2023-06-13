@@ -47,7 +47,7 @@ class DashboardLayout extends Layout
                         'id' => 'documents',
                         'route' => 'Document',
                         'routeList' => 'Documents',
-                        'url' => 'api/document/tree?order=menuindex&dir=asc',
+                        'url' => '/document/tree?order=menuindex&dir=asc',
                         'aliases' => [
                             'hide_from_tree' => 'hideChildren',
                             'isfolder' => 'folder',
@@ -328,7 +328,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'templates',
                             'route' => 'Template',
-                            'url' => 'api/templates/tree',
+                            'url' => '/templates/tree',
                             'category' => true,
                             'aliases' => [
                                 'name' => 'title',
@@ -358,7 +358,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'tvs',
                             'route' => 'Tv',
-                            'url' => 'api/tvs/tree',
+                            'url' => '/tvs/tree',
                             'category' => true,
                             'aliases' => [
                                 'name' => 'title',
@@ -387,7 +387,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'chunks',
                             'route' => 'Chunk',
-                            'url' => 'api/chunks/tree',
+                            'url' => '/chunks/tree',
                             'category' => true,
                             'aliases' => [
                                 'name' => 'title',
@@ -416,7 +416,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'snippets',
                             'route' => 'Snippet',
-                            'url' => 'api/snippets/tree',
+                            'url' => '/snippets/tree',
                             'category' => true,
                             'aliases' => [
                                 'name' => 'title',
@@ -445,7 +445,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'plugins',
                             'route' => 'Plugin',
-                            'url' => 'api/plugins/tree',
+                            'url' => '/plugins/tree',
                             'category' => true,
                             'aliases' => [
                                 'name' => 'title',
@@ -474,7 +474,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'modules',
                             'route' => 'Module',
-                            'url' => 'api/modules/tree',
+                            'url' => '/modules/tree',
                             'category' => true,
                             'aliases' => [
                                 'name' => 'title',
@@ -503,7 +503,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'categories',
                             'route' => 'Category',
-                            'url' => 'api/categories/tree?order=category',
+                            'url' => '/categories/tree?order=category',
                             'category' => true,
                             'aliases' => [
                                 'category' => 'title',
@@ -530,7 +530,7 @@ class DashboardLayout extends Layout
                         'attrs' => [
                             'id' => 'treeFiles',
                             'route' => 'File',
-                            'url' => 'api/file/tree',
+                            'url' => '/file/tree',
                             'category' => true,
                             'aliases' => [],
                             'icons' => [
@@ -619,6 +619,15 @@ class DashboardLayout extends Layout
     protected function getMessages(): array
     {
         $data = [
+//            [
+//                'component' => [
+//                    'template' => '<button class="btn btn-green px-3 py-1 rounded mb-4" @click="click">{{ test }}</button>',
+//                    'data' => 'function () { return { test: 1 } }',
+//                    'methods' => [
+//                        'click' => 'function () { this.test++ }',
+//                    ],
+//                ],
+//            ],
             [
                 'component' => 'Template',
                 'attrs' => [
@@ -719,7 +728,7 @@ class DashboardLayout extends Layout
                                         'attrs' => [
                                             'id' => 'widgetUsers',
                                             'class' => '-mx-4 -mb-4 pb-4 grow',
-                                            'url' => 'api/users/active',
+                                            'url' => '/users/active',
                                             'history' => false,
                                             'route' => 'User',
                                             'data' => [],
@@ -752,7 +761,7 @@ class DashboardLayout extends Layout
                                         'attrs' => [
                                             'id' => 'widgetDocuments',
                                             'class' => '-m-4 pb-4 grow',
-                                            'url' => 'api/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon',
+                                            'url' => '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon',
                                             'history' => false,
                                             'route' => 'Document',
                                             'data' => [],
@@ -788,7 +797,7 @@ class DashboardLayout extends Layout
                                         'attrs' => [
                                             'id' => 'widgetNews',
                                             'class' => '-m-4 grow h-80 overflow-auto',
-                                            'url' => 'api/dashboard/news',
+                                            'url' => '/dashboard/news',
                                             'data' => [],
                                         ],
                                     ],
@@ -822,7 +831,7 @@ class DashboardLayout extends Layout
                                         'attrs' => [
                                             'id' => 'widgetNews',
                                             'class' => '-m-4 grow h-80 overflow-auto',
-                                            'url' => 'api/dashboard/news-security',
+                                            'url' => '/dashboard/news-security',
                                             'data' => [],
                                         ],
                                     ],

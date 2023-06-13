@@ -135,7 +135,7 @@ class BootstrapController extends Controller
                                             'element' => 'templates',
                                         ],
                                     ],
-                                    'url' => 'api/templates/list',
+                                    'url' => '/templates/list',
                                     'permissions' => ['new_template', 'edit_template'],
                                 ],
                                 [
@@ -148,7 +148,7 @@ class BootstrapController extends Controller
                                             'element' => 'tvs',
                                         ],
                                     ],
-                                    'url' => 'api/tvs/list',
+                                    'url' => '/tvs/list',
                                     'permissions' => ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                                 ],
                                 [
@@ -161,7 +161,7 @@ class BootstrapController extends Controller
                                             'element' => 'chunks',
                                         ],
                                     ],
-                                    'url' => 'api/chunks/list',
+                                    'url' => '/chunks/list',
                                     'permissions' => ['edit_chunk'],
                                 ],
                                 [
@@ -174,7 +174,7 @@ class BootstrapController extends Controller
                                             'element' => 'snippets',
                                         ],
                                     ],
-                                    'url' => 'api/snippets/list',
+                                    'url' => '/snippets/list',
                                     'permissions' => ['edit_snippet'],
                                 ],
                                 [
@@ -187,7 +187,7 @@ class BootstrapController extends Controller
                                             'element' => 'plugins',
                                         ],
                                     ],
-                                    'url' => 'api/plugins/list',
+                                    'url' => '/plugins/list',
                                     'permissions' => ['edit_plugin'],
                                 ],
                                 [
@@ -200,7 +200,7 @@ class BootstrapController extends Controller
                                             'element' => 'modules',
                                         ],
                                     ],
-                                    'url' => 'api/modules/list',
+                                    'url' => '/modules/list',
                                     'permissions' => ['edit_module'],
                                 ],
                                 [
@@ -230,7 +230,7 @@ class BootstrapController extends Controller
                             'key' => 'modules',
                             'name' => '[%modules%]',
                             'icon' => 'fa fa-cubes md:hidden',
-                            'url' => 'api/modules/exec',
+                            'url' => '/modules/exec',
                             'permissions' => ['exec_module'],
                         ],
                         [
@@ -245,7 +245,7 @@ class BootstrapController extends Controller
                                     'click' => [
                                         'name' => 'User',
                                     ],
-                                    'url' => 'api/users/list',
+                                    'url' => '/users/list',
                                     'permissions' => ['edit_user'],
                                 ],
                                 [

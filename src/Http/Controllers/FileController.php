@@ -156,7 +156,7 @@ class FileController extends Controller
 
             $data[] = $item;
 
-            $next = 'api/file/tree?parent=' . base64_encode($parent) . '&after=' . base64_encode($title);
+            $next = '/file/tree?parent=' . base64_encode($parent) . '&after=' . base64_encode($title);
         }
 
         $checkAfter = true;
@@ -206,7 +206,7 @@ class FileController extends Controller
 
             $data[] = $item;
 
-            $next = 'api/file/tree?parent=' . base64_encode($parent) . '&after=' . base64_encode($title);
+            $next = '/file/tree?parent=' . base64_encode($parent) . '&after=' . base64_encode($title);
         }
 
         if (count($data) <= $limit) {

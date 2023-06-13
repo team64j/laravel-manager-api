@@ -128,7 +128,7 @@ class DocumentLayout extends Layout
                                 Lang::get('global.page_data_template'),
                                 '<b>[*template*]</b><br>' . Lang::get('global.page_data_template_help')
                             )
-                                ->setUrl('api/templates/select')
+                                ->setUrl('/templates/select')
                                 ->setData([
                                     [
                                         'key' => $model->template,

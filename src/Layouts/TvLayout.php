@@ -70,7 +70,7 @@ class TvLayout extends Layout
                     ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full px-4 pb-0')
                     ->setSlot([
                         Select::make('category', Lang::get('global.existing_category'))
-                            ->setUrl('api/categories/select')
+                            ->setUrl('/categories/select')
                             ->setNew('')
                             ->setData([
                                 [
@@ -84,7 +84,7 @@ class TvLayout extends Layout
                                 ],
                             ]),
                         Select::make('type', Lang::get('global.tmplvars_type'))
-                            ->setUrl('api/tvs/types')
+                            ->setUrl('/tvs/types')
                             ->setData([
                                 [
                                     'key' => $model->type,

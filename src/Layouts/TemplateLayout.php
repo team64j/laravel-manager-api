@@ -85,7 +85,7 @@ class TemplateLayout extends Layout
                                 'category',
                                 Lang::get('global.existing_category')
                             )
-                                ->setUrl('api/categories/select')
+                                ->setUrl('/categories/select')
                                 ->addOption(
                                     $model->category,
                                     $model->categories ? $model->categories->category : Lang::get('global.no_category')
@@ -121,7 +121,7 @@ class TemplateLayout extends Layout
                         ->setHistory(true)
                         ->isFilter()
                         ->setSlotTop('<div class="font-bold">' . Lang::get('global.template_tv_msg') . '</div>')
-                        ->setUrl('api/templates/' . ($model->getKey() ?: 'new') . '/tvs')
+                        ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),

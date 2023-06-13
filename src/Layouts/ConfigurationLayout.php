@@ -194,7 +194,7 @@ class ConfigurationLayout extends Layout
                         'key' => 'default_template',
                         'value' => Select::make('default_template')
                             ->setData([$defaultTemplate])
-                            ->setUrl('api/templates/select'),
+                            ->setUrl('/templates/select'),
                     ],
                     [
                         'name' => Lang::get('global.defaulttemplate_logic_title'),
