@@ -19,7 +19,7 @@ class File extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'Fields/File',
+            'component' => 'EvoFields/File',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,

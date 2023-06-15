@@ -19,7 +19,7 @@ class Checkbox extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'Fields/Checkbox',
+            'component' => 'EvoFields/Checkbox',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,

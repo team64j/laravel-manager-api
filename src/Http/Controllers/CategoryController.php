@@ -114,7 +114,7 @@ class CategoryController extends Controller
             }
 
             $item->setAttribute('#', [
-                'component' => 'HelpIcon',
+                'component' => 'EvoHelpIcon',
                 'attrs' => [
                     'icon' => 'fa fa-object-group fa-fw',
                     'noOpacity' => true,

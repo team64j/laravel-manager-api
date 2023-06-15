@@ -23,16 +23,18 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
-        header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
-        header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+        if (!$this->app->runningInConsole()) {
+            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+            header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
+            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 
-        $this->registerConfig();
-        $this->registerLang();
+            $this->registerConfig();
+            $this->registerLang();
 
-        Permissions::all()->map(function ($permission) {
-            Gate::define($permission->key, fn(User $user) => $user->hasPermissionOrFail($permission));
-        });
+            Permissions::all()->map(function ($permission) {
+                Gate::define($permission->key, fn(User $user) => $user->hasPermissionOrFail($permission));
+            });
+        }
     }
 
     /**

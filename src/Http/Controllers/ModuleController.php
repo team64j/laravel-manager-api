@@ -104,7 +104,7 @@ class ModuleController extends Controller
             }
 
             $item->setAttribute('#', [
-                'component' => 'HelpIcon',
+                'component' => 'EvoHelpIcon',
                 'attrs' => [
                     'icon' => 'fa fa-cube fa-fw',
                     'iconInner' => $item->locked ? 'fa fa-lock text-xs' : '',

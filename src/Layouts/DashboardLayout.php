@@ -42,7 +42,7 @@ class DashboardLayout extends Layout
                 ['Document', 'Documents'],
                 Lang::get('global.manage_documents'),
                 [
-                    'component' => 'Tree',
+                    'component' => 'EvoTree',
                     'attrs' => [
                         'id' => 'documents',
                         'route' => 'Document',
@@ -324,7 +324,7 @@ class DashboardLayout extends Layout
                     ['Template'],
                     Lang::get('global.templates'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'templates',
                             'route' => 'Template',
@@ -354,7 +354,7 @@ class DashboardLayout extends Layout
                     ['Tv'],
                     Lang::get('global.tmplvars'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'tvs',
                             'route' => 'Tv',
@@ -383,7 +383,7 @@ class DashboardLayout extends Layout
                     ['Chunk'],
                     Lang::get('global.htmlsnippets'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'chunks',
                             'route' => 'Chunk',
@@ -412,7 +412,7 @@ class DashboardLayout extends Layout
                     ['Snippet'],
                     Lang::get('global.snippets'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'snippets',
                             'route' => 'Snippet',
@@ -441,7 +441,7 @@ class DashboardLayout extends Layout
                     ['Plugin'],
                     Lang::get('global.plugins'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'plugins',
                             'route' => 'Plugin',
@@ -470,7 +470,7 @@ class DashboardLayout extends Layout
                     ['Module'],
                     Lang::get('global.modules'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'modules',
                             'route' => 'Module',
@@ -499,7 +499,7 @@ class DashboardLayout extends Layout
                     ['Category'],
                     Lang::get('global.category_management'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'categories',
                             'route' => 'Category',
@@ -526,7 +526,7 @@ class DashboardLayout extends Layout
                     ['File'],
                     Lang::get('global.files_files'),
                     [
-                        'component' => 'Tree',
+                        'component' => 'EvoTree',
                         'attrs' => [
                             'id' => 'treeFiles',
                             'route' => 'File',
@@ -619,6 +619,9 @@ class DashboardLayout extends Layout
     protected function getMessages(): array
     {
         $data = [
+            [
+                'component' => 'TestComponent',
+            ],
 //            [
 //                'component' => [
 //                    'template' => '<button class="btn btn-green px-3 py-1 rounded mb-4" @click="click">{{ test }}</button>',
@@ -629,7 +632,7 @@ class DashboardLayout extends Layout
 //                ],
 //            ],
             [
-                'component' => 'Template',
+                'component' => 'EvoTemplate',
                 'attrs' => [
                     'class' => 'block alert-warning p-4 mb-3 rounded',
                 ],
@@ -641,7 +644,7 @@ class DashboardLayout extends Layout
                 ],
             ],
             [
-                'component' => 'Template',
+                'component' => 'EvoTemplate',
                 'attrs' => [
                     'class' => 'block alert-warning p-4 mb-3 rounded',
                 ],
@@ -656,7 +659,7 @@ class DashboardLayout extends Layout
         ];
 
         return [
-            'component' => 'Template',
+            'component' => 'EvoTemplate',
             'attrs' => [
                 'class' => 'pt-6 px-6',
             ],
@@ -673,14 +676,14 @@ class DashboardLayout extends Layout
     {
         $data = [
             [
-                'component' => 'Template',
+                'component' => 'EvoTemplate',
                 'attrs' => [
                     'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
                 ],
                 'slots' => [
                     'default' => [
                         [
-                            'component' => 'Section',
+                            'component' => 'EvoSection',
                             'attrs' => [
                                 'label' => Lang::get('global.welcome_title'),
                                 'icon' => 'fa fa-home',
@@ -706,14 +709,14 @@ class DashboardLayout extends Layout
                 ],
             ],
             [
-                'component' => 'Template',
+                'component' => 'EvoTemplate',
                 'attrs' => [
                     'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
                 ],
                 'slots' => [
                     'default' => [
                         [
-                            'component' => 'Section',
+                            'component' => 'EvoSection',
                             'attrs' => [
                                 'label' => Lang::get('global.onlineusers_title'),
                                 'icon' => 'fa fa-user',
@@ -724,7 +727,7 @@ class DashboardLayout extends Layout
                                     '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
                                     date('H:i:s') . '</b>)</div>',
                                     [
-                                        'component' => 'Panel',
+                                        'component' => 'EvoPanel',
                                         'attrs' => [
                                             'id' => 'widgetUsers',
                                             'class' => '-mx-4 -mb-4 pb-4 grow',
@@ -741,14 +744,14 @@ class DashboardLayout extends Layout
                 ],
             ],
             [
-                'component' => 'Template',
+                'component' => 'EvoTemplate',
                 'attrs' => [
                     'class' => 'grow w-full px-2 pb-2',
                 ],
                 'slots' => [
                     'default' => [
                         [
-                            'component' => 'Section',
+                            'component' => 'EvoSection',
                             'attrs' => [
                                 'label' => Lang::get('global.activity_title'),
                                 'icon' => 'fa fa-pencil',
@@ -757,7 +760,7 @@ class DashboardLayout extends Layout
                             'slots' => [
                                 'default' => [
                                     [
-                                        'component' => 'Panel',
+                                        'component' => 'EvoPanel',
                                         'attrs' => [
                                             'id' => 'widgetDocuments',
                                             'class' => '-m-4 pb-4 grow',
@@ -777,14 +780,14 @@ class DashboardLayout extends Layout
 
         if (Config::get('global.rss_url_news')) {
             $data[] = [
-                'component' => 'Template',
+                'component' => 'EvoTemplate',
                 'attrs' => [
                     'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
                 ],
                 'slots' => [
                     'default' => [
                         [
-                            'component' => 'Section',
+                            'component' => 'EvoSection',
                             'attrs' => [
                                 'label' => Lang::get('global.modx_news'),
                                 'icon' => 'fa fa-rss',
@@ -793,7 +796,7 @@ class DashboardLayout extends Layout
                             'slots' => [
                                 'default' => [
                                     [
-                                        'component' => 'Panel',
+                                        'component' => 'EvoPanel',
                                         'attrs' => [
                                             'id' => 'widgetNews',
                                             'class' => '-m-4 grow h-80 overflow-auto',
@@ -811,14 +814,14 @@ class DashboardLayout extends Layout
 
         if (Config::get('global.rss_url_security')) {
             $data[] = [
-                'component' => 'Template',
+                'component' => 'EvoTemplate',
                 'attrs' => [
                     'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
                 ],
                 'slots' => [
                     'default' => [
                         [
-                            'component' => 'Section',
+                            'component' => 'EvoSection',
                             'attrs' => [
                                 'label' => Lang::get('global.modx_security_notices'),
                                 'icon' => 'fa fa-exclamation-triangle',
@@ -827,7 +830,7 @@ class DashboardLayout extends Layout
                             'slots' => [
                                 'default' => [
                                     [
-                                        'component' => 'Panel',
+                                        'component' => 'EvoPanel',
                                         'attrs' => [
                                             'id' => 'widgetNews',
                                             'class' => '-m-4 grow h-80 overflow-auto',
@@ -844,7 +847,7 @@ class DashboardLayout extends Layout
         }
 
         return [
-            'component' => 'Template',
+            'component' => 'EvoTemplate',
             'attrs' => [
                 'class' => 'flex flex-wrap items-baseline pt-6 px-4',
             ],

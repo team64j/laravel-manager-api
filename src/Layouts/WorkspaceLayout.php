@@ -80,7 +80,7 @@ class WorkspaceLayout extends Layout
             ->addTab('topmenu', 'Top menu', null, 'p-6')
             ->addSlot('topmenu', [
                 [
-                    'component' => 'MenuBuilder',
+                    'component' => 'EvoMenuBuilder',
                     'model' => 'data.topmenu.data',
                 ],
             ])

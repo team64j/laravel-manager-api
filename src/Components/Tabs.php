@@ -14,7 +14,7 @@ class Tabs extends Component
     public function __construct(array $data = [])
     {
         $attributes = [
-            'component' => 'Tabs',
+            'component' => 'EvoTabs',
             'attrs' => [
                 'id' => $data['id'] ?? null,
                 'history' => $data['history'] ?? null,

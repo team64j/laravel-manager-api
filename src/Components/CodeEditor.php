@@ -19,14 +19,14 @@ class CodeEditor extends Component
         string $class = null
     ) {
         $attributes = [
-            'component' => 'CodeEditor',
+            'component' => 'EvoCodeEditor',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,
                 'class' => $class,
                 'config' => [
                     [
-                        'component' => 'Codemirror',
+                        'component' => 'EvoCodemirror',
                         'name' => 'Codemirror',
                     ],
                 ],
@@ -57,7 +57,7 @@ class CodeEditor extends Component
     public function setLanguage(string $value): static
     {
         foreach ($this->attributes['attrs']['config'] as &$attr) {
-            if ($attr['component'] == 'Codemirror') {
+            if ($attr['component'] == 'EvoCodemirror') {
                 $attr['lang'] = $value;
             }
         }

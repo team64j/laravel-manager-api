@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Vite;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
@@ -103,12 +104,6 @@ class BootstrapController extends Controller
                 $apiCss = realpath(__DIR__ . '/../../../public/css/styles.css')
             ) ? url('/') . str_replace(app()->basePath(), '', $apiCss) : '',
         ];
-
-//        $assets[] = [
-//            'rel' => 'js',
-//            'component' => 'TestComponent',
-//            'src' => url('/') . '/packages/test-component/main.js',
-//        ];
 //
 //        $assets[] = [
 //            'rel' => 'module',
@@ -118,11 +113,10 @@ class BootstrapController extends Controller
 //        $assets[] = [
 //            'rel' => 'manifest',
 //            'source' => str_replace(
-//                'public/..',
-//                \url('/'),
-//                Vite::useBuildDirectory('../packages/test/dist/build')
+//                '/../packages',
+//                \url('/packages/'),
+//                Vite::useBuildDirectory('../packages/component-element-plus/dist')
 //                    ->withEntryPoints([
-//                        'src/main.css',
 //                        'src/main.js',
 //                    ])
 //                    ->toHtml()

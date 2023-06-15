@@ -15,7 +15,7 @@ class Template extends Component
         string | array $slot = null
     ) {
         $attributes = [
-            'component' => 'Template',
+            'component' => 'EvoTemplate',
             'attrs' => [
                 'class' => $class,
             ],

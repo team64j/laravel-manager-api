@@ -108,7 +108,7 @@ class TemplateController extends Controller
             }
 
             $item->setAttribute('#', [
-                'component' => 'HelpIcon',
+                'component' => 'EvoHelpIcon',
                 'attrs' => [
                     'icon' => $item->id == Config::get('global.default_template') ? 'fa fa-home fa-fw text-blue-500'
                         : 'fa fa-newspaper fa-fw',
@@ -127,7 +127,7 @@ class TemplateController extends Controller
                 $item->setAttribute(
                     'file',
                     [
-                        'component' => 'HelpIcon',
+                        'component' => 'EvoHelpIcon',
                         'attrs' => [
                             'icon' => 'fa-fw far fa-file-code',
                             'noOpacity' => true,

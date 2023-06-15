@@ -12,7 +12,7 @@ class Panel extends Component
     public function __construct(array $data = [])
     {
         $attributes = [
-            'component' => 'Panel',
+            'component' => 'EvoPanel',
             'attrs' => [
                 'id' => $data['id'] ?? null,
                 'history' => $data['history'] ?? null,

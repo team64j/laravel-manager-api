@@ -67,7 +67,7 @@ class EventLogLayout extends Layout
             ->setIcon('fa fa-exclamation-triangle');
 
         $data[] = [
-            'component' => 'RenderString',
+            'component' => 'EvoRenderString',
             'attrs' => [
                 'string' => '
                 <div class="py-4 bg-white dark:bg-gray-700">
