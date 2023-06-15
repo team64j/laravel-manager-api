@@ -23,7 +23,7 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
         header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
         header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 

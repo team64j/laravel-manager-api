@@ -86,8 +86,50 @@ class BootstrapController extends Controller
             ],
             'lexicon' => Lang::get('global'),
             'menu' => $this->getMenu(),
-            'css' => is_file($css = __DIR__ . '/../../../public/css/styles.css') ? file_get_contents($css) : '',
+            'assets' => $this->getAssets(),
         ]);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAssets(): array
+    {
+        $assets = [];
+
+        $assets[] = [
+            'rel' => 'css',
+            'src' => is_file(
+                $apiCss = realpath(__DIR__ . '/../../../public/css/styles.css')
+            ) ? url('/') . str_replace(app()->basePath(), '', $apiCss) : '',
+        ];
+
+//        $assets[] = [
+//            'rel' => 'js',
+//            'component' => 'TestComponent',
+//            'src' => url('/') . '/packages/test-component/main.js',
+//        ];
+//
+//        $assets[] = [
+//            'rel' => 'module',
+//            'src' => url('/') . '/packages/vue3-component/dist/library.mjs',
+//        ];
+//
+//        $assets[] = [
+//            'rel' => 'manifest',
+//            'source' => str_replace(
+//                'public/..',
+//                \url('/'),
+//                Vite::useBuildDirectory('../packages/test/dist/build')
+//                    ->withEntryPoints([
+//                        'src/main.css',
+//                        'src/main.js',
+//                    ])
+//                    ->toHtml()
+//            ),
+//        ];
+
+        return $assets;
     }
 
     /**
