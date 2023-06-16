@@ -122,6 +122,37 @@ class BootstrapController extends Controller
 //                    ->toHtml()
 //            ),
 //        ];
+//
+//        $assets[] = [
+//            'rel' => 'module',
+//            'src' => url('/') . '/packages/component-3/main.js',
+//        ];
+
+//        $assets[] = [
+//            'rel' => 'manifest',
+//            'source' => str_replace(
+//                'public/..',
+//                \url('/'),
+//                Vite::useBuildDirectory('../packages/component-element-plus/dist')
+//                    ->withEntryPoints([
+//                        'src/main.js',
+//                    ])
+//                    ->toHtml()
+//            ),
+//        ];
+//
+//        $assets[] = [
+//            'rel' => 'manifest',
+//            'source' => str_replace(
+//                'public/..',
+//                \url('/'),
+//                Vite::useBuildDirectory('../packages/component-easyui/dist')
+//                    ->withEntryPoints([
+//                        'src/main.js',
+//                    ])
+//                    ->toHtml()
+//            ),
+//        ];
 
         return $assets;
     }

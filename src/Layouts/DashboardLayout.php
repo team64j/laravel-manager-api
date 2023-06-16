@@ -619,9 +619,18 @@ class DashboardLayout extends Layout
     protected function getMessages(): array
     {
         $data = [
-            [
-                'component' => 'TestComponent',
-            ],
+//            [
+//                'component' => 'Component3',
+//            ],
+//            [
+//                'component' => 'ComponentElementPlus',
+//            ],
+//            [
+//                'component' => 'ComponentEasyUi',
+//                'attrs' => [
+//                    'data' => collect(Lang::get('global'))->map(fn($v, $k) => ['key' => $k, 'value' => $v])->values()
+//                ]
+//            ],
 //            [
 //                'component' => [
 //                    'template' => '<button class="btn btn-green px-3 py-1 rounded mb-4" @click="click">{{ test }}</button>',
