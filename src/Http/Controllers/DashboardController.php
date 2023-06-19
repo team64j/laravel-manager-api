@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\DashboardRequest;
 use Team64j\LaravelManagerApi\Http\Resources\DashboardResource;
 use Team64j\LaravelManagerApi\Layouts\DashboardLayout;
@@ -45,11 +46,27 @@ class DashboardController extends Controller
         ],
     ];
 
+    /**
+     * @var array
+     */
     protected array $routeOptions = [
         'only' => ['index']
     ];
 
     /**
+     * @OA\Get(
+     *     path="/dashboard",
+     *     summary="Получение шаблона для стартовой панели",
+     *     tags={"Dashboard"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DashboardRequest $request
      * @param DashboardLayout $layout
      *
@@ -66,29 +83,42 @@ class DashboardController extends Controller
             ]);
     }
 
-    /**
-     * @param DashboardRequest $request
-     *
-     * @return Application|Factory|View
-     */
-    public function show(DashboardRequest $request): View | Factory | Application
-    {
-        $userAttributes = Auth::user()->attributes;
+//    /**
+//     * @param DashboardRequest $request
+//     *
+//     * @return Application|Factory|View
+//     */
+//    public function show(DashboardRequest $request): View | Factory | Application
+//    {
+//        $userAttributes = Auth::user()->attributes;
+//
+//        return view('dashboard', [
+//            'user' => [
+//                'username' => Auth::user()->username,
+//                'role' => $userAttributes->role,
+//                'permissions' => $userAttributes->rolePermissions->pluck('permission'),
+//            ],
+//            'config' => [
+//                'site_url' => URL::to('/', [], Config::get('global.server_protocol') == 'https'),
+//            ],
+//            'lexicon' => Lang::get('global'),
+//        ]);
+//    }
 
-        return view('dashboard', [
-            'user' => [
-                'username' => Auth::user()->username,
-                'role' => $userAttributes->role,
-                'permissions' => $userAttributes->rolePermissions->pluck('permission'),
-            ],
-            'config' => [
-                'site_url' => URL::to('/', [], Config::get('global.server_protocol') == 'https'),
-            ],
-            'lexicon' => Lang::get('global'),
-        ]);
-    }
-
     /**
+     * @OA\Get(
+     *     path="/dashboard/news",
+     *     summary="Получение списка новостей для дашборда",
+     *     tags={"Dashboard"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DashboardRequest $request
      *
      * @return array[]
@@ -131,6 +161,19 @@ class DashboardController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/dashboard/news-security",
+     *     summary="Получение списка новостей по безопасности для дашборда",
+     *     tags={"Dashboard"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DashboardRequest $request
      *
      * @return array[]
@@ -173,6 +216,19 @@ class DashboardController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/dashboard/sidebar",
+     *     summary="Получение шаблона сайдбара",
+     *     tags={"Dashboard"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DashboardRequest $request
      * @param DashboardLayout $layout
      *

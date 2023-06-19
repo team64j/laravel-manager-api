@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
 use Team64j\LaravelManagerApi\Http\Resources\FilesResource;
 
@@ -28,6 +29,26 @@ class FilesController extends Controller
     ];
 
     /**
+     * @var array
+     */
+    protected array $routeOptions = [
+        'only' => ['index', 'show'],
+    ];
+
+    /**
+     * @OA\Get(
+     *     path="/files",
+     *     summary="Получение списка файлов из корневой директории",
+     *     tags={"File"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param FilesRequest $request
      *
      * @return AnonymousResourceCollection
@@ -38,6 +59,22 @@ class FilesController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/files/{files}",
+     *     summary="Получение списка файлов из директории",
+     *     tags={"File"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param FilesRequest $request
      * @param string $files
      *
@@ -184,6 +221,23 @@ class FilesController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/files/tree",
+     *     summary="Получение списка файлов для древовидного меню",
+     *     tags={"File"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param FilesRequest $request
      *
      * @return AnonymousResourceCollection

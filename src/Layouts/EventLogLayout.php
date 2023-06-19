@@ -66,40 +66,35 @@ class EventLogLayout extends Layout
             ->setTitle(Lang::get('global.eventlog'))
             ->setIcon('fa fa-exclamation-triangle');
 
-        $data[] = [
-            'component' => 'EvoRenderString',
-            'attrs' => [
-                'string' => '
-                <div class="py-4 bg-white dark:bg-gray-700">
-                  <div class="data data-event-log mb-4">
-                    <table>
-                      <thead>
-                      <tr>
-                        <th colspan="4">' . e($model->source . ' - ' . Lang::get('global.eventlog_viewer')) . '</th>
-                      </tr>
-                      <tr>
-                        <th>' . Lang::get('global.event_id') . '</th>
-                        <th>' . Lang::get('global.source') . '</th>
-                        <th>' . Lang::get('global.date') . '</th>
-                        <th>' . Lang::get('global.user') . '</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr class="text-center">
-                        <td>' . $model->eventid . '</td>
-                        <td>' . e($model->source) . '</td>
-                        <td>' . $model->createdon . '</td>
-                        <td>' . ($model->users->username ?? '-') . '</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-            
-                  <div class="data data-event-log mb-4">' . $model->description . '</div>
-            
-                </div>'
-            ]
-        ];
+        $data[] = '
+            <div class="py-4 bg-white dark:bg-gray-700">
+              <div class="data data-event-log mb-4">
+                <table>
+                  <thead>
+                  <tr>
+                    <th colspan="4">' . e($model->source . ' - ' . Lang::get('global.eventlog_viewer')) . '</th>
+                  </tr>
+                  <tr>
+                    <th>' . Lang::get('global.event_id') . '</th>
+                    <th>' . Lang::get('global.source') . '</th>
+                    <th>' . Lang::get('global.date') . '</th>
+                    <th>' . Lang::get('global.user') . '</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="text-center">
+                    <td>' . $model->eventid . '</td>
+                    <td>' . e($model->source) . '</td>
+                    <td>' . $model->createdon . '</td>
+                    <td>' . ($model->users->username ?? '-') . '</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+        
+              <div class="data data-event-log mb-4">' . $model->description . '</div>
+        
+            </div>';
 
         return $data;
     }

@@ -20,8 +20,14 @@ use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 
 class PermissionController extends Controller
 {
+    /**
+     * @var string
+     */
     protected string $route = 'permissions';
 
+    /**
+     * @var array
+     */
     protected array $routes = [
         [
             'method' => 'get',

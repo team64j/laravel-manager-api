@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
+use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
 use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
@@ -113,14 +114,13 @@ class CategoryController extends Controller
                 ];
             }
 
-            $item->setAttribute('#', [
-                'component' => 'EvoHelpIcon',
-                'attrs' => [
-                    'icon' => 'fa fa-object-group fa-fw',
-                    'noOpacity' => true,
-                    'fit' => true,
-                ],
-            ]);
+            $item->setAttribute(
+                '#',
+                HelpIcon::make('', 'fa fa-object-group fa-fw')
+                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
+                    ->isOpacity(false)
+                    ->isFit()
+            );
 
             $data['data'][0]['data']->add($item->withoutRelations());
         }
@@ -406,7 +406,7 @@ class CategoryController extends Controller
      *     tags={"Category"},
      *     security={{"Api":{}}},
      *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="integer")),
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
      *     },
      *     @OA\Response(
      *          response="200",

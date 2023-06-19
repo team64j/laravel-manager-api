@@ -10,8 +10,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteModule;
+use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\ModuleRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ModuleResource;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
@@ -22,6 +24,9 @@ class ModuleController extends Controller
 {
     use PaginationTrait;
 
+    /**
+     * @var string
+     */
     protected string $route = 'modules';
 
     /**
@@ -32,6 +37,11 @@ class ModuleController extends Controller
             'method' => 'get',
             'uri' => 'exec',
             'action' => [self::class, 'exec'],
+        ],
+        [
+            'method' => ['get', 'post', 'delete', 'put'],
+            'uri' => 'exec/{id}',
+            'action' => [self::class, 'execRun'],
         ],
         [
             'method' => 'get',
@@ -46,6 +56,25 @@ class ModuleController extends Controller
     ];
 
     /**
+     * @OA\Get(
+     *     path="/modules",
+     *     summary="Получение списка модулей с пагинацией и фильтрацией",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      * @param ModuleLayout $layout
      *
@@ -103,16 +132,16 @@ class ModuleController extends Controller
                 }
             }
 
-            $item->setAttribute('#', [
-                'component' => 'EvoHelpIcon',
-                'attrs' => [
-                    'icon' => 'fa fa-cube fa-fw',
-                    'iconInner' => $item->locked ? 'fa fa-lock text-xs' : '',
-                    'noOpacity' => true,
-                    'fit' => true,
-                    'data' => $item->locked ? Lang::get('global.locked') : '',
-                ],
-            ]);
+            $item->setAttribute(
+                '#',
+                HelpIcon::make(
+                    $item->locked ? Lang::get('global.locked') : '',
+                    'fa fa-cube fa-fw'
+                )
+                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
+                    ->isOpacity(false)
+                    ->isFit()
+            );
 
             $item->setAttribute('category.name', $data['data'][$item->category]['name']);
             $item->setAttribute('description.html', $item->description);
@@ -134,6 +163,24 @@ class ModuleController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/modules",
+     *     summary="Создание нового модуля",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      *
      * @return ModuleResource
@@ -146,6 +193,19 @@ class ModuleController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/modules/{id}",
+     *     summary="Чтение модуля",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      * @param string $module
      * @param ModuleLayout $layout
@@ -166,6 +226,24 @@ class ModuleController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/modules/{id}",
+     *     summary="Обновление модуля",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      * @param SiteModule $module
      *
@@ -179,6 +257,19 @@ class ModuleController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/modules/{id}",
+     *     summary="Удаление модуля",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      * @param SiteModule $module
      *
@@ -192,6 +283,22 @@ class ModuleController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/modules/list",
+     *     summary="Получение списка модулей с пагинацией для меню",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      *
      * @return AnonymousResourceCollection
@@ -238,6 +345,24 @@ class ModuleController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/modules/exec",
+     *     summary="Получение списка модулей для запуска",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer", default="-1")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      *
      * @return AnonymousResourceCollection
@@ -262,13 +387,26 @@ class ModuleController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/modules/exec/{id}",
+     *     summary="Запуск модуля",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *     )
+     * )
      * @param ModuleRequest $request
-     * @param SiteModule $module
+     * @param string $module
      *
      * @return mixed|string
      */
-    public function execRun(ModuleRequest $request, SiteModule $module): mixed
+    public function execRun(ModuleRequest $request, string $module): mixed
     {
+        /** @var SiteModule $module */
+        $module = SiteModule::query()->findOrFail($module);
+
         try {
             $code = str_starts_with($module->modulecode, '<?php') ? '//' : '';
 
@@ -277,19 +415,28 @@ class ModuleController extends Controller
             $result = $exception->getMessage();
         }
 
-//        $result = [
-//            'data' => [],
-//            'layout' => [
-//                [
-//                    'component' => 'Title'
-//                ]
-//            ]
-//        ];
-
         return $result;
     }
 
     /**
+     * @OA\Get(
+     *     path="/modules/tree",
+     *     summary="Получение списка модулей с пагинацией для древовидного меню",
+     *     tags={"Module"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer", default="-1")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ModuleRequest $request
      *
      * @return AnonymousResourceCollection

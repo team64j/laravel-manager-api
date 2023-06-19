@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteHtmlSnippet;
+use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\ChunkRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ChunkResource;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
@@ -117,16 +118,16 @@ class ChunkController extends Controller
                 }
             }
 
-            $item->setAttribute('#', [
-                'component' => 'EvoHelpIcon',
-                'attrs' => [
-                    'icon' => 'fa fa-th-large fa-fw',
-                    'iconInner' => $item->locked ? 'fa fa-lock text-xs' : '',
-                    'noOpacity' => true,
-                    'fit' => true,
-                    'data' => $item->locked ? Lang::get('global.locked') : '',
-                ],
-            ]);
+            $item->setAttribute(
+                '#',
+                HelpIcon::make(
+                    $item->locked ? Lang::get('global.locked') : '',
+                    'fa fa-th-large fa-fw'
+                )
+                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
+                    ->isOpacity(false)
+                    ->isFit()
+            );
 
             $item->setAttribute('category.name', $data['data'][$item->category]['name']);
 
@@ -273,7 +274,7 @@ class ChunkController extends Controller
      *     tags={"Chunk"},
      *     security={{"Api":{}}},
      *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="integer")),
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
      *     },
      *     @OA\Response(
      *          response="200",
@@ -338,6 +339,7 @@ class ChunkController extends Controller
      *     parameters={
      *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer", default="-1")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
      *     },
      *     @OA\Response(
      *          response="200",

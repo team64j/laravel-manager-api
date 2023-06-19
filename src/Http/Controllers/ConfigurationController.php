@@ -7,6 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\URL;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ConfigurationResource;
@@ -15,6 +16,19 @@ use Team64j\LaravelManagerApi\Layouts\ConfigurationLayout;
 class ConfigurationController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/configuration",
+     *     summary="Чтение конфигурации",
+     *     tags={"Configuration"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ConfigurationRequest $request
      * @param ConfigurationLayout $layout
      *
@@ -32,6 +46,24 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/configuration",
+     *     summary="Сохранение конфигурации",
+     *     tags={"Configuration"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param ConfigurationRequest $request
      * @param SystemSetting $configuration
      *

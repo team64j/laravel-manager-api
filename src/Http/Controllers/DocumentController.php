@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Facades\Uri;
 use Team64j\LaravelEvolution\Models\DocumentgroupName;
 use Team64j\LaravelEvolution\Models\SiteContent;
@@ -37,6 +38,27 @@ class DocumentController extends Controller
     ];
 
     /**
+     * @OA\Get(
+     *     path="/document",
+     *     summary="Получение списка документов с пагинацией и фильтрацией по основным полям",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *         @OA\Parameter (name="limit", in="query", @OA\Schema(type="integer")),
+     *         @OA\Parameter (name="columns", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="fields", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="additional", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DocumentRequest $request
      *
      * @return AnonymousResourceCollection
@@ -135,6 +157,24 @@ class DocumentController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/document/{id}",
+     *     summary="Чтение документа",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="template", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="type", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DocumentRequest $request
      * @param string $document
      * @param DocumentLayout $layout
@@ -192,6 +232,24 @@ class DocumentController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/document",
+     *     summary="Создание нового документа",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DocumentRequest $request
      * @param DocumentLayout $layout
      *
@@ -206,6 +264,24 @@ class DocumentController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/document/{id}",
+     *     summary="Обновление документа",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DocumentRequest $request
      * @param SiteContent $document
      * @param DocumentLayout $layout
@@ -220,6 +296,19 @@ class DocumentController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/document/{id}",
+     *     summary="Удаление документа",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DocumentRequest $request
      * @param SiteContent $document
      *
@@ -309,6 +398,26 @@ class DocumentController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/document/tree",
+     *     summary="Получение списка документов с пагинацией для древовидного меню",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DocumentRequest $request
      *
      * @return AnonymousResourceCollection
@@ -401,6 +510,19 @@ class DocumentController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/document/parents/{id}",
+     *     summary="Получение списка родителей для документа",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param DocumentRequest $request
      * @param int $id
      *

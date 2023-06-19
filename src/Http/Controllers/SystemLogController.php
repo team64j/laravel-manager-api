@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\ManagerLog;
 use Team64j\LaravelManagerApi\Http\Requests\SystemLogRequest;
 use Team64j\LaravelManagerApi\Http\Resources\SystemLogResource;
@@ -18,11 +19,36 @@ class SystemLogController extends Controller
 {
     use PaginationTrait;
 
+    /**
+     * @var array
+     */
     protected array $routeOptions = [
         'only' => ['index']
     ];
 
     /**
+     * @OA\Get(
+     *     path="/system-log",
+     *     summary="Получение списка лога системных событий с фильтрацией",
+     *     tags={"SystemLog"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="desc")),
+     *         @OA\Parameter (name="username", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="action", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="itemid", in="query", @OA\Schema(type="string", default="")),
+     *         @OA\Parameter (name="itemname", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="timestamp", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SystemLogRequest $request
      * @param SystemLogLayout $layout
      *

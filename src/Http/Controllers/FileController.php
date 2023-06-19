@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FileRequest;
 use Team64j\LaravelManagerApi\Http\Resources\FileResource;
 
@@ -27,12 +28,80 @@ class FileController extends Controller
     ];
 
     /**
+     * @var array
+     */
+    protected array $routeOptions = [
+        'only' => ['show'],
+    ];
+
+//    /**
+//     * @param FileRequest $request
+//     * @param string $file
+//     *
+//     * @return FileResource
+//     */
+//    public function index(FileRequest $request, string $file): FileResource
+//    {
+//        $data = [];
+//        $root = realpath(Config::get('global.filemanager_path', App::basePath('../')));
+//        $filename = trim(base64_decode(urldecode($file)), '/');
+//        $path = $root . DIRECTORY_SEPARATOR . $filename;
+//        $types = [
+//            'text/plain',
+//            'image/svg+xml',
+//            'application/json',
+//            'application/octet-stream',
+//        ];
+//
+//        $ignoreExtensions = [
+//            'woff',
+//            'woff2',
+//        ];
+//
+//        if (File::isFile($path)) {
+//            $data['path'] = $filename;
+//            $data['name'] = File::name($path);
+//            $data['basename'] = File::basename($path);
+//            $data['type'] = File::mimeType($path);
+//            $data['ext'] = File::extension($path);
+//            $data['lang'] = '';
+//
+//            $content = File::get($path);
+//
+//            if (str_starts_with($content, '#!/usr/bin/env php')) {
+//                $data['lang'] = 'php';
+//            }
+//
+//            if (!in_array($data['ext'], $ignoreExtensions, true)) {
+//                if (in_array($data['type'], $types) || Str::startsWith($data['type'], 'text/')) {
+//                    $data['content'] = $content;
+//                }
+//            }
+//        }
+//
+//        return FileResource::make($data);
+//    }
+
+    /**
+     * @OA\Get(
+     *     path="/file/{file}",
+     *     summary="Получение файла по адресу на сервере",
+     *     tags={"File"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param FileRequest $request
      * @param string $file
      *
      * @return FileResource
      */
-    public function index(FileRequest $request, string $file): FileResource
+    public function show(FileRequest $request, string $file): FileResource
     {
         $data = [];
         $root = realpath(Config::get('global.filemanager_path', App::basePath('../')));
@@ -71,21 +140,29 @@ class FileController extends Controller
             }
         }
 
-        return new FileResource($data);
+        return FileResource::make($data);
     }
 
     /**
-     * @param FileRequest $request
-     * @param string $file
-     *
-     * @return FileResource
-     */
-    public function show(FileRequest $request, string $file): FileResource
-    {
-        return $this->index($request, $file);
-    }
-
-    /**
+     * @OA\Get(
+     *     path="/file/tree",
+     *     summary="Получение списка файлов с пагинацией для древовидного меню",
+     *     tags={"File"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="after", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param FileRequest $request
      *
      * @return AnonymousResourceCollection
@@ -198,7 +275,7 @@ class FileController extends Controller
                 'type' => $type,
                 'unpublished' => !$file->isWritable() || !$file->isReadable(),
                 'class' => 'f-ext-' . $file->getExtension(),
-                'size' => !empty($settings['show']) && in_array('size', $settings['show'])  ? $size : '',
+                'size' => !empty($settings['show']) && in_array('size', $settings['show']) ? $size : '',
                 'date' => !empty($settings['show']) && in_array('date', $settings['show']) ? $date : '',
                 '_size' => $size,
                 '_date' => $date,

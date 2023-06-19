@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\EventLog;
 use Team64j\LaravelManagerApi\Http\Requests\EventLogRequest;
 use Team64j\LaravelManagerApi\Http\Resources\EventLogResource;
@@ -15,11 +16,33 @@ use Team64j\LaravelManagerApi\Layouts\EventLogLayout;
 
 class EventLogController extends Controller
 {
+    /**
+     * @var array
+     */
     protected array $routeOptions = [
         'only' => ['index', 'show']
     ];
 
     /**
+     * @OA\Get(
+     *     path="/event-log",
+     *     summary="Получение списка лога событий с фильтрацией",
+     *     tags={"EventLog"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="type", in="query", @OA\Schema(type="string", default="")),
+     *         @OA\Parameter (name="user", in="query", @OA\Schema(type="string", default="")),
+     *         @OA\Parameter (name="eventid", in="query", @OA\Schema(type="string", default="")),
+     *         @OA\Parameter (name="createdon", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param EventLogRequest $request
      * @param EventLogLayout $layout
      *
@@ -151,6 +174,19 @@ class EventLogController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/event-log/{id}",
+     *     summary="Чтение лога события",
+     *     tags={"EventLog"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param EventLogRequest $request
      * @param string $eventlog
      * @param EventLogLayout $layout

@@ -98,12 +98,28 @@ class BootstrapController extends Controller
     {
         $assets = [];
 
+        $packageFolder = str_replace([app()->basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3));
+        $publicFolder = trim(str_replace(app()->basePath(), '', app()->publicPath()), DIRECTORY_SEPARATOR);
+
         $assets[] = [
-            'rel' => 'css',
-            'src' => is_file(
-                $apiCss = realpath(__DIR__ . '/../../../public/css/styles.css')
-            ) ? url('/') . str_replace(app()->basePath(), '', $apiCss) : '',
+            'rel' => 'manifest',
+            'source' => str_replace(
+                $publicFolder . '/../',
+                \url('/'),
+                Vite::useBuildDirectory('../' . $packageFolder . '/dist')
+                    ->withEntryPoints([
+                        'resources/css/styles.css',
+                    ])
+                    ->toHtml()
+            ),
         ];
+
+//        $assets[] = [
+//            'rel' => 'css',
+//            'src' => is_file(
+//                $apiCss = realpath(__DIR__ . '/../../../public/css/styles.css')
+//            ) ? url('/') . str_replace(app()->basePath(), '', $apiCss) : '',
+//        ];
 //
 //        $assets[] = [
 //            'rel' => 'module',

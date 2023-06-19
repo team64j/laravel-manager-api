@@ -18,8 +18,22 @@ use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
 
 class SystemInfoController extends Controller
 {
+    /**
+     * @var array
+     */
+    protected array $routes = [
+        [
+            'method' => 'get',
+            'uri' => 'phpinfo',
+            'action' => [self::class, 'phpinfo'],
+        ],
+    ];
+
+    /**
+     * @var array
+     */
     protected array $routeOptions = [
-        'only' => ['index']
+        'only' => ['index'],
     ];
 
     /**
@@ -41,7 +55,7 @@ class SystemInfoController extends Controller
             ],
             [
                 'name' => 'PHP Version',
-                'data.html' => '<a href="manager/phpinfo">' . phpversion() . '</a>',
+                'data.html' => '<a href="/phpinfo" style="text-decoration: underline">' . phpversion() . '</a>',
             ],
             [
                 'name' => Lang::get('global.access_permissions'),
@@ -124,11 +138,11 @@ class SystemInfoController extends Controller
         $path = URL::to('/') . str_replace([App::basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3));
 
         $style = '
-        <link rel="stylesheet" href="' . $path . '/public/assets/css/reset.css">
-        <link rel="stylesheet" href="' . $path . '/public/assets/css/phpinfo.css">
+        <link rel="stylesheet" href="' . $path . '/public/css/reset.css">
+        <link rel="stylesheet" href="' . $path . '/public/css/phpinfo.css">
         ';
 
-        return (string)preg_replace('/<head>(.*?)<\/head>/s', '$1' . $style, $info);
+        return (string) preg_replace('/<head>(.*?)<\/head>/s', '$1' . $style, $info);
     }
 
     protected function resolveCharset()

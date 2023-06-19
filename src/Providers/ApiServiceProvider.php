@@ -24,7 +24,7 @@ class ApiServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (!$this->app->runningInConsole()) {
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+            header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
             header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 
@@ -106,7 +106,7 @@ class ApiServiceProvider extends ServiceProvider
                             $routeName = $name . '.' . Str::snake($route['name'] ?? $route['action'][1] ?? '');
 
                             Route::name($routeName)->match(
-                                [$route['method']],
+                                (array) $route['method'],
                                 $path . '/' . $route['uri'],
                                 $route['action']
                             )->middleware($route['middleware'] ?? $guard . '.auth:' . $guard);

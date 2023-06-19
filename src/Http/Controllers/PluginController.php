@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SitePlugin;
 use Team64j\LaravelEvolution\Models\SystemEventname;
+use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\PluginRequest;
 use Team64j\LaravelManagerApi\Http\Resources\PluginResource;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
@@ -103,16 +104,13 @@ class PluginController extends Controller
                 }
             }
 
-            $item->setAttribute('#', [
-                'component' => 'EvoHelpIcon',
-                'attrs' => [
-                    'icon' => 'fa fa-plug fa-fw',
-                    'iconInner' => $item->locked ? 'fa fa-lock text-xs' : '',
-                    'noOpacity' => true,
-                    'fit' => true,
-                    'data' => $item->locked ? Lang::get('global.locked') : '',
-                ],
-            ]);
+            $item->setAttribute(
+                '#',
+                HelpIcon::make($item->locked ? Lang::get('global.locked') : '', 'fa fa-plug fa-fw')
+                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
+                    ->isOpacity(false)
+                    ->isFit()
+            );
 
             $item->setAttribute('category.name', $data['data'][$item->category]['name']);
             $item->setAttribute('description.html', $item->description);

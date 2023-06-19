@@ -7,7 +7,10 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Team64j\LaravelManagerApi\Components\Panel;
+use Team64j\LaravelManagerApi\Components\Section;
 use Team64j\LaravelManagerApi\Components\Tabs;
+use Team64j\LaravelManagerApi\Components\Template;
 
 class DashboardLayout extends Layout
 {
@@ -618,64 +621,25 @@ class DashboardLayout extends Layout
      */
     protected function getMessages(): array
     {
-        $data = [
-//            [
-//                'component' => 'Component3',
-//            ],
-//            [
-//                'component' => 'ComponentElementPlus',
-//            ],
-//            [
-//                'component' => 'ComponentEasyUi',
-//                'attrs' => [
-//                    'data' => collect(Lang::get('global'))->map(fn($v, $k) => ['key' => $k, 'value' => $v])->values()
-//                ]
-//            ],
-//            [
-//                'component' => [
-//                    'template' => '<button class="btn btn-green px-3 py-1 rounded mb-4" @click="click">{{ test }}</button>',
-//                    'data' => 'function () { return { test: 1 } }',
-//                    'methods' => [
-//                        'click' => 'function () { this.test++ }',
-//                    ],
-//                ],
-//            ],
+        return Template::make(
+            'pt-6 px-6',
             [
-                'component' => 'EvoTemplate',
-                'attrs' => [
-                    'class' => 'block alert-warning p-4 mb-3 rounded',
-                ],
-                'slots' => [
-                    'default' =>
-                        Lang::get('global.siteunavailable_message_default') .
-                        ' ' . Lang::get('global.update_settings_from_language') .
-                        '<a href="configuration" class="btn-sm btn-green ml-2">' . Lang::get('global.online') . '</a>',
-                ],
-            ],
-            [
-                'component' => 'EvoTemplate',
-                'attrs' => [
-                    'class' => 'block alert-warning p-4 mb-3 rounded',
-                ],
-                'slots' => [
-                    'default' =>
-                        '<strong>' . Lang::get('global.configcheck_warning') . '</strong>' .
-                        '<br>' . Lang::get('global.configcheck_installer') .
-                        '<br><br><i>' . Lang::get('global.configcheck_what') . '</i>' .
-                        '<br>' . Lang::get('global.configcheck_installer_msg'),
-                ],
-            ],
-        ];
-
-        return [
-            'component' => 'EvoTemplate',
-            'attrs' => [
-                'class' => 'pt-6 px-6',
-            ],
-            'slots' => [
-                'default' => $data,
-            ],
-        ];
+                Template::make(
+                    'block alert-warning p-4 mb-3 rounded',
+                    Lang::get('global.siteunavailable_message_default') .
+                    ' ' . Lang::get('global.update_settings_from_language') .
+                    '<a href="configuration" class="btn-sm btn-green ml-2">' . Lang::get('global.online') . '</a>'
+                ),
+                Template::make(
+                    'block alert-warning p-4 mb-3 rounded',
+                    '<strong>' . Lang::get('global.configcheck_warning') . '</strong>' .
+                    '<br>' . Lang::get('global.configcheck_installer') .
+                    '<br><br><i>' . Lang::get('global.configcheck_what') . '</i>' .
+                    '<br>' . Lang::get('global.configcheck_installer_msg')
+                ),
+            ]
+        )
+            ->toArray();
     }
 
     /**
@@ -683,186 +647,98 @@ class DashboardLayout extends Layout
      */
     protected function getWidgets(): array
     {
-        $data = [
-            [
-                'component' => 'EvoTemplate',
-                'attrs' => [
-                    'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
-                ],
-                'slots' => [
-                    'default' => [
+        return Template::make(
+            'flex flex-wrap items-baseline pt-6 px-4'
+        )
+            ->setSlot([
+                Template::make(
+                    'grow w-full lg:basis-1/2 px-2 pb-2',
+                    Section::make(
+                        'fa fa-home',
+                        Lang::get('global.welcome_title'),
+                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg transition',
+                        '<div class="data"><table>' .
+                        '<tr><td class="w-52">' . Lang::get('global.yourinfo_username') .
+                        '</td><td><strong>' .
+                        Auth::user()->username . '</strong></td></tr>' .
+                        '<tr><td>' . Lang::get('global.yourinfo_role') . '</td><td><strong>' .
+                        Auth::user()->attributes->userRole->name . '</strong></td></tr>' .
+                        '<tr><td>' . Lang::get('global.yourinfo_previous_login') . '</td><td><strong>' .
+                        Auth::user()->attributes->lastlogin . '</strong></td></tr>' .
+                        '<tr><td>' . Lang::get('global.yourinfo_total_logins') . '</td><td><strong>' .
+                        Auth::user()->attributes->logincount . '</strong></td></tr>' .
+                        '</table></div>'
+                    )
+                ),
+                Template::make(
+                    'grow w-full lg:basis-1/2 px-2 pb-2',
+                    Section::make(
+                        'fa fa-user',
+                        Lang::get('global.onlineusers_title'),
+                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg transition',
                         [
-                            'component' => 'EvoSection',
-                            'attrs' => [
-                                'label' => Lang::get('global.welcome_title'),
-                                'icon' => 'fa fa-home',
-                                'class' => 'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg transition',
-                            ],
-                            'slots' => [
-                                'default' => [
-                                    '<div class="data"><table>' .
-                                    '<tr><td class="w-52">' . Lang::get('global.yourinfo_username') .
-                                    '</td><td><strong>' .
-                                    Auth::user()->username . '</strong></td></tr>' .
-                                    '<tr><td>' . Lang::get('global.yourinfo_role') . '</td><td><strong>' .
-                                    Auth::user()->attributes->userRole->name . '</strong></td></tr>' .
-                                    '<tr><td>' . Lang::get('global.yourinfo_previous_login') . '</td><td><strong>' .
-                                    Auth::user()->attributes->lastlogin . '</strong></td></tr>' .
-                                    '<tr><td>' . Lang::get('global.yourinfo_total_logins') . '</td><td><strong>' .
-                                    Auth::user()->attributes->logincount . '</strong></td></tr>' .
-                                    '</table></div>',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'component' => 'EvoTemplate',
-                'attrs' => [
-                    'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
-                ],
-                'slots' => [
-                    'default' => [
-                        [
-                            'component' => 'EvoSection',
-                            'attrs' => [
-                                'label' => Lang::get('global.onlineusers_title'),
-                                'icon' => 'fa fa-user',
-                                'class' => 'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg transition',
-                            ],
-                            'slots' => [
-                                'default' => [
-                                    '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
-                                    date('H:i:s') . '</b>)</div>',
-                                    [
-                                        'component' => 'EvoPanel',
-                                        'attrs' => [
-                                            'id' => 'widgetUsers',
-                                            'class' => '-mx-4 -mb-4 pb-4 grow',
-                                            'url' => '/users/active',
-                                            'history' => false,
-                                            'route' => 'User',
-                                            'data' => [],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'component' => 'EvoTemplate',
-                'attrs' => [
-                    'class' => 'grow w-full px-2 pb-2',
-                ],
-                'slots' => [
-                    'default' => [
-                        [
-                            'component' => 'EvoSection',
-                            'attrs' => [
-                                'label' => Lang::get('global.activity_title'),
-                                'icon' => 'fa fa-pencil',
-                                'class' => 'hover:shadow-lg bg-white dark:bg-gray-700 transition overflow-hidden',
-                            ],
-                            'slots' => [
-                                'default' => [
-                                    [
-                                        'component' => 'EvoPanel',
-                                        'attrs' => [
-                                            'id' => 'widgetDocuments',
-                                            'class' => '-m-4 pb-4 grow',
-                                            'url' => '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon',
-                                            'history' => false,
-                                            'route' => 'Document',
-                                            'data' => [],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        if (Config::get('global.rss_url_news')) {
-            $data[] = [
-                'component' => 'EvoTemplate',
-                'attrs' => [
-                    'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
-                ],
-                'slots' => [
-                    'default' => [
-                        [
-                            'component' => 'EvoSection',
-                            'attrs' => [
-                                'label' => Lang::get('global.modx_news'),
-                                'icon' => 'fa fa-rss',
-                                'class' => 'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
-                            ],
-                            'slots' => [
-                                'default' => [
-                                    [
-                                        'component' => 'EvoPanel',
-                                        'attrs' => [
-                                            'id' => 'widgetNews',
-                                            'class' => '-m-4 grow h-80 overflow-auto',
-                                            'url' => '/dashboard/news',
-                                            'data' => [],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        if (Config::get('global.rss_url_security')) {
-            $data[] = [
-                'component' => 'EvoTemplate',
-                'attrs' => [
-                    'class' => 'grow w-full lg:basis-1/2 px-2 pb-2',
-                ],
-                'slots' => [
-                    'default' => [
-                        [
-                            'component' => 'EvoSection',
-                            'attrs' => [
-                                'label' => Lang::get('global.modx_security_notices'),
-                                'icon' => 'fa fa-exclamation-triangle',
-                                'class' => 'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
-                            ],
-                            'slots' => [
-                                'default' => [
-                                    [
-                                        'component' => 'EvoPanel',
-                                        'attrs' => [
-                                            'id' => 'widgetNews',
-                                            'class' => '-m-4 grow h-80 overflow-auto',
-                                            'url' => '/dashboard/news-security',
-                                            'data' => [],
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        return [
-            'component' => 'EvoTemplate',
-            'attrs' => [
-                'class' => 'flex flex-wrap items-baseline pt-6 px-4',
-            ],
-            'slots' => [
-                'default' => $data,
-            ],
-        ];
+                            '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
+                            date('H:i:s') . '</b>)</div>',
+                            Panel::make()
+                                ->setId('widgetUsers')
+                                ->setClass('-mx-4 -mb-4 pb-4 grow')
+                                ->setUrl('/users/active')
+                                ->setHistory(false)
+                                ->setRoute('User'),
+                        ]
+                    )
+                ),
+                Template::make(
+                    'grow w-full px-2 pb-2',
+                    Section::make(
+                        'fa fa-pencil',
+                        Lang::get('global.activity_title'),
+                        'hover:shadow-lg bg-white dark:bg-gray-700 transition overflow-hidden',
+                        Panel::make()
+                            ->setId('widgetDocuments')
+                            ->setHistory(false)
+                            ->setClass('-m-4 pb-4 grow')
+                            ->setUrl(
+                                '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
+                            )
+                            ->setRoute('Document')
+                    )
+                ),
+            ])
+            ->if(
+                Config::get('global.rss_url_news'),
+                fn(Template $template) => $template->putSlot(
+                    Template::make(
+                        'grow w-full lg:basis-1/2 px-2 pb-2',
+                        Section::make(
+                            'fa fa-rss',
+                            Lang::get('global.modx_news'),
+                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
+                            Panel::make()
+                                ->setId('widgetNews')
+                                ->setClass('-m-4 grow h-80 overflow-auto')
+                                ->setUrl('/dashboard/news')
+                        )
+                    )
+                )
+            )
+            ->if(
+                Config::get('global.rss_url_security'),
+                fn(Template $template) => $template->putSlot(
+                    Template::make(
+                        'grow w-full lg:basis-1/2 px-2 pb-2',
+                        Section::make(
+                            'fa fa-exclamation-triangle',
+                            Lang::get('global.modx_security_notices'),
+                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
+                            Panel::make()
+                                ->setId('widgetNewsSecurity')
+                                ->setClass('-m-4 grow h-80 overflow-auto')
+                                ->setUrl('/dashboard/news-security')
+                        )
+                    )
+                )
+            )
+            ->toArray();
     }
 }

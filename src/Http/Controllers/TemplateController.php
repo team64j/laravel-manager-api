@@ -15,6 +15,7 @@ use Team64j\LaravelEvolution\Models\SiteTemplate;
 use Team64j\LaravelEvolution\Models\SiteTmplvar;
 use Team64j\LaravelEvolution\Models\SiteTmplvarTemplate;
 use Team64j\LaravelManagerApi\Components\Checkbox;
+use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
@@ -107,17 +108,17 @@ class TemplateController extends Controller
                 }
             }
 
-            $item->setAttribute('#', [
-                'component' => 'EvoHelpIcon',
-                'attrs' => [
-                    'icon' => $item->id == Config::get('global.default_template') ? 'fa fa-home fa-fw text-blue-500'
-                        : 'fa fa-newspaper fa-fw',
-                    'iconInner' => $item->locked ? 'fa fa-lock text-xs' : '',
-                    'noOpacity' => true,
-                    'fit' => true,
-                    'data' => $item->locked ? Lang::get('global.locked') : '',
-                ],
-            ]);
+            $item->setAttribute(
+                '#',
+                HelpIcon::make(
+                    $item->locked ? Lang::get('global.locked') : '',
+                    $item->id == Config::get('global.default_template') ? 'fa fa-home fa-fw text-blue-500'
+                        : 'fa fa-newspaper fa-fw'
+                )
+                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
+                    ->isOpacity(false)
+                    ->isFit()
+            );
 
             $item->setAttribute('category.name', $data[$item->category]['name']);
 
@@ -126,16 +127,13 @@ class TemplateController extends Controller
             if (file_exists($viewPath . $file)) {
                 $item->setAttribute(
                     'file',
-                    [
-                        'component' => 'EvoHelpIcon',
-                        'attrs' => [
-                            'icon' => 'fa-fw far fa-file-code',
-                            'noOpacity' => true,
-                            'fit' => true,
-                            'data' => Lang::get('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath .
-                                $file,
-                        ],
-                    ]
+                    HelpIcon::make(
+                        Lang::get('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath . $file,
+                        'fa-fw far fa-file-code'
+                    )
+                        ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
+                        ->isOpacity(false)
+                        ->isFit()
                 );
             }
 
@@ -205,7 +203,7 @@ class TemplateController extends Controller
 
         SiteTmplvarTemplate::query()->upsert($tvsTemplates, 'tmplvarid');
 
-        return $this->show($request, (string)$template->getKey(), $layout);
+        return $this->show($request, (string) $template->getKey(), $layout);
     }
 
     /**
@@ -235,7 +233,7 @@ class TemplateController extends Controller
 
         SiteTmplvarTemplate::query()->upsert($tvsTemplates, 'tmplvarid');
 
-        return $this->show($request, (string)$template->getKey(), $layout);
+        return $this->show($request, (string) $template->getKey(), $layout);
     }
 
     /**
@@ -285,7 +283,7 @@ class TemplateController extends Controller
                             'id' => 'new',
                         ],
                     ],
-                ]
+                ],
             ],
             $result->items()
         );
@@ -492,7 +490,7 @@ class TemplateController extends Controller
                         'folder' => true,
                     ];
 
-                    if (in_array((int)$item->id, $opened, true)) {
+                    if (in_array((int) $item->id, $opened, true)) {
                         $result = $item->templates()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());
