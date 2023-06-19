@@ -421,7 +421,7 @@ class BootstrapController extends Controller
                                     ],
                                 ],
                             ],
-                            'href' => '/',
+                            'href' => \url('/'),
                             'target' => '_blank',
                         ],
                         [
