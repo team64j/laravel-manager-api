@@ -1,21 +1,21 @@
 @tailwind components;
 @tailwind screens;
 @tailwind utilities;
-.alert {
+.evo-alert {
     @apply rounded p-4
 }
-.alert-blue {
+.evo-alert-blue {
     @apply bg-blue-500/40
 }
-.alert-info {
+.evo-alert-info {
     @apply bg-blue-500/40
 }
-.alert-error {
+.evo-alert-error {
     @apply bg-rose-600/40
 }
-.alert-warning {
+.evo-alert-warning {
     @apply bg-amber-500/40
 }
-.alert code {
+.evo-alert code {
     @apply text-fuchsia-500 dark:text-fuchsia-400
 }

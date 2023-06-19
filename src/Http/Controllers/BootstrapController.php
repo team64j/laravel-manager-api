@@ -104,7 +104,7 @@ class BootstrapController extends Controller
         $assets[] = [
             'rel' => 'manifest',
             'source' => str_replace(
-                $publicFolder . '/../',
+                '/../',
                 \url('/'),
                 Vite::useBuildDirectory('../' . $packageFolder . '/dist')
                     ->withEntryPoints([

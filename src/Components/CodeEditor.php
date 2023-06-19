@@ -26,7 +26,7 @@ class CodeEditor extends Component
                 'class' => $class,
                 'config' => [
                     [
-                        'component' => 'EvoCodemirror',
+                        'component' => 'Codemirror',
                         'name' => 'Codemirror',
                     ],
                 ],
