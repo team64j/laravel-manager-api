@@ -138,8 +138,8 @@ class SystemInfoController extends Controller
         $path = URL::to('/') . str_replace([App::basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3));
 
         $style = '
-        <link rel="stylesheet" href="' . $path . '/public/css/reset.css">
-        <link rel="stylesheet" href="' . $path . '/public/css/phpinfo.css">
+        <link rel="stylesheet" href="' . $path . '/resources/css/phpinfo-reset.css?v=' . time() . '">
+        <link rel="stylesheet" href="' . $path . '/resources/css/phpinfo-main.css?v=' . time() . '">
         ';
 
         return (string) preg_replace('/<head>(.*?)<\/head>/s', '$1' . $style, $info);

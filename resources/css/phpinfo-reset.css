@@ -1,0 +1,19 @@
+/**
+ * Scrollbar
+ */
+::-webkit-scrollbar, *::-webkit-scrollbar, ::-webkit-scrollbar-thumb, *::-webkit-scrollbar-thumb {
+    width: 0.5rem;
+    height: 0.5rem;
+    background-color: transparent;
+    border-radius: .5rem;
+    border: .01rem solid transparent
+}
+::-webkit-scrollbar-thumb, *::-webkit-scrollbar-thumb, :hover::-webkit-scrollbar-thumb, *:hover::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 0 1rem rgba(150, 150, 150, 0.5)
+}
+::-webkit-scrollbar-thumb:hover, *::-webkit-scrollbar-thumb:hover {
+    box-shadow: inset 0 0 0 1rem rgba(150, 150, 150, 0.7)
+}
+::-webkit-scrollbar-corner, *::-webkit-scrollbar-corner {
+    background-color: transparent
+}

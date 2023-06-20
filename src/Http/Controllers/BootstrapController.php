@@ -431,11 +431,11 @@ class BootstrapController extends Controller
                             'name' => '[+user.username+]',
                             'data' => [
                                 [
-                                    'key' => 'change_password',
+                                    'key' => 'password',
                                     'icon' => 'fa fa-lock',
                                     'name' => '[%change_password%]',
                                     'click' => [
-                                        'name' => 'PasswordChange',
+                                        'name' => 'Password',
                                     ],
                                     'permissions' => ['change_password'],
                                 ],

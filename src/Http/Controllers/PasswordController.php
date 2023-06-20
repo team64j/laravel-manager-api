@@ -9,4 +9,14 @@ class PasswordController extends Controller
     protected array $routeOptions = [
         'only' => ['index']
     ];
+
+    public function index()
+    {
+        return [];
+    }
+
+    public function store()
+    {
+        return [];
+    }
 }

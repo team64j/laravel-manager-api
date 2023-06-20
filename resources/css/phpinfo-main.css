@@ -1,0 +1,64 @@
+html {
+    font-size: 18px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}
+body {
+    margin: 0;
+    padding: 0 1rem;
+    font-size: 1rem;
+}
+.h {
+    background-color: #99c;
+}
+.e {
+    background-color: #ccf;
+}
+.v {
+    background-color: #ddd;
+}
+table tr:nth-child(even) .e {
+    background-color: #babaee;
+}
+table tr:nth-child(even) .v {
+    background-color: #c7c6c6;
+}
+.dark body {
+    color: #d1d5db;
+    background-color: #202329;
+}
+.dark table {
+    background-color: #2e323a;
+    box-shadow: 1px 2px 3px #222;
+}
+.dark .h {
+    background-color: slateblue;
+}
+.dark .e {
+    background-color: darkslateblue;
+}
+.dark .v {
+    background-color: #2e323a;
+}
+.dark table tr:nth-child(even) .e {
+    background-color: #3d3477;
+}
+.dark table tr:nth-child(even) .v {
+    background-color: #262b33;
+}
+.dark hr {
+    background-color: #666;
+}
+hr {
+    width: 100%;
+}
+table td, table th {
+    border: none;
+}
+table {
+    width: 100%;
+    border-radius: .125rem;
+    overflow: hidden;
+}
+body > div > table:first-of-type h1 {
+    font-size: 1.5rem;
+}

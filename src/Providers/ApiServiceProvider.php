@@ -61,61 +61,63 @@ class ApiServiceProvider extends ServiceProvider
      */
     protected function registerRoutes(): void
     {
-        $apiPath = Config::get('manager-api.uri', 'manager/api');
-
-        Route::prefix($apiPath)
-            ->name('manager.api')
-            ->any('/', fn() => abort(404));
-
-        Route::prefix($apiPath)
-            ->name('manager.api.')
-            ->group(function (): void {
-                $controllersNamespace = 'Team64j\LaravelManagerApi\Http\Controllers';
-                $guard = Config::get('manager-api.guard.provider');
-
-                Collection::make(
-                    require_once $this->app->basePath('vendor/composer/autoload_classmap.php')
-                )
-                    ->keys()
-                    ->filter(fn($controller) => Str::contains($controller, $controllersNamespace))
-                    ->map(function ($controller) use ($controllersNamespace, $guard) {
-                        $path = Str::of($controller)
-                            ->replace($controllersNamespace, '\\')
-                            ->replaceLast('Controller', '')
-                            ->snake()
-                            ->slug();
-
-                        if ($path->isEmpty()) {
-                            return;
-                        }
-
-                        /** @var ControllerContract $controllerClass */
-                        $controllerClass = $this->app->make($controller);
-
-                        if (!$controllerClass instanceof ControllerContract) {
-                            return;
-                        }
-
-                        $path = $controllerClass->getRoute() ?: $path->toString();
-                        $name = str_replace('/', '.', $path);
-
-                        foreach ($controllerClass->getRoutes() as $route) {
-                            $routeName = $name . '.' . Str::snake($route['name'] ?? $route['action'][1] ?? '');
-
-                            Route::name($routeName)->match(
-                                (array) $route['method'],
-                                $path . '/' . $route['uri'],
-                                $route['action']
-                            )->middleware($route['middleware'] ?? $guard . '.auth:' . $guard);
-                        }
-
-                        Route::middleware([$guard . '.auth:' . $guard])->apiResource(
-                            $path,
-                            $controller,
-                            $controllerClass->getRouteOptions()
-                        );
-                    });
-            });
+        $this->loadRoutesFrom(dirname(__DIR__, 2) . '/routes/api.php');
+//
+//        $apiPath = Config::get('manager-api.uri', 'manager/api');
+//
+//        Route::prefix($apiPath)
+//            ->name('manager.api')
+//            ->any('/', fn() => abort(404));
+//
+//        Route::prefix($apiPath)
+//            ->name('manager.api.')
+//            ->group(function (): void {
+//                $controllersNamespace = 'Team64j\LaravelManagerApi\Http\Controllers';
+//                $guard = Config::get('manager-api.guard.provider');
+//
+//                Collection::make(
+//                    require_once $this->app->basePath('vendor/composer/autoload_classmap.php')
+//                )
+//                    ->keys()
+//                    ->filter(fn($controller) => Str::contains($controller, $controllersNamespace))
+//                    ->map(function ($controller) use ($controllersNamespace, $guard) {
+//                        $path = Str::of($controller)
+//                            ->replace($controllersNamespace, '\\')
+//                            ->replaceLast('Controller', '')
+//                            ->snake()
+//                            ->slug();
+//
+//                        if ($path->isEmpty()) {
+//                            return;
+//                        }
+//
+//                        /** @var ControllerContract $controllerClass */
+//                        $controllerClass = $this->app->make($controller);
+//
+//                        if (!$controllerClass instanceof ControllerContract) {
+//                            return;
+//                        }
+//
+//                        $path = $controllerClass->getRoute() ?: $path->toString();
+//                        $name = str_replace('/', '.', $path);
+//
+//                        foreach ($controllerClass->getRoutes() as $route) {
+//                            $routeName = $name . '.' . Str::snake($route['name'] ?? $route['action'][1] ?? '');
+//
+//                            Route::name($routeName)->match(
+//                                (array) $route['method'],
+//                                $path . '/' . $route['uri'],
+//                                $route['action']
+//                            )->middleware($route['middleware'] ?? $guard . '.auth:' . $guard);
+//                        }
+//
+//                        Route::middleware([$guard . '.auth:' . $guard])->apiResource(
+//                            $path,
+//                            $controller,
+//                            $controllerClass->getRouteOptions()
+//                        );
+//                    });
+//            });
     }
 
     /**

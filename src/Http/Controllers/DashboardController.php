@@ -32,17 +32,17 @@ class DashboardController extends Controller
         [
             'method' => 'get',
             'uri' => 'sidebar',
-            'action' => [self::class, 'getSidebar'],
+            'action' => [self::class, 'sidebar'],
         ],
         [
             'method' => 'get',
             'uri' => 'news',
-            'action' => [self::class, 'getNews'],
+            'action' => [self::class, 'news'],
         ],
         [
             'method' => 'get',
             'uri' => 'news-security',
-            'action' => [self::class, 'getNewsSecurity'],
+            'action' => [self::class, 'newsSecurity'],
         ],
     ];
 
@@ -123,7 +123,7 @@ class DashboardController extends Controller
      *
      * @return array[]
      */
-    public function getNews(DashboardRequest $request): array
+    public function news(DashboardRequest $request): array
     {
         $data = Cache::remember('cms.dashboard.news', 86400, function () {
             $data = [];
@@ -178,7 +178,7 @@ class DashboardController extends Controller
      *
      * @return array[]
      */
-    public function getNewsSecurity(DashboardRequest $request): array
+    public function newsSecurity(DashboardRequest $request): array
     {
         $data = Cache::remember('cms.dashboard.news-security', 86400, function () {
             $data = [];
@@ -234,7 +234,7 @@ class DashboardController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function getSidebar(DashboardRequest $request, DashboardLayout $layout): AnonymousResourceCollection
+    public function sidebar(DashboardRequest $request, DashboardLayout $layout): AnonymousResourceCollection
     {
         return DashboardResource::collection([
             'data' => [],

@@ -36,7 +36,7 @@ class UserController extends Controller
         [
             'method' => 'get',
             'uri' => 'active',
-            'action' => [self::class, 'getActive'],
+            'action' => [self::class, 'active'],
         ],
     ];
 
@@ -249,7 +249,7 @@ class UserController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function getActive(UserRequest $request): AnonymousResourceCollection
+    public function active(UserRequest $request): AnonymousResourceCollection
     {
         $result = ActiveUserSession::query()
             ->select(['internalKey', 'internalKey as id', 'ip', 'lasthit'])
