@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FileRequest;
 use Team64j\LaravelManagerApi\Http\Resources\FileResource;
+use Team64j\LaravelManagerApi\Layouts\FileLayout;
 
 class FileController extends Controller
 {
@@ -80,10 +81,11 @@ class FileController extends Controller
      * )
      * @param FileRequest $request
      * @param string $file
+     * @param FileLayout $layout
      *
      * @return FileResource
      */
-    public function show(FileRequest $request, string $file): FileResource
+    public function show(FileRequest $request, string $file, FileLayout $layout): FileResource
     {
         $data = [];
         $root = realpath(Config::get('global.filemanager_path', App::basePath('../')));
@@ -107,7 +109,8 @@ class FileController extends Controller
             $data['basename'] = File::basename($path);
             $data['type'] = File::mimeType($path);
             $data['ext'] = File::extension($path);
-            $data['lang'] = '';
+            $data['lang'] = $this->getLang($data['ext'], $data['type']);
+            $data['size'] = $this->getSize(File::size($path));
 
             $content = File::get($path);
 
@@ -122,7 +125,13 @@ class FileController extends Controller
             }
         }
 
-        return FileResource::make($data);
+        return FileResource::make($data)
+            ->additional([
+                'layout' => $layout->default($data),
+                'meta' => [
+                    'tab' => $layout->titleDefault($data['basename']),
+                ],
+            ]);
     }
 
     /**
@@ -307,5 +316,61 @@ class FileController extends Controller
     protected function getDate(int $date): string
     {
         return Carbon::createFromFormat('U', (string) $date)->format('d-m-Y H:i:s');
+    }
+
+    /**
+     * @param string $ext
+     * @param string $type
+     *
+     * @return string
+     */
+    protected function getLang(string $ext, string $type = ''): string
+    {
+        $lang = '';
+
+        switch ($ext) {
+            case 'css':
+            case 'less':
+            case 'cass':
+                $lang = 'css';
+                break;
+
+            case 'vue':
+                $lang = 'vue';
+                break;
+
+            case 'js':
+            case 'json':
+                $lang = 'javascript';
+                break;
+
+            case 'xml':
+            case 'svg':
+                $lang = 'xml';
+                break;
+
+            case 'php':
+                $lang = 'php';
+                break;
+
+            case 'htm':
+            case 'html':
+                $lang = 'html';
+                break;
+
+            case 'md':
+                $lang = 'markdown';
+                break;
+
+            case 'sql':
+                $lang = 'sql';
+                break;
+        }
+
+        if (!$lang && $type == 'application/json') {
+            $lang = 'javascript';
+        }
+
+        return $lang;
     }
 }

@@ -45,8 +45,12 @@ Route::prefix($apiPath)
     ->middleware($authMiddleware)
     ->group(fn() => [
         /** Auth */
-        Route::post('auth', [AuthController::class, 'login'])
-            ->withoutMiddleware($authMiddleware),
+        Route::prefix('auth')
+            ->group(fn() => [
+                Route::post('/', [AuthController::class, 'login'])
+                    ->withoutMiddleware($authMiddleware),
+                Route::get('refresh', [AuthController::class, 'refresh']),
+            ]),
 
         /** Boostrap */
         Route::prefix('bootstrap')

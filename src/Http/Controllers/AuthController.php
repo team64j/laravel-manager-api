@@ -78,6 +78,14 @@ class AuthController extends Controller
     /**
      * @return JsonResponse
      */
+    public function refresh(): JsonResponse
+    {
+        return $this->createNewToken(auth(Config::get('manager-api.guard.provider'))->refresh());
+    }
+
+    /**
+     * @return JsonResponse
+     */
     public function user(): JsonResponse
     {
         return response()->json(auth(Config::get('manager-api.guard.provider'))->user());
