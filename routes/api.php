@@ -34,29 +34,32 @@ use Team64j\LaravelManagerApi\Http\Controllers\UserController;
 use Team64j\LaravelManagerApi\Http\Controllers\WorkspaceController;
 
 $apiPath = Config::get('manager-api.uri', 'manager/api');
-$guard = Config::get('manager-api.guard.provider');
+$authMiddleware = Config::get('manager-api.guard.provider') . '.auth:' . Config::get('manager-api.guard.provider');
 
 Route::prefix($apiPath)
     ->name('manager.api')
     ->any('/', [OpenApiController::class, 'index']);
 
 Route::prefix($apiPath)
-    ->name('manager.login')
-    ->post('auth', [AuthController::class, 'login']);
-
-Route::prefix($apiPath)
     ->name('manager.api.')
-    ->middleware($guard . '.auth:' . $guard)
+    ->middleware($authMiddleware)
     ->group(fn() => [
+        /** Auth */
+        Route::post('auth', [AuthController::class, 'login'])
+            ->withoutMiddleware($authMiddleware),
+
         /** Boostrap */
-        Route::get('bootstrap', [BootstrapController::class, 'index']),
-        Route::get(
-            'bootstrap/select-pages',
-            [BootstrapController::class, 'selectPages']
-        ),
+        Route::prefix('bootstrap')
+            ->group(fn() => [
+                Route::get('/', [BootstrapController::class, 'index']),
+                Route::get('select-pages', [BootstrapController::class, 'selectPages']),
+            ]),
 
         /** Cache */
-        Route::get('cache', [CacheController::class, 'index']),
+        Route::prefix('cache')
+            ->group(fn() => [
+                Route::get('/', [CacheController::class, 'index']),
+            ]),
 
         /** Categories */
         Route::prefix('categories')
