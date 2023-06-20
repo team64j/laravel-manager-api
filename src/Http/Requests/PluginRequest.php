@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Team64j\LaravelManagerApi\Http\Controllers\PluginController;
+use Illuminate\Support\Facades\Gate;
 
 class PluginRequest extends FormRequest
 {
@@ -15,28 +14,13 @@ class PluginRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        switch ($this->route()->getActionMethod()) {
-            case 'index':
-            case 'show':
-            case 'list':
-            case 'tree':
-                Auth::user()->hasPermissionsOrFail(['edit_plugin']);
-                break;
-
-            case 'store':
-                Auth::user()->hasPermissionsOrFail(['new_plugin']);
-                break;
-
-            case 'update':
-                Auth::user()->hasPermissionsOrFail(['save_plugin']);
-                break;
-
-            case 'destroy':
-                Auth::user()->hasPermissionsOrFail(['delete_plugin']);
-                break;
-        }
-
-        return true;
+        return match ($this->route()->getActionMethod()) {
+            'index' => Gate::check('edit_plugin'),
+            'store' => Gate::check('new_plugin'),
+            'update' => Gate::check('save_plugin'),
+            'destroy' => Gate::check('delete_plugin'),
+            default => Gate::any(['edit_plugin', 'new_plugin', 'save_plugin', 'delete_plugin']),
+        };
     }
 
     /**
@@ -46,28 +30,4 @@ class PluginRequest extends FormRequest
     {
         return [];
     }
-
-//    /**
-//     * @return array
-//     */
-//    public static function getRoutes(): array
-//    {
-//        return [
-//            [
-//                'method' => 'get',
-//                'uri' => 'sort',
-//                'action' => [PluginController::class, 'sort'],
-//            ],
-//            [
-//                'method' => 'get',
-//                'uri' => 'categories',
-//                'action' => [PluginController::class, 'categories'],
-//            ],
-//            [
-//                'method' => 'get',
-//                'uri' => 'tree',
-//                'action' => [PluginController::class, 'tree'],
-//            ],
-//        ];
-//    }
 }

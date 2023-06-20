@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Throwable;
 
@@ -18,17 +17,13 @@ class TemplateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return throw_unless(
-            match ($this->route()->getActionMethod()) {
-                'index', 'show', 'list', 'tree', 'tvs' => Auth::user()->can('edit_template'),
-                'store' => Auth::user()->can('new_template'),
-                'update' => Auth::user()->can('save_template'),
-                'destroy' => Auth::user()->can('delete_template'),
-                default => true,
-            },
-            AuthorizationException::class,
-            Lang::get('global.error_no_privileges')
-        );
+        return match ($this->route()->getActionMethod()) {
+            'index' => Gate::check('edit_template'),
+            'store' => Gate::check('new_template'),
+            'update' => Gate::check('save_template'),
+            'destroy' => Gate::check('delete_template'),
+            default => Gate::any(['edit_template', 'new_template', 'save_template', 'delete_template']),
+        };
     }
 
     /**
@@ -36,7 +31,7 @@ class TemplateRequest extends FormRequest
      */
     public function rules(): array
     {
-        if (in_array($this->route()->getActionMethod(), ['index', 'show', 'list', 'tree', 'select', 'tvs'])) {
+        if ($this->isMethod('get')) {
             return [];
         }
 

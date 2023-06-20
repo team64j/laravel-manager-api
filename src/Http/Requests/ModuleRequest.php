@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Team64j\LaravelManagerApi\Http\Controllers\ModuleController;
+use Illuminate\Support\Facades\Gate;
 
 class ModuleRequest extends FormRequest
 {
@@ -15,33 +14,15 @@ class ModuleRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        switch ($this->route()->getActionMethod()) {
-            case 'exec':
-            case 'execList':
-                Auth::user()->hasPermissionsOrFail(['exec_module']);
-                break;
-
-            case 'index':
-            case 'show':
-            case 'list':
-            case 'tree':
-                Auth::user()->hasPermissionsOrFail(['edit_module']);
-                break;
-
-            case 'store':
-                Auth::user()->hasPermissionsOrFail(['new_module']);
-                break;
-
-            case 'update':
-                Auth::user()->hasPermissionsOrFail(['save_module']);
-                break;
-
-            case 'destroy':
-                Auth::user()->hasPermissionsOrFail(['delete_module']);
-                break;
-        }
-
-        return true;
+        return match ($this->route()->getActionMethod()) {
+            'index' => Gate::check('edit_module'),
+            'store' => Gate::check('new_module'),
+            'update' => Gate::check('save_module'),
+            'destroy' => Gate::check('delete_module'),
+            'exec' => Gate::check('list_module'),
+            'execRun' => Gate::check('exec_module'),
+            default => Gate::any(['edit_module', 'new_module', 'save_module', 'delete_module']),
+        };
     }
 
     /**
@@ -51,28 +32,4 @@ class ModuleRequest extends FormRequest
     {
         return [];
     }
-
-//    /**
-//     * @return array
-//     */
-//    public static function getRoutes(): array
-//    {
-//        return [
-//            [
-//                'method' => 'get',
-//                'uri' => 'exec',
-//                'action' => [ModuleController::class, 'exec'],
-//            ],
-//            [
-//                'method' => 'get',
-//                'uri' => 'categories',
-//                'action' => [ModuleController::class, 'categories'],
-//            ],
-//            [
-//                'method' => 'get',
-//                'uri' => 'tree',
-//                'action' => [ModuleController::class, 'tree'],
-//            ],
-//        ];
-//    }
 }

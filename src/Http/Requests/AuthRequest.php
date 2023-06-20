@@ -16,8 +16,6 @@ class AuthRequest extends FormRequest
     public ?string $token = null;
 
     /**
-     * Determine if the user is authorized to make this request.
-     *
      * @return bool
      */
     public function authorize(): bool
@@ -26,8 +24,6 @@ class AuthRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array
      */
     public function rules(): array
@@ -39,8 +35,6 @@ class AuthRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
-     *
      * @return void
      *
      * @throws ValidationException
@@ -61,8 +55,6 @@ class AuthRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
-     *
      * @return void
      *
      * @throws ValidationException
@@ -86,8 +78,6 @@ class AuthRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
-     *
      * @return string
      */
     public function throttleKey(): string

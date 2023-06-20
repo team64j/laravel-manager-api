@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Team64j\LaravelManagerApi\Http\Controllers\SnippetController;
+use Illuminate\Support\Facades\Gate;
 
 class SnippetRequest extends FormRequest
 {
@@ -15,28 +14,13 @@ class SnippetRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        switch ($this->route()->getActionMethod()) {
-            case 'index':
-            case 'show':
-            case 'list':
-            case 'tree':
-                Auth::user()->hasPermissionsOrFail(['edit_snippet']);
-                break;
-
-            case 'store':
-                Auth::user()->hasPermissionsOrFail(['new_snippet']);
-                break;
-
-            case 'update':
-                Auth::user()->hasPermissionsOrFail(['save_snippet']);
-                break;
-
-            case 'destroy':
-                Auth::user()->hasPermissionsOrFail(['delete_snippet']);
-                break;
-        }
-
-        return true;
+        return match ($this->route()->getActionMethod()) {
+            'index' => Gate::check('edit_snippet'),
+            'store' => Gate::check('new_snippet'),
+            'update' => Gate::check('save_snippet'),
+            'destroy' => Gate::check('delete_snippet'),
+            default => Gate::any(['edit_snippet', 'new_snippet', 'save_snippet', 'delete_snippet']),
+        };
     }
 
     /**
@@ -46,23 +30,4 @@ class SnippetRequest extends FormRequest
     {
         return [];
     }
-
-//    /**
-//     * @return array[]
-//     */
-//    public static function getRoutes(): array
-//    {
-//        return [
-//            [
-//                'method' => 'get',
-//                'uri' => 'categories',
-//                'action' => [SnippetController::class, 'categories'],
-//            ],
-//            [
-//                'method' => 'get',
-//                'uri' => 'tree',
-//                'action' => [SnippetController::class, 'tree'],
-//            ],
-//        ];
-//    }
 }

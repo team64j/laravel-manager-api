@@ -26,14 +26,11 @@ class ApiServiceProvider extends ServiceProvider
         if (!$this->app->runningInConsole()) {
             header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
             header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
-            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+            header('Access-Control-Allow-Methods: GET, PUT, POST, PATCH, DELETE, OPTIONS');
 
             $this->registerConfig();
             $this->registerLang();
-
-            Permissions::all()->map(function ($permission) {
-                Gate::define($permission->key, fn(User $user) => $user->hasPermissionOrFail($permission));
-            });
+            $this->registerPermissions();
         }
     }
 
@@ -161,5 +158,15 @@ class ApiServiceProvider extends ServiceProvider
                 Str::substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? $this->app['config']['app.locale'], 0, 2)
             )
         );
+    }
+
+    /**
+     * @return void
+     */
+    protected function registerPermissions(): void
+    {
+        Permissions::all()->map(function ($permission) {
+            Gate::define($permission->key, fn(User $user) => $user->hasPermissionOrFail($permission));
+        });
     }
 }

@@ -57,7 +57,7 @@ class CodeEditor extends Component
     public function setLanguage(string $value): static
     {
         foreach ($this->attributes['attrs']['config'] as &$attr) {
-            if ($attr['component'] == 'EvoCodemirror') {
+            if ($attr['component'] == 'Codemirror') {
                 $attr['lang'] = $value;
             }
         }

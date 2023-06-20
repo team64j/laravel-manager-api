@@ -264,7 +264,7 @@ class DocumentController extends Controller
     }
 
     /**
-     * @OA\Put(
+     * @OA\Patch(
      *     path="/document/{id}",
      *     summary="Обновление документа",
      *     tags={"Document"},
@@ -283,13 +283,15 @@ class DocumentController extends Controller
      *      )
      * )
      * @param DocumentRequest $request
-     * @param SiteContent $document
+     * @param string $id
      * @param DocumentLayout $layout
      *
      * @return DocumentResource
      */
-    public function update(DocumentRequest $request, SiteContent $document, DocumentLayout $layout): DocumentResource
+    public function update(DocumentRequest $request, string $id, DocumentLayout $layout): DocumentResource
     {
+        /** @var SiteContent $document */
+        $document = SiteContent::query()->findOrFail($id);
         $document->update($request->validated());
 
         return $this->getDocument($request, $document, $layout);
@@ -310,13 +312,13 @@ class DocumentController extends Controller
      *      )
      * )
      * @param DocumentRequest $request
-     * @param SiteContent $document
+     * @param string $id
      *
      * @return Response
      */
-    public function destroy(DocumentRequest $request, SiteContent $document): Response
+    public function destroy(DocumentRequest $request, string $id): Response
     {
-        $document->delete();
+        SiteContent::query()->findOrFail($id)->delete();
 
         return response()->noContent();
     }
@@ -383,7 +385,9 @@ class DocumentController extends Controller
                 case 'checkbox':
                 case 'listbox-multiple':
                     if ($tv['elements']) {
-                        $value = $tv['value'] == '' ? [] : explode('||', $value);
+                        if (!is_array($value)) {
+                            $value = $tv['value'] == '' ? [] : explode('||', $value);
+                        }
                     }
 
                     break;

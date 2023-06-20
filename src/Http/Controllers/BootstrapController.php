@@ -98,13 +98,13 @@ class BootstrapController extends Controller
     {
         $assets = [];
 
-        $packageFolder = str_replace([app()->basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3));
-        $publicFolder = trim(str_replace(app()->basePath(), '', app()->publicPath()), DIRECTORY_SEPARATOR);
+        $packageFolder = trim(str_replace([app()->basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3)), '/');
+        $publicFolder = trim(str_replace([app()->basePath(), DIRECTORY_SEPARATOR], ['', '/'], app()->publicPath()), '/');
 
         $assets[] = [
             'rel' => 'manifest',
             'source' => str_replace(
-                '/../',
+                $publicFolder . '/..',
                 \url('/'),
                 Vite::useBuildDirectory('../' . $packageFolder . '/dist')
                     ->withEntryPoints([

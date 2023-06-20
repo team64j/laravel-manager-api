@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class ConfigurationRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class ConfigurationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::check('settings');
     }
 
     /**
