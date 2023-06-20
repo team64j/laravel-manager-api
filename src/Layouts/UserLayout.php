@@ -19,21 +19,21 @@ class UserLayout extends Layout
      */
     public function default(User $model = null): array
     {
-        $data[] = ActionsButtons::make()
-            ->setCancel()
-            ->setSaveAnd()
-            ->if(
-                $model->getKey(),
-                fn($actions) => $actions->setDelete()->setCopy()
-            );
+        return [
+            ActionsButtons::make()
+                ->setCancel()
+                ->setSaveAnd()
+                ->if(
+                    $model->getKey(),
+                    fn($actions) => $actions->setDelete()->setCopy()
+                ),
 
-        $data[] = Title::make()
-            ->setModel('username')
-            ->setTitle(Lang::get('global.new_user'))
-            ->setIcon('fa fa-user-circle')
-            ->setId($model->getKey());
-
-        return $data;
+            Title::make()
+                ->setModel('username')
+                ->setTitle(Lang::get('global.new_user'))
+                ->setIcon('fa fa-user-circle')
+                ->setId($model->getKey()),
+        ];
     }
 
     /**
@@ -41,57 +41,57 @@ class UserLayout extends Layout
      */
     public function list(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setNew(
-                Lang::get('global.new_user'),
-                'User',
-                'btn-green'
-            );
+        return [
+            ActionsButtons::make()
+                ->setNew(
+                    Lang::get('global.new_user'),
+                    'User',
+                    'btn-green'
+                ),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.users'))
-            ->setIcon('fa fa-users');
+            Title::make()
+                ->setTitle(Lang::get('global.users'))
+                ->setIcon('fa fa-users'),
 
-        $data[] = Panel::make()
-            ->setId('users')
-            ->setModel('data')
-            ->setRoute('User')
-            ->setHistory(true)
-            ->setClass('grow py-4')
-            ->addColumn(
-                'id',
-                Lang::get('global.id'),
-                ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
-                true
-            )
-            ->addColumn('username', Lang::get('global.name'), ['fontWeight' => 500], true)
-            ->addColumn('fullname', Lang::get('global.user_full_name'), [], true)
-            ->addColumn('email', Lang::get('global.email'), [], true)
-            ->addColumn(['role', 'rolename'], Lang::get('global.role'), ['width' => '10rem'], true)
-            ->addColumn(
-                'lastlogin',
-                Lang::get('global.user_prevlogin'),
-                ['width' => '12rem', 'textAlign' => 'center'],
-                true
-            )
-            ->addColumn(
-                'logincount',
-                Lang::get('global.user_logincount'),
-                ['width' => '10rem', 'textAlign' => 'center'],
-                true
-            )
-            ->addColumn(
-                'blocked',
-                Lang::get('global.user_block'),
-                ['width' => '10rem', 'textAlign' => 'center'],
-                true,
-                [
-                    0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                    1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                ]
-            );
-
-        return $data;
+            Panel::make()
+                ->setId('users')
+                ->setModel('data')
+                ->setRoute('User')
+                ->setHistory(true)
+                ->setClass('grow py-4')
+                ->addColumn(
+                    'id',
+                    Lang::get('global.id'),
+                    ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
+                    true
+                )
+                ->addColumn('username', Lang::get('global.name'), ['fontWeight' => 500], true)
+                ->addColumn('fullname', Lang::get('global.user_full_name'), [], true)
+                ->addColumn('email', Lang::get('global.email'), [], true)
+                ->addColumn(['role', 'rolename'], Lang::get('global.role'), ['width' => '10rem'], true)
+                ->addColumn(
+                    'lastlogin',
+                    Lang::get('global.user_prevlogin'),
+                    ['width' => '12rem', 'textAlign' => 'center'],
+                    true
+                )
+                ->addColumn(
+                    'logincount',
+                    Lang::get('global.user_logincount'),
+                    ['width' => '10rem', 'textAlign' => 'center'],
+                    true
+                )
+                ->addColumn(
+                    'blocked',
+                    Lang::get('global.user_block'),
+                    ['width' => '10rem', 'textAlign' => 'center'],
+                    true,
+                    [
+                        0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                        1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                    ]
+                ),
+        ];
     }
 
     /**

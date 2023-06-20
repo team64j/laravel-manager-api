@@ -18,50 +18,50 @@ class RolePermissionLayout extends Layout
      */
     public function list(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setNew(
-                Lang::get('global.new_permission'),
-                'RolePermission',
-                'btn-green'
-            );
+        return [
+            ActionsButtons::make()
+                ->setNew(
+                    Lang::get('global.new_permission'),
+                    'RolePermission',
+                    'btn-green'
+                ),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.role_management_title'))
-            ->setIcon('fa fa-legal');
+            Title::make()
+                ->setTitle(Lang::get('global.role_management_title'))
+                ->setIcon('fa fa-legal'),
 
-        $data[] = Tabs::make()
-            ->setId('userManagement')
-            ->setHistory('element')
-            ->addTab('users', Lang::get('global.role_role_management'), 'fa fa-legal', 'py-4')
-            ->addTab('categories', Lang::get('global.category_heading'), 'fa fa-object-group', 'py-4')
-            ->addTab('permissions', Lang::get('global.manage_permission'), 'fa fa-user-tag', 'py-4')
-            ->addSlot(
-                'permissions',
-                Panel::make()
-                    ->setId('permissions')
-                    ->setModel('data')
-                    ->setRoute('RolePermission')
-                    ->setHistory(true)
-                    ->addColumn(
-                        'id',
-                        Lang::get('global.id'),
-                        ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
-                    )
-                    ->addColumn('name', Lang::get('global.role_name'), ['fontWeight' => 500])
-                    ->addColumn('key', Lang::get('global.key_desc'), ['width' => '5rem'])
-                    ->addColumn(
-                        'disabled',
-                        Lang::get('global.disabled'),
-                        ['width' => '7rem', 'textAlign' => 'center'],
-                        false,
-                        [
-                            0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                            1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                        ]
-                    )
-            );
-
-        return $data;
+            Tabs::make()
+                ->setId('userManagement')
+                ->setHistory('element')
+                ->addTab('users', Lang::get('global.role_role_management'), 'fa fa-legal', 'py-4')
+                ->addTab('categories', Lang::get('global.category_heading'), 'fa fa-object-group', 'py-4')
+                ->addTab('permissions', Lang::get('global.manage_permission'), 'fa fa-user-tag', 'py-4')
+                ->addSlot(
+                    'permissions',
+                    Panel::make()
+                        ->setId('permissions')
+                        ->setModel('data')
+                        ->setRoute('RolePermission')
+                        ->setHistory(true)
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
+                        )
+                        ->addColumn('name', Lang::get('global.role_name'), ['fontWeight' => 500])
+                        ->addColumn('key', Lang::get('global.key_desc'), ['width' => '5rem'])
+                        ->addColumn(
+                            'disabled',
+                            Lang::get('global.disabled'),
+                            ['width' => '7rem', 'textAlign' => 'center'],
+                            false,
+                            [
+                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                            ]
+                        )
+                ),
+        ];
     }
 
     /**
@@ -82,14 +82,14 @@ class RolePermissionLayout extends Layout
      */
     public function default(Permissions $model = null): array
     {
-        $data[] = Title::make()
-            ->setTitle(
-                Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key)
-                    : Lang::get('global.new_permission')
-            )
-            ->setIcon('fa fa-user-tag');
-
-        return $data;
+        return [
+            Title::make()
+                ->setTitle(
+                    Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key)
+                        : Lang::get('global.new_permission')
+                )
+                ->setIcon('fa fa-user-tag')
+        ];
     }
 
     /**

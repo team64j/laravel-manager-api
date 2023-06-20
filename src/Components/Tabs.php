@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Components;
 
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class Tabs extends Component
 {
@@ -177,10 +177,6 @@ class Tabs extends Component
     public function addSlot(string $id, array | Component $data = [], bool | array | string $permissions = true): static
     {
         if ($this->hasPermissions($permissions) && !isset($this->attributes['slots'][$id])) {
-            if ($data instanceof Component) {
-                $data = $data->toArray();
-            }
-
             $this->attributes['slots'][$id] = $data;
         }
 
@@ -197,10 +193,6 @@ class Tabs extends Component
     public function putSlot(string $id, array | Component $data = [], bool | array | string $permissions = true): static
     {
         if ($this->hasPermissions($permissions)) {
-            if ($data instanceof Component) {
-                $data = $data->toArray();
-            }
-
             $this->attributes['slots'][$id][] = $data;
         }
 
@@ -230,6 +222,6 @@ class Tabs extends Component
             return $permissions;
         }
 
-        return Auth::user()->hasPermissions((array) $permissions);
+        return Gate::check($permissions);
     }
 }

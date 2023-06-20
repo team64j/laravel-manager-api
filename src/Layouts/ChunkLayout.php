@@ -20,24 +20,20 @@ class ChunkLayout extends Layout
      */
     public function default(SiteHtmlSnippet $model = null): array
     {
-        $actions = ActionsButtons::make()
-            ->setCancel()
-            ->setSaveAnd();
-
-        if ($model->getKey()) {
-            $actions->setDelete()
-                ->setCopy();
-        }
-
-        $title = Title::make()
-            ->setModel('name')
-            ->setTitle(Lang::get('global.new_htmlsnippet'))
-            ->setIcon('fa fa-th-large')
-            ->setId($model->getKey());
-
         return [
-            $actions,
-            $title,
+            ActionsButtons::make()
+                ->setCancel()
+                ->setSaveAnd()
+                ->if(
+                    $model->getKey(),
+                    fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                ),
+
+            Title::make()
+                ->setModel('name')
+                ->setTitle(Lang::get('global.new_htmlsnippet'))
+                ->setIcon('fa fa-th-large')
+                ->setId($model->getKey()),
         ];
     }
 
@@ -56,109 +52,109 @@ class ChunkLayout extends Layout
 
     public function list(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setNew(
-                Lang::get('global.new_htmlsnippet'),
-                'Chunk',
-                'btn-green',
-                'fa fa-plus'
-            );
+        return [
+            ActionsButtons::make()
+                ->setNew(
+                    Lang::get('global.new_htmlsnippet'),
+                    'Chunk',
+                    'btn-green',
+                    'fa fa-plus'
+                ),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.htmlsnippets'))
-            ->setIcon('fa fa-th-large')
-            ->setHelp(Lang::get('global.htmlsnippet_management_msg'));
+            Title::make()
+                ->setTitle(Lang::get('global.htmlsnippets'))
+                ->setIcon('fa fa-th-large')
+                ->setHelp(Lang::get('global.htmlsnippet_management_msg')),
 
-        $data[] = Tabs::make()
-            ->setId('elements')
-            ->setHistory('element')
-            ->addTab('templates', Lang::get('global.templates'), 'fa fa-newspaper', 'py-4', ['edit_template'])
-            ->addTab(
-                'tvs',
-                Lang::get('global.tmplvars'),
-                'fa fa-th-large',
-                'py-4',
-                ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
-            )
-            ->addTab('chunks', Lang::get('global.htmlsnippets'), 'fa fa-th-large', 'py-4', ['edit_chunk'])
-            ->addTab('snippets', Lang::get('global.snippets'), 'fa fa-code', 'py-4', ['edit_snippet'])
-            ->addTab('plugins', Lang::get('global.plugins'), 'fa fa-plug', 'py-4', ['edit_plugin'])
-            ->addTab('modules', Lang::get('global.modules'), 'fa fa-cubes', 'py-4', ['edit_module'])
-            ->addTab(
-                'categories',
-                Lang::get('global.category_management'),
-                'fa fa-object-group',
-                'py-4',
-                ['category_manager']
-            )
-            ->addSlot(
-                'chunks',
-                Panel::make()
-                    ->setId('chunks')
-                    ->setModel('data')
-                    ->setData([])
-                    ->setRoute('Chunk')
-                    ->setHistory(true)
-                    ->addColumn('#', null, ['width' => '3rem'])
-                    ->addColumn(
-                        'id',
-                        Lang::get('global.id'),
-                        ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
-                        true
-                    )
-                    ->addColumn(
-                        'name',
-                        Lang::get('global.htmlsnippet_name'),
-                        ['width' => '20rem', 'fontWeight' => 500],
-                        true
-                    )
-                    ->addColumn('description', Lang::get('global.htmlsnippet_desc'))
-                    ->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
-                    ->addColumn(
-                        'locked',
-                        Lang::get('global.locked'),
-                        ['width' => '10rem', 'textAlign' => 'center'],
-                        true,
-                        [
-                            0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                            1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                        ]
-                    )
-                    ->addColumn(
-                        'disabled',
-                        Lang::get('global.disabled'),
-                        ['width' => '10rem', 'textAlign' => 'center'],
-                        true,
-                        [
-                            0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                            1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                        ]
-                    )
-                    ->addColumn(
-                        'actions',
-                        Lang::get('global.onlineusers_action'),
-                        ['width' => '10rem', 'textAlign' => 'center'],
-                        false,
-                        [],
-                        [
-                            'copy' => [
-                                'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                'help' => Lang::get('global.duplicate'),
-                                'helpFit' => true,
-                                'noOpacity' => true,
-                            ],
-                            'delete' => [
-                                'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                'help' => Lang::get('global.delete'),
-                                'helpFit' => true,
-                                'noOpacity' => true,
-                            ],
-                        ]
-                    ),
-                ['edit_chunk']
-            );
-
-        return $data;
+            Tabs::make()
+                ->setId('elements')
+                ->setHistory('element')
+                ->addTab('templates', Lang::get('global.templates'), 'fa fa-newspaper', 'py-4', ['edit_template'])
+                ->addTab(
+                    'tvs',
+                    Lang::get('global.tmplvars'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
+                )
+                ->addTab('chunks', Lang::get('global.htmlsnippets'), 'fa fa-th-large', 'py-4', ['edit_chunk'])
+                ->addTab('snippets', Lang::get('global.snippets'), 'fa fa-code', 'py-4', ['edit_snippet'])
+                ->addTab('plugins', Lang::get('global.plugins'), 'fa fa-plug', 'py-4', ['edit_plugin'])
+                ->addTab('modules', Lang::get('global.modules'), 'fa fa-cubes', 'py-4', ['edit_module'])
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    'py-4',
+                    ['category_manager']
+                )
+                ->addSlot(
+                    'chunks',
+                    Panel::make()
+                        ->setId('chunks')
+                        ->setModel('data')
+                        ->setData([])
+                        ->setRoute('Chunk')
+                        ->setHistory(true)
+                        ->addColumn('#', null, ['width' => '3rem'])
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
+                            true
+                        )
+                        ->addColumn(
+                            'name',
+                            Lang::get('global.htmlsnippet_name'),
+                            ['width' => '20rem', 'fontWeight' => 500],
+                            true
+                        )
+                        ->addColumn('description', Lang::get('global.htmlsnippet_desc'))
+                        ->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
+                        ->addColumn(
+                            'locked',
+                            Lang::get('global.locked'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            true,
+                            [
+                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                            ]
+                        )
+                        ->addColumn(
+                            'disabled',
+                            Lang::get('global.disabled'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            true,
+                            [
+                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                            ]
+                        )
+                        ->addColumn(
+                            'actions',
+                            Lang::get('global.onlineusers_action'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            false,
+                            [],
+                            [
+                                'copy' => [
+                                    'icon' => 'far fa-clone fa-fw hover:text-blue-500',
+                                    'help' => Lang::get('global.duplicate'),
+                                    'helpFit' => true,
+                                    'noOpacity' => true,
+                                ],
+                                'delete' => [
+                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
+                                    'help' => Lang::get('global.delete'),
+                                    'helpFit' => true,
+                                    'noOpacity' => true,
+                                ],
+                            ]
+                        ),
+                    ['edit_chunk']
+                ),
+        ];
     }
 
     /**

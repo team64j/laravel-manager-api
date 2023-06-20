@@ -17,37 +17,37 @@ class EventLogLayout extends Layout
      */
     public function list(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setClear(Lang::get('global.clear_log'), '', 'btn-red', 'fa fa-trash');
+        return [
+            ActionsButtons::make()
+                ->setClear(Lang::get('global.clear_log'), '', 'btn-red', 'fa fa-trash'),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.eventlog_viewer'))
-            ->setIcon('fa fa-exclamation-triangle');
+            Title::make()
+                ->setTitle(Lang::get('global.eventlog_viewer'))
+                ->setIcon('fa fa-exclamation-triangle'),
 
-        $data[] = Panel::make()
-            ->setModel('data')
-            ->setClass('py-4')
-            ->setRoute('EventLog')
-            ->addColumn(
-                'type',
-                Lang::get('global.type'),
-                [
-                    'textAlign' => 'center',
-                    'width' => '10rem',
-                ],
-                false,
-                [
-                    1 => '<i class="fa fa-info-circle text-blue-500"></i>',
-                    2 => '<i class="fa fa-exclamation-triangle text-amber-400"></i>',
-                    3 => '<i class="fa fa-times-circle text-rose-500"></i>',
-                ]
-            )
-            ->addColumn('source', Lang::get('global.source'))
-            ->addColumn('createdon', Lang::get('global.date'), ['textAlign' => 'center', 'width' => '20rem'])
-            ->addColumn('eventid', Lang::get('global.event_id'), ['textAlign' => 'center', 'width' => '10rem'])
-            ->addColumn(['user', 'users.username'], Lang::get('global.user'), ['width' => '20rem']);
-
-        return $data;
+            Panel::make()
+                ->setModel('data')
+                ->setClass('py-4')
+                ->setRoute('EventLog')
+                ->addColumn(
+                    'type',
+                    Lang::get('global.type'),
+                    [
+                        'textAlign' => 'center',
+                        'width' => '10rem',
+                    ],
+                    false,
+                    [
+                        1 => '<i class="fa fa-info-circle text-blue-500"></i>',
+                        2 => '<i class="fa fa-exclamation-triangle text-amber-400"></i>',
+                        3 => '<i class="fa fa-times-circle text-rose-500"></i>',
+                    ]
+                )
+                ->addColumn('source', Lang::get('global.source'))
+                ->addColumn('createdon', Lang::get('global.date'), ['textAlign' => 'center', 'width' => '20rem'])
+                ->addColumn('eventid', Lang::get('global.event_id'), ['textAlign' => 'center', 'width' => '10rem'])
+                ->addColumn(['user', 'users.username'], Lang::get('global.user'), ['width' => '20rem']),
+        ];
     }
 
     /**
@@ -57,17 +57,17 @@ class EventLogLayout extends Layout
      */
     public function default(EventLog $model = null): array
     {
-        $data[] = ActionsButtons::make()
-            ->setDelete()
-            ->setDeleteClass('btn-red')
-            ->setCancel();
+        return [
+            ActionsButtons::make()
+                ->setDelete()
+                ->setDeleteClass('btn-red')
+                ->setCancel(),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.eventlog'))
-            ->setIcon('fa fa-exclamation-triangle');
+            Title::make()
+                ->setTitle(Lang::get('global.eventlog'))
+                ->setIcon('fa fa-exclamation-triangle'),
 
-        $data[] = '
-            <div class="py-4 bg-white dark:bg-gray-700">
+            '<div class="py-4 bg-white dark:bg-gray-700">
               <div class="data data-event-log mb-4">
                 <table>
                   <thead>
@@ -94,9 +94,8 @@ class EventLogLayout extends Layout
         
               <div class="data data-event-log mb-4">' . $model->description . '</div>
         
-            </div>';
-
-        return $data;
+            </div>',
+        ];
     }
 
     /**

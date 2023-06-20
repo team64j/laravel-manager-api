@@ -14,11 +14,11 @@ class ScheduleLayout extends Layout
      */
     public function default(): array
     {
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.site_schedule'))
-            ->setIcon('far fa-calendar');
-
-        return $data;
+        return [
+            Title::make()
+                ->setTitle(Lang::get('global.site_schedule'))
+                ->setIcon('far fa-calendar')
+        ];
     }
 
     public function title(): array

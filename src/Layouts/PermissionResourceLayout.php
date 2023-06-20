@@ -17,50 +17,51 @@ class PermissionResourceLayout extends Layout
      */
     public function list(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setNew(
-                Lang::get('global.create_new'),
-                'PermissionResource',
-                'btn-green'
-            );
+        return [
+            ActionsButtons::make()
+                ->setNew(
+                    Lang::get('global.create_new'),
+                    'PermissionResource',
+                    'btn-green'
+                ),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.manage_permission'))
-            ->setIcon('fa fa-male')
-            ->setHelp(Lang::get('global.access_permissions_resources_tab'));
+            Title::make()
+                ->setTitle(Lang::get('global.manage_permission'))
+                ->setIcon('fa fa-male')
+                ->setHelp(Lang::get('global.access_permissions_resources_tab')),
 
-        $data[] = Tabs::make()
-            ->setId('permissions')
-            ->setHistory('element')
-            ->addTab('groups', Lang::get('global.web_access_permissions_user_groups'), null, 'py-4')
-            ->addTab('resources', Lang::get('global.access_permissions_resource_groups'), null, 'py-4')
-            ->addTab('relations', Lang::get('global.access_permissions_links'), null, 'py-4')
-            ->addSlot(
-                'resources',
-                Panel::make()
-                    ->setModel('data')
-                    ->setId('resources')
-                    ->setHistory(true)
-                    ->setRoute('PermissionResource')
-                    ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
-                    ->addColumn('documents', Lang::get('global.access_permissions_resources_in_group'))->addColumn(
-                        'actions',
-                        Lang::get('global.mgrlog_action'),
-                        ['width' => '3rem', 'textAlign' => 'center'],
-                        false,
-                        [],
-                        [
-                            'delete' => [
-                                'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                'help' => Lang::get('global.delete'),
-                                'helpFit' => true,
-                                'noOpacity' => true,
-                            ],
-                        ]
-                    )
-            );
-
-        return $data;
+            Tabs::make()
+                ->setId('permissions')
+                ->setHistory('element')
+                ->addTab('groups', Lang::get('global.web_access_permissions_user_groups'), null, 'py-4')
+                ->addTab('resources', Lang::get('global.access_permissions_resource_groups'), null, 'py-4')
+                ->addTab('relations', Lang::get('global.access_permissions_links'), null, 'py-4')
+                ->addSlot(
+                    'resources',
+                    Panel::make()
+                        ->setModel('data')
+                        ->setId('resources')
+                        ->setHistory(true)
+                        ->setRoute('PermissionResource')
+                        ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
+                        ->addColumn('documents', Lang::get('global.access_permissions_resources_in_group'))
+                        ->addColumn(
+                            'actions',
+                            Lang::get('global.mgrlog_action'),
+                            ['width' => '3rem', 'textAlign' => 'center'],
+                            false,
+                            [],
+                            [
+                                'delete' => [
+                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
+                                    'help' => Lang::get('global.delete'),
+                                    'helpFit' => true,
+                                    'noOpacity' => true,
+                                ],
+                            ]
+                        )
+                ),
+        ];
     }
 
     /**
@@ -81,11 +82,11 @@ class PermissionResourceLayout extends Layout
      */
     public function default($model = null): array
     {
-        $data[] = Title::make()
-            ->setTitle($model->name ?: Lang::get('global.manage_permission'))
-            ->setIcon('fa fa-male');
-
-        return $data;
+        return [
+            Title::make()
+                ->setTitle($model->name ?: Lang::get('global.manage_permission'))
+                ->setIcon('fa fa-male')
+        ];
     }
 
     /**

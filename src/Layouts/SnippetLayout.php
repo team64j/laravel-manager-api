@@ -20,24 +20,20 @@ class SnippetLayout extends Layout
      */
     public function default(SiteSnippet $model = null): array
     {
-        $actions = ActionsButtons::make()
-            ->setCancel()
-            ->setSaveAnd();
-
-        if ($model->getKey()) {
-            $actions->setDelete()
-                ->setCopy();
-        }
-
-        $title = Title::make()
-            ->setModel('name')
-            ->setTitle(Lang::get('global.new_snippet'))
-            ->setIcon('fa fa-code')
-            ->setId($model->getKey());
-
         return [
-            $actions,
-            $title,
+            ActionsButtons::make()
+                ->setCancel()
+                ->setSaveAnd()
+                ->if(
+                    $model->getKey(),
+                    fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                ),
+
+            Title::make()
+                ->setModel('name')
+                ->setTitle(Lang::get('global.new_snippet'))
+                ->setIcon('fa fa-code')
+                ->setId($model->getKey()),
         ];
     }
 
@@ -56,28 +52,29 @@ class SnippetLayout extends Layout
 
     public function list(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setNew(
-                Lang::get('global.new_snippet'),
-                'Snippet',
-                'btn-green',
-                'fa fa-plus'
-            );
+        return [
+            ActionsButtons::make()
+                ->setNew(
+                    Lang::get('global.new_snippet'),
+                    'Snippet',
+                    'btn-green',
+                    'fa fa-plus'
+                ),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.snippets'))
-            ->setIcon('fa fa-code')
-            ->setHelp(Lang::get('global.snippet_management_msg'));
+            Title::make()
+                ->setTitle(Lang::get('global.snippets'))
+                ->setIcon('fa fa-code')
+                ->setHelp(Lang::get('global.snippet_management_msg')),
 
-        $data[] = Tabs::make()
-            ->setId('elements')
-            ->setHistory('element')
-            ->addTab('templates', Lang::get('global.templates'), 'fa fa-newspaper', 'py-4', ['edit_template'])
-            ->addTab(
-                'tvs',
-                Lang::get('global.tmplvars'),
-                'fa fa-th-large',
-                'py-4',
+            Tabs::make()
+                ->setId('elements')
+                ->setHistory('element')
+                ->addTab('templates', Lang::get('global.templates'), 'fa fa-newspaper', 'py-4', ['edit_template'])
+                ->addTab(
+                    'tvs',
+                    Lang::get('global.tmplvars'),
+                    'fa fa-th-large',
+                    'py-4',
                 ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
             )
             ->addTab('chunks', Lang::get('global.htmlsnippets'), 'fa fa-th-large', 'py-4', ['edit_chunk'])
@@ -156,9 +153,8 @@ class SnippetLayout extends Layout
                         ]
                     ),
                 ['edit_snippet']
-            );
-
-        return $data;
+            ),
+        ];
     }
 
     /**

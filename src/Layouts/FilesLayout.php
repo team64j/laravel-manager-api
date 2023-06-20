@@ -14,10 +14,10 @@ class FilesLayout extends Layout
      */
     public function default(): array
     {
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.files_management'))
-            ->setIcon('far fa-folder-open');
-
-        return $data;
+        return [
+            Title::make()
+                ->setTitle(Lang::get('global.files_management'))
+                ->setIcon('far fa-folder-open'),
+        ];
     }
 }

@@ -17,76 +17,76 @@ class WorkspaceLayout extends Layout
      */
     public function default(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setCancel()
-            ->setSave();
+        return [
+            ActionsButtons::make()
+                ->setCancel()
+                ->setSave(),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.settings_ui'))
-            ->setIcon('fa fa-eye');
+            Title::make()
+                ->setTitle(Lang::get('global.settings_ui'))
+                ->setIcon('fa fa-eye'),
 
-        $data[] = Tabs::make()
-            ->setId('workspace')
-            ->addTab('sidebar', 'Sidebar', null, 'p-6')
-            ->addSlot('sidebar', [
-                Checkbox::make(
-                    'data.sidebar.templates',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.templates') . '"'
-                )
-                    ->setCheckedValue(0, 1),
+            Tabs::make()
+                ->setId('workspace')
+                ->addTab('sidebar', 'Sidebar', null, 'p-6')
+                ->addSlot('sidebar', [
+                    Checkbox::make(
+                        'data.sidebar.templates',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.templates') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
 
-                Checkbox::make(
-                    'data.sidebar.tvs',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.tmplvars') . '"'
-                )
-                    ->setCheckedValue(0, 1),
+                    Checkbox::make(
+                        'data.sidebar.tvs',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.tmplvars') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
 
-                Checkbox::make(
-                    'data.sidebar.chunks',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.htmlsnippets') . '"'
-                )
-                    ->setCheckedValue(0, 1),
+                    Checkbox::make(
+                        'data.sidebar.chunks',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.htmlsnippets') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
 
-                Checkbox::make(
-                    'data.sidebar.snippets',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.snippets') . '"'
-                )
-                    ->setCheckedValue(0, 1),
+                    Checkbox::make(
+                        'data.sidebar.snippets',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.snippets') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
 
-                Checkbox::make(
-                    'data.sidebar.plugins',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.plugins') . '"'
-                )
-                    ->setCheckedValue(0, 1),
+                    Checkbox::make(
+                        'data.sidebar.plugins',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.plugins') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
 
-                Checkbox::make(
-                    'data.sidebar.modules',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.modules') . '"'
-                )
-                    ->setCheckedValue(0, 1),
+                    Checkbox::make(
+                        'data.sidebar.modules',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.modules') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
 
-                Checkbox::make(
-                    'data.sidebar.categories',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.category_management') . '"'
-                )
-                    ->setCheckedValue(0, 1),
+                    Checkbox::make(
+                        'data.sidebar.categories',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.category_management') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
 
-                Checkbox::make(
-                    'data.sidebar.files',
-                    Lang::get('global.disable') . ' "' . Lang::get('global.files_files') . '"'
-                )
-                    ->setCheckedValue(0, 1),
-            ])
-            ->addTab('topmenu', 'Top menu', null, 'p-6')
-            ->addSlot('topmenu', [
-                [
-                    'component' => 'EvoMenuBuilder',
-                    'model' => 'data.topmenu.data',
-                ],
-            ])
-            ->addTab('dashboard', 'Dashboard', null, 'p-6');
-
-        return $data;
+                    Checkbox::make(
+                        'data.sidebar.files',
+                        Lang::get('global.disable') . ' "' . Lang::get('global.files_files') . '"'
+                    )
+                        ->setCheckedValue(0, 1),
+                ])
+                ->addTab('topmenu', 'Top menu', null, 'p-6')
+                ->addSlot('topmenu', [
+                    [
+                        'component' => 'EvoMenuBuilder',
+                        'model' => 'data.topmenu.data',
+                    ],
+                ])
+                ->addTab('dashboard', 'Dashboard', null, 'p-6'),
+        ];
     }
 
     /**

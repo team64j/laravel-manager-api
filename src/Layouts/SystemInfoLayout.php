@@ -15,16 +15,16 @@ class SystemInfoLayout extends Layout
      */
     public function default(): array
     {
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.view_sysinfo'))
-            ->setIcon('fa fa-info');
+        return [
+            Title::make()
+                ->setTitle(Lang::get('global.view_sysinfo'))
+                ->setIcon('fa fa-info'),
 
-        $data[] = Panel::make()
-            ->setId('system-info')
-            ->setModel('data')
-            ->setClass('py-4');
-
-        return $data;
+            Panel::make()
+                ->setId('system-info')
+                ->setModel('data')
+                ->setClass('py-4'),
+        ];
     }
 
     /**

@@ -27,32 +27,32 @@ class ConfigurationLayout extends Layout
      */
     public function default(): array
     {
-        $data[] = ActionsButtons::make()
-            ->setCancel()
-            ->setSave();
+        return [
+            ActionsButtons::make()
+                ->setCancel()
+                ->setSave(),
 
-        $data[] = Title::make()
-            ->setTitle(Lang::get('global.settings_title'))
-            ->setIcon('fa fa-sliders');
+            Title::make()
+                ->setTitle(Lang::get('global.settings_title'))
+                ->setIcon('fa fa-sliders'),
 
-        $data[] = Tabs::make()
-            ->setId('configuration')
-            ->addTab('tab1', Lang::get('global.settings_site'), null, 'flex flex-wrap py-4 mb-4')
-            ->addTab('tab2', Lang::get('global.settings_furls'), null, 'flex flex-wrap py-4 mb-4')
-            ->addTab('tab3', Lang::get('global.settings_ui'), null, 'flex flex-wrap py-4 mb-4')
-            ->addTab('tab4', Lang::get('global.settings_security'), null, 'flex flex-wrap py-4 mb-4')
-            ->addTab('tab5', Lang::get('global.settings_misc'), null, 'flex flex-wrap py-4 mb-4')
-            ->addTab('tab6', Lang::get('global.settings_KC'), null, 'flex flex-wrap py-4 mb-4')
-            ->addTab('tab7', Lang::get('global.settings_email_templates'), null, 'flex flex-wrap py-4 mb-4')
-            ->addSlot('tab1', $this->tab1())
-            ->addSlot('tab2', $this->tab2())
-            ->addSlot('tab3', $this->tab3())
-            ->addSlot('tab4', $this->tab4())
-            ->addSlot('tab5', $this->tab5())
-            ->addSlot('tab6', $this->tab6())
-            ->addSlot('tab7', $this->tab7());
-
-        return $data;
+            Tabs::make()
+                ->setId('configuration')
+                ->addTab('tab1', Lang::get('global.settings_site'), null, 'flex flex-wrap py-4 mb-4')
+                ->addTab('tab2', Lang::get('global.settings_furls'), null, 'flex flex-wrap py-4 mb-4')
+                ->addTab('tab3', Lang::get('global.settings_ui'), null, 'flex flex-wrap py-4 mb-4')
+                ->addTab('tab4', Lang::get('global.settings_security'), null, 'flex flex-wrap py-4 mb-4')
+                ->addTab('tab5', Lang::get('global.settings_misc'), null, 'flex flex-wrap py-4 mb-4')
+                ->addTab('tab6', Lang::get('global.settings_KC'), null, 'flex flex-wrap py-4 mb-4')
+                ->addTab('tab7', Lang::get('global.settings_email_templates'), null, 'flex flex-wrap py-4 mb-4')
+                ->addSlot('tab1', $this->tab1())
+                ->addSlot('tab2', $this->tab2())
+                ->addSlot('tab3', $this->tab3())
+                ->addSlot('tab4', $this->tab4())
+                ->addSlot('tab5', $this->tab5())
+                ->addSlot('tab6', $this->tab6())
+                ->addSlot('tab7', $this->tab7()),
+        ];
     }
 
     /**
