@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Generator;
@@ -23,19 +22,6 @@ use OpenApi\Generator;
  */
 class OpenApiController extends Controller
 {
-    /**
-     * @return array[]
-     */
-    public function getRouteOptions(): array
-    {
-        $guard = Config::get('manager-api.guard.provider');
-
-        return [
-            'only' => ['index'],
-            'excluded_middleware' => [$guard . '.auth:' . $guard],
-        ];
-    }
-
     /**
      * @return OpenApi|null
      */

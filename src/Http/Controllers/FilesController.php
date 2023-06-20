@@ -18,24 +18,6 @@ use Team64j\LaravelManagerApi\Http\Resources\FilesResource;
 class FilesController extends Controller
 {
     /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['index', 'show'],
-    ];
-
-    /**
      * @OA\Get(
      *     path="/files",
      *     summary="Получение списка файлов из корневой директории",

@@ -18,29 +18,6 @@ use Team64j\LaravelManagerApi\Models\UserAttribute;
 class BootstrapController extends Controller
 {
     /**
-     * @var string
-     */
-    protected string $route = 'bootstrap';
-
-    /**
-     * @var array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'select-pages',
-            'action' => [self::class, 'selectPages'],
-        ],
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['index']
-    ];
-
-    /**
      * @OA\Get(
      *     path="/bootstrap",
      *     summary="Глобальные данные для формирования админ панели",

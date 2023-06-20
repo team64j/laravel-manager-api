@@ -15,12 +15,6 @@ class SearchController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'search';
-
-    protected array $routeOptions = [
-        'only' => ['index']
-    ];
-
     /**
      * @param SearchRequest $request
      *

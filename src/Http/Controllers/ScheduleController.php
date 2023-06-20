@@ -11,10 +11,6 @@ use Team64j\LaravelManagerApi\Layouts\ScheduleLayout;
 
 class ScheduleController extends Controller
 {
-    protected array $routeOptions = [
-        'only' => ['index']
-    ];
-
     /**
      * @param ScheduleRequest $request
      * @param ScheduleLayout $layout

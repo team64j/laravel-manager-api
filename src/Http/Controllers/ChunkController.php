@@ -23,24 +23,6 @@ class ChunkController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'chunks';
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-    ];
-
     /**
      * @OA\Get(
      *     path="/chunks",

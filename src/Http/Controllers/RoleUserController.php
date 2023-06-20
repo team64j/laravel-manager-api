@@ -16,8 +16,6 @@ class RoleUserController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'roles/users';
-
     /**
      * @param RoleUserRequest $request
      * @param RoleUserLayout $layout

@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\DashboardRequest;
@@ -24,34 +18,6 @@ use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 class DashboardController extends Controller
 {
     use PaginationTrait;
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'sidebar',
-            'action' => [self::class, 'sidebar'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'news',
-            'action' => [self::class, 'news'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'news-security',
-            'action' => [self::class, 'newsSecurity'],
-        ],
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['index']
-    ];
 
     /**
      * @OA\Get(

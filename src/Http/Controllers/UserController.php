@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Models\ActiveUserSession;
 use Team64j\LaravelEvolution\Models\User;
@@ -21,24 +20,6 @@ use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 class UserController extends Controller
 {
     use PaginationTrait;
-
-    protected string $route = 'users';
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'active',
-            'action' => [self::class, 'active'],
-        ],
-    ];
 
     /**
      * @param UserRequest $request
@@ -76,8 +57,6 @@ class UserController extends Controller
         if (!in_array($dir, ['asc', 'desc'])) {
             $dir = 'asc';
         }
-
-        DB::enableQueryLog();
 
         $a = new UserAttribute();
         $u = new User();

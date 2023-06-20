@@ -19,8 +19,6 @@ class RolePermissionController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'roles/permissions';
-
     /**
      * @param RolePermissionRequest $request
      * @param RolePermissionLayout $layout

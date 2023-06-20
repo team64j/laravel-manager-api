@@ -16,24 +16,6 @@ use Team64j\LaravelManagerApi\Http\Resources\FileResource;
 
 class FileController extends Controller
 {
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['show'],
-    ];
-
 //    /**
 //     * @param FileRequest $request
 //     * @param string $file

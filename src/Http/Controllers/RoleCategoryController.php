@@ -18,8 +18,6 @@ class RoleCategoryController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'roles/categories';
-
     /**
      * @param RoleCategoryRequest $request
      * @param RoleCategoryLayout $layout

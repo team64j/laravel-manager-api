@@ -23,29 +23,6 @@ class PluginController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'plugins';
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'sort',
-            'action' => [self::class, 'sort'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-    ];
-
     /**
      * @param PluginRequest $request
      * @param PluginLayout $layout

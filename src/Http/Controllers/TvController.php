@@ -22,34 +22,6 @@ class TvController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'tvs';
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'sort',
-            'action' => [self::class, 'sort'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'types',
-            'action' => [self::class, 'types'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-    ];
-
     /**
      * @param TvRequest $request
      * @param TvLayout $layout

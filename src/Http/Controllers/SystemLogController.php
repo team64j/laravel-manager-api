@@ -20,13 +20,6 @@ class SystemLogController extends Controller
     use PaginationTrait;
 
     /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['index']
-    ];
-
-    /**
      * @OA\Get(
      *     path="/system-log",
      *     summary="Получение списка лога системных событий с фильтрацией",

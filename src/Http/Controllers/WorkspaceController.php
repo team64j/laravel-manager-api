@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Team64j\LaravelEvolution\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Http\Requests\WorkspaceRequest;
 use Team64j\LaravelManagerApi\Http\Resources\WorkspaceResource;
@@ -17,12 +16,6 @@ use Team64j\LaravelManagerApi\Layouts\WorkspaceLayout;
 
 class WorkspaceController extends Controller
 {
-    protected string $route = 'workspace';
-
-    protected array $routeOptions = [
-        'only' => ['index', 'store']
-    ];
-
     /**
      * @param WorkspaceRequest $request
      * @param WorkspaceLayout $layout

@@ -9,13 +9,6 @@ use OpenApi\Annotations as OA;
 class CacheController extends Controller
 {
     /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['index']
-    ];
-
-    /**
      * @OA\Get(
      *     path="/cache",
      *     summary="Очистка кэша",

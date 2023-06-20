@@ -17,13 +17,6 @@ use Team64j\LaravelManagerApi\Layouts\EventLogLayout;
 class EventLogController extends Controller
 {
     /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['index', 'show']
-    ];
-
-    /**
      * @OA\Get(
      *     path="/event-log",
      *     summary="Получение списка лога событий с фильтрацией",

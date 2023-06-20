@@ -22,24 +22,6 @@ class SnippetController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'snippets';
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-    ];
-
     /**
      * @param SnippetRequest $request
      * @param SnippetLayout $layout

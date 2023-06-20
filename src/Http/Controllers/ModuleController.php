@@ -25,37 +25,6 @@ class ModuleController extends Controller
     use PaginationTrait;
 
     /**
-     * @var string
-     */
-    protected string $route = 'modules';
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'exec',
-            'action' => [self::class, 'exec'],
-        ],
-        [
-            'method' => ['get', 'post', 'delete', 'put'],
-            'uri' => 'exec/{id}',
-            'action' => [self::class, 'execRun'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-    ];
-
-    /**
      * @OA\Get(
      *     path="/modules",
      *     summary="Получение списка модулей с пагинацией и фильтрацией",

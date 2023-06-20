@@ -21,52 +21,6 @@ use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 class PermissionController extends Controller
 {
     /**
-     * @var string
-     */
-    protected string $route = 'permissions';
-
-    /**
-     * @var array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'groups',
-            'action' => [self::class, 'groups'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'groups/{id}',
-            'action' => [self::class, 'group'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'resources',
-            'action' => [self::class, 'resources'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'resources/{id}',
-            'action' => [self::class, 'resource'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'relations',
-            'action' => [self::class, 'relations'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'relations/{id}',
-            'action' => [self::class, 'relation'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'select',
-            'action' => [self::class, 'select'],
-        ],
-    ];
-
-    /**
      * @param PermissionRequest $request
      * @param PermissionGroupLayout $layout
      *

@@ -22,22 +22,6 @@ class DocumentController extends Controller
     use PaginationTrait;
 
     /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'parents/{id}',
-            'action' => [self::class, 'parents'],
-        ],
-    ];
-
-    /**
      * @OA\Get(
      *     path="/document",
      *     summary="Получение списка документов с пагинацией и фильтрацией по основным полям",
@@ -476,6 +460,7 @@ class DocumentController extends Controller
             $dir = 'asc';
         }
 
+        /** @var \Illuminate\Pagination\LengthAwarePaginator $result */
         $result = SiteContent::query()
             ->select($fields)
             ->where('parent', $parent)

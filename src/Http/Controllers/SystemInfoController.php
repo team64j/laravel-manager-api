@@ -19,24 +19,6 @@ use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
 class SystemInfoController extends Controller
 {
     /**
-     * @var array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'phpinfo',
-            'action' => [self::class, 'phpinfo'],
-        ],
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => ['index'],
-    ];
-
-    /**
      * @param SystemInfoRequest $request
      * @param SystemInfoLayout $layout
      *

@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;

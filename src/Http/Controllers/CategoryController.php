@@ -20,34 +20,6 @@ class CategoryController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'categories';
-
-    /**
-     * @var array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => 'sort',
-            'action' => [self::class, 'sort'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'select',
-            'action' => [self::class, 'select'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-    ];
-
     /**
      * @OA\Get(
      *     path="/categories",

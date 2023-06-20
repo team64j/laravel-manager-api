@@ -25,34 +25,6 @@ class TemplateController extends Controller
 {
     use PaginationTrait;
 
-    protected string $route = 'templates';
-
-    /**
-     * @return array
-     */
-    protected array $routes = [
-        [
-            'method' => 'get',
-            'uri' => '{id}/tvs',
-            'action' => [self::class, 'tvs'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'select',
-            'action' => [self::class, 'select'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'tree',
-            'action' => [self::class, 'tree'],
-        ],
-        [
-            'method' => 'get',
-            'uri' => 'list',
-            'action' => [self::class, 'list'],
-        ],
-    ];
-
     /**
      * @param TemplateRequest $request
      * @param TemplateLayout $layout

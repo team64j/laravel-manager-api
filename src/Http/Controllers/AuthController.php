@@ -14,25 +14,6 @@ use OpenApi\Annotations as OA;
 class AuthController extends Controller
 {
     /**
-     * @var array
-     */
-    protected array $routeOptions = [
-        'only' => '',
-    ];
-
-    /**
-     * @var array
-     */
-    protected array $routes = [
-        [
-            'method' => 'post',
-            'uri' => '/',
-            'action' => [self::class, 'login'],
-            'middleware' => [],
-        ],
-    ];
-
-    /**
      * @OA\Post(
      *     path="/auth",
      *     summary="Авторизация",
