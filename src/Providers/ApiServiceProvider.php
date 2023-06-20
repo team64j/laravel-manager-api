@@ -109,7 +109,7 @@ class ApiServiceProvider extends ServiceProvider
     protected function registerPermissions(): void
     {
         Permissions::all()->map(function ($permission) {
-            Gate::define($permission->key, fn(User $user) => $user->hasPermissionOrFail($permission));
+            Gate::define($permission->key, fn(User $user) => $user->hasPermission($permission));
         });
     }
 }

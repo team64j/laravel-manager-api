@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Section;
@@ -631,7 +632,7 @@ class DashboardLayout extends Layout
                     '<a href="configuration" class="btn-sm btn-green ml-2">' . Lang::get('global.online') . '</a>'
                 ),
                 Template::make(
-                    'block evo-alert-warning p-4 mb-3 rounded',
+                    'block evo-alert-warning p-4 mb-0 rounded',
                     '<strong>' . Lang::get('global.configcheck_warning') . '</strong>' .
                     '<br>' . Lang::get('global.configcheck_installer') .
                     '<br><br><i>' . Lang::get('global.configcheck_what') . '</i>' .
@@ -650,9 +651,9 @@ class DashboardLayout extends Layout
         return Template::make(
             'flex flex-wrap items-baseline pt-6 px-4'
         )
-            ->setSlot([
+            ->putSlot(
                 Template::make(
-                    'grow w-full lg:basis-1/2 px-2 pb-2',
+                    'grow w-full lg:basis-1/2 px-2',
                     Section::make(
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
@@ -669,9 +670,11 @@ class DashboardLayout extends Layout
                         Auth::user()->attributes->logincount . '</strong></td></tr>' .
                         '</table></div>'
                     )
-                ),
+                )
+            )
+            ->putSlot(
                 Template::make(
-                    'grow w-full lg:basis-1/2 px-2 pb-2',
+                    'grow w-full lg:basis-1/2 px-2',
                     Section::make(
                         'fa fa-user',
                         Lang::get('global.onlineusers_title'),
@@ -687,24 +690,29 @@ class DashboardLayout extends Layout
                                 ->setRoute('User'),
                         ]
                     )
-                ),
-                Template::make(
-                    'grow w-full px-2 pb-2',
-                    Section::make(
-                        'fa fa-pencil',
-                        Lang::get('global.activity_title'),
-                        'hover:shadow-lg bg-white dark:bg-gray-700 transition overflow-hidden',
-                        Panel::make()
-                            ->setId('widgetDocuments')
-                            ->setHistory(false)
-                            ->setClass('-m-4 pb-4 grow')
-                            ->setUrl(
-                                '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
-                            )
-                            ->setRoute('Document')
+                )
+            )
+            ->if(
+                Gate::check(['view_document']),
+                fn(Template $template) => $template->putSlot(
+                    Template::make(
+                        'grow w-full px-2',
+                        Section::make(
+                            'fa fa-pencil',
+                            Lang::get('global.activity_title'),
+                            'hover:shadow-lg bg-white dark:bg-gray-700 transition overflow-hidden',
+                            Panel::make()
+                                ->setId('widgetDocuments')
+                                ->setHistory(false)
+                                ->setClass('-m-4 pb-4 grow')
+                                ->setUrl(
+                                    '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
+                                )
+                                ->setRoute('Document')
+                        )
                     )
-                ),
-            ])
+                )
+            )
             ->if(
                 Config::get('global.rss_url_news'),
                 fn(Template $template) => $template->putSlot(

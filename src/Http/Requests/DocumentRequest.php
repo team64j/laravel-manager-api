@@ -15,7 +15,7 @@ class DocumentRequest extends FormRequest
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
-            'index' => Gate::check('edit_document'),
+            'index' => Gate::any(['edit_document', 'view_document']),
             'store' => Gate::check('new_document'),
             'update' => Gate::check('save_document'),
             'destroy' => Gate::check('delete_document'),

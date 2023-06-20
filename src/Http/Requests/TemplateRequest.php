@@ -18,6 +18,7 @@ class TemplateRequest extends FormRequest
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
+            'select' => true,
             'index' => Gate::check('edit_template'),
             'store' => Gate::check('new_template'),
             'update' => Gate::check('save_template'),
