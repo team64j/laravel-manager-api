@@ -32,9 +32,11 @@ class FileLayout extends Layout
             Template::make()
                 ->setClass('px-6')
                 ->setSlot([
-                    Lang::get('global.filemanager_path_title') . ' ' . $data['path'],
-                    Input::make('basename', Lang::get('global.files_filename'))->setInputClass('text-xl font-bold px-4 py-2'),
-                    CodeEditor::make('content')->setLanguage($data['lang']),
+                    Lang::get('global.filemanager_path_title') . ' <strong>' . $data['path'] . '</strong>',
+                    Input::make('basename', Lang::get('global.files_filename'))
+                        ->setInputClass('text-xl font-bold px-4 py-2'),
+                    CodeEditor::make('content')
+                        ->setLanguage($data['lang']),
                 ]),
         ];
     }
