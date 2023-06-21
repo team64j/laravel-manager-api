@@ -586,25 +586,22 @@ class DashboardLayout extends Layout
      */
     protected function getMessages(): array
     {
-        return Template::make(
-            'pt-6 px-6',
-            [
-                Template::make(
-                    'block evo-alert-warning p-4 mb-3 rounded',
-                    Lang::get('global.siteunavailable_message_default') .
-                    ' ' . Lang::get('global.update_settings_from_language') .
-                    '<a href="configuration" class="btn-sm btn-green ml-2">' . Lang::get('global.online') . '</a>'
-                ),
-                Template::make(
-                    'block evo-alert-warning p-4 mb-0 rounded',
-                    '<strong>' . Lang::get('global.configcheck_warning') . '</strong>' .
-                    '<br>' . Lang::get('global.configcheck_installer') .
-                    '<br><br><i>' . Lang::get('global.configcheck_what') . '</i>' .
-                    '<br>' . Lang::get('global.configcheck_installer_msg')
-                ),
-            ]
-        )
-            ->toArray();
+        return [
+            Template::make(
+                'block evo-alert-warning p-4 mt-4 mx-6 rounded',
+                Lang::get('global.siteunavailable_message_default') .
+                ' ' . Lang::get('global.update_settings_from_language') .
+                '<a href="configuration" class="btn-sm btn-green ml-2">' . Lang::get('global.online') . '</a>'
+            ),
+
+            Template::make(
+                'block evo-alert-warning p-4 mt-4 mx-6 rounded',
+                '<strong>' . Lang::get('global.configcheck_warning') . '</strong>' .
+                '<br>' . Lang::get('global.configcheck_installer') .
+                '<br><br><i>' . Lang::get('global.configcheck_what') . '</i>' .
+                '<br>' . Lang::get('global.configcheck_installer_msg')
+            ),
+        ];
     }
 
     /**
