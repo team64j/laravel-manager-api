@@ -67,6 +67,18 @@ class Tree extends Component
     }
 
     /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setRouteList(string $value): static
+    {
+        $this->attributes['attrs']['routeList'] = $value;
+
+        return $this;
+    }
+
+    /**
      * @param array $value
      *
      * @return $this

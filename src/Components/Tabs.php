@@ -125,7 +125,7 @@ class Tabs extends Component
      * @param bool|array|string $permissions
      * @param string|array|null $route
      * @param string|null $title
-     * @param array|null $slot
+     * @param array|Component|null $slot
      *
      * @return $this
      */
@@ -134,10 +134,10 @@ class Tabs extends Component
         string $name = null,
         string $icon = null,
         string $class = null,
-        bool | array | string $permissions = true,
-        string | array $route = null,
+        bool|array|string $permissions = true,
+        string|array $route = null,
         string $title = null,
-        array $slot = null): static
+        array|Component $slot = null): static
     {
         if ($this->hasPermissions($permissions) &&
             !in_array($id, array_column($this->attributes['attrs']['data'], 'id'))
@@ -174,7 +174,7 @@ class Tabs extends Component
      *
      * @return $this
      */
-    public function addSlot(string $id, array | Component $data = [], bool | array | string $permissions = true): static
+    public function addSlot(string $id, array|Component $data = [], bool|array|string $permissions = true): static
     {
         if ($this->hasPermissions($permissions) && !isset($this->attributes['slots'][$id])) {
             $this->attributes['slots'][$id] = $data;
@@ -190,7 +190,7 @@ class Tabs extends Component
      *
      * @return $this
      */
-    public function putSlot(string $id, array | Component $data = [], bool | array | string $permissions = true): static
+    public function putSlot(string $id, array|Component $data = [], bool|array|string $permissions = true): static
     {
         if ($this->hasPermissions($permissions)) {
             $this->attributes['slots'][$id][] = $data;
@@ -216,7 +216,7 @@ class Tabs extends Component
      *
      * @return bool
      */
-    protected function hasPermissions(bool | array | string $permissions = true): bool
+    protected function hasPermissions(bool|array|string $permissions = true): bool
     {
         if (is_bool($permissions)) {
             return $permissions;
