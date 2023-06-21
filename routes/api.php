@@ -49,7 +49,7 @@ Route::prefix($apiPath)
             ->group(fn() => [
                 Route::post('/', [AuthController::class, 'login'])
                     ->withoutMiddleware($authMiddleware),
-                Route::get('refresh', [AuthController::class, 'refresh']),
+                Route::post('refresh', [AuthController::class, 'refresh']),
             ]),
 
         /** Boostrap */
