@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
@@ -96,63 +98,9 @@ class BootstrapController extends Controller
             ),
         ];
 
-//        $assets[] = [
-//            'rel' => 'css',
-//            'src' => is_file(
-//                $apiCss = realpath(__DIR__ . '/../../../public/css/styles.css')
-//            ) ? url('/') . str_replace(app()->basePath(), '', $apiCss) : '',
-//        ];
-//
-//        $assets[] = [
-//            'rel' => 'module',
-//            'src' => url('/') . '/packages/vue3-component/dist/library.mjs',
-//        ];
-//
-//        $assets[] = [
-//            'rel' => 'manifest',
-//            'source' => str_replace(
-//                '/../packages',
-//                \url('/packages/'),
-//                Vite::useBuildDirectory('../packages/component-element-plus/dist')
-//                    ->withEntryPoints([
-//                        'src/main.js',
-//                    ])
-//                    ->toHtml()
-//            ),
-//        ];
-//
-//        $assets[] = [
-//            'rel' => 'module',
-//            'src' => url('/') . '/packages/component-3/main.js',
-//        ];
+        //return $assets;
 
-//        $assets[] = [
-//            'rel' => 'manifest',
-//            'source' => str_replace(
-//                'public/..',
-//                \url('/'),
-//                Vite::useBuildDirectory('../packages/component-element-plus/dist')
-//                    ->withEntryPoints([
-//                        'src/main.js',
-//                    ])
-//                    ->toHtml()
-//            ),
-//        ];
-//
-//        $assets[] = [
-//            'rel' => 'manifest',
-//            'source' => str_replace(
-//                'public/..',
-//                \url('/'),
-//                Vite::useBuildDirectory('../packages/component-easyui/dist')
-//                    ->withEntryPoints([
-//                        'src/main.js',
-//                    ])
-//                    ->toHtml()
-//            ),
-//        ];
-
-        return $assets;
+        return array_merge($assets, Arr::flatten(Event::until('OnManagerMainFrameHeaderHTMLBlock'), 1) ?? []);
     }
 
     /**
