@@ -168,7 +168,17 @@ class TvLayout extends Layout
                         ->setData([])
                         ->setRoute('Tv')
                         ->setHistory(true)
-                        ->addColumn('#', null, ['width' => '3rem'])
+                        ->addColumn(
+                            ['#', 'locked'],
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [
+                                '<i class="fa fa-list-alt fa-fw"/>',
+                                '<i class="fa fa-list-alt fa-fw" title="' .
+                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                            ]
+                        )
                         ->addColumn(
                             'id',
                             Lang::get('global.id'),

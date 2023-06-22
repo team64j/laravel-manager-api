@@ -99,7 +99,19 @@ class CategoryLayout extends Layout
                         ->setData([])
                         ->setRoute('Category')
                         ->setHistory(true)
-                        ->addColumn('#', null, ['width' => '3rem'])
+                        ->addColumn(
+                            '#',
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [],
+                            [
+                                [
+                                    'icon' => 'fa fa-object-group fa-fw pointer-events-none',
+                                    'noOpacity' => true,
+                                ],
+                            ]
+                        )
                         ->addColumn(
                             'id',
                             Lang::get('global.id'),

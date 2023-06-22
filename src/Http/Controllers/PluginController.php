@@ -10,10 +10,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SitePlugin;
 use Team64j\LaravelEvolution\Models\SystemEventname;
-use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\PluginRequest;
 use Team64j\LaravelManagerApi\Http\Resources\PluginResource;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
@@ -24,6 +24,25 @@ class PluginController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/plugins",
+     *     summary="Получение списка плагинов с пагинацией и фильтрацией",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      * @param PluginLayout $layout
      *
@@ -81,14 +100,6 @@ class PluginController extends Controller
                 }
             }
 
-            $item->setAttribute(
-                '#',
-                HelpIcon::make($item->locked ? Lang::get('global.locked') : '', 'fa fa-plug fa-fw')
-                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
-                    ->isOpacity(false)
-                    ->isFit()
-            );
-
             $item->setAttribute('category.name', $data['data'][$item->category]['name']);
             $item->setAttribute('description.html', $item->description);
 
@@ -109,6 +120,24 @@ class PluginController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/plugins",
+     *     summary="Создание нового плагина",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      *
      * @return PluginResource
@@ -121,6 +150,19 @@ class PluginController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/plugins/{id}",
+     *     summary="Чтение плагина",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      * @param string $plugin
      * @param PluginLayout $layout
@@ -141,6 +183,24 @@ class PluginController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/plugins/{id}",
+     *     summary="Обновление плагина",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      * @param SitePlugin $plugin
      *
@@ -154,6 +214,19 @@ class PluginController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/plugins/{id}",
+     *     summary="Удаление плагина",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      * @param SitePlugin $plugin
      *
@@ -167,6 +240,22 @@ class PluginController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/plugins/list",
+     *     summary="Получение списка плагинов с пагинацией для меню",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      *
      * @return AnonymousResourceCollection
@@ -215,6 +304,22 @@ class PluginController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/plugins/sort",
+     *     summary="Получение списка всех плагинов для сортировки",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      * @param PluginLayout $layout
      *
@@ -254,6 +359,24 @@ class PluginController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/plugins/tree",
+     *     summary="Получение списка плагинов с пагинацией для древовидного меню",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer", default="-1")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PluginRequest $request
      *
      * @return AnonymousResourceCollection
@@ -312,12 +435,12 @@ class PluginController extends Controller
                 ->get()
                 ->map(function (Category $item) use ($request, $opened) {
                     $data = [
-                        'id' => $item->id,
+                        'id' => $item->getKey(),
                         'name' => $item->category,
                         'folder' => true,
                     ];
 
-                    if (in_array((int) $item->id, $opened, true)) {
+                    if (in_array($item->getKey(), $opened, true)) {
                         $result = $item->plugins()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());

@@ -96,7 +96,17 @@ class ChunkLayout extends Layout
                         ->setData([])
                         ->setRoute('Chunk')
                         ->setHistory(true)
-                        ->addColumn('#', null, ['width' => '3rem'])
+                        ->addColumn(
+                            ['#', 'locked'],
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [
+                                '<i class="fa fa-th-large fa-fw"/>',
+                                '<i class="fa fa-th-large fa-fw" title="' .
+                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                            ]
+                        )
                         ->addColumn(
                             'id',
                             Lang::get('global.id'),

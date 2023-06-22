@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\DocumentgroupName;
 use Team64j\LaravelEvolution\Models\MembergroupName;
 use Team64j\LaravelEvolution\Models\SiteContent;
@@ -21,6 +22,19 @@ use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 class PermissionController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/permissions/groups",
+     *     summary="Получение списка групп пользователей",
+     *     tags={"Permissions"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PermissionRequest $request
      * @param PermissionGroupLayout $layout
      *
@@ -60,6 +74,19 @@ class PermissionController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/permissions/group/{id}",
+     *     summary="Получение групы пользователей",
+     *     tags={"Permissions"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PermissionRequest $request
      * @param string $id
      * @param PermissionGroupLayout $layout
@@ -83,6 +110,19 @@ class PermissionController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/permissions/resources",
+     *     summary="Получение групп документов",
+     *     tags={"Permissions"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PermissionRequest $request
      * @param PermissionResourceLayout $layout
      *
@@ -126,6 +166,19 @@ class PermissionController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/permissions/resources/{id}",
+     *     summary="Получение групы документов",
+     *     tags={"Permissions"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PermissionRequest $request
      * @param string $id
      * @param PermissionResourceLayout $layout
@@ -149,6 +202,19 @@ class PermissionController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/permissions/relations",
+     *     summary="Получение групп связей юзеров с документами",
+     *     tags={"Permissions"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PermissionRequest $request
      * @param PermissionRelationLayout $layout
      *
@@ -198,6 +264,19 @@ class PermissionController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/permissions/relations/{id}",
+     *     summary="Получение групы связей юзеров с документами",
+     *     tags={"Permissions"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PermissionRequest $request
      * @param string $id
      * @param PermissionRelationLayout $layout
@@ -221,6 +300,19 @@ class PermissionController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/permissions/select",
+     *     summary="Получение списка разрешений",
+     *     tags={"Permissions"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param PermissionRequest $request
      *
      * @return AnonymousResourceCollection

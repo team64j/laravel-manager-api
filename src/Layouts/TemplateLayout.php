@@ -222,7 +222,22 @@ class TemplateLayout extends Layout
                         ->setData([])
                         ->setRoute('Template')
                         ->setHistory(true)
-                        ->addColumn('#', null, ['width' => '3rem'])
+                        ->addColumn(
+                            '#',
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [
+                                'id' => [
+                                    Config::get('global.default_template') => '<i class="fa fa-home fa-fw text-blue-500"/>',
+                                ],
+                                'locked' => [
+                                    '<i class="fa fa-newspaper fa-fw"/>',
+                                    '<i class="fa fa-newspaper fa-fw" title="' . Lang::get('global.locked') .
+                                    '"><i class="fa fa-lock"/></i>',
+                                ],
+                            ]
+                        )
                         ->addColumn(
                             'id',
                             Lang::get('global.id'),

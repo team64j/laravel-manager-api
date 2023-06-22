@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteModule;
-use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\ModuleRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ModuleResource;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
@@ -100,17 +99,6 @@ class ModuleController extends Controller
                     ];
                 }
             }
-
-            $item->setAttribute(
-                '#',
-                HelpIcon::make(
-                    $item->locked ? Lang::get('global.locked') : '',
-                    'fa fa-cube fa-fw'
-                )
-                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
-                    ->isOpacity(false)
-                    ->isFit()
-            );
 
             $item->setAttribute('category.name', $data['data'][$item->category]['name']);
             $item->setAttribute('description.html', $item->description);
@@ -464,12 +452,12 @@ class ModuleController extends Controller
                 ->get()
                 ->map(function (Category $item) use ($request, $opened) {
                     $data = [
-                        'id' => $item->id,
+                        'id' => $item->getKey(),
                         'name' => $item->category,
                         'folder' => true,
                     ];
 
-                    if (in_array((int) $item->id, $opened, true)) {
+                    if (in_array($item->getKey(), $opened, true)) {
                         $result = $item->modules()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());

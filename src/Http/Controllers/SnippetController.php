@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteSnippet;
-use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
 use Team64j\LaravelManagerApi\Http\Resources\SnippetResource;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
@@ -79,17 +78,6 @@ class SnippetController extends Controller
                     ];
                 }
             }
-
-            $item->setAttribute(
-                '#',
-                HelpIcon::make(
-                    $item->locked ? Lang::get('global.locked') : '',
-                    'fa fa-code fa-fw'
-                )
-                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
-                    ->isOpacity(false)
-                    ->isFit()
-            );
 
             $item->setAttribute('category.name', $data['data'][$item->category]['name']);
             $item->setAttribute('description.html', $item->description);
@@ -275,12 +263,12 @@ class SnippetController extends Controller
                 ->get()
                 ->map(function (Category $item) use ($request, $opened) {
                     $data = [
-                        'id' => $item->id,
+                        'id' => $item->getKey(),
                         'name' => $item->category,
                         'folder' => true,
                     ];
 
-                    if (in_array((int) $item->id, $opened, true)) {
+                    if (in_array($item->getKey(), $opened, true)) {
                         $result = $item->snippets()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());

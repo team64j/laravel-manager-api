@@ -80,18 +80,6 @@ class TemplateController extends Controller
                 }
             }
 
-            $item->setAttribute(
-                '#',
-                HelpIcon::make(
-                    $item->locked ? Lang::get('global.locked') : '',
-                    $item->id == Config::get('global.default_template') ? 'fa fa-home fa-fw text-blue-500'
-                        : 'fa fa-newspaper fa-fw'
-                )
-                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
-                    ->isOpacity(false)
-                    ->isFit()
-            );
-
             $item->setAttribute('category.name', $data[$item->category]['name']);
 
             $file = '/' . $item->templatealias . '.blade.php';
@@ -457,12 +445,12 @@ class TemplateController extends Controller
                 ->get()
                 ->map(function (Category $item) use ($request, $opened) {
                     $data = [
-                        'id' => $item->id,
+                        'id' => $item->getKey(),
                         'name' => $item->category,
                         'folder' => true,
                     ];
 
-                    if (in_array((int) $item->id, $opened, true)) {
+                    if (in_array($item->getKey(), $opened, true)) {
                         $result = $item->templates()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());

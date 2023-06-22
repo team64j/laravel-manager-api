@@ -96,7 +96,17 @@ class SnippetLayout extends Layout
                     ->setData([])
                     ->setRoute('Snippet')
                     ->setHistory(true)
-                    ->addColumn('#', null, ['width' => '3rem'])
+                    ->addColumn(
+                        ['#', 'locked'],
+                        null,
+                        ['width' => '3rem'],
+                        false,
+                        [
+                            '<i class="fa fa-code fa-fw"/>',
+                            '<i class="fa fa-code fa-fw" title="' .
+                            Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                        ]
+                    )
                     ->addColumn(
                         'id',
                         Lang::get('global.id'),

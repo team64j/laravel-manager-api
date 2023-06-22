@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
-use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
 use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
@@ -69,38 +68,11 @@ class CategoryController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $data = Collection::make([
-            'data' => Collection::make(),
-            'pagination' => $this->pagination($result),
-            'filters' => [
-                'category' => true,
-            ],
-        ]);
-
-        /** @var Category $item */
-        foreach ($result->items() as $item) {
-            if (!$data['data']->has(0)) {
-                $data['data'][0] = [
-                    'id' => 0,
-                    'data' => Collection::make(),
-                ];
-            }
-
-            $item->setAttribute(
-                '#',
-                HelpIcon::make('', 'fa fa-object-group fa-fw')
-                    ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
-                    ->isOpacity(false)
-                    ->isFit()
-            );
-
-            $data['data'][0]['data']->add($item->withoutRelations());
-        }
-
-        $data['data'] = $data['data']->values();
-
         return CategoryResource::collection([
-            'data' => $data,
+            'data' => [
+                'data' => $result->items(),
+                'pagination' => $this->pagination($result),
+            ],
         ])
             ->additional([
                 'layout' => $layout->list(),

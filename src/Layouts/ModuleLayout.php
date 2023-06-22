@@ -99,7 +99,17 @@ class ModuleLayout extends Layout
                         ->setData([])
                         ->setRoute('Module')
                         ->setHistory(true)
-                        ->addColumn('#', null, ['width' => '3rem'])
+                        ->addColumn(
+                            ['#', 'locked'],
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [
+                                '<i class="fa fa-cube fa-fw"/>',
+                                '<i class="fa fa-cube fa-fw" title="' .
+                                    Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                            ]
+                        )
                         ->addColumn(
                             'id',
                             Lang::get('global.id'),

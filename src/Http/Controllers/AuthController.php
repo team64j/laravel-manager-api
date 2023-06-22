@@ -76,6 +76,18 @@ class AuthController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/auth/refresh",
+     *     summary="Обновление токена",
+     *     tags={"Auth"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @return JsonResponse
      */
     public function refresh(): JsonResponse
