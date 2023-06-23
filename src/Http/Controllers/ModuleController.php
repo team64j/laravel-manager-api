@@ -377,7 +377,7 @@ class ModuleController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/modules/tree",
+     *     path="/modules/tree/{category}",
      *     summary="Получение списка модулей с пагинацией для древовидного меню",
      *     tags={"Module"},
      *     security={{"Api":{}}},
@@ -395,14 +395,14 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
+     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(ModuleRequest $request): AnonymousResourceCollection
+    public function tree(ModuleRequest $request, int $category): AnonymousResourceCollection
     {
         $data = [];
         $filter = $request->input('filter');
-        $category = $request->integer('parent', -1);
         $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
 
         $opened = $request->has('opened') ? $request->string('opened')

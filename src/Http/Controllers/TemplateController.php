@@ -388,14 +388,14 @@ class TemplateController extends Controller
 
     /**
      * @param TemplateRequest $request
+     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(TemplateRequest $request): AnonymousResourceCollection
+    public function tree(TemplateRequest $request, int $category): AnonymousResourceCollection
     {
         $data = [];
         $filter = $request->input('filter');
-        $category = $request->integer('parent', -1);
         $opened = $request->has('opened') ? $request->string('opened')
             ->explode(',')
             ->map(fn($i) => intval($i))

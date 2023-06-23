@@ -5,6 +5,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
@@ -407,12 +408,12 @@ class DocumentController extends Controller
      *      )
      * )
      * @param DocumentRequest $request
+     * @param int $parent
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(DocumentRequest $request): AnonymousResourceCollection
+    public function tree(DocumentRequest $request, int $parent): AnonymousResourceCollection
     {
-        $parent = $request->integer('parent');
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
         $opened = $request->has('opened') ? $request->string('opened')
@@ -460,7 +461,7 @@ class DocumentController extends Controller
             $dir = 'asc';
         }
 
-        /** @var \Illuminate\Pagination\LengthAwarePaginator $result */
+        /** @var LengthAwarePaginator $result */
         $result = SiteContent::query()
             ->select($fields)
             ->where('parent', $parent)
@@ -476,7 +477,7 @@ class DocumentController extends Controller
                     'parent' => $item->getKey(),
                     'page' => 1,
                 ]);
-                $result = $this->tree($request);
+                $result = $this->tree($request, $item->getKey());
                 $item->setAttribute('data', $result['data']);
             }
 

@@ -320,14 +320,14 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
+     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(ChunkRequest $request): AnonymousResourceCollection
+    public function tree(ChunkRequest $request, int $category): AnonymousResourceCollection
     {
         $data = [];
         $filter = $request->input('filter');
-        $category = $request->integer('parent', -1);
         $fields = ['id', 'name', 'description', 'category', 'locked'];
 
         $opened = $request->has('opened') ? $request->string('opened')

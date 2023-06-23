@@ -78,7 +78,7 @@ Route::prefix($apiPath)
         /** Chunks */
         Route::prefix('chunks')
             ->group(fn() => [
-                Route::get('tree', [ChunkController::class, 'tree']),
+                Route::get('tree/{category}', [ChunkController::class, 'tree']),
                 Route::get('list', [ChunkController::class, 'list']),
             ])
             ->apiResource('chunks', ChunkController::class),
@@ -98,7 +98,7 @@ Route::prefix($apiPath)
         /** Documents */
         Route::prefix('document')
             ->group(fn() => [
-                Route::get('tree', [DocumentController::class, 'tree']),
+                Route::get('tree/{parent}', [DocumentController::class, 'tree']),
                 Route::get('parents/{id}', [DocumentController::class, 'parents']),
             ])
             ->apiResource('document', DocumentController::class),
@@ -115,7 +115,7 @@ Route::prefix($apiPath)
         /** Files */
         Route::prefix('file')
             ->group(fn() => [
-                Route::get('tree', [FileController::class, 'tree']),
+                Route::get('tree/{path}', [FileController::class, 'tree']),
             ])
             ->apiResource('file', FileController::class)->only(['show']),
 
@@ -131,7 +131,7 @@ Route::prefix($apiPath)
         /** Modules */
         Route::prefix('modules')
             ->group(fn() => [
-                Route::get('tree', [ModuleController::class, 'tree']),
+                Route::get('tree/{category}', [ModuleController::class, 'tree']),
                 Route::get('list', [ModuleController::class, 'list']),
                 Route::get('exec', [ModuleController::class, 'exec']),
                 Route::addRoute(
@@ -161,7 +161,7 @@ Route::prefix($apiPath)
         Route::prefix('plugins')
             ->group(fn() => [
                 Route::get('sort', [PluginController::class, 'sort']),
-                Route::get('tree', [PluginController::class, 'tree']),
+                Route::get('tree/{category}', [PluginController::class, 'tree']),
                 Route::get('list', [PluginController::class, 'list']),
             ])
             ->apiResource('plugins', PluginController::class),
@@ -183,7 +183,7 @@ Route::prefix($apiPath)
         /** Snippets */
         Route::prefix('snippets')
             ->group(fn() => [
-                Route::get('tree', [SnippetController::class, 'tree']),
+                Route::get('tree/{category}', [SnippetController::class, 'tree']),
                 Route::get('list', [SnippetController::class, 'list']),
             ])
             ->apiResource('snippets', SnippetController::class),
@@ -201,7 +201,7 @@ Route::prefix($apiPath)
         /** Templates */
         Route::prefix('templates')
             ->group(fn() => [
-                Route::get('tree', [TemplateController::class, 'tree']),
+                Route::get('tree/{category}', [TemplateController::class, 'tree']),
                 Route::get('list', [TemplateController::class, 'list']),
                 Route::get('select', [TemplateController::class, 'select']),
                 Route::get('{id}/tvs', [TemplateController::class, 'tvs']),
@@ -211,7 +211,7 @@ Route::prefix($apiPath)
         /** Tvs */
         Route::prefix('tvs')
             ->group(fn() => [
-                Route::get('tree', [TvController::class, 'tree']),
+                Route::get('tree/{category}', [TvController::class, 'tree']),
                 Route::get('list', [TvController::class, 'list']),
                 Route::get('sort', [TvController::class, 'sort']),
                 Route::get('types', [TvController::class, 'types']),

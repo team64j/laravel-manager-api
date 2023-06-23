@@ -281,14 +281,14 @@ class TvController extends Controller
 
     /**
      * @param TvRequest $request
+     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(TvRequest $request): AnonymousResourceCollection
+    public function tree(TvRequest $request, int $category): AnonymousResourceCollection
     {
         $data = [];
         $filter = $request->input('filter');
-        $category = $request->integer('parent', -1);
         $opened = $request->has('opened') ? $request->string('opened')
             ->explode(',')
             ->map(fn($i) => intval($i))

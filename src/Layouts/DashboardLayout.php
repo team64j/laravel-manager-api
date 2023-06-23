@@ -50,7 +50,7 @@ class DashboardLayout extends Layout
                     ->setId('documents')
                     ->setRoute('Document')
                     ->setRouteList('Documents')
-                    ->setUrl('/document/tree?order=menuindex&dir=asc')
+                    ->setUrl('/document/tree/:parent?order=menuindex&dir=asc')
                     ->setAliases([
                         'hide_from_tree' => 'hideChildren',
                         'isfolder' => 'folder',
@@ -327,7 +327,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('templates')
                         ->setRoute('Template')
-                        ->setUrl('/templates/tree')
+                        ->setUrl('/templates/tree/:parent')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -337,6 +337,9 @@ class DashboardLayout extends Layout
                         ])
                         ->setIcons([
                             'default' => 'fa fa-newspaper',
+                        ])
+                        ->setSettings([
+                            'parent' => -1,
                         ])
                 )
             )
@@ -353,7 +356,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('tvs')
                         ->setRoute('Tv')
-                        ->setUrl('/tvs/tree')
+                        ->setUrl('/tvs/tree/:parent')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -362,6 +365,9 @@ class DashboardLayout extends Layout
                         ])
                         ->setIcons([
                             'default' => 'fa fa-list-alt',
+                        ])
+                        ->setSettings([
+                            'parent' => -1,
                         ])
                 )
             )
@@ -378,7 +384,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('chunks')
                         ->setRoute('Chunk')
-                        ->setUrl('/chunks/tree')
+                        ->setUrl('/chunks/tree/:parent')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -387,6 +393,9 @@ class DashboardLayout extends Layout
                         ])
                         ->setIcons([
                             'default' => 'fa fa-th-large',
+                        ])
+                        ->setSettings([
+                            'parent' => -1,
                         ])
                 )
             )
@@ -403,7 +412,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('snippets')
                         ->setRoute('Snippet')
-                        ->setUrl('/snippets/tree')
+                        ->setUrl('/snippets/tree/:parent')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -412,6 +421,9 @@ class DashboardLayout extends Layout
                         ])
                         ->setIcons([
                             'default' => 'fa fa-code',
+                        ])
+                        ->setSettings([
+                            'parent' => -1,
                         ])
                 )
             )
@@ -428,7 +440,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('plugins')
                         ->setRoute('Plugin')
-                        ->setUrl('/plugins/tree')
+                        ->setUrl('/plugins/tree/:parent')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -437,6 +449,9 @@ class DashboardLayout extends Layout
                         ])
                         ->setIcons([
                             'default' => 'fa fa-plug',
+                        ])
+                        ->setSettings([
+                            'parent' => -1,
                         ])
                 )
             )
@@ -453,7 +468,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('modules')
                         ->setRoute('Module')
-                        ->setUrl('/modules/tree')
+                        ->setUrl('/modules/tree/:parent')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -462,6 +477,9 @@ class DashboardLayout extends Layout
                         ])
                         ->setIcons([
                             'default' => 'fa fa-cubes',
+                        ])
+                        ->setSettings([
+                            'parent' => -1,
                         ])
                 )
             )
@@ -501,7 +519,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('treeFiles')
                         ->setRoute('File')
-                        ->setUrl('/file/tree')
+                        ->setUrl('/file/tree/:parent')
                         ->isCategory()
                         ->setIcons([
                             'default' => 'fa fa-ban',
@@ -575,6 +593,7 @@ class DashboardLayout extends Layout
                                 Lang::get('global.files_filesize') . ': {_size}' . PHP_EOL,
                         ])
                         ->setSettings([
+                            'parent' => 'Lw==',
                             'show' => ['date'],
                         ])
                 )

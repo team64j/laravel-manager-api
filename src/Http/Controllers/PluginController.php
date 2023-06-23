@@ -360,7 +360,7 @@ class PluginController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/plugins/tree",
+     *     path="/plugins/tree/{category}",
      *     summary="Получение списка плагинов с пагинацией для древовидного меню",
      *     tags={"Plugins"},
      *     security={{"Api":{}}},
@@ -378,14 +378,14 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
+     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(PluginRequest $request): AnonymousResourceCollection
+    public function tree(PluginRequest $request, int $category): AnonymousResourceCollection
     {
         $data = [];
         $filter = $request->input('filter');
-        $category = $request->integer('parent', -1);
         $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
 
         $opened = $request->has('opened') ? $request->string('opened')

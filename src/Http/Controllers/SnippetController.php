@@ -206,14 +206,14 @@ class SnippetController extends Controller
 
     /**
      * @param SnippetRequest $request
+     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(SnippetRequest $request): AnonymousResourceCollection
+    public function tree(SnippetRequest $request, int $category): AnonymousResourceCollection
     {
         $data = [];
         $filter = $request->input('filter');
-        $category = $request->integer('parent', -1);
         $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
 
         $opened = $request->has('opened') ? $request->string('opened')

@@ -672,7 +672,7 @@ class BootstrapController extends Controller
             '{"name":"Files"}' => Lang::get('global.manage_files'),
             '{"name":"File"}' => Lang::get('global.files_management'),
             '{"name":"Cache"}' => Lang::get('global.resource_opt_emptycache'),
-            '{"name":"PasswordChange"}' => Lang::get('global.change_password'),
+            '{"name":"Password"}' => Lang::get('global.change_password'),
             '{"name":"Logout"}' => Lang::get('global.logout'),
         ];
 

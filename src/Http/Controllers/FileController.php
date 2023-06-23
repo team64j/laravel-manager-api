@@ -155,15 +155,15 @@ class FileController extends Controller
      *      )
      * )
      * @param FileRequest $request
+     * @param string $path
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(FileRequest $request): AnonymousResourceCollection
+    public function tree(FileRequest $request, string $path): AnonymousResourceCollection
     {
         $data = [];
         $root = realpath(Config::get('global.filemanager_path', App::basePath('../')));
-        $parent = trim(base64_decode((string) $request->input('parent', '')), './');
-        $parentPath = $root . DIRECTORY_SEPARATOR . $parent;
+        $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
         $after = basename(base64_decode($request->string('after', '')->toString()));
         $opened = $request->has('opened') ? $request->string('opened')
             ->explode(',')
@@ -218,13 +218,12 @@ class FileController extends Controller
             if (in_array($key, $opened)) {
                 $newRequest = clone $request;
                 $newRequest->query->set('after', null);
-                $newRequest->query->set('parent', $key);
-                $item['data'] = $this->tree($newRequest)['data'] ?? [];
+                $item['data'] = $this->tree($newRequest, $key)['data'] ?? [];
             }
 
             $data[] = $item;
 
-            $next = '/file/tree?parent=' . base64_encode($parent) . '&after=' . base64_encode($title);
+            $next = '/file/tree/' . $path . '?after=' . base64_encode($title);
         }
 
         $checkAfter = true;
@@ -274,7 +273,7 @@ class FileController extends Controller
 
             $data[] = $item;
 
-            $next = '/file/tree?parent=' . base64_encode($parent) . '&after=' . base64_encode($title);
+            $next = '/file/tree/' . $path . '?after=' . base64_encode($title);
         }
 
         if (count($data) <= $limit) {
