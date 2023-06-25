@@ -98,9 +98,9 @@ class BootstrapController extends Controller
             ),
         ];
 
-        //return $assets;
+        return $assets;
 
-        return array_merge($assets, Arr::flatten(Event::until('OnManagerMainFrameHeaderHTMLBlock'), 1) ?? []);
+        //return array_merge($assets, Arr::flatten(Event::until('OnManagerMainFrameHeaderHTMLBlock'), 1) ?? []);
     }
 
     /**
