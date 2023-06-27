@@ -7,6 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
@@ -55,24 +56,30 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
+        $guard = auth(Config::get('manager-api.guard.provider'));
+
         $validator = Validator::make($request->all(), [
             'username' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        $guard = auth(Config::get('manager-api.guard.provider'));
+        $validator->validate();
 
         if (!$token = $guard->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'errors' => [
+                    'username' => [],
+                    'password' => [],
+                ],
+                'message' => Lang::get('global.login_processor_unknown_user'),
+            ], 422);
         }
 
         $guard->login($guard->user(), $request->boolean('remember'));
 
-        return $this->createNewToken((string) $token);
+        return response()->json([
+            'data' => $this->createNewToken((string) $token),
+        ]);
     }
 
     /**
@@ -92,15 +99,43 @@ class AuthController extends Controller
      */
     public function refresh(): JsonResponse
     {
-        return $this->createNewToken(auth(Config::get('manager-api.guard.provider'))->refresh());
+        return response()->json([
+            'data' => $this->createNewToken(auth(Config::get('manager-api.guard.provider'))->refresh()),
+        ]);
     }
 
     /**
+     * @OA\Post(
+     *     path="/auth/forgot",
+     *     summary="Восстановление пароля",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *             required={"email"},
+     *             properties={
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="string",
+     *                 ),
+     *             }
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @return JsonResponse
      */
-    public function user(): JsonResponse
+    public function forgot(): JsonResponse
     {
-        return response()->json(auth(Config::get('manager-api.guard.provider'))->user());
+        return response()->json([
+            'data' => [],
+        ]);
     }
 
     /**
@@ -108,15 +143,15 @@ class AuthController extends Controller
      *
      * @param string $token
      *
-     * @return JsonResponse
+     * @return array
      */
-    protected function createNewToken(string $token): JsonResponse
+    protected function createNewToken(string $token): array
     {
-        return response()->json([
+        return [
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth(Config::get('manager-api.guard.provider'))->factory()->getTTL() * 60,
             'user' => auth(Config::get('manager-api.guard.provider'))->user(),
-        ]);
+        ];
     }
 }

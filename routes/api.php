@@ -49,6 +49,8 @@ Route::prefix($apiPath)
             ->group(fn() => [
                 Route::post('/', [AuthController::class, 'login'])
                     ->withoutMiddleware($authMiddleware),
+                Route::post('forgot', [AuthController::class, 'forgot'])
+                    ->withoutMiddleware($authMiddleware),
                 Route::post('refresh', [AuthController::class, 'refresh']),
             ]),
 
