@@ -112,6 +112,7 @@ class AuthController extends Controller
                 'username' => '',
                 'password' => '',
                 'remember' => null,
+                'site_name' => Config::get('global.site_name'),
             ],
             'layout' => [
                 Input::make('username')
