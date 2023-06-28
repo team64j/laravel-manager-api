@@ -179,6 +179,18 @@ class Field extends Component
      *
      * @return $this
      */
+    public function setErrorClass(string $value = null): static
+    {
+        $this->attributes['attrs']['errorClass'] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return $this
+     */
     public function setRequired(string $value = null): static
     {
         $this->attributes['attrs']['requiredText'] = $value;

@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelManagerApi\Components\Button;
 use Team64j\LaravelManagerApi\Components\Checkbox;
 use Team64j\LaravelManagerApi\Components\Input;
 use Team64j\LaravelManagerApi\Components\Template;
@@ -91,10 +90,22 @@ class AuthController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/auth",
+     *     summary="Форма авторизации",
+     *     tags={"Auth"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param Request $request
      * @return JsonResponse
      */
-    protected function loginForm(Request $request)
+    protected function loginForm(Request $request): JsonResponse
     {
         return response()->json([
             'data' => [
@@ -105,17 +116,19 @@ class AuthController extends Controller
             'layout' => [
                 Input::make('username')
                     ->setLabel(Lang::get('global.username'))
-                    ->setInputClass('!bg-transparent input-lg'),
+                    ->setInputClass('!bg-transparent input-lg')
+                    ->setErrorClass('hidden'),
                 Input::make('password')
                     ->setType('password')
                     ->setLabel(Lang::get('global.password'))
-                    ->setInputClass('!bg-transparent input-lg'),
+                    ->setInputClass('!bg-transparent input-lg')
+                    ->setErrorClass('hidden'),
                 Template::make('remember')
                     ->setClass('flex justify-between items-center')
                     ->setSlot([
                         Checkbox::make()
                             ->setLabel(Lang::get('global.remember_username'))
-                            ->setClass('!mb-0')
+                            ->setClass('flex !mb-0')
                             ->setInputClass('input-lg'),
                         Input::make()
                             ->setType('button')
