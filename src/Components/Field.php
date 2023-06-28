@@ -91,6 +91,18 @@ class Field extends Component
     }
 
     /**
+     * @param null $value
+     *
+     * @return $this
+     */
+    public function setType($value = null): static
+    {
+        $this->attributes['attrs']['type'] = $value;
+
+        return $this;
+    }
+
+    /**
      * @param string|null $value
      *
      * @return $this

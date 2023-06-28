@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
+use Team64j\LaravelManagerApi\Components\Button;
+use Team64j\LaravelManagerApi\Components\Checkbox;
+use Team64j\LaravelManagerApi\Components\Input;
+use Team64j\LaravelManagerApi\Components\Template;
 
 class AuthController extends Controller
 {
@@ -56,6 +60,10 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
+        if ($request->isMethod('get')) {
+            return $this->loginForm($request);
+        }
+
         $guard = auth(Config::get('manager-api.guard.provider'));
 
         $validator = Validator::make($request->all(), [
@@ -78,7 +86,43 @@ class AuthController extends Controller
         $guard->login($guard->user(), $request->boolean('remember'));
 
         return response()->json([
-            'data' => $this->createNewToken((string) $token),
+            'data' => $this->createNewToken((string)$token),
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    protected function loginForm(Request $request)
+    {
+        return response()->json([
+            'data' => [
+                'username' => '',
+                'password' => '',
+                'remember' => null,
+            ],
+            'layout' => [
+                Input::make('username')
+                    ->setLabel(Lang::get('global.username'))
+                    ->setInputClass('!bg-transparent input-lg'),
+                Input::make('password')
+                    ->setType('password')
+                    ->setLabel(Lang::get('global.password'))
+                    ->setInputClass('!bg-transparent input-lg'),
+                Template::make('remember')
+                    ->setClass('flex justify-between items-center')
+                    ->setSlot([
+                        Checkbox::make()
+                            ->setLabel(Lang::get('global.remember_username'))
+                            ->setClass('!mb-0')
+                            ->setInputClass('input-lg'),
+                        Input::make()
+                            ->setType('button')
+                            ->setValue(Lang::get('global.login_button'))
+                            ->setInputClass('btn-green btn-lg whitespace-nowrap'),
+                    ])
+            ],
         ]);
     }
 
