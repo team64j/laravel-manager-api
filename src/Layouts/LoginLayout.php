@@ -19,11 +19,13 @@ class LoginLayout extends Layout
     {
         return [
             Input::make('username')
+                ->setId('username')
                 ->setLabel(Lang::get('global.username'))
                 ->setInputClass('!bg-transparent input-lg')
                 ->setErrorClass('hidden'),
 
             Input::make('password')
+                ->setId('password')
                 ->setType('password')
                 ->setLabel(Lang::get('global.password'))
                 ->setInputClass('!bg-transparent input-lg')
@@ -33,6 +35,7 @@ class LoginLayout extends Layout
                 ->setClass('flex justify-between items-center')
                 ->setSlot([
                     Checkbox::make('remember')
+                        ->setId('remember')
                         ->setLabel(Lang::get('global.remember_username'))
                         ->setClass('inline-flex')
                         ->setInputClass('input-lg'),
