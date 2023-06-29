@@ -68,10 +68,13 @@ class ApiServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/manager-api.php', 'manager-api');
 
-        $guard = Config::get('manager-api.guard.provider');
+        if (!$this->app->configurationIsCached()) {
+            $guard = Config::get('manager-api.guard.provider');
 
-        Config::set('auth.guards.' . $guard, Config::get('manager-api.guard'));
-        Config::set('auth.providers.' . $guard, Config::get('manager-api.provider'));
+            Config::set('auth.guards.' . $guard, Config::get('manager-api.guard'));
+            Config::set('auth.providers.' . $guard, Config::get('manager-api.provider'));
+            Config::set('database.connections.' . Config::get('database.default') . '.prefix', env('DB_PREFIX', ''));
+        }
     }
 
     /**
