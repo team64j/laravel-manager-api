@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Permissions;
 use Team64j\LaravelManagerApi\Http\Requests\RolePermissionRequest;
 use Team64j\LaravelManagerApi\Http\Resources\RoleCategoryResource;
@@ -20,6 +21,19 @@ class RolePermissionController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/roles/permissions",
+     *     summary="Получение списка прав доступа для юзеров",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param RolePermissionRequest $request
      * @param RolePermissionLayout $layout
      *
@@ -72,6 +86,19 @@ class RolePermissionController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/roles/permissions/{id}",
+     *     summary="Получение права доступа для юзеров",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param RolePermissionRequest $request
      * @param string $rolePermission
      * @param RolePermissionLayout $layout

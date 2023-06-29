@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Http\Requests\WorkspaceRequest;
 use Team64j\LaravelManagerApi\Http\Resources\WorkspaceResource;
@@ -17,6 +18,19 @@ use Team64j\LaravelManagerApi\Layouts\WorkspaceLayout;
 class WorkspaceController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/workspace",
+     *     summary="Интерфейс и представление",
+     *     tags={"System"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param WorkspaceRequest $request
      * @param WorkspaceLayout $layout
      *
@@ -59,6 +73,24 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/workspace",
+     *     summary="Сохранение Интерфейс и представление",
+     *     tags={"System"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param WorkspaceRequest $request
      * @param WorkspaceLayout $layout
      *

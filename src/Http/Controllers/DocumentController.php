@@ -388,12 +388,11 @@ class DocumentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/document/tree",
+     *     path="/document/tree/{parent}",
      *     summary="Получение списка документов с пагинацией для древовидного меню",
      *     tags={"Document"},
      *     security={{"Api":{}}},
      *     parameters={
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer")),
      *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
      *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),

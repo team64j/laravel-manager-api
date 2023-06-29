@@ -49,7 +49,6 @@ class AuthController extends Controller
      *          )
      *      )
      * )
-     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -124,6 +123,7 @@ class AuthController extends Controller
      *     path="/auth/refresh",
      *     summary="Обновление токена",
      *     tags={"Auth"},
+     *     security={{"Api":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="ok",
@@ -166,9 +166,35 @@ class AuthController extends Controller
      *          )
      *      )
      * )
+     * @param Request $request
+     *
      * @return JsonResponse
      */
-    public function forgot(): JsonResponse
+    public function forgot(Request $request): JsonResponse
+    {
+        return response()->json([
+            'data' => [],
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/auth/forgot",
+     *     summary="Форма Восстановление пароля",
+     *     tags={"Auth"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function forgotForm(Request $request): JsonResponse
     {
         return response()->json([
             'data' => [],

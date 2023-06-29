@@ -366,7 +366,6 @@ class PluginController extends Controller
      *     security={{"Api":{}}},
      *     parameters={
      *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer", default="-1")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
      *     },
      *     @OA\Response(

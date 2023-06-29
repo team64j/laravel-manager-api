@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteSnippet;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
@@ -22,6 +23,25 @@ class SnippetController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/snippets",
+     *     summary="Получение списка сниппетов с пагинацией и фильтрацией",
+     *     tags={"Snippets"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SnippetRequest $request
      * @param SnippetLayout $layout
      *
@@ -99,6 +119,24 @@ class SnippetController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/snippets",
+     *     summary="Создание нового сниппета",
+     *     tags={"Snippets"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SnippetRequest $request
      *
      * @return SnippetResource
@@ -111,6 +149,19 @@ class SnippetController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/snippets/{id}",
+     *     summary="Чтение сниппета",
+     *     tags={"Snippets"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SnippetRequest $request
      * @param string $snippet
      * @param SnippetLayout $layout
@@ -131,6 +182,24 @@ class SnippetController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/snippets/{id}",
+     *     summary="Обновление сниппета",
+     *     tags={"Snippets"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SnippetRequest $request
      * @param SiteSnippet $snippet
      *
@@ -144,6 +213,19 @@ class SnippetController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/snippets/{id}",
+     *     summary="Удаление сниппета",
+     *     tags={"Snippets"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SnippetRequest $request
      * @param SiteSnippet $snippet
      *
@@ -157,6 +239,22 @@ class SnippetController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/snippets/list",
+     *     summary="Получение списка сниппетов с пагинацией для меню",
+     *     tags={"Snippets"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SnippetRequest $request
      *
      * @return AnonymousResourceCollection
@@ -205,6 +303,23 @@ class SnippetController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/snippets/tree/{category}",
+     *     summary="Получение списка сниппетов с пагинацией для древовидного меню",
+     *     tags={"Snippets"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SnippetRequest $request
      * @param int $category
      *

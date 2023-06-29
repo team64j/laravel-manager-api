@@ -136,12 +136,11 @@ class FileController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/file/tree",
+     *     path="/file/tree/{path}",
      *     summary="Получение списка файлов с пагинацией для древовидного меню",
      *     tags={"File"},
      *     security={{"Api":{}}},
      *     parameters={
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="after", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),

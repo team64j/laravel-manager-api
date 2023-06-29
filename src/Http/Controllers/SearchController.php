@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Config;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\SiteContent;
 use Team64j\LaravelManagerApi\Http\Requests\SearchRequest;
 use Team64j\LaravelManagerApi\Http\Resources\SearchResource;
@@ -16,6 +17,19 @@ class SearchController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/search",
+     *     summary="Поиск",
+     *     tags={"System"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SearchRequest $request
      *
      * @return AnonymousResourceCollection

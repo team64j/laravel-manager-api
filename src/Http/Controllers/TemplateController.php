@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteTemplate;
 use Team64j\LaravelEvolution\Models\SiteTmplvar;
@@ -26,6 +27,25 @@ class TemplateController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/templates",
+     *     summary="Получение списка шаблонов с пагинацией и фильтрацией",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="templatename", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      * @param TemplateLayout $layout
      *
@@ -118,6 +138,19 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/templates/{id}",
+     *     summary="Чтение шаблона",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      * @param string $id
      * @param TemplateLayout $layout
@@ -143,6 +176,24 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/templates",
+     *     summary="Создание нового шаблона",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      * @param TemplateLayout $layout
      *
@@ -167,6 +218,24 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/templates/{id}",
+     *     summary="Обновление шаблона",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      * @param string $id
      * @param TemplateLayout $layout
@@ -197,6 +266,19 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/templates/{id}",
+     *     summary="Удаление шаблона",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      * @param string $id
      *
@@ -210,6 +292,22 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/templates/list",
+     *     summary="Получение списка шаблонов с пагинацией для меню",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      *
      * @return AnonymousResourceCollection
@@ -258,6 +356,24 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/templates/{id}/tvs",
+     *     summary="Получение списка TV парметров с пагинацией для шаблона",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="attach")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      * @param string $template
      * @param TemplateLayout $layout
@@ -336,6 +452,22 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/templates/select",
+     *     summary="Получение списка шаблонов для выбора",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="integer")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      *
      * @return AnonymousResourceCollection
@@ -387,6 +519,23 @@ class TemplateController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/templates/tree/{category}",
+     *     summary="Получение списка шаблонов с пагинацией для древовидного меню",
+     *     tags={"Templates"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TemplateRequest $request
      * @param int $category
      *

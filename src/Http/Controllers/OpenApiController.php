@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use OpenApi\Annotations as OA;
-use OpenApi\Annotations\OpenApi;
 use OpenApi\Generator;
 
 /**
  * @OA\Info(
- *     title="Openapi schema",
+ *     title="OpenAPI Schema",
  *     version="1.1.1",
  * )
  * @OA\SecurityScheme(
@@ -22,10 +22,11 @@ use OpenApi\Generator;
  */
 class OpenApiController extends Controller
 {
+
     /**
-     * @return OpenApi|null
+     * @return JsonResponse
      */
-    public function index(): ?OpenApi
+    public function index(): JsonResponse
     {
         $openapi = Generator::scan(
             [__DIR__],
@@ -36,10 +37,16 @@ class OpenApiController extends Controller
 
         $openapi->servers = [
             [
-                'url' => route('manager.api')
+                'url' => route('manager.api'),
             ],
         ];
 
-        return $openapi;
+        return response()
+            ->json(
+                $openapi,
+                200,
+                [],
+                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+            );
     }
 }

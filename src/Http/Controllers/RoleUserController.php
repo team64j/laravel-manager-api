@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Config;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\UserRole;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
 use Team64j\LaravelManagerApi\Http\Resources\RoleUserResource;
@@ -17,6 +18,19 @@ class RoleUserController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/roles/users",
+     *     summary="Получение списка ролей для юзеров",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param RoleUserRequest $request
      * @param RoleUserLayout $layout
      *
@@ -44,6 +58,19 @@ class RoleUserController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/roles/users/{id}",
+     *     summary="Получение роли для юзеров",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param RoleUserRequest $request
      * @param string $roleUser
      * @param RoleUserLayout $layout

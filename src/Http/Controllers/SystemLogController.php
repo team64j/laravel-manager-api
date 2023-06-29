@@ -23,7 +23,7 @@ class SystemLogController extends Controller
      * @OA\Get(
      *     path="/system-log",
      *     summary="Получение списка лога системных событий с фильтрацией",
-     *     tags={"SystemLog"},
+     *     tags={"System"},
      *     security={{"Api":{}}},
      *     parameters={
      *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),

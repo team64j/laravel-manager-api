@@ -20,7 +20,7 @@ class EventLogController extends Controller
      * @OA\Get(
      *     path="/event-log",
      *     summary="Получение списка лога событий с фильтрацией",
-     *     tags={"EventLog"},
+     *     tags={"System"},
      *     security={{"Api":{}}},
      *     parameters={
      *         @OA\Parameter (name="type", in="query", @OA\Schema(type="string", default="")),
@@ -170,7 +170,7 @@ class EventLogController extends Controller
      * @OA\Get(
      *     path="/event-log/{id}",
      *     summary="Чтение лога события",
-     *     tags={"EventLog"},
+     *     tags={"System"},
      *     security={{"Api":{}}},
      *     @OA\Response(
      *          response="200",

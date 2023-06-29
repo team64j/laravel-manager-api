@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteTmplvar;
 use Team64j\LaravelManagerApi\Http\Requests\TvRequest;
@@ -22,6 +23,25 @@ class TvController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/tvs",
+     *     summary="Получение списка TV параметров с пагинацией и фильтрацией",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      * @param TvLayout $layout
      *
@@ -98,6 +118,24 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/tvs",
+     *     summary="Создание нового TV параметра",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      * @param TvLayout $layout
      *
@@ -118,6 +156,19 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/tvs/{id}",
+     *     summary="Чтение TV параметра",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      * @param string $tv
      * @param TvLayout $layout
@@ -149,6 +200,24 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/tvs/{id}",
+     *     summary="Обновление TV параметра",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      * @param SiteTmplvar $tv
      * @param TvLayout $layout
@@ -171,6 +240,19 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/tvs/{id}",
+     *     summary="Удаление TV параметра",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      * @param SiteTmplvar $tv
      *
@@ -184,6 +266,22 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/tvs/list",
+     *     summary="Получение списка TV параметров с пагинацией для меню",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      *
      * @return AnonymousResourceCollection
@@ -231,6 +329,22 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/tvs/sort",
+     *     summary="Получение списка TV параметров с пагинацией для сортировки",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      * @param TvLayout $layout
      *
@@ -259,6 +373,22 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/tvs/types",
+     *     summary="Получение списка типов TV параметров для выбора",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      *
      * @return AnonymousResourceCollection
@@ -280,9 +410,26 @@ class TvController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/tvs/tree/{category}",
+     *     summary="Получение списка TV параметров с пагинацией для древовидного меню",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param TvRequest $request
      * @param int $category
-     *
+     *ф
      * @return AnonymousResourceCollection
      */
     public function tree(TvRequest $request, int $category): AnonymousResourceCollection

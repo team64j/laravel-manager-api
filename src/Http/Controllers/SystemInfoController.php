@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemInfoRequest;
 use Team64j\LaravelManagerApi\Http\Resources\SystemInfoResource;
 use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
@@ -19,6 +20,19 @@ use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
 class SystemInfoController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/system-info",
+     *     summary="Системная информация",
+     *     tags={"System"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SystemInfoRequest $request
      * @param SystemInfoLayout $layout
      *
@@ -106,6 +120,19 @@ class SystemInfoController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/phpinfo",
+     *     summary="Информация о PHP",
+     *     tags={"System"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param SystemInfoRequest $request
      *
      * @return string

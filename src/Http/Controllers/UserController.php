@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\ActiveUserSession;
 use Team64j\LaravelEvolution\Models\User;
 use Team64j\LaravelEvolution\Models\UserAttribute;
@@ -22,6 +23,26 @@ class UserController extends Controller
     use PaginationTrait;
 
     /**
+     * @OA\Get(
+     *     path="/users",
+     *     summary="Получение списка пользователей с пагинацией и фильтрацией",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *         @OA\Parameter (name="role", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="blocked", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param UserRequest $request
      * @param UserLayout $layout
      *
@@ -162,6 +183,19 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/users/{id}",
+     *     summary="Чтение пользователя",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param UserRequest $request
      * @param string $user
      * @param UserLayout $layout
@@ -183,6 +217,22 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/users/list",
+     *     summary="Получение списка пользователей с пагинацией для меню",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param UserRequest $request
      *
      * @return AnonymousResourceCollection
@@ -224,6 +274,19 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/users/active",
+     *     summary="Получение списка активных пользователей с пагинацией",
+     *     tags={"Users"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
      * @param UserRequest $request
      *
      * @return AnonymousResourceCollection
