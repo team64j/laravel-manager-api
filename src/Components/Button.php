@@ -4,30 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Components;
 
-class Button extends Field
+class Button extends Input
 {
-    /**
-     * @param string|null $model
-     * @param string|null $label
-     * @param string|null $help
-     * @param string|null $class
-     */
-    public function __construct(
-        string $model = null,
-        string $label = null,
-        string $help = null,
-        string $class = null
-    ) {
-        $attributes = [
-            'component' => 'EvoFields/Button',
-            'attrs' => [
-                'label' => $label,
-                'help' => $help,
-                'class' => $class,
-            ],
-            'model' => $model,
-        ];
+    public function __construct()
+    {
+        parent::__construct(...func_get_args());
 
-        parent::__construct($attributes);
+        $this->attributes['attrs']['type'] = 'button';
     }
 }

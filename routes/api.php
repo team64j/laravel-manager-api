@@ -47,10 +47,14 @@ Route::prefix($apiPath)
         /** Auth */
         Route::prefix('auth')
             ->group(fn() => [
-                Route::addRoute(['GET', 'POST'], '/', [AuthController::class, 'login'])
-                    ->withoutMiddleware($authMiddleware),
-                Route::addRoute(['GET', 'POST'], 'forgot', [AuthController::class, 'forgot'])
-                    ->withoutMiddleware($authMiddleware),
+                Route::withoutMiddleware($authMiddleware)
+                    ->group(fn() => [
+                        Route::get('/', [AuthController::class, 'loginForm']),
+                        Route::post('/', [AuthController::class, 'login']),
+                        Route::get('forgot', [AuthController::class, 'forgotForm']),
+                        Route::post('forgot', [AuthController::class, 'forgot']),
+                    ]),
+
                 Route::post('refresh', [AuthController::class, 'refresh']),
             ]),
 

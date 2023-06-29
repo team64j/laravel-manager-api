@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelManagerApi\Components\Checkbox;
-use Team64j\LaravelManagerApi\Components\Input;
-use Team64j\LaravelManagerApi\Components\Template;
+use Team64j\LaravelManagerApi\Layouts\LoginLayout;
 
 class AuthController extends Controller
 {
@@ -59,10 +57,6 @@ class AuthController extends Controller
      */
     public function login(Request $request): JsonResponse
     {
-        if ($request->isMethod('get')) {
-            return $this->loginForm($request);
-        }
-
         $guard = auth(Config::get('manager-api.guard.provider'));
 
         $validator = Validator::make($request->all(), [
@@ -74,10 +68,6 @@ class AuthController extends Controller
 
         if (!$token = $guard->attempt($validator->validated())) {
             return response()->json([
-                'errors' => [
-                    'username' => [],
-                    'password' => [],
-                ],
                 'message' => Lang::get('global.login_processor_unknown_user'),
             ], 422);
         }
@@ -103,39 +93,28 @@ class AuthController extends Controller
      *      )
      * )
      * @param Request $request
+     * @param LoginLayout $layout
+     *
      * @return JsonResponse
      */
-    protected function loginForm(Request $request): JsonResponse
+    protected function loginForm(Request $request, LoginLayout $layout): JsonResponse
     {
+        $languages = $this->getLanguages();
+        $language =
+            empty($languages[Config::get('global.manager_language')]) ? 'en' : Config::get('global.manager_language');
+
         return response()->json([
             'data' => [
                 'username' => '',
                 'password' => '',
-                'remember' => null,
-                'site_name' => Config::get('global.site_name'),
+                'remember' => true,
             ],
-            'layout' => [
-                Input::make('username')
-                    ->setLabel(Lang::get('global.username'))
-                    ->setInputClass('!bg-transparent input-lg')
-                    ->setErrorClass('hidden'),
-                Input::make('password')
-                    ->setType('password')
-                    ->setLabel(Lang::get('global.password'))
-                    ->setInputClass('!bg-transparent input-lg')
-                    ->setErrorClass('hidden'),
-                Template::make('remember')
-                    ->setClass('flex justify-between items-center')
-                    ->setSlot([
-                        Checkbox::make()
-                            ->setLabel(Lang::get('global.remember_username'))
-                            ->setClass('flex !mb-0')
-                            ->setInputClass('input-lg'),
-                        Input::make()
-                            ->setType('button')
-                            ->setValue(Lang::get('global.login_button'))
-                            ->setInputClass('btn-green btn-lg whitespace-nowrap'),
-                    ])
+            'layout' => $layout->default(),
+            'meta' => [
+                'site_name' => Config::get('global.site_name'),
+                'version' => Config::get('global.settings_version'),
+                'language' => $language,
+                'languages' => $languages,
             ],
         ]);
     }
@@ -211,5 +190,49 @@ class AuthController extends Controller
             'expires_in' => auth(Config::get('manager-api.guard.provider'))->factory()->getTTL() * 60,
             'user' => auth(Config::get('manager-api.guard.provider'))->user(),
         ];
+    }
+
+    /**
+     * load languages and keys
+     *
+     * @return array
+     */
+    protected function getLanguages(): array
+    {
+        $languages = [
+            'be' => 'Беларуская мова',
+            'bg' => 'Български език',
+            'cs' => 'Čeština',
+            'da' => 'Dansk',
+            'de' => 'Deutsch',
+            'en' => 'English',
+            'es' => 'Español',
+            'he' => 'עברית ʿ',
+            'ja' => '日本語',
+            'fa' => 'فارسی',
+            'fi' => 'Suomi',
+            'fr' => 'Français',
+            'it' => 'Italiano',
+            'nl' => 'Nederlands',
+            'nn' => 'Nynorsk',
+            'pl' => 'Język polski',
+            'pt' => 'Português',
+            'ru' => 'Русский',
+            'sv' => 'Svenska',
+            'uk' => 'Українська мова',
+            'zh' => '中文',
+        ];
+
+        $path = dirname(__DIR__, 3);
+        $lang_keys_select = [];
+        $dir = dir($path . '/lang');
+        while ($file = $dir->read()) {
+            if (is_dir($path . '/lang/' . $file) && ($file != '.' && $file != '..')) {
+                $lang_keys_select[$file] = $languages[$file] ?? $file;
+            }
+        }
+        $dir->close();
+
+        return $lang_keys_select;
     }
 }
