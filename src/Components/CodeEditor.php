@@ -64,4 +64,16 @@ class CodeEditor extends Component
 
         return $this;
     }
+
+    /**
+     * @param array $value
+     *
+     * @return $this
+     */
+    public function setConfig(array $value): static
+    {
+        $this->attributes['attrs']['config'] = $value;
+
+        return $this;
+    }
 }

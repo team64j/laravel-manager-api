@@ -114,7 +114,8 @@ class TemplateLayout extends Layout
                                 ->setCheckedValue(1, 0)),
 
                         CodeEditor::make('content', Lang::get('global.template_code'))
-                            ->setLanguage('html'),
+                            ->setLanguage('html')
+                            ->setRows(20),
                     ]
                 )
                 ->addTab('tvs', Lang::get('global.template_assignedtv_tab'), null, 'py-8 flex flex-wrap')

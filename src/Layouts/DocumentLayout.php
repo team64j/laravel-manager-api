@@ -117,7 +117,7 @@ class DocumentLayout extends Layout
                                     Lang::get('global.import_parent_resource'),
                                     '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
                                 )
-                                    ->setInputClass('pr-8 appearance-select cursor-pointer')
+                                    ->setInputClass('cursor-pointer')
                                     ->setValue(
                                         $model->parent ? $model->parents->pagetitle . ' (' . $model->parent . ')' : 0
                                     )
