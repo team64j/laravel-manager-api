@@ -456,12 +456,14 @@ class DocumentLayout extends Layout
                     Checkbox::make()
                         ->setModel('data.is_document_group')
                         ->setLabel(Lang::get('global.all_doc_groups'))
-                        ->setCheckedValue(true, false),
+                        ->setCheckedValue(true, false)
+                        ->setRelation('data.document_groups', [], [], true),
 
                     Checkbox::make()
                         ->setModel('data.document_groups')
                         ->setLabel(Lang::get('global.access_permissions_resource_groups'))
-                        ->setData($groups),
+                        ->setData($groups)
+                        ->setRelation('data.is_document_group', false, true),
                 ]
             );
     }

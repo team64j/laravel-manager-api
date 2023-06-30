@@ -254,6 +254,26 @@ class Field extends Component
     }
 
     /**
+     * @param string $value
+     * @param null $trueValue
+     * @param null $falseValue
+     * @param null $notEmpty
+     *
+     * @return $this
+     */
+    public function setRelation(string $value, $trueValue = null, $falseValue = null, $notEmpty = null): static
+    {
+        $this->attributes['attrs']['relation'] = [
+            'key' => $value,
+            'trueValue' => $trueValue,
+            'falseValue' => $falseValue,
+            'notEmpty' => $notEmpty,
+        ];
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function isRequired(): static
