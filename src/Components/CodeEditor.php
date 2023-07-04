@@ -38,11 +38,11 @@ class CodeEditor extends Component
     }
 
     /**
-     * @param int $value
+     * @param int|string $value
      *
      * @return $this
      */
-    public function setRows(int $value): static
+    public function setRows(int|string $value): static
     {
         $this->attributes['attrs']['rows'] = $value;
 

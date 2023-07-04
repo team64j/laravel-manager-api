@@ -36,7 +36,8 @@ class FileLayout extends Layout
                     Input::make('basename', Lang::get('global.files_filename'))
                         ->setInputClass('text-xl font-bold px-4 py-2'),
                     CodeEditor::make('content')
-                        ->setLanguage($data['lang']),
+                        ->setLanguage($data['lang'])
+                        ->setRows('auto'),
                 ]),
         ];
     }
