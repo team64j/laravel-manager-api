@@ -274,6 +274,18 @@ class Field extends Component
     }
 
     /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setEmitClick(string $value): static
+    {
+        $this->attributes['attrs']['emitClick'] = $value;
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function isRequired(): static

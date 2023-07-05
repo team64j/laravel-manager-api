@@ -121,6 +121,7 @@ class DocumentLayout extends Layout
                                     ->setValue(
                                         $model->parent ? $model->parents->pagetitle . ' (' . $model->parent . ')' : 0
                                     )
+                                    ->setEmitClick('tree:select')
                                     ->isRequired()
                                     ->isReadonly(),
 
