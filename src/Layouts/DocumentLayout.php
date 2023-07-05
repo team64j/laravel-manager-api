@@ -137,7 +137,8 @@ class DocumentLayout extends Layout
                                             'value' => $model->tpl->templatename ?? 'blank',
                                             'selected' => true,
                                         ],
-                                    ]),
+                                    ])
+                                    ->setEmitInput('inputChangeQuery'),
 
                                 Checkbox::make(
                                     'hidemenu',

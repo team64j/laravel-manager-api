@@ -286,6 +286,18 @@ class Field extends Component
     }
 
     /**
+     * @param string $value
+     *
+     * @return $this
+     */
+    public function setEmitInput(string $value): static
+    {
+        $this->attributes['attrs']['emitInput'] = $value;
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function isRequired(): static
