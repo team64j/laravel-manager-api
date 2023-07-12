@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
@@ -169,6 +170,57 @@ class DocumentController extends Controller
     public function show(DocumentRequest $request, string $document, DocumentLayout $layout): DocumentResource
     {
         /** @var SiteContent $document */
+        $document = SiteContent::query()->findOrFail($document);
+
+        if ($request->has('template')) {
+            $document->template = $request->input('template');
+        }
+
+        if ($request->has('parent')) {
+            $document->parent = $request->input('parent');
+        }
+
+        if ($request->has('type')) {
+            $document->type = $request->input('type');
+        }
+
+        $document->setAttribute(
+            'tvs',
+            $document->getTvs()->keyBy('name')->map(fn($tv) => $tv['value'])
+        );
+
+        if (Config::get('global.use_udperms')) {
+            /** @var Collection $groups */
+            $groups = $document->documentGroups;
+
+            $document->setAttribute(
+                'is_document_group',
+                $groups->isEmpty()
+            );
+
+            $document->setAttribute(
+                'document_groups',
+                $groups->map(
+                    fn(DocumentgroupName $group) => $group->getKey()
+                )
+            );
+        }
+
+        $route = Uri::getRouteById($document->getKey());
+
+        return DocumentResource::make($document->withoutRelations())
+            ->additional([
+                'layout' => $layout->default($document),
+                'meta' => [
+                    'tab' => $layout->titleDefault($document),
+                    'url' => $route['url'] ?? '',
+                ],
+            ]);
+    }
+
+    public function show2(DocumentRequest $request, string $document, DocumentLayout $layout): DocumentResource
+    {
+        /** @var SiteContent $document */
         $document = SiteContent::query()->findOrNew($document);
 
         if ($request->has('template')) {
@@ -243,9 +295,9 @@ class DocumentController extends Controller
     public function store(DocumentRequest $request, DocumentLayout $layout): DocumentResource
     {
         /** @var SiteContent $document */
-        $document = SiteContent::query()->create($request->validated());
+        $document = SiteContent::query()->create($request->all());
 
-        return $this->getDocument($request, $document, $layout);
+        return $this->show($request, $document->getKey(), $layout);
     }
 
     /**
@@ -277,9 +329,39 @@ class DocumentController extends Controller
     {
         /** @var SiteContent $document */
         $document = SiteContent::query()->findOrFail($id);
-        $document->update($request->validated());
+        $document->update($request->all());
 
-        return $this->getDocument($request, $document, $layout);
+        $tvs = $document->getTvs()->keyBy('name');
+        foreach ($request->input('tvs', []) as $key => $value) {
+            if ($tvs->has($key)) {
+                $tv = $tvs->get($key);
+
+                switch ($tv['type']) {
+                    case 'radio':
+                    case 'checkbox':
+                    case 'listbox-multiple':
+                        if (is_array($tv['value'])) {
+                            $tv['value'] = implode('||', $tv['value']);
+                        }
+
+                        if (is_array($value)) {
+                            $value = implode('||', $value);
+                        }
+
+                        break;
+                }
+
+                if ($tv['value'] != $value) {
+                    if ($value != '' && !is_null($value)) {
+                        // insert tv value
+                    } else {
+                        // delete tv value
+                    }
+                }
+            }
+        }
+
+        return $this->show($request, $id, $layout);
     }
 
     /**
@@ -306,50 +388,6 @@ class DocumentController extends Controller
         SiteContent::query()->findOrFail($id)->delete();
 
         return response()->noContent();
-    }
-
-    /**
-     * @param DocumentRequest $request
-     * @param SiteContent $document
-     * @param DocumentLayout $layout
-     *
-     * @return DocumentResource
-     */
-    protected function getDocument(
-        DocumentRequest $request,
-        SiteContent $document,
-        DocumentLayout $layout): DocumentResource
-    {
-        $data = array_merge(
-            $document->withoutRelations()->toArray(),
-            ['empty_cache' => 1],
-            $this->tvs($document)
-        );
-
-        return (new DocumentResource($data))
-            ->additional([
-                'meta' => $this->getMeta($request, $document),
-                'layout' => $layout->default($document),
-            ]);
-    }
-
-    /**
-     * @param DocumentRequest $request
-     * @param SiteContent $document
-     *
-     * @return array
-     */
-    protected function getMeta(DocumentRequest $request, SiteContent $document): array
-    {
-        $route = Uri::getRouteById($document->id);
-
-        return [
-            'url' => $route['url'] ?? '',
-            'tab' => [
-                'title' => $document->pagetitle ?: Lang::get('global.new_resource'),
-                'icon' => 'fa fa-edit',
-            ],
-        ];
     }
 
     /**

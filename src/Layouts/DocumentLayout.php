@@ -392,8 +392,7 @@ class DocumentLayout extends Layout
                 $tvTabs->putSlot(
                     $categoryId,
                     Textarea::make()
-                        ->setModel('data.tvs.' . $tv['name'] . '.value')
-                        ->setValue($tv['value'])
+                        ->setModel('data.tvs.' . $tv['name'])
                         ->setData($data)
                         ->setLabel($tv['caption'])
                         ->setDescription($tv['description'])
@@ -410,8 +409,7 @@ class DocumentLayout extends Layout
                 $tvTabs->putSlot(
                     $categoryId,
                     $field
-                        ->setModel('data.tvs.' . $tv['name'] . '.value')
-                        ->setValue($tv['value'])
+                        ->setModel('data.tvs.' . $tv['name'])
                         ->setData($data)
                         ->setLabel($tv['caption'])
                         ->setDescription($tv['description'])
