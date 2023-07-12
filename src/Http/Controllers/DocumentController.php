@@ -170,7 +170,7 @@ class DocumentController extends Controller
     public function show(DocumentRequest $request, string $document, DocumentLayout $layout): DocumentResource
     {
         /** @var SiteContent $document */
-        $document = SiteContent::query()->findOrFail($document);
+        $document = SiteContent::query()->findOrNew($document);
 
         if ($request->has('template')) {
             $document->template = $request->input('template');
