@@ -120,7 +120,7 @@ class SnippetLayout extends Layout
                         true
                     )
                     ->addColumn('description', Lang::get('global.snippet_desc'))
-                    ->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
+                    //->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
                     ->addColumn(
                         'locked',
                         Lang::get('global.locked'),

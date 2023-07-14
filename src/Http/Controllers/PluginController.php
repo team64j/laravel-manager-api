@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -64,52 +65,31 @@ class PluginController extends Controller
             $dir = 'asc';
         }
 
-        $result = SitePlugin::query()
+        /** @var LengthAwarePaginator $result */
+        $result = SitePlugin::withoutLocked()
             ->select($fields)
-            ->with('categories')
+            ->with('category')
             ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
-            ->whereIn('locked', Auth::user()->attributes->role == 1 ? [0, 1] : [0])
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $data = Collection::make([
-            'data' => Collection::make(),
-            'pagination' => $this->pagination($result),
-            'filters' => [
-                'name' => true
-            ],
-        ]);
-
-        /** @var SitePlugin $item */
-        foreach ($result->items() as $item) {
-            if (!$data['data']->has($item->category)) {
-                if ($item->category) {
-                    $data['data'][$item->category] = [
-                        'id' => $item->category,
-                        'name' => $item->categories->category,
-                        'data' => Collection::make(),
-                    ];
-                } else {
-                    $data['data'][0] = [
-                        'id' => 0,
-                        'name' => Lang::get('global.no_category'),
-                        'data' => Collection::make(),
-                    ];
-                }
-            }
-
-            $item->setAttribute('category.name', $data['data'][$item->category]['name']);
-            $item->setAttribute('description.html', $item->description);
-
-            $data['data'][$item->category]['data']->add($item->withoutRelations());
-        }
-
-        $data['data'] = $data['data']->values();
-
         return PluginResource::collection([
-            'data' => $data,
+            'data' => [
+                'data' => $result->groupBy('category')
+                    ->map(fn($category) => [
+                        'id' => $category->first()->category,
+                        'name' => $category->first()->getRelation('category')->category ??
+                            Lang::get('global.no_category'),
+                        'data' => $category->map->withoutRelations(),
+                    ])
+                    ->values(),
+                'pagination' => $this->pagination($result),
+                'filters' => [
+                    'name' => true,
+                ],
+            ],
         ])
             ->additional([
                 'layout' => $layout->list(),
@@ -264,10 +244,9 @@ class PluginController extends Controller
     {
         $filter = $request->get('filter');
 
-        $result = SitePlugin::query()
+        $result = SitePlugin::withoutLocked()
             ->where(fn($query) => $filter ? $query->where('name', 'like', '%' . $filter . '%') : null)
-            ->whereIn('locked', Auth::user()->attributes->role == 1 ? [0, 1] : [0])
-            ->whereIn('disabled', Auth::user()->attributes->role == 1 ? [0, 1] : [0])
+            ->whereIn('disabled', Auth::user()->isAdmin() ? [0, 1] : [0])
             ->orderBy('name')
             ->paginate(Config::get('global.number_of_results'), [
                 'id',

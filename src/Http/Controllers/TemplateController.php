@@ -6,8 +6,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
@@ -16,7 +16,6 @@ use Team64j\LaravelEvolution\Models\SiteTemplate;
 use Team64j\LaravelEvolution\Models\SiteTmplvar;
 use Team64j\LaravelEvolution\Models\SiteTmplvarTemplate;
 use Team64j\LaravelManagerApi\Components\Checkbox;
-use Team64j\LaravelManagerApi\Components\HelpIcon;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
@@ -67,65 +66,43 @@ class TemplateController extends Controller
             $dir = 'asc';
         }
 
-        $result = SiteTemplate::query()
+        /** @var LengthAwarePaginator $result */
+        $result = SiteTemplate::withoutLocked()
             ->select($fields)
-            ->with('categories')
+            ->with('category')
             ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('templatename', 'like', '%' . $filterName . '%'))
-            ->whereIn('locked', Auth::user()->attributes->role == 1 ? [0, 1] : [0])
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $data = Collection::make();
-
         $viewPath = Config::get('view.app');
-        $viewRelativePath = str_replace(base_path(), '', resource_path('views'));
-
-        /** @var SiteTemplate $item */
-        foreach ($result->items() as $item) {
-            if (!$data->has($item->category)) {
-                if ($item->category) {
-                    $data[$item->category] = [
-                        'id' => $item->category,
-                        'name' => $item->categories->category,
-                        'data' => Collection::make(),
-                    ];
-                } else {
-                    $data[0] = [
-                        'id' => 0,
-                        'name' => Lang::get('global.no_category'),
-                        'data' => Collection::make(),
-                    ];
-                }
-            }
-
-            $item->setAttribute('category.name', $data[$item->category]['name']);
-
-            $file = '/' . $item->templatealias . '.blade.php';
-
-            if (file_exists($viewPath . $file)) {
-                $item->setAttribute(
-                    'file',
-                    HelpIcon::make(
-                        Lang::get('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath . $file,
-                        'fa-fw far fa-file-code'
-                    )
-                        ->setInnerIcon($item->locked ? 'fa fa-lock text-xs' : '')
-                        ->isOpacity(false)
-                        ->isFit()
-                );
-            }
-
-            $data[$item->category]['data']->add($item->withoutRelations());
-        }
+        $viewRelativePath = str_replace([base_path(), DIRECTORY_SEPARATOR], ['', '/'], resource_path('views'));
 
         return TemplateResource::collection([
             'data' => [
-                'data' => $data->values(),
+                'data' => $result->groupBy('category')
+                    ->map(fn($category) => [
+                        'id' => $category->first()->category,
+                        'name' => $category->first()->getRelation('category')->category ??
+                            Lang::get('global.no_category'),
+                        'data' => $category->map(function (SiteTemplate $item) use ($viewPath, $viewRelativePath) {
+                            $file = '/' . $item->templatealias . '.blade.php';
+                            if (file_exists($viewPath . $file)) {
+                                $item->setAttribute(
+                                    'file.help',
+                                    Lang::get('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath .
+                                    $file
+                                );
+                            }
+
+                            return $item->withoutRelations();
+                        }),
+                    ])
+                    ->values(),
                 'pagination' => $this->pagination($result),
                 'filters' => [
-                    'templatename' => true,
+                    'name' => true,
                 ],
             ],
         ])
@@ -316,9 +293,8 @@ class TemplateController extends Controller
     {
         $filter = $request->get('filter');
 
-        $result = SiteTemplate::query()
+        $result = SiteTemplate::withoutLocked()
             ->where(fn($query) => $filter ? $query->where('templatename', 'like', '%' . $filter . '%') : null)
-            ->whereIn('locked', Auth::user()->attributes->role == 1 ? [0, 1] : [0])
             ->orderBy('templatename')
             ->paginate(Config::get('global.number_of_results'), [
                 'id',
@@ -402,9 +378,10 @@ class TemplateController extends Controller
             $dir = 'asc';
         }
 
+        /** @var LengthAwarePaginator $result */
         $result = SiteTmplvar::query()
             ->select($fields)
-            ->with('categories')
+            ->with('category')
             ->when($filter, fn($q) => $q->where('name', 'like', '%' . $filter . '%'))
             ->when(
                 $order == 'attach',
@@ -416,36 +393,22 @@ class TemplateController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $data = Collection::make();
-
-        /** @var SiteTmplvar $item */
-        foreach ($result->items() as $item) {
-            if (!$data->has($item->category)) {
-                if ($item->category) {
-                    $data[$item->category] = [
-                        'id' => $item->category,
-                        'name' => $item->categories->category,
-                        'data' => Collection::make(),
-                    ];
-                } else {
-                    $data[0] = [
-                        'id' => 0,
-                        'name' => Lang::get('global.no_category'),
-                        'data' => Collection::make(),
-                    ];
-                }
-            }
-
-            $item->setAttribute('category.name', $data[$item->category]['name']);
-
-            $item->setAttribute('attach', Checkbox::make('tvs')->setValue($item->id));
-
-            $data[$item->category]['data']->add($item->withoutRelations());
-        }
-
         return TemplateResource::collection([
             'data' => [
-                'data' => $data->values(),
+                'data' => $result->groupBy('category')
+                    ->map(fn($category) => [
+                        'id' => $category->first()->category,
+                        'name' => $category->first()->getRelation('category')->category ??
+                            Lang::get('global.no_category'),
+                        'data' => $category->map(function (SiteTmplvar $item) {
+                            return $item->setAttribute(
+                                'attach',
+                                Checkbox::make('tvs')->setValue($item->id)
+                            )
+                                ->withoutRelations();
+                        }),
+                    ])
+                    ->values(),
                 'pagination' => $this->pagination($result),
             ],
         ]);

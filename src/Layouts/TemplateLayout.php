@@ -257,7 +257,7 @@ class TemplateLayout extends Layout
                             ['width' => '5rem', 'textAlign' => 'center']
                         )
                         ->addColumn('description', Lang::get('global.template_desc'))
-                        ->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
+                        //->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
                         ->addColumn(
                             'locked',
                             Lang::get('global.locked'),
