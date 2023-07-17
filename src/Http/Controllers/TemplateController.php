@@ -449,47 +449,21 @@ class TemplateController extends Controller
      */
     public function select(TemplateRequest $request): AnonymousResourceCollection
     {
-        $selected = $request->integer('selected');
-
-        $data = [];
-
-        $data['blank'] = [
-            'key' => 0,
-            'value' => '(blank)',
-        ];
-
-        /** @var SiteTemplate $item */
-        foreach (SiteTemplate::all() as $item) {
-            if (!isset($data[$item->category])) {
-                if ($item->category) {
-                    $data[$item->category] = [
-                        'id' => $item->category,
-                        'name' => $item->categories->category,
-                        'data' => [],
-                    ];
-                } else {
-                    $data[$item->category] = [
-                        'id' => $item->category,
-                        'name' => Lang::get('global.no_category'),
-                        'data' => [],
-                    ];
-                }
-            }
-
-            $option = [
-                'key' => $item->getKey(),
-                'value' => $item->templatename . ' (' . $item->getKey() . ')',
-            ];
-
-            if ($item->getKey() == $selected) {
-                $option['selected'] = true;
-            }
-
-            $data[$item->category]['data'][] = $option;
-        }
-
         return TemplateResource::collection(
-            array_values($data)
+            SiteTemplate::with('category')
+                ->select(['id', 'templatename', 'category'])
+                ->get()
+                ->groupBy('category')
+                ->map(fn($group) => [
+                    'id' => $group->first()->category,
+                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
+                    'data' => $group->map(fn($item) => [
+                        'key' => $item->getKey(),
+                        'value' => $item->templatename . ' (' . $item->getKey() . ')',
+                        'selected' => $item->getKey() == $request->integer('selected'),
+                    ]),
+                ])
+                ->values()
         );
     }
 
