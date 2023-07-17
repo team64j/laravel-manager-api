@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
@@ -17,6 +16,7 @@ use Team64j\LaravelEvolution\Models\SiteTmplvar;
 use Team64j\LaravelEvolution\Models\SiteTmplvarTemplate;
 use Team64j\LaravelManagerApi\Components\Checkbox;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
+use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -501,74 +501,55 @@ class TemplateController extends Controller
 
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked'];
 
+        /** @var LengthAwarePaginator $result */
+        $result = SiteTemplate::withoutLocked()
+            ->with('category')
+            ->select($fields)
+            ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
+            ->when($category < 0, fn($query) => $query->groupBy('category'))
+            ->when($category >= 0, fn($query) => $query->where('category', $category))
+            ->orderBy('templatename')
+            ->paginate(Config::get('global.number_of_results'))
+            ->appends($request->all());
+
         if ($category >= 0) {
-            $result = SiteTemplate::query()
-                ->select($fields)
-                ->where('category', $category)
-                ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
-                ->orderBy('templatename')
-                ->paginate(Config::get('global.number_of_results'))
-                ->appends($request->all());
+            return TemplateResource::collection([
+                'data' => [
+                    'data' => $result->items(),
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
+        }
 
-            $data['data'] = $result->items();
-            $data['pagination'] = $this->pagination($result);
-        } else {
-            $collection = Collection::make();
+        return CategoryResource::collection([
+            'data' => [
+                'data' => $result->map(function (SiteTemplate $template) use ($request, $opened) {
+                    /** @var Category $category */
+                    $category = $template->getRelation('category') ?? new Category();
+                    $category->id = $template->category;
+                    $data = [];
 
-            $result = SiteTemplate::query()
-                ->select($fields)
-                ->where('category', 0)
-                ->paginate(Config::get('global.number_of_results'))
-                ->appends($request->all());
-
-            if ($result->count()) {
-                $collection->add(
-                    [
-                        'id' => 0,
-                        'name' => Lang::get('global.no_category'),
-                        'folder' => true,
-                    ] + (in_array(0, $opened, true) ?
-                        [
-                            'data' => [
-                                'data' => $result->items(),
-                                'pagination' => $this->pagination($result),
-                            ],
-                        ]
-                        : [])
-                );
-            }
-
-            $result = Category::query()
-                ->whereHas('templates')
-                ->get()
-                ->map(function (Category $item) use ($request, $opened) {
-                    $data = [
-                        'id' => $item->getKey(),
-                        'name' => $item->category,
-                        'folder' => true,
-                    ];
-
-                    if (in_array($item->getKey(), $opened, true)) {
-                        $result = $item->templates()
+                    if (in_array($category->getKey(), $opened, true)) {
+                        /** @var LengthAwarePaginator $result */
+                        $result = $category->templates()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());
 
-                        $data['data'] = [
-                            'data' => $result->items(),
-                            'pagination' => $this->pagination($result),
-                        ];
+                        if ($result->isNotEmpty()) {
+                            $data = [
+                                'data' => $result->items(),
+                                'pagination' => $this->pagination($result),
+                            ];
+                        }
                     }
 
-                    $item->setRawAttributes($data);
-
-                    return $item;
-                });
-
-            $data['data'] = $collection->merge($result);
-        }
-
-        return TemplateResource::collection([
-            'data' => $data,
+                    return [
+                            'id' => $category->getKey(),
+                            'name' => $category->category ?? Lang::get('global.no_category'),
+                            'folder' => true,
+                        ] + ($data ? ['data' => $data] : $data);
+                }),
+            ],
         ]);
     }
 }
