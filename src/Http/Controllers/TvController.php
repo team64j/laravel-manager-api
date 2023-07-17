@@ -33,6 +33,7 @@ class TvController extends Controller
      *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
      *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *         @OA\Parameter (name="groupBy", in="query", @OA\Schema(type="string", default="category")),
      *     },
      *     @OA\Response(
      *          response="200",
@@ -54,6 +55,7 @@ class TvController extends Controller
         $order = $request->input('order', 'category');
         $dir = $request->input('dir', 'asc');
         $fields = ['id', 'name', 'type', 'caption', 'locked', 'category', 'rank'];
+        $groupBy = $request->has('groupBy');
 
         if (!in_array($order, $fields)) {
             $order = 'id';
@@ -73,19 +75,28 @@ class TvController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
+        if ($groupBy) {
+            $callbackGroup = function ($group) {
+                return [
+                    'id' => $group->first()->category,
+                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
+                    'data' => $group->map->withoutRelations(),
+                ];
+            };
+
+            $data = $result->groupBy('category')
+                ->map($callbackGroup)
+                ->values();
+        } else {
+            $data = $result->map(fn($item) => $item->withoutRelations());
+        }
+
         return TvResource::collection([
             'data' => [
-                'data' => $result->groupBy('category')
-                    ->map(fn($category) => [
-                        'id' => $category->first()->category,
-                        'name' => $category->first()->getRelation('category')->category ??
-                            Lang::get('global.no_category'),
-                        'data' => $category->map->withoutRelations(),
-                    ])
-                    ->values(),
+                'data' => $data,
                 'pagination' => $this->pagination($result),
                 'filters' => [
-                    'name' => true,
+                    'name',
                 ],
             ],
         ])

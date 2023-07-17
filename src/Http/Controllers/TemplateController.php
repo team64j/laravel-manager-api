@@ -36,6 +36,7 @@ class TemplateController extends Controller
      *         @OA\Parameter (name="templatename", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
      *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *         @OA\Parameter (name="groupBy", in="query", @OA\Schema(type="string", default="category")),
      *     },
      *     @OA\Response(
      *          response="200",
@@ -57,6 +58,7 @@ class TemplateController extends Controller
         $dir = $request->input('dir', 'asc');
         $order = $request->input('order', 'category');
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked'];
+        $groupBy = $request->has('groupBy');
 
         if (!in_array($order, $fields)) {
             $order = 'id';
@@ -79,30 +81,40 @@ class TemplateController extends Controller
         $viewPath = Config::get('view.app');
         $viewRelativePath = str_replace([base_path(), DIRECTORY_SEPARATOR], ['', '/'], resource_path('views'));
 
+        $callbackItem = function (SiteTemplate $item) use ($viewPath, $viewRelativePath) {
+            $file = '/' . $item->templatealias . '.blade.php';
+            if (file_exists($viewPath . $file)) {
+                $item->setAttribute(
+                    'file.help',
+                    Lang::get('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath . $file
+                );
+            }
+
+            return $item->withoutRelations();
+        };
+
+        if ($groupBy) {
+            $callbackGroup = function ($group) use ($callbackItem) {
+                return [
+                    'id' => $group->first()->category,
+                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
+                    'data' => $group->map($callbackItem),
+                ];
+            };
+
+            $data = $result->groupBy('category')
+                ->map($callbackGroup)
+                ->values();
+        } else {
+            $data = $result->map($callbackItem);
+        }
+
         return TemplateResource::collection([
             'data' => [
-                'data' => $result->groupBy('category')
-                    ->map(fn($category) => [
-                        'id' => $category->first()->category,
-                        'name' => $category->first()->getRelation('category')->category ??
-                            Lang::get('global.no_category'),
-                        'data' => $category->map(function (SiteTemplate $item) use ($viewPath, $viewRelativePath) {
-                            $file = '/' . $item->templatealias . '.blade.php';
-                            if (file_exists($viewPath . $file)) {
-                                $item->setAttribute(
-                                    'file.help',
-                                    Lang::get('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath .
-                                    $file
-                                );
-                            }
-
-                            return $item->withoutRelations();
-                        }),
-                    ])
-                    ->values(),
+                'data' => $data,
                 'pagination' => $this->pagination($result),
                 'filters' => [
-                    'name' => true,
+                    'templatename',
                 ],
             ],
         ])
