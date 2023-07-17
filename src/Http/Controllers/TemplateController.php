@@ -537,8 +537,10 @@ class TemplateController extends Controller
 
                         if ($result->isNotEmpty()) {
                             $data = [
-                                'data' => $result->items(),
-                                'pagination' => $this->pagination($result),
+                                'data' => [
+                                    'data' => $result->items(),
+                                    'pagination' => $this->pagination($result),
+                                ],
                             ];
                         }
                     }
@@ -547,7 +549,7 @@ class TemplateController extends Controller
                             'id' => $category->getKey(),
                             'name' => $category->category ?? Lang::get('global.no_category'),
                             'folder' => true,
-                        ] + ($data ? ['data' => $data] : $data);
+                        ] + $data;
                 }),
             ],
         ]);
