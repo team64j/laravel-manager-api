@@ -218,55 +218,55 @@ class DocumentController extends Controller
             ]);
     }
 
-    public function show2(DocumentRequest $request, string $document, DocumentLayout $layout): DocumentResource
-    {
-        /** @var SiteContent $document */
-        $document = SiteContent::query()->findOrNew($document);
-
-        if ($request->has('template')) {
-            $document->template = $request->input('template');
-        }
-
-        if ($request->has('parent')) {
-            $document->parent = $request->input('parent');
-        }
-
-        if ($request->has('type')) {
-            $document->type = $request->input('type');
-        }
-
-        $document->setAttribute(
-            'tvs',
-            $document->getTvs()->keyBy('name')
-        );
-
-        if (Config::get('global.use_udperms')) {
-            /** @var Collection $groups */
-            $groups = $document->documentGroups;
-
-            $document->setAttribute(
-                'is_document_group',
-                $groups->isEmpty()
-            );
-
-            $document->setAttribute(
-                'document_groups',
-                $groups->map(
-                    fn(DocumentgroupName $group) => $group->getKey()
-                )
-            );
-        }
-
-        return DocumentResource::make(
-            $document->withoutRelations()
-        )
-            ->additional([
-                'layout' => $layout->default($document),
-                'meta' => [
-                    'tab' => $layout->titleDefault($document),
-                ],
-            ]);
-    }
+//    public function show2(DocumentRequest $request, string $document, DocumentLayout $layout): DocumentResource
+//    {
+//        /** @var SiteContent $document */
+//        $document = SiteContent::query()->findOrNew($document);
+//
+//        if ($request->has('template')) {
+//            $document->template = $request->input('template');
+//        }
+//
+//        if ($request->has('parent')) {
+//            $document->parent = $request->input('parent');
+//        }
+//
+//        if ($request->has('type')) {
+//            $document->type = $request->input('type');
+//        }
+//
+//        $document->setAttribute(
+//            'tvs',
+//            $document->getTvs()->keyBy('name')
+//        );
+//
+//        if (Config::get('global.use_udperms')) {
+//            /** @var Collection $groups */
+//            $groups = $document->documentGroups;
+//
+//            $document->setAttribute(
+//                'is_document_group',
+//                $groups->isEmpty()
+//            );
+//
+//            $document->setAttribute(
+//                'document_groups',
+//                $groups->map(
+//                    fn(DocumentgroupName $group) => $group->getKey()
+//                )
+//            );
+//        }
+//
+//        return DocumentResource::make(
+//            $document->withoutRelations()
+//        )
+//            ->additional([
+//                'layout' => $layout->default($document),
+//                'meta' => [
+//                    'tab' => $layout->titleDefault($document),
+//                ],
+//            ]);
+//    }
 
     /**
      * @OA\Post(
@@ -390,39 +390,39 @@ class DocumentController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * @param SiteContent $document
-     *
-     * @return array
-     */
-    protected function tvs(SiteContent $document): array
-    {
-        $tvs = $document->getTvs();
-        $data = [];
-
-        foreach ($tvs as $tv) {
-            $value = $tv['value'];
-
-            switch ($tv['type']) {
-                case 'radio':
-                case 'checkbox':
-                case 'listbox-multiple':
-                    if ($tv['elements']) {
-                        if (!is_array($value)) {
-                            $value = $tv['value'] == '' ? [] : explode('||', $value);
-                        }
-                    }
-
-                    break;
-
-                default:
-            }
-
-            $data[$tv['name']] = $value;
-        }
-
-        return $data;
-    }
+//    /**
+//     * @param SiteContent $document
+//     *
+//     * @return array
+//     */
+//    protected function tvs(SiteContent $document): array
+//    {
+//        $tvs = $document->getTvs();
+//        $data = [];
+//
+//        foreach ($tvs as $tv) {
+//            $value = $tv['value'];
+//
+//            switch ($tv['type']) {
+//                case 'radio':
+//                case 'checkbox':
+//                case 'listbox-multiple':
+//                    if ($tv['elements']) {
+//                        if (!is_array($value)) {
+//                            $value = $tv['value'] == '' ? [] : explode('||', $value);
+//                        }
+//                    }
+//
+//                    break;
+//
+//                default:
+//            }
+//
+//            $data[$tv['name']] = $value;
+//        }
+//
+//        return $data;
+//    }
 
     /**
      * @OA\Get(
