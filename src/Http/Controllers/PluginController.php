@@ -390,9 +390,8 @@ class PluginController extends Controller
             ->with('category')
             ->select($fields)
             ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
-            ->when($showFromCategory, fn($query) => $query->where('category', $category))
+            ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('name'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
-            ->when($showFromCategory, fn($query) => $query->orderBy('name'))
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 

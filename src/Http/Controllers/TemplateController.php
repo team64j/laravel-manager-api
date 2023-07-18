@@ -509,8 +509,7 @@ class TemplateController extends Controller
             ->with('category')
             ->select($fields)
             ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
-            ->when($showFromCategory, fn($query) => $query->where('category', $category))
-            ->when($showFromCategory, fn($query) => $query->orderBy('templatename'))
+            ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('templatename'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
