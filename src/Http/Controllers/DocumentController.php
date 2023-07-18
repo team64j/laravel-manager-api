@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
@@ -426,11 +425,12 @@ class DocumentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/document/tree/{parent}",
+     *     path="/document/tree",
      *     summary="Получение списка документов с пагинацией для древовидного меню",
      *     tags={"Document"},
      *     security={{"Api":{}}},
      *     parameters={
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="int", default="0")),
      *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
      *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
@@ -445,12 +445,12 @@ class DocumentController extends Controller
      *      )
      * )
      * @param DocumentRequest $request
-     * @param int $parent
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(DocumentRequest $request, int $parent): AnonymousResourceCollection
+    public function tree(DocumentRequest $request): AnonymousResourceCollection
     {
+        $parent = $request->input('parent', 0);
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
         $opened = $request->has('opened') ? $request->string('opened')
@@ -509,13 +509,35 @@ class DocumentController extends Controller
 
         $result->map(function (SiteContent $item) use ($opened, $request, $fields, $settings) {
             if (in_array($item->getKey(), $opened, true)) {
-                $request = clone $request;
-                $request->query->add([
+                $request->query->replace([
                     'parent' => $item->getKey(),
-                    'page' => 1,
                 ]);
-                $result = $this->tree($request, $item->getKey());
-                $item->setAttribute('data', $result['data']);
+
+                /** @var LengthAwarePaginator $result */
+                $result = $item->children()
+                    ->select($fields)
+                    ->with('documentGroups')
+                    ->without('children')
+                    ->paginate(Config::get('global.number_of_results'))
+                    ->appends($request->all());
+
+                if ($result->isNotEmpty()) {
+                    $item->setAttribute('data', [
+                        'data' => $result->map(function (SiteContent $item) use ($settings, $fields) {
+                            $title =
+                                in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
+                                    : '';
+
+                            if ((string) $title == '') {
+                                $title = $item->getAttribute('pagetitle');
+                            }
+
+                            return $item->setAttribute('title', $title)
+                                ->setAttribute('private', $item->documentGroups->isNotEmpty());
+                        }),
+                        'pagination' => $this->pagination($result),
+                    ]);
+                }
             }
 
             $title = in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle']) : '';

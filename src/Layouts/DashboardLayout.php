@@ -50,7 +50,7 @@ class DashboardLayout extends Layout
                     ->setId('documents')
                     ->setRoute('Document')
                     ->setRouteList('Documents')
-                    ->setUrl('/document/tree/:parent?order=menuindex&dir=asc')
+                    ->setUrl('/document/tree?order=menuindex&dir=asc')
                     ->setAliases([
                         'hide_from_tree' => 'hideChildren',
                         'isfolder' => 'folder',
@@ -309,6 +309,7 @@ class DashboardLayout extends Layout
                         ],
                     ])
                     ->setSettings([
+                        'parent' => 0,
                         'dir' => 'asc',
                         'order' => 'menuindex',
                         'keyTitle' => 'pagetitle',

@@ -89,7 +89,7 @@ class TvLayout extends Layout
                                 ->setData([
                                     [
                                         'key' => $model->type,
-                                        'value' => $model->getStandardTypes()[$model->type],
+                                        'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
                                     ],
                                 ]),
                             Input::make('rank', Lang::get('global.tmplvars_rank')),
