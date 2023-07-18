@@ -469,11 +469,12 @@ class TemplateController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/templates/tree/{category}",
+     *     path="/templates/tree",
      *     summary="Получение списка шаблонов с пагинацией для древовидного меню",
      *     tags={"Templates"},
      *     security={{"Api":{}}},
      *     parameters={
+     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
      *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
      *     },
@@ -486,33 +487,35 @@ class TemplateController extends Controller
      *      )
      * )
      * @param TemplateRequest $request
-     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(TemplateRequest $request, int $category): AnonymousResourceCollection
+    public function tree(TemplateRequest $request): AnonymousResourceCollection
     {
-        $data = [];
+        $category = $request->input('parent', -1);
         $filter = $request->input('filter');
-        $opened = $request->has('opened') ? $request->string('opened')
+        $opened = $request->string('opened')
             ->explode(',')
+            ->filter(fn($i) => $i !== '')
             ->map(fn($i) => intval($i))
-            ->toArray() : [];
+            ->values()
+            ->toArray();
 
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked'];
+        $showFromCategory = $category >= 0;
 
         /** @var LengthAwarePaginator $result */
         $result = SiteTemplate::withoutLocked()
             ->with('category')
             ->select($fields)
             ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
-            ->when($category < 0, fn($query) => $query->groupBy('category'))
-            ->when($category >= 0, fn($query) => $query->where('category', $category))
-            ->orderBy('templatename')
+            ->when($showFromCategory, fn($query) => $query->where('category', $category))
+            ->when($showFromCategory, fn($query) => $query->orderBy('templatename'))
+            ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        if ($category >= 0) {
+        if ($showFromCategory) {
             return TemplateResource::collection([
                 'data' => [
                     'data' => $result->items(),
@@ -530,8 +533,14 @@ class TemplateController extends Controller
                     $data = [];
 
                     if (in_array($category->getKey(), $opened, true)) {
+                        $request->query->replace([
+                            'parent' => $category->getKey(),
+                        ]);
+
                         /** @var LengthAwarePaginator $result */
                         $result = $category->templates()
+                            ->withoutLocked()
+                            ->orderBy('templatename')
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());
 
@@ -550,7 +559,9 @@ class TemplateController extends Controller
                             'name' => $category->category ?? Lang::get('global.no_category'),
                             'folder' => true,
                         ] + $data;
-                }),
+                })
+                    ->sortBy('name')
+                    ->values(),
             ],
         ]);
     }

@@ -327,7 +327,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('templates')
                         ->setRoute('Template')
-                        ->setUrl('/templates/tree/:parent')
+                        ->setUrl('/templates/tree')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -356,7 +356,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('tvs')
                         ->setRoute('Tv')
-                        ->setUrl('/tvs/tree/:parent')
+                        ->setUrl('/tvs/tree')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -384,7 +384,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('chunks')
                         ->setRoute('Chunk')
-                        ->setUrl('/chunks/tree/:parent')
+                        ->setUrl('/chunks/tree')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -412,7 +412,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('snippets')
                         ->setRoute('Snippet')
-                        ->setUrl('/snippets/tree/:parent')
+                        ->setUrl('/snippets/tree')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -440,7 +440,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('plugins')
                         ->setRoute('Plugin')
-                        ->setUrl('/plugins/tree/:parent')
+                        ->setUrl('/plugins/tree')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',
@@ -468,7 +468,7 @@ class DashboardLayout extends Layout
                     Tree::make()
                         ->setId('modules')
                         ->setRoute('Module')
-                        ->setUrl('/modules/tree/:parent')
+                        ->setUrl('/modules/tree')
                         ->isCategory()
                         ->setAliases([
                             'name' => 'title',

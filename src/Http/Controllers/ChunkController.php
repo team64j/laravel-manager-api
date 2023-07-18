@@ -7,13 +7,13 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteHtmlSnippet;
 use Team64j\LaravelManagerApi\Http\Requests\ChunkRequest;
+use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\ChunkResource;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -297,6 +297,7 @@ class ChunkController extends Controller
      *     tags={"Chunk"},
      *     security={{"Api":{}}},
      *     parameters={
+     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
      *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
      *     },
@@ -309,89 +310,81 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(ChunkRequest $request, int $category): AnonymousResourceCollection
+    public function tree(ChunkRequest $request): AnonymousResourceCollection
     {
-        $data = [];
+        $category = $request->input('parent', -1);
         $filter = $request->input('filter');
-        $fields = ['id', 'name', 'description', 'category', 'locked'];
-
-        $opened = $request->has('opened') ? $request->string('opened')
+        $opened = $request->string('opened')
             ->explode(',')
+            ->filter(fn($i) => $i !== '')
             ->map(fn($i) => intval($i))
-            ->toArray() : [];
+            ->values()
+            ->toArray();
 
-        if ($category >= 0) {
-            $result = SiteHtmlSnippet::query()
-                ->select($fields)
-                ->where('category', $category)
-                ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
-                ->orderBy('name')
-                ->paginate(Config::get('global.number_of_results'))
-                ->appends($request->all());
+        $fields = ['id', 'name', 'description', 'category', 'locked'];
+        $showFromCategory = $category >= 0;
 
-            $data['data'] = $result->items();
-            $data['pagination'] = $this->pagination($result);
-        } else {
-            $collection = Collection::make();
+        /** @var LengthAwarePaginator $result */
+        $result = SiteHtmlSnippet::withoutLocked()
+            ->with('category')
+            ->select($fields)
+            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+            ->when($showFromCategory, fn($query) => $query->where('category', $category))
+            ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
+            ->when($showFromCategory, fn($query) => $query->orderBy('name'))
+            ->paginate(Config::get('global.number_of_results'))
+            ->appends($request->all());
 
-            $result = SiteHtmlSnippet::query()
-                ->select($fields)
-                ->where('category', 0)
-                ->paginate(Config::get('global.number_of_results'))
-                ->appends($request->all());
+        if ($showFromCategory) {
+            return ChunkResource::collection([
+                'data' => [
+                    'data' => $result->items(),
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
+        }
 
-            if ($result->count()) {
-                $collection->add(
-                    [
-                        'id' => 0,
-                        'name' => Lang::get('global.no_category'),
-                        'folder' => true,
-                    ] + (in_array(0, $opened, true) ?
-                        [
-                            'data' => [
-                                'data' => $result->items(),
-                                'pagination' => $this->pagination($result),
-                            ],
-                        ]
-                        : [])
-                );
-            }
+        return CategoryResource::collection([
+            'data' => [
+                'data' => $result->map(function (SiteHtmlSnippet $template) use ($request, $opened) {
+                    /** @var Category $category */
+                    $category = $template->getRelation('category') ?? new Category();
+                    $category->id = $template->category;
+                    $data = [];
 
-            $result = Category::query()
-                ->whereHas('chunks')
-                ->get()
-                ->map(function (Category $item) use ($request, $opened) {
-                    $data = [
-                        'id' => $item->getKey(),
-                        'name' => $item->category,
-                        'folder' => true,
-                    ];
+                    if (in_array($category->getKey(), $opened, true)) {
+                        $request->query->replace([
+                            'parent' => $category->getKey(),
+                        ]);
 
-                    if (in_array($item->getKey(), $opened, true)) {
-                        $result = $item->chunks()
+                        /** @var LengthAwarePaginator $result */
+                        $result = $category->chunks()
+                            ->withoutLocked()
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());
 
-                        $data['data'] = [
-                            'data' => $result->items(),
-                            'pagination' => $this->pagination($result),
-                        ];
+                        if ($result->isNotEmpty()) {
+                            $data = [
+                                'data' => [
+                                    'data' => $result->items(),
+                                    'pagination' => $this->pagination($result),
+                                ],
+                            ];
+                        }
                     }
 
-                    $item->setRawAttributes($data);
-
-                    return $item;
-                });
-
-            $data['data'] = $collection->merge($result);
-        }
-
-        return ChunkResource::collection([
-            'data' => $data,
+                    return [
+                            'id' => $category->getKey(),
+                            'name' => $category->category ?? Lang::get('global.no_category'),
+                            'folder' => true,
+                        ] + $data;
+                })
+                    ->sortBy('name')
+                    ->values(),
+            ],
         ]);
     }
 }

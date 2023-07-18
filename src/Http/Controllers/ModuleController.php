@@ -15,6 +15,7 @@ use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteModule;
 use Team64j\LaravelManagerApi\Http\Requests\ModuleRequest;
+use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\ModuleResource;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -365,11 +366,12 @@ class ModuleController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/modules/tree/{category}",
+     *     path="/modules/tree",
      *     summary="Получение списка модулей с пагинацией для древовидного меню",
      *     tags={"Module"},
      *     security={{"Api":{}}},
      *     parameters={
+     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
      *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
      *     },
@@ -382,12 +384,84 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param int $category
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(ModuleRequest $request, int $category): AnonymousResourceCollection
+    public function tree(ModuleRequest $request): AnonymousResourceCollection
     {
+        $category = $request->input('parent', -1);
+        $filter = $request->input('filter');
+        $opened = $request->string('opened')
+            ->explode(',')
+            ->filter(fn($i) => $i !== '')
+            ->map(fn($i) => intval($i))
+            ->values()
+            ->toArray();
+
+        $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
+        $showFromCategory = $category >= 0;
+
+        /** @var LengthAwarePaginator $result */
+        $result = SiteModule::withoutLocked()
+            ->with('category')
+            ->select($fields)
+            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+            ->when($showFromCategory, fn($query) => $query->where('category', $category))
+            ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
+            ->when($showFromCategory, fn($query) => $query->orderBy('name'))
+            ->paginate(Config::get('global.number_of_results'))
+            ->appends($request->all());
+
+        if ($showFromCategory) {
+            return ModuleResource::collection([
+                'data' => [
+                    'data' => $result->items(),
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
+        }
+
+        return CategoryResource::collection([
+            'data' => [
+                'data' => $result->map(function (SiteModule $template) use ($request, $opened) {
+                    /** @var Category $category */
+                    $category = $template->getRelation('category') ?? new Category();
+                    $category->id = $template->category;
+                    $data = [];
+
+                    if (in_array($category->getKey(), $opened, true)) {
+                        $request->query->replace([
+                            'parent' => $category->getKey(),
+                        ]);
+
+                        /* @var LengthAwarePaginator $result */
+                        $result = $category->modules()
+                            ->withoutLocked()
+                            ->orderBy('name')
+                            ->paginate(Config::get('global.number_of_results'))
+                            ->appends($request->all());
+
+                        if ($result->isNotEmpty()) {
+                            $data = [
+                                'data' => [
+                                    'data' => $result->items(),
+                                    'pagination' => $this->pagination($result),
+                                ],
+                            ];
+                        }
+                    }
+
+                    return [
+                            'id' => $category->getKey(),
+                            'name' => $category->category ?? Lang::get('global.no_category'),
+                            'folder' => true,
+                        ] + $data;
+                })
+                    ->sortBy('name')
+                    ->values(),
+            ],
+        ]);
+
         $data = [];
         $filter = $request->input('filter');
         $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
