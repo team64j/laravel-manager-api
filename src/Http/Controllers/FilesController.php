@@ -95,7 +95,7 @@ class FilesController extends Controller
                 'folder' => true,
                 'size' => $this->getSize(File::size($directory)),
                 'date' => $this->getDate(filemtime($directory)),
-                'icon.html' => '<i class="far fa-folder fa-fw"></i>'
+                'icon' => '<i class="far fa-folder fa-fw"></i>'
             ];
 
             if (in_array($key, $opened)) {
@@ -138,7 +138,7 @@ class FilesController extends Controller
                 'class' => 'f-ext-' . $file->getExtension(),
                 'size' => $this->getSize($file->getSize()),
                 'date' => $this->getDate($file->getATime()),
-                'icon.html' => '<i class="far fa-file fa-fw"></i>',
+                'icon' => '<i class="far fa-file fa-fw"></i>',
             ];
 
             $mimeType = File::mimeType($file->getPathname());
@@ -157,7 +157,7 @@ class FilesController extends Controller
                     $folderBase . str_replace($root, '', $file->getPathname())
                 );
 
-                $item['icon.html'] = '<img src="' . URL::to($imageUrl) . '" />';
+                $item['icon'] = '<img src="' . URL::to($imageUrl) . '" />';
             }
 
             $data[] = $item;

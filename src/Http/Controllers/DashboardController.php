@@ -109,7 +109,7 @@ class DashboardController extends Controller
                     }
 
                     $data[] = [
-                        'content.html' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
+                        'content' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
                             '</a> - <strong>' .
                             $item->updated . '</strong><div class="text-sm">' . $content . '</div>',
                     ];
@@ -164,7 +164,7 @@ class DashboardController extends Controller
                     }
 
                     $data[] = [
-                        'content.html' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
+                        'content' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
                             '</a> - <strong>' .
                             $item->updated . '</strong><div class="text-sm">' . $content . '</div>',
                     ];

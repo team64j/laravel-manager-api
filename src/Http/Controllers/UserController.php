@@ -53,9 +53,9 @@ class UserController extends Controller
         $filter = $request->get('filter');
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
+        $filterUsername = $request->input('username');
         $filterRole = $request->input('role');
         $filterBlocked = $request->input('blocked', '');
-        $filters = [];
 
         /** @var Collection $filterDatetime */
         $filterDatetime = $request->collect('lastlogin')->map(function ($item, $index) {
@@ -96,6 +96,11 @@ class UserController extends Controller
             ])
             ->join($u->getTable(), $u->qualifyColumn('id'), $a->qualifyColumn('internalKey'))
             ->join($r->getTable(), $r->qualifyColumn('id'), $a->qualifyColumn('role'))
+            ->when(
+                $filterUsername,
+                fn($query) => $query->where($u->qualifyColumn('username'), $filterUsername)
+                    ->orWhere($u->qualifyColumn('username'), 'like', '%' . $filterUsername . '%')
+            )
             ->when(in_array($order, $orderFields), fn($q) => $q->orderBy($order, $dir))
             ->when(
                 $filter,
@@ -123,6 +128,7 @@ class UserController extends Controller
             ->get();
 
         $filters = [
+            'username',
             [
                 'name' => 'role',
                 'data' => $distinct->keyBy('name')

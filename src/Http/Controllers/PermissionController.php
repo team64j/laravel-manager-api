@@ -59,7 +59,8 @@ class PermissionController extends Controller
                         '</span>';
                 }
 
-                return $group->setAttribute('users.html', $users);
+                return $group->withoutRelations()
+                    ->setAttribute('users', $users);
             });
 
         return PermissionResource::collection([
@@ -151,7 +152,8 @@ class PermissionController extends Controller
                         '</span>';
                 }
 
-                return $group->setAttribute('documents.html', $documents);
+                return $group->withoutRelations()
+                    ->setAttribute('documents', $documents);
             });
 
         return PermissionResource::collection([
@@ -244,7 +246,8 @@ class PermissionController extends Controller
                     $documentGroups = '<span class="opacity-50">' . Lang::get('global.no_groups_found') . '</span>';
                 }
 
-                return $group->setAttribute('document_groups.html', $documentGroups);
+                return $group->withoutRelations()
+                    ->setAttribute('document_groups', $documentGroups);
             });
 
         $documents = DocumentgroupName::query()
