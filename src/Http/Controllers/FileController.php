@@ -255,6 +255,10 @@ class FileController extends Controller
                 };
             }
 
+            if ($type == 'example') {
+                $type = preg_replace('/^.*\.([^.]+)\.example$/D', '$1', $title);
+            }
+
             $size = $this->getSize($file->getSize());
             $date = $this->getDate($file->getATime());
 
@@ -353,6 +357,7 @@ class FileController extends Controller
 
             case 'htm':
             case 'html':
+            case 'phtml':
                 $lang = 'html';
                 break;
 

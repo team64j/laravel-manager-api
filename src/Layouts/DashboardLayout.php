@@ -335,9 +335,11 @@ class DashboardLayout extends Layout
                             'templatename' => 'title',
                             'locked' => 'private',
                             'category' => 'parent',
+                            'selectable' => 'unhidden',
                         ])
                         ->setIcons([
                             'default' => 'fa fa-newspaper',
+                            Config::get('global.default_template') => 'fa fa-home fa-fw text-blue-500',
                         ])
                         ->setSettings([
                             'parent' => -1,
@@ -524,6 +526,10 @@ class DashboardLayout extends Layout
                         ->isCategory()
                         ->setIcons([
                             'default' => 'fa fa-ban',
+                            'htm' => 'fa fa-code',
+                            'htm' => 'fa fa-code',
+                            'html' => 'fa fa-code',
+                            'phtml' => 'fa fa-code',
                             'txt' => 'fa fa-code',
                             'css' => 'fa fa-code text-blue-500',
                             'less' => 'fa fa-code text-blue-500',
@@ -590,6 +596,7 @@ class DashboardLayout extends Layout
                         ])
                         ->setTemplates([
                             'title' =>
+                                '{title}' . PHP_EOL .
                                 Lang::get('global.createdon') . ': {_date}' . PHP_EOL .
                                 Lang::get('global.files_filesize') . ': {_size}' . PHP_EOL,
                         ])

@@ -501,7 +501,7 @@ class TemplateController extends Controller
             ->values()
             ->toArray();
 
-        $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked'];
+        $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked', 'selectable'];
         $showFromCategory = $category >= 0;
 
         /** @var LengthAwarePaginator $result */
@@ -525,7 +525,7 @@ class TemplateController extends Controller
 
         return CategoryResource::collection([
             'data' => [
-                'data' => $result->map(function (SiteTemplate $template) use ($request, $opened) {
+                'data' => $result->map(function (SiteTemplate $template) use ($request, $opened, $fields) {
                     /** @var Category $category */
                     $category = $template->getRelation('category') ?? new Category();
                     $category->id = $template->category;
@@ -539,6 +539,7 @@ class TemplateController extends Controller
                         /** @var LengthAwarePaginator $result */
                         $result = $category->templates()
                             ->withoutLocked()
+                            ->select($fields)
                             ->orderBy('templatename')
                             ->paginate(Config::get('global.number_of_results'))
                             ->appends($request->all());
