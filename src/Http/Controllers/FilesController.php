@@ -65,7 +65,7 @@ class FilesController extends Controller
     public function show(FilesRequest $request, string $files): AnonymousResourceCollection
     {
         $data = [];
-        $root = realpath(Config::get('global.rb_base_dir', App::basePath('../')));
+        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
         $parent = trim(base64_decode($files), './');
         $parentPath = $root . ($parent ? DIRECTORY_SEPARATOR . $parent : '');
         $opened = $request->has('opened') ? $request->string('opened')
@@ -146,7 +146,7 @@ class FilesController extends Controller
 
             if ($isImage) {
                 $folderBase = str_replace(
-                    realpath(App::basePath('../')),
+                    realpath(App::basePath()),
                     '',
                     realpath(Config::get('global.rb_base_dir'))
                 );
@@ -227,7 +227,7 @@ class FilesController extends Controller
     public function tree(FilesRequest $request): AnonymousResourceCollection
     {
         $data = [];
-        $root = realpath(Config::get('global.rb_base_dir', App::basePath('../')));
+        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
         $parent = trim(base64_decode($request->input('parent', '')), './');
         $parentPath = $root . DIRECTORY_SEPARATOR . $parent;
         $opened = $request->has('opened') ? $request->string('opened')

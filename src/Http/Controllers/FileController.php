@@ -88,7 +88,7 @@ class FileController extends Controller
     public function show(FileRequest $request, string $file, FileLayout $layout): FileResource
     {
         $data = [];
-        $root = realpath(Config::get('global.filemanager_path', App::basePath('../')));
+        $root = realpath(Config::get('global.filemanager_path', App::basePath()));
         $filename = trim(base64_decode(urldecode($file)), '/');
         $path = $root . DIRECTORY_SEPARATOR . $filename;
         $types = [
@@ -161,7 +161,7 @@ class FileController extends Controller
     public function tree(FileRequest $request, string $path): AnonymousResourceCollection
     {
         $data = [];
-        $root = realpath(Config::get('global.filemanager_path', App::basePath('../')));
+        $root = realpath(Config::get('global.filemanager_path', App::basePath()));
         $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
         $after = basename(base64_decode($request->string('after', '')->toString()));
         $opened = $request->has('opened') ? $request->string('opened')
