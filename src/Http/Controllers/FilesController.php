@@ -95,7 +95,6 @@ class FilesController extends Controller
                 'folder' => true,
                 'size' => $this->getSize(File::size($directory)),
                 'date' => $this->getDate(filemtime($directory)),
-                'icon' => '<i class="far fa-folder fa-fw"></i>'
             ];
 
             if (in_array($key, $opened)) {
@@ -138,7 +137,6 @@ class FilesController extends Controller
                 'class' => 'f-ext-' . $file->getExtension(),
                 'size' => $this->getSize($file->getSize()),
                 'date' => $this->getDate($file->getATime()),
-                'icon' => '<i class="far fa-file fa-fw"></i>',
             ];
 
             $mimeType = File::mimeType($file->getPathname());
@@ -175,6 +173,12 @@ class FilesController extends Controller
                         'style' => [
                             'textAlign' => 'center',
                         ],
+                        'values' => [
+                            'folder' => [
+                                'false' => '<i class="far fa-file fa-fw"></i>',
+                                'true' => '<i class="far fa-folder fa-fw"></i>',
+                            ]
+                        ]
                     ],
                     [
                         'name' => 'title',

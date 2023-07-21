@@ -74,7 +74,12 @@ class AuthController extends Controller
         $guard->login($guard->user(), $request->boolean('remember'));
 
         return response()->json([
-            'data' => $this->createNewToken((string)$token),
+            'data' => [
+                'access_token' => $token,
+                'token_type' => 'bearer',
+                'expires_in' => auth(Config::get('manager-api.guard.provider'))->factory()->getTTL() * 60,
+                'user' => auth(Config::get('manager-api.guard.provider'))->user(),
+            ],
         ]);
     }
 
@@ -137,7 +142,9 @@ class AuthController extends Controller
     public function refresh(): JsonResponse
     {
         return response()->json([
-            'data' => $this->createNewToken(auth(Config::get('manager-api.guard.provider'))->refresh()),
+            'data' => [
+                'access_token' => auth(Config::get('manager-api.guard.provider'))->refresh(),
+            ],
         ]);
     }
 
@@ -199,23 +206,6 @@ class AuthController extends Controller
         return response()->json([
             'data' => [],
         ]);
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param string $token
-     *
-     * @return array
-     */
-    protected function createNewToken(string $token): array
-    {
-        return [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth(Config::get('manager-api.guard.provider'))->factory()->getTTL() * 60,
-            'user' => auth(Config::get('manager-api.guard.provider'))->user(),
-        ];
     }
 
     /**
