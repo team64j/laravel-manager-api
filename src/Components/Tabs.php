@@ -126,6 +126,7 @@ class Tabs extends Component
      * @param string|array|null $route
      * @param string|null $title
      * @param array|Component|null $slot
+     * @param bool $needUpdate
      *
      * @return $this
      */
@@ -137,7 +138,8 @@ class Tabs extends Component
         bool|array|string $permissions = true,
         string|array $route = null,
         string $title = null,
-        array|Component $slot = null): static
+        array|Component $slot = null,
+        bool $needUpdate = false): static
     {
         if ($this->hasPermissions($permissions) &&
             !in_array($id, array_column($this->attributes['attrs']['data'], 'id'))

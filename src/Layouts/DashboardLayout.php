@@ -36,7 +36,7 @@ class DashboardLayout extends Layout
             ->setId('tree')
             ->setUid('TREE')
             ->setClass('h-full !bg-gray-800')
-            ->isWatch()
+            //->isWatch()
             ->isLoadOnce()
             ->addTab(
                 'documents',
@@ -343,7 +343,8 @@ class DashboardLayout extends Layout
                         ])
                         ->setSettings([
                             'parent' => -1,
-                        ])
+                        ]),
+                    true
                 )
             )
             ->if(
@@ -371,7 +372,8 @@ class DashboardLayout extends Layout
                         ])
                         ->setSettings([
                             'parent' => -1,
-                        ])
+                        ]),
+                    true
                 )
             )
             ->if(
@@ -399,7 +401,8 @@ class DashboardLayout extends Layout
                         ])
                         ->setSettings([
                             'parent' => -1,
-                        ])
+                        ]),
+                    true
                 )
             )
             ->if(
@@ -427,7 +430,8 @@ class DashboardLayout extends Layout
                         ])
                         ->setSettings([
                             'parent' => -1,
-                        ])
+                        ]),
+                    true
                 )
             )
             ->if(
@@ -455,7 +459,8 @@ class DashboardLayout extends Layout
                         ])
                         ->setSettings([
                             'parent' => -1,
-                        ])
+                        ]),
+                    true
                 )
             )
             ->if(
@@ -483,7 +488,8 @@ class DashboardLayout extends Layout
                         ])
                         ->setSettings([
                             'parent' => -1,
-                        ])
+                        ]),
+                    true
                 )
             )
             ->if(
@@ -506,7 +512,8 @@ class DashboardLayout extends Layout
                         ])
                         ->setIcons([
                             'default' => 'fa fa-object-group',
-                        ])
+                        ]),
+                    true
                 )
             )
             ->if(
@@ -603,7 +610,8 @@ class DashboardLayout extends Layout
                         ->setSettings([
                             'parent' => 'Lw==',
                             'show' => ['date'],
-                        ])
+                        ]),
+                    true
                 )
             );
     }
