@@ -22,7 +22,16 @@ class PluginLayout extends Layout
     {
         return [
             ActionsButtons::make()
-                ->setCancel()
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'name' => 'Elements',
+                        'params' => [
+                            'element' => 'plugins',
+                        ],
+                        'close' => true,
+                    ]
+                )
                 ->setSaveAnd()
                 ->if(
                     $model->getKey(),
@@ -188,7 +197,14 @@ class PluginLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make(['cancel', 'save']),
+            ActionsButtons::make(['cancel', 'save'])
+                ->setCancelTo([
+                    'name' => 'Elements',
+                    'params' => [
+                        'element' => 'plugins',
+                    ],
+                    'close' => true,
+                ]),
 
             Title::make()
                 ->setTitle(Lang::get('global.plugin_priority_title'))

@@ -28,7 +28,16 @@ class TvLayout extends Layout
     {
         return [
             ActionsButtons::make()
-                ->setCancel()
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'name' => 'Elements',
+                        'params' => [
+                            'element' => 'tvs',
+                        ],
+                        'close' => true,
+                    ]
+                )
                 ->setSaveAnd()
                 ->if(
                     $model->getKey(),
@@ -253,7 +262,14 @@ class TvLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make(['cancel', 'save']),
+            ActionsButtons::make(['cancel', 'save'])
+                ->setCancelTo([
+                    'name' => 'Elements',
+                    'params' => [
+                        'element' => 'tvs',
+                    ],
+                    'close' => true,
+                ]),
 
             Title::make()
                 ->setTitle(Lang::get('global.template_tv_edit_title'))

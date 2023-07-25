@@ -22,7 +22,16 @@ class CategoryLayout extends Layout
     {
         return [
             ActionsButtons::make()
-                ->setCancel()
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'name' => 'Elements',
+                        'params' => [
+                            'element' => 'categories',
+                        ],
+                        'close' => true,
+                    ]
+                )
                 ->setSaveAnd()
                 ->if(
                     $model->getKey(),
@@ -152,7 +161,13 @@ class CategoryLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make(['cancel', 'save']),
+            ActionsButtons::make(['cancel', 'save'])
+                ->setCancelTo([
+                    'name' => 'Elements',
+                    'params' => [
+                        'element' => 'categories',
+                    ],
+                ]),
 
             Title::make()
                 ->setTitle(Lang::get('global.cm_sort_categories'))

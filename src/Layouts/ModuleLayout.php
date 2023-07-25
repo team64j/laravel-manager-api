@@ -22,7 +22,16 @@ class ModuleLayout extends Layout
     {
         return [
             ActionsButtons::make()
-                ->setCancel()
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'name' => 'Elements',
+                        'params' => [
+                            'element' => 'modules',
+                        ],
+                        'close' => true,
+                    ]
+                )
                 ->setSaveAnd()
                 ->if(
                     $model->getKey(),
