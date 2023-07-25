@@ -60,7 +60,7 @@ class PermissionController extends Controller
                 }
 
                 return $group->withoutRelations()
-                    ->setAttribute('users', $users);
+                    ->setAttribute('users.html', $users);
             });
 
         return PermissionResource::collection([
@@ -153,7 +153,7 @@ class PermissionController extends Controller
                 }
 
                 return $group->withoutRelations()
-                    ->setAttribute('documents', $documents);
+                    ->setAttribute('documents.html', $documents);
             });
 
         return PermissionResource::collection([
@@ -238,7 +238,7 @@ class PermissionController extends Controller
                             <div class="pb-1">
                                 <span class="font-medium">' . $i->name . '</span> (' .
                             ($i->pivot->context ? 'web' : 'mgr') . ')
-                                <a class="link text-rose-500 hover:text-rose-600"></a>
+                                <i class="fa fa-close text-rose-500"/>
                             </div>'
                         )
                         ->join(' ');
@@ -247,7 +247,7 @@ class PermissionController extends Controller
                 }
 
                 return $group->withoutRelations()
-                    ->setAttribute('document_groups', $documentGroups);
+                    ->setAttribute('document_groups.html', $documentGroups);
             });
 
         $documents = DocumentgroupName::query()
