@@ -207,7 +207,7 @@ class TvLayout extends Layout
                         ->addColumn(
                             'rank',
                             Lang::get('global.tmplvars_rank'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
+                            ['width' => '15rem', 'textAlign' => 'center'],
                             true
                         )
                         ->addColumn(

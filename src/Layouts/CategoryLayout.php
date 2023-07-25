@@ -127,7 +127,7 @@ class CategoryLayout extends Layout
                         ->addColumn(
                             'rank',
                             Lang::get('global.cm_category_position'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
+                            ['width' => '15rem', 'textAlign' => 'center'],
                             true
                         ),
                     ['category_manager']

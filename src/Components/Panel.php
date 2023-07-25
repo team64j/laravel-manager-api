@@ -150,6 +150,10 @@ class Panel extends Component
             $data['name'] = $data['name'][0] ?? null;
         }
 
+        if (!empty($style['width'])) {
+            $data['width'] = $style['width'];
+        }
+
         $this->attributes['attrs']['columns'][] = $data;
 
         return $this;

@@ -78,7 +78,7 @@ class UserLayout extends Layout
                 ->addColumn(
                     'logincount',
                     Lang::get('global.user_logincount'),
-                    ['width' => '10rem', 'textAlign' => 'center'],
+                    ['width' => '20rem', 'textAlign' => 'center'],
                     true
                 )
                 ->addColumn(
