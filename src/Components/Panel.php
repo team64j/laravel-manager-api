@@ -132,6 +132,7 @@ class Panel extends Component
      * @param bool $sort
      * @param array $values
      * @param array $actions
+     * @param array|false $html
      *
      * @return $this
      */
@@ -141,7 +142,8 @@ class Panel extends Component
         array $style = [],
         bool $sort = false,
         array $values = [],
-        array $actions = []
+        array $actions = [],
+        bool $html = false
     ): static {
         $data = get_defined_vars();
 

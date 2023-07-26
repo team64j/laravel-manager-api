@@ -365,7 +365,7 @@ class SnippetController extends Controller
                         $result = $category->snippets()
                             ->withoutLocked()
                             ->orderBy('name')
-                            ->paginate(Config::get('global.number_of_results'))
+                            ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());
 
                         if ($result->isNotEmpty()) {

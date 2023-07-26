@@ -264,8 +264,10 @@ class TemplateLayout extends Layout
                             Lang::get('global.files_management'),
                             ['width' => '5rem', 'textAlign' => 'center']
                         )
-                        ->addColumn('description', Lang::get('global.template_desc'))
-                        //->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
+                        ->addColumn(
+                            'description',
+                            Lang::get('global.template_desc')
+                        )
                         ->addColumn(
                             'locked',
                             Lang::get('global.locked'),

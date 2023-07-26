@@ -57,6 +57,7 @@ class DashboardLayout extends Layout
                         'hidemenu' => 'inhidden',
                         'children' => 'data',
                     ])
+                    ->setAppends(['id'])
                     ->setIcons([
                         'default' => 'far fa-file',
                         Config::get('global.unauthorized_page') => 'fa fa-lock text-rose-600',
@@ -337,9 +338,19 @@ class DashboardLayout extends Layout
                             'category' => 'parent',
                             'selectable' => 'unhidden',
                         ])
+                        ->setAppends(['id'])
                         ->setIcons([
                             'default' => 'fa fa-newspaper',
                             Config::get('global.default_template') => 'fa fa-home fa-fw text-blue-500',
+                        ])
+                        ->setMenu([
+                            'actions' => [
+                                [
+                                    'icon' => 'fa fa-refresh',
+                                    'click' => 'update',
+                                    'loader' => true,
+                                ],
+                            ],
                         ])
                         ->setSettings([
                             'parent' => -1,
@@ -367,8 +378,18 @@ class DashboardLayout extends Layout
                             'locked' => 'private',
                             'category' => 'parent',
                         ])
+                        ->setAppends(['id'])
                         ->setIcons([
                             'default' => 'fa fa-list-alt',
+                        ])
+                        ->setMenu([
+                            'actions' => [
+                                [
+                                    'icon' => 'fa fa-refresh',
+                                    'click' => 'update',
+                                    'loader' => true,
+                                ],
+                            ],
                         ])
                         ->setSettings([
                             'parent' => -1,
@@ -396,8 +417,18 @@ class DashboardLayout extends Layout
                             'locked' => 'private',
                             'disabled' => 'deleted',
                         ])
+                        ->setAppends(['id'])
                         ->setIcons([
                             'default' => 'fa fa-th-large',
+                        ])
+                        ->setMenu([
+                            'actions' => [
+                                [
+                                    'icon' => 'fa fa-refresh',
+                                    'click' => 'update',
+                                    'loader' => true,
+                                ],
+                            ],
                         ])
                         ->setSettings([
                             'parent' => -1,
@@ -425,8 +456,18 @@ class DashboardLayout extends Layout
                             'locked' => 'private',
                             'disabled' => 'deleted',
                         ])
+                        ->setAppends(['id'])
                         ->setIcons([
                             'default' => 'fa fa-code',
+                        ])
+                        ->setMenu([
+                            'actions' => [
+                                [
+                                    'icon' => 'fa fa-refresh',
+                                    'click' => 'update',
+                                    'loader' => true,
+                                ],
+                            ],
                         ])
                         ->setSettings([
                             'parent' => -1,
@@ -454,8 +495,18 @@ class DashboardLayout extends Layout
                             'locked' => 'private',
                             'disabled' => 'deleted',
                         ])
+                        ->setAppends(['id'])
                         ->setIcons([
                             'default' => 'fa fa-plug',
+                        ])
+                        ->setMenu([
+                            'actions' => [
+                                [
+                                    'icon' => 'fa fa-refresh',
+                                    'click' => 'update',
+                                    'loader' => true,
+                                ],
+                            ],
                         ])
                         ->setSettings([
                             'parent' => -1,
@@ -483,8 +534,18 @@ class DashboardLayout extends Layout
                             'locked' => 'private',
                             'disabled' => 'deleted',
                         ])
+                        ->setAppends(['id'])
                         ->setIcons([
                             'default' => 'fa fa-cubes',
+                        ])
+                        ->setMenu([
+                            'actions' => [
+                                [
+                                    'icon' => 'fa fa-refresh',
+                                    'click' => 'update',
+                                    'loader' => true,
+                                ],
+                            ],
                         ])
                         ->setSettings([
                             'parent' => -1,
@@ -510,8 +571,18 @@ class DashboardLayout extends Layout
                         ->setAliases([
                             'category' => 'title',
                         ])
+                        ->setAppends(['id'])
                         ->setIcons([
                             'default' => 'fa fa-object-group',
+                        ])
+                        ->setMenu([
+                            'actions' => [
+                                [
+                                    'icon' => 'fa fa-refresh',
+                                    'click' => 'update',
+                                    'loader' => true,
+                                ],
+                            ],
                         ]),
                     true
                 )
@@ -601,6 +672,7 @@ class DashboardLayout extends Layout
                                 ],
                             ],
                         ])
+                        ->setAppends(['size', 'date'])
                         ->setTemplates([
                             'title' =>
                                 '{title}' . PHP_EOL .

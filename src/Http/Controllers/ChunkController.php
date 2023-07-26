@@ -362,7 +362,8 @@ class ChunkController extends Controller
                         /** @var LengthAwarePaginator $result */
                         $result = $category->chunks()
                             ->withoutLocked()
-                            ->paginate(Config::get('global.number_of_results'))
+                            ->orderBy('name')
+                            ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());
 
                         if ($result->isNotEmpty()) {

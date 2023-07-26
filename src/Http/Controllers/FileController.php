@@ -168,7 +168,7 @@ class FileController extends Controller
             ->explode(',')
             ->map(fn($i) => $i)
             ->toArray() : [];
-        $settings = $request->has('settings') ? json_decode($request->input('settings'), true) : [];
+        $settings = $request->whenFilled('settings', fn($i) => json_decode($i, true));
 
         $directories = File::directories($parentPath);
         $files = File::files($parentPath, true);

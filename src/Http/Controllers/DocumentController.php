@@ -507,10 +507,10 @@ class DocumentController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $result->map(function (SiteContent $item) use ($opened, $request, $fields, $settings) {
+        $result->map(function (SiteContent $item) use ($opened, $request, $fields, $order, $dir, $settings) {
             if (in_array($item->getKey(), $opened, true)) {
                 $request->query->replace([
-                    'parent' => $item->getKey(),
+                    'parent' => $item->getKey()
                 ]);
 
                 /** @var LengthAwarePaginator $result */
@@ -518,7 +518,8 @@ class DocumentController extends Controller
                     ->select($fields)
                     ->with('documentGroups')
                     ->without('children')
-                    ->paginate(Config::get('global.number_of_results'))
+                    ->orderBy($order, $dir)
+                    ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                     ->appends($request->all());
 
                 if ($result->isNotEmpty()) {

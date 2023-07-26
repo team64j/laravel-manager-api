@@ -119,6 +119,18 @@ class Tree extends Component
      *
      * @return $this
      */
+    public function setAppends(array $value): static
+    {
+        $this->attributes['attrs']['appends'] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param array $value
+     *
+     * @return $this
+     */
     public function setContextMenu(array $value): static
     {
         $this->attributes['attrs']['contextMenu'] = $value;

@@ -437,7 +437,7 @@ class ModuleController extends Controller
                         $result = $category->modules()
                             ->withoutLocked()
                             ->orderBy('name')
-                            ->paginate(Config::get('global.number_of_results'))
+                            ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());
 
                         if ($result->isNotEmpty()) {
@@ -459,85 +459,6 @@ class ModuleController extends Controller
                     ->sortBy('name')
                     ->values(),
             ],
-        ]);
-
-        $data = [];
-        $filter = $request->input('filter');
-        $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
-
-        $opened = $request->has('opened') ? $request->string('opened')
-            ->explode(',')
-            ->map(fn($i) => intval($i))
-            ->toArray() : [];
-
-        if ($category >= 0) {
-            $result = SiteModule::query()
-                ->select($fields)
-                ->where('category', $category)
-                ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
-                ->orderBy('name')
-                ->paginate(Config::get('global.number_of_results'))
-                ->appends($request->all());
-
-            $data['data'] = $result->items();
-            $data['pagination'] = $this->pagination($result);
-        } else {
-            $collection = Collection::make();
-
-            $result = SiteModule::query()
-                ->select($fields)
-                ->where('category', 0)
-                ->paginate(Config::get('global.number_of_results'))
-                ->appends($request->all());
-
-            if ($result->count()) {
-                $collection->add(
-                    [
-                        'id' => 0,
-                        'name' => Lang::get('global.no_category'),
-                        'folder' => true,
-                    ] + (in_array(0, $opened, true) ?
-                        [
-                            'data' => [
-                                'data' => $result->items(),
-                                'pagination' => $this->pagination($result),
-                            ],
-                        ]
-                        : [])
-                );
-            }
-
-            $result = Category::query()
-                ->whereHas('modules')
-                ->get()
-                ->map(function (Category $item) use ($request, $opened) {
-                    $data = [
-                        'id' => $item->getKey(),
-                        'name' => $item->category,
-                        'folder' => true,
-                    ];
-
-                    if (in_array($item->getKey(), $opened, true)) {
-                        $result = $item->modules()
-                            ->paginate(Config::get('global.number_of_results'))
-                            ->appends($request->all());
-
-                        $data['data'] = [
-                            'data' => $result->items(),
-                            'pagination' => $this->pagination($result),
-                        ];
-                    }
-
-                    $item->setRawAttributes($data);
-
-                    return $item;
-                });
-
-            $data['data'] = $collection->merge($result);
-        }
-
-        return ModuleResource::collection([
-            'data' => $data,
         ]);
     }
 }

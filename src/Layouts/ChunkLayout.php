@@ -128,8 +128,10 @@ class ChunkLayout extends Layout
                             ['width' => '20rem', 'fontWeight' => 500],
                             true
                         )
-                        ->addColumn('description', Lang::get('global.htmlsnippet_desc'))
-                        //->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
+                        ->addColumn(
+                            'description',
+                            Lang::get('global.htmlsnippet_desc')
+                        )
                         ->addColumn(
                             'locked',
                             Lang::get('global.locked'),

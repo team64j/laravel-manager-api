@@ -202,7 +202,6 @@ class TvLayout extends Layout
                         )
                         ->addColumn('caption', Lang::get('global.tmplvars_caption'), [], true)
                         ->addColumn('type', Lang::get('global.tmplvars_type'), ['width' => '10rem'])
-                        //->addColumn('category', Lang::get('global.category_heading'), ['width' => '15rem'], true)
                         ->addColumn(
                             'locked',
                             Lang::get('global.locked'),

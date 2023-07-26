@@ -541,7 +541,7 @@ class TemplateController extends Controller
                             ->withoutLocked()
                             ->select($fields)
                             ->orderBy('templatename')
-                            ->paginate(Config::get('global.number_of_results'))
+                            ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());
 
                         if ($result->isNotEmpty()) {
