@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FileRequest;
@@ -111,6 +112,11 @@ class FileController extends Controller
             $data['ext'] = File::extension($path);
             $data['lang'] = $this->getLang($data['ext'], $data['type']);
             $data['size'] = $this->getSize(File::size($path));
+            $data['url'] = str_replace(
+                DIRECTORY_SEPARATOR,
+                '/',
+                URL::to($filename, [], Config::get('global.server_protocol') == 'https')
+            );
 
             $content = File::get($path);
 
@@ -129,7 +135,7 @@ class FileController extends Controller
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
-                    'tab' => $layout->titleDefault($data['basename']),
+                    'tab' => $layout->titleDefault($data['path']),
                 ],
             ]);
     }

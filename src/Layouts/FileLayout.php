@@ -7,7 +7,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\CodeEditor;
-use Team64j\LaravelManagerApi\Components\Input;
+use Team64j\LaravelManagerApi\Components\Media;
 use Team64j\LaravelManagerApi\Components\Template;
 use Team64j\LaravelManagerApi\Components\Title;
 
@@ -25,20 +25,24 @@ class FileLayout extends Layout
                 ),
 
             Title::make()
-                ->setModel('basename')
+                ->setModel('path')
                 ->setIcon('fa fa-file')
                 ->setId($data['size'] ?? null),
 
             Template::make()
-                ->setClass('px-6')
-                ->setSlot([
-                    Lang::get('global.filemanager_path_title') . ' <strong>' . $data['path'] . '</strong>',
-                    Input::make('basename', Lang::get('global.files_filename'))
-                        ->setInputClass('text-xl font-bold px-4 py-2'),
-                    CodeEditor::make('content')
-                        ->setLanguage($data['lang'])
-                        ->setRows('auto'),
-                ]),
+                ->setClass('px-6 pb-4')
+                ->setSlot(
+                    match (true) {
+                        (stripos($data['type'], 'text/') !== false ||
+                            stripos($data['type'], 'application/json') !== false) => CodeEditor::make('content')
+                            ->setLanguage($data['lang'])
+                            ->setRows('auto')
+                            ->setClass('!m-0'),
+                        stripos($data['type'], 'image/') !== false => Media::make('path')
+                            ->setData($data),
+                        default => [],
+                    }
+                ),
         ];
     }
 

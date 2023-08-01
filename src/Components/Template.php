@@ -60,7 +60,7 @@ class Template extends Component
      */
     public function setSlot(string|array|Component $slot = null): static
     {
-        $this->attributes['slots']['default'] = (array) $slot;
+        $this->attributes['slots']['default'] = $slot;
 
         return $this;
     }

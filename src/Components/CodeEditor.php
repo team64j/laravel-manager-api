@@ -38,6 +38,18 @@ class CodeEditor extends Component
     }
 
     /**
+     * @param string|null $value
+     *
+     * @return $this
+     */
+    public function setClass(string $value = null): static
+    {
+        $this->attributes['attrs']['class'] = $value;
+
+        return $this;
+    }
+
+    /**
      * @param int|string $value
      *
      * @return $this
