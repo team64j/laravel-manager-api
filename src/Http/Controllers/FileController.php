@@ -96,7 +96,7 @@ class FileController extends Controller
             'text/plain',
             'image/svg+xml',
             'application/json',
-            'application/octet-stream',
+            //'application/octet-stream',
         ];
 
         $ignoreExtensions = [
