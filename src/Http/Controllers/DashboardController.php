@@ -181,31 +181,31 @@ class DashboardController extends Controller
         ];
     }
 
-    /**
-     * @OA\Get(
-     *     path="/dashboard/sidebar",
-     *     summary="Получение шаблона сайдбара",
-     *     tags={"Dashboard"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param DashboardRequest $request
-     * @param DashboardLayout $layout
-     *
-     * @return AnonymousResourceCollection
-     */
-    public function sidebar(DashboardRequest $request, DashboardLayout $layout): AnonymousResourceCollection
-    {
-        return DashboardResource::collection([
-            'data' => [],
-            'meta' => [],
-            'layout' => $layout->sidebar(),
-        ]);
-    }
+//    /**
+//     * @OA\Get(
+//     *     path="/dashboard/sidebar",
+//     *     summary="Получение шаблона сайдбара",
+//     *     tags={"Dashboard"},
+//     *     security={{"Api":{}}},
+//     *     @OA\Response(
+//     *          response="200",
+//     *          description="ok",
+//     *          @OA\JsonContent(
+//     *              type="object"
+//     *          )
+//     *      )
+//     * )
+//     * @param DashboardRequest $request
+//     * @param DashboardLayout $layout
+//     *
+//     * @return AnonymousResourceCollection
+//     */
+//    public function sidebar(DashboardRequest $request, DashboardLayout $layout): AnonymousResourceCollection
+//    {
+//        return DashboardResource::collection([
+//            'data' => [],
+//            'meta' => [],
+//            'layout' => $layout->sidebar(),
+//        ]);
+//    }
 }

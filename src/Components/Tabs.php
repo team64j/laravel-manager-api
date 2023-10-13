@@ -88,6 +88,18 @@ class Tabs extends Component
     }
 
     /**
+     * @param bool|null $value
+     *
+     * @return $this
+     */
+    public function setNavigation(bool $value = null): static
+    {
+        $this->attributes['attrs']['navigation'] = $value ?? true;
+
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function isWatch(): static
@@ -113,6 +125,16 @@ class Tabs extends Component
     public function isVertical(): static
     {
         $this->attributes['attrs']['vertical'] = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function isSmallTabs(): static
+    {
+        $this->attributes['attrs']['smallTabs'] = true;
 
         return $this;
     }
@@ -171,6 +193,37 @@ class Tabs extends Component
 
     /**
      * @param string $id
+     *
+     * @return $this
+     */
+    public function removeTab(string $id): static
+    {
+        if ($this->hasTab($id)) {
+            $this->attributes['attrs']['data'] = array_filter(
+                $this->attributes['attrs']['data'],
+                fn($item) => $item['id'] != $id
+            );
+        }
+
+        if ($this->hasSlot($id)) {
+            unset($this->attributes['slots'][$id]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function hasTab(string $id): bool
+    {
+        return in_array($id, array_column($this->attributes['attrs']['data'] ?? [], 'id'), true);
+    }
+
+    /**
+     * @param string $id
      * @param array|Component $data
      * @param bool|array|string $permissions
      *
@@ -211,6 +264,16 @@ class Tabs extends Component
         $this->attributes['slots'] = $data;
 
         return $this;
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
+    public function hasSlot(string $id): bool
+    {
+        return !empty($this->attributes['slots'][$id]);
     }
 
     /**

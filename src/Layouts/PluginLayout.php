@@ -10,6 +10,7 @@ use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerApi\Components\Tree;
 
 class PluginLayout extends Layout
 {
@@ -33,7 +34,7 @@ class PluginLayout extends Layout
                     ]
                 )
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $model->getKey(),
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
                 ),
@@ -251,6 +252,46 @@ class PluginLayout extends Layout
         return [
             'title' => Lang::get('global.plugin_priority_title'),
             'icon' => 'fa fa-sort-numeric-asc',
+        ];
+    }
+
+    public function tree(): array
+    {
+        return [
+            'plugins',
+            null,
+            'fa fa-plug',
+            '!bg-inherit',
+            ['edit_plugin'],
+            ['Plugin'],
+            Lang::get('global.plugins'),
+            Tree::make()
+                ->setId('plugins')
+                ->setRoute('Plugin')
+                ->setUrl('/plugins/tree')
+                ->isCategory()
+                ->setAliases([
+                    'name' => 'title',
+                    'locked' => 'private',
+                    'disabled' => 'deleted',
+                ])
+                ->setAppends(['id'])
+                ->setIcons([
+                    'default' => 'fa fa-plug',
+                ])
+                ->setMenu([
+                    'actions' => [
+                        [
+                            'icon' => 'fa fa-refresh',
+                            'click' => 'update',
+                            'loader' => true,
+                        ],
+                    ],
+                ])
+                ->setSettings([
+                    'parent' => -1,
+                ]),
+            true,
         ];
     }
 }

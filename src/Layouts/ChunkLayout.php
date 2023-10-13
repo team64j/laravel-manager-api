@@ -10,6 +10,7 @@ use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerApi\Components\Tree;
 
 class ChunkLayout extends Layout
 {
@@ -33,7 +34,7 @@ class ChunkLayout extends Layout
                     ]
                 )
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $model->getKey(),
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
                 ),
@@ -186,6 +187,49 @@ class ChunkLayout extends Layout
         return [
             'title' => Lang::get('global.htmlsnippets'),
             'icon' => 'fa fa-th-large',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function tree(): array
+    {
+        return [
+            'chunks',
+            null,
+            'fa fa-th-large',
+            '!bg-inherit',
+            ['edit_chunk'],
+            ['Chunk'],
+            Lang::get('global.htmlsnippets'),
+            Tree::make()
+                ->setId('chunks')
+                ->setRoute('Chunk')
+                ->setUrl('/chunks/tree')
+                ->isCategory()
+                ->setAliases([
+                    'name' => 'title',
+                    'locked' => 'private',
+                    'disabled' => 'deleted',
+                ])
+                ->setAppends(['id'])
+                ->setIcons([
+                    'default' => 'fa fa-th-large',
+                ])
+                ->setMenu([
+                    'actions' => [
+                        [
+                            'icon' => 'fa fa-refresh',
+                            'click' => 'update',
+                            'loader' => true,
+                        ],
+                    ],
+                ])
+                ->setSettings([
+                    'parent' => -1,
+                ]),
+            true,
         ];
     }
 }

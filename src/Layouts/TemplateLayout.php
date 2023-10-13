@@ -17,6 +17,7 @@ use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Template;
 use Team64j\LaravelManagerApi\Components\Textarea;
 use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerApi\Components\Tree;
 
 class TemplateLayout extends Layout
 {
@@ -44,7 +45,7 @@ class TemplateLayout extends Layout
                     ]
                 )
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $model->getKey(),
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
                 ),
@@ -238,7 +239,9 @@ class TemplateLayout extends Layout
                             false,
                             [
                                 'id' => [
-                                    Config::get('global.default_template') => '<i class="fa fa-home fa-fw text-blue-500"/>',
+                                    Config::get(
+                                        'global.default_template'
+                                    ) => '<i class="fa fa-home fa-fw text-blue-500"/>',
                                 ],
                                 'locked' => [
                                     '<i class="fa fa-newspaper fa-fw"/>',
@@ -312,6 +315,52 @@ class TemplateLayout extends Layout
         return [
             'title' => Lang::get('global.templates'),
             'icon' => 'fa fa-newspaper',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function tree(): array
+    {
+        return [
+            'templates',
+            null,
+            'fa fa-newspaper',
+            '!bg-inherit',
+            ['edit_template'],
+            ['Template'],
+            Lang::get('global.templates'),
+            Tree::make()
+                ->setId('templates')
+                ->setRoute('Template')
+                ->setUrl('/templates/tree')
+                ->isCategory()
+                ->setAliases([
+                    'name' => 'title',
+                    'templatename' => 'title',
+                    'locked' => 'private',
+                    'category' => 'parent',
+                    'selectable' => 'unhidden',
+                ])
+                ->setAppends(['id'])
+                ->setIcons([
+                    'default' => 'fa fa-newspaper',
+                    Config::get('global.default_template') => 'fa fa-home fa-fw text-blue-500',
+                ])
+                ->setMenu([
+                    'actions' => [
+                        [
+                            'icon' => 'fa fa-refresh',
+                            'click' => 'update',
+                            'loader' => true,
+                        ],
+                    ],
+                ])
+                ->setSettings([
+                    'parent' => -1,
+                ]),
+            true,
         ];
     }
 }

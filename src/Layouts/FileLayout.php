@@ -19,7 +19,7 @@ class FileLayout extends Layout
             ActionsButtons::make()
                 ->setCancel()
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $data['basename'] ?? false,
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
                 ),

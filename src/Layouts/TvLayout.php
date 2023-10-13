@@ -16,6 +16,7 @@ use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Template;
 use Team64j\LaravelManagerApi\Components\Textarea;
 use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerApi\Components\Tree;
 
 class TvLayout extends Layout
 {
@@ -39,7 +40,7 @@ class TvLayout extends Layout
                     ]
                 )
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $model->getKey(),
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
                 ),
@@ -314,6 +315,49 @@ class TvLayout extends Layout
         return [
             'title' => Lang::get('global.template_tv_edit_title'),
             'icon' => 'fa fa-sort-numeric-asc',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function tree(): array
+    {
+        return [
+            'tvs',
+            null,
+            'fa fa-list-alt',
+            '!bg-inherit',
+            ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
+            ['Tv'],
+            Lang::get('global.tmplvars'),
+            Tree::make()
+                ->setId('tvs')
+                ->setRoute('Tv')
+                ->setUrl('/tvs/tree')
+                ->isCategory()
+                ->setAliases([
+                    'name' => 'title',
+                    'locked' => 'private',
+                    'category' => 'parent',
+                ])
+                ->setAppends(['id'])
+                ->setIcons([
+                    'default' => 'fa fa-list-alt',
+                ])
+                ->setMenu([
+                    'actions' => [
+                        [
+                            'icon' => 'fa fa-refresh',
+                            'click' => 'update',
+                            'loader' => true,
+                        ],
+                    ],
+                ])
+                ->setSettings([
+                    'parent' => -1,
+                ]),
+            true,
         ];
     }
 }

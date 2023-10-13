@@ -95,7 +95,7 @@ Route::prefix($apiPath)
         /** Dashboard */
         Route::prefix('dashboard')
             ->group(fn() => [
-                Route::get('sidebar', [DashboardController::class, 'sidebar']),
+                //Route::get('sidebar', [DashboardController::class, 'sidebar']),
                 Route::get('news', [DashboardController::class, 'news']),
                 Route::get('news-security', [DashboardController::class, 'newsSecurity']),
             ])

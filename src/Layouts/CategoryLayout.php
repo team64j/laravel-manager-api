@@ -10,6 +10,7 @@ use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerApi\Components\Tree;
 
 class CategoryLayout extends Layout
 {
@@ -33,7 +34,7 @@ class CategoryLayout extends Layout
                     ]
                 )
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $model->getKey(),
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
                 ),
@@ -212,6 +213,44 @@ class CategoryLayout extends Layout
         return [
             'title' => Lang::get('global.cm_sort_categories'),
             'icon' => 'fa fa-sort-numeric-asc',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function tree(): array
+    {
+        return [
+            'categories',
+            null,
+            'fa fa-object-group',
+            '!bg-inherit',
+            ['category_manager'],
+            ['Category'],
+            Lang::get('global.category_management'),
+            Tree::make()
+                ->setId('categories')
+                ->setRoute('Category')
+                ->setUrl('/categories/tree?order=category')
+                ->isCategory()
+                ->setAliases([
+                    'category' => 'title',
+                ])
+                ->setAppends(['id'])
+                ->setIcons([
+                    'default' => 'fa fa-object-group',
+                ])
+                ->setMenu([
+                    'actions' => [
+                        [
+                            'icon' => 'fa fa-refresh',
+                            'click' => 'update',
+                            'loader' => true,
+                        ],
+                    ],
+                ]),
+            true,
         ];
     }
 }

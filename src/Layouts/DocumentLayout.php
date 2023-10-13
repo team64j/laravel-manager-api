@@ -24,6 +24,7 @@ use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Template;
 use Team64j\LaravelManagerApi\Components\Textarea;
 use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerApi\Components\Tree;
 
 class DocumentLayout extends Layout
 {
@@ -38,10 +39,10 @@ class DocumentLayout extends Layout
             ActionsButtons::make()
                 ->setCancel()
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $model->deleted,
                     fn(ActionsButtons $actions) => $actions->setView()->setRestore(),
-                    fn(ActionsButtons $actions) => $actions->if(
+                    fn(ActionsButtons $actions) => $actions->when(
                         $model->getKey(),
                         fn(ActionsButtons $actions) => $actions->setView()->setDelete()->setCopy()
                     )
@@ -300,14 +301,14 @@ class DocumentLayout extends Layout
                             ]),
                     ]
                 )
-                ->if(
+                ->when(
                     $model->getTvs()->count(),
                     fn(Tabs $tabs) => $this->tabTvs(
                         $tabs,
                         $model->getTvs()
                     )
                 )
-                ->if(
+                ->when(
                     Config::get('global.use_udperms'),
                     fn(Tabs $tabs) => $this->tabPermissions($tabs)
                 ),
@@ -466,5 +467,290 @@ class DocumentLayout extends Layout
                         ->setRelation('data.is_document_group', false, true),
                 ]
             );
+    }
+
+    /**
+     * @return array
+     */
+    public function tree(): array
+    {
+        return [
+            'documents',
+            null,
+            'fa fa-sitemap',
+            '!bg-inherit',
+            true,
+            ['Document', 'Documents'],
+            Lang::get('global.manage_documents'),
+            Tree::make()
+                ->setId('documents')
+                ->setRoute('Document')
+                ->setRouteList('Documents')
+                ->setUrl('/document/tree?order=menuindex&dir=asc')
+                ->setAliases([
+                    'hide_from_tree' => 'hideChildren',
+                    'isfolder' => 'folder',
+                    'hidemenu' => 'inhidden',
+                    'children' => 'data',
+                ])
+                ->setAppends(['id'])
+                ->setIcons([
+                    'default' => 'far fa-file',
+                    Config::get('global.unauthorized_page') => 'fa fa-lock text-rose-600',
+                    Config::get('global.site_start') => 'fa fa-home text-blue-500',
+                    Config::get('global.site_unavailable_page') => 'fa fa-ban text-amber-400',
+                    Config::get('global.error_page') => 'fa fa-exclamation-triangle text-rose-600',
+                    'reference' => 'fa fa-link',
+                ])
+                ->setTemplates([
+                    'title' =>
+                        Lang::get('global.pagetitle') . ': {pagetitle}' . PHP_EOL .
+                        Lang::get('global.id') . ': {id}' . PHP_EOL .
+                        Lang::get('global.resource_opt_menu_title') . ': {menutitle}' . PHP_EOL .
+                        Lang::get('global.resource_opt_menu_index') . ': {menuindex}' . PHP_EOL .
+                        Lang::get('global.alias') . ': {alias}' . PHP_EOL .
+                        Lang::get('global.template') . ': {template}' . PHP_EOL .
+                        Lang::get('global.resource_opt_richtext') . ': {richtext}' . PHP_EOL .
+                        Lang::get('global.page_data_searchable') . ': {searchable}' . PHP_EOL .
+                        Lang::get('global.page_data_cacheable') . ': {cacheable}' . PHP_EOL,
+                ])
+                ->setContextMenu([
+                    'class' => 'text-base',
+                    'actions' => [
+                        [
+                            'title' => Lang::get('global.create_resource_here'),
+                            'icon' => 'fa fa-file',
+                            'to' => [
+                                'name' => 'Document',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
+                                'query' => [
+                                    'type' => 'document',
+                                ],
+                            ],
+                        ],
+                        [
+                            'title' => Lang::get('global.create_weblink_here'),
+                            'icon' => 'fa fa-link',
+                            'to' => [
+                                'name' => 'Document',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
+                                'query' => [
+                                    'type' => 'reference',
+                                ],
+                            ],
+                        ],
+                        [
+                            'title' => Lang::get('global.edit'),
+                            'icon' => 'fa fa-edit',
+                            'to' => [
+                                'name' => 'Document',
+                            ],
+                        ],
+                        [
+                            'title' => Lang::get('global.move'),
+                            'icon' => 'fa fa-arrows',
+                        ],
+                        [
+                            'title' => Lang::get('global.duplicate'),
+                            'icon' => 'fa fa-clone',
+                        ],
+                        [
+                            'split' => true,
+                        ],
+                        [
+                            'title' => Lang::get('global.sort_menuindex'),
+                            'icon' => 'fa fa-sort-numeric-asc',
+                            'hidden' => [
+                                'folder' => 0,
+                            ],
+                        ],
+                        [
+                            'title' => Lang::get('global.unpublish_resource'),
+                            'icon' => 'fa fa-close',
+                            'hidden' => [
+                                'published' => 0,
+                            ],
+                        ],
+                        [
+                            'title' => Lang::get('global.delete'),
+                            'icon' => 'fa fa-trash',
+                            'hidden' => [
+                                'deleted' => 1,
+                            ],
+                        ],
+                        [
+                            'split' => true,
+                        ],
+                        [
+                            'title' => Lang::get('global.undelete_resource'),
+                            'icon' => 'fa fa-undo',
+                            'hidden' => [
+                                'deleted' => 0,
+                            ],
+                        ],
+                        [
+                            'title' => Lang::get('global.resource_overview'),
+                            'icon' => 'fa fa-info',
+                        ],
+                        [
+                            'title' => Lang::get('global.preview'),
+                            'icon' => 'fa fa-eye',
+                        ],
+                    ],
+                ])
+                ->setMenu([
+                    'actions' => [
+                        [
+                            'icon' => 'fa fa-refresh',
+                            'click' => 'update',
+                            'loader' => true,
+                        ],
+                        [
+                            'icon' => 'fa fa-sort',
+                            'actions' => [
+                                [
+                                    'title' => Lang::get('global.sort_tree'),
+                                ],
+                                [
+                                    'key' => 'dir',
+                                    'value' => 'asc',
+                                    'title' => Lang::get('global.sort_asc'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'dir',
+                                    'value' => 'desc',
+                                    'title' => Lang::get('global.sort_desc'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'split' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'id',
+                                    'title' => 'ID',
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'menuindex',
+                                    'title' => Lang::get('global.resource_opt_menu_index'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'isfolder',
+                                    'title' => Lang::get('global.folder'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'pagetitle',
+                                    'title' => Lang::get('global.pagetitle'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'longtitle',
+                                    'title' => Lang::get('global.long_title'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'alias',
+                                    'title' => Lang::get('global.alias'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'createdon',
+                                    'title' => Lang::get('global.createdon'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'editedon',
+                                    'title' => Lang::get('global.editedon'),
+                                    'toggle' => true,
+                                ],
+                                [
+                                    'key' => 'order',
+                                    'value' => 'publishedon',
+                                    'title' => Lang::get('global.publish_date'),
+                                    'toggle' => true,
+                                ],
+                            ],
+                        ],
+                        [
+                            'icon' => 'fa fa-eye',
+                            'actions' => [
+                                [
+                                    'title' => Lang::get('global.setting_resource_tree_node_name'),
+                                ],
+                                [
+                                    'key' => 'keyTitle',
+                                    'value' => 'pagetitle',
+                                    'title' => Lang::get('global.pagetitle'),
+                                    'toggle' => true,
+                                    'click' => 'changeKeyTitle',
+                                ],
+                                [
+                                    'key' => 'keyTitle',
+                                    'value' => 'longtitle',
+                                    'title' => Lang::get('global.long_title'),
+                                    'toggle' => true,
+                                    'click' => 'changeKeyTitle',
+                                ],
+                                [
+                                    'key' => 'keyTitle',
+                                    'value' => 'menutitle',
+                                    'title' => Lang::get('global.resource_opt_menu_title'),
+                                    'toggle' => true,
+                                    'click' => 'changeKeyTitle',
+                                ],
+                                [
+                                    'key' => 'keyTitle',
+                                    'value' => 'alias',
+                                    'title' => Lang::get('global.alias'),
+                                    'toggle' => true,
+                                    'click' => 'changeKeyTitle',
+                                ],
+                                [
+                                    'key' => 'keyTitle',
+                                    'value' => 'createdon',
+                                    'title' => Lang::get('global.createdon'),
+                                    'toggle' => true,
+                                    'click' => 'changeKeyTitle',
+                                ],
+                                [
+                                    'key' => 'keyTitle',
+                                    'value' => 'editedon',
+                                    'title' => Lang::get('global.editedon'),
+                                    'toggle' => true,
+                                    'click' => 'changeKeyTitle',
+                                ],
+                                [
+                                    'key' => 'keyTitle',
+                                    'value' => 'publishedon',
+                                    'title' => Lang::get('global.publish_date'),
+                                    'toggle' => true,
+                                    'click' => 'changeKeyTitle',
+                                ],
+                            ],
+                        ],
+                    ],
+                ])
+                ->setSettings([
+                    'parent' => 0,
+                    'dir' => 'asc',
+                    'order' => 'menuindex',
+                    'keyTitle' => 'pagetitle',
+                ]),
+        ];
     }
 }

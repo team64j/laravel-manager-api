@@ -48,7 +48,7 @@ class WorkspaceController extends Controller
         foreach ($result as $key => $value) {
             [, $tab, $key] = explode('_', $key, 3);
 
-            if ($tab == 'topmenu') {
+            if (in_array($tab, ['topmenu', 'tree'])) {
                 if (!$value || $value == '[]') {
                     continue;
                 }
@@ -57,6 +57,10 @@ class WorkspaceController extends Controller
             }
 
             $data[$tab][$key] = $value;
+        }
+
+        if (empty($data['tree']['data'])) {
+            $data['tree']['data'] = App::call(BootstrapController::class . '@getTree', ['edit' => true]);
         }
 
         if (empty($data['topmenu']['data'])) {
@@ -103,7 +107,6 @@ class WorkspaceController extends Controller
         $collect = Collection::make(
             Arr::dot(
                 $request->only([
-                    'sidebar',
                     'dashboard',
                 ]),
                 'workspace_'
@@ -115,6 +118,10 @@ class WorkspaceController extends Controller
 
         if ($request->has('topmenu')) {
             $collect['workspace_topmenu_data'] = json_encode($request->get('topmenu')['data']);
+        }
+
+        if ($request->has('tree')) {
+            $collect['workspace_tree_data'] = json_encode($request->get('tree')['data']);
         }
 
         foreach ($collect as $key => $value) {

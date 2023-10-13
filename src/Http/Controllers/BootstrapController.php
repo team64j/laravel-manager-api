@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Env;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
@@ -12,8 +13,18 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use OpenApi\Annotations as OA;
+use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
+use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
+use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
+use Team64j\LaravelManagerApi\Layouts\DocumentLayout;
+use Team64j\LaravelManagerApi\Layouts\FilesLayout;
+use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
+use Team64j\LaravelManagerApi\Layouts\PluginLayout;
+use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
+use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
+use Team64j\LaravelManagerApi\Layouts\TvLayout;
 use Team64j\LaravelManagerApi\Models\UserAttribute;
 
 class BootstrapController extends Controller
@@ -65,6 +76,7 @@ class BootstrapController extends Controller
             ],
             'lexicon' => Lang::get('global'),
             'menu' => $this->getMenu(),
+            'tree' => $this->getTree(),
             'assets' => $this->getAssets(),
         ]);
     }
@@ -97,7 +109,6 @@ class BootstrapController extends Controller
         ];
 
         return $assets;
-
         //return array_merge($assets, Arr::flatten(Event::until('OnManagerMainFrameHeaderHTMLBlock'), 1) ?? []);
     }
 
@@ -556,7 +567,6 @@ class BootstrapController extends Controller
      */
     protected function replaceUserVariables(string $item): string
     {
-
         preg_match_all('!\[\+user\.(.*)\+]!U', $item, $matches);
 
         if (!empty($matches[1])) {
@@ -680,5 +690,100 @@ class BootstrapController extends Controller
                 'value' => $value,
             ], $data, array_keys($data)),
         ];
+    }
+
+    /**
+     * @param bool $edit
+     *
+     * @return array
+     */
+    public function getTree(bool $edit = false): array
+    {
+        $tabs = Tabs::make()
+            ->setId('tree')
+            ->setUid('TREE')
+            ->setClass('h-full !bg-gray-800')
+            ->setNavigation(false)
+            ->isSmallTabs()
+            ->isLoadOnce();
+
+        if (!$edit && Config::has('global.workspace_tree_data') && Config::get('global.workspace_tree_data') != '[]') {
+            $data = json_decode(Config::get('global.workspace_tree_data'), true);
+        } else {
+            $data = [
+                [
+                    'lang' => 'manage_documents',
+                    'class' => DocumentLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'templates',
+                    'class' => TemplateLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'tmplvars',
+                    'class' => TvLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'htmlsnippets',
+                    'class' => ChunkLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'snippets',
+                    'class' => SnippetLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'plugins',
+                    'class' => PluginLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'modules',
+                    'class' => ModuleLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'category_management',
+                    'class' => CategoryLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+                [
+                    'lang' => 'files_files',
+                    'class' => FilesLayout::class . '@tree',
+                    'enabled' => true,
+                    'custom' => false,
+                ],
+            ];
+        }
+
+        if ($edit) {
+            return $data;
+        }
+
+        foreach ($data as $v) {
+            $class = explode('@', (string) $v['class']);
+
+            if (!$v['enabled'] || !$v['class'] || count($class) < 2 ||
+                (class_exists($class[0]) && !method_exists(...$class))
+            ) {
+                continue;
+            }
+
+            $tabs->addTab(...App::call($v['class']));
+        }
+
+        return $tabs->toArray();
     }
 }

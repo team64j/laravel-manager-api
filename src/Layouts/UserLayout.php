@@ -29,7 +29,7 @@ class UserLayout extends Layout
                     ]
                 )
                 ->setSaveAnd()
-                ->if(
+                ->when(
                     $model->getKey(),
                     fn($actions) => $actions->setDelete()->setCopy()
                 ),
