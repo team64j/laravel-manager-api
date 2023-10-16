@@ -23,6 +23,7 @@ abstract class Component extends Fluent
      */
     public function toArray(): array
     {
+        $this->checkPermissions();
         $this->clearAttributes();
 
         return parent::toArray();
@@ -38,8 +39,16 @@ abstract class Component extends Fluent
         }
 
         $this->attributes = array_filter($this->attributes, fn($i) => !is_null($i));
+    }
 
-        if (!empty($this->attributes['permissions']) && !$this->hasPermissions($this->attributes['permissions'])) {
+    /**
+     * @return void
+     */
+    protected function checkPermissions(): void
+    {
+        $permissions = $this->attributes['permissions'] ?? $this->attributes['attrs']['permissions'] ?? true;
+
+        if (!$this->hasPermissions($permissions)) {
             $this->attributes = [];
         }
     }
