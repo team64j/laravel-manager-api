@@ -781,7 +781,11 @@ class BootstrapController extends Controller
                 continue;
             }
 
-            $tabs->addTab(...App::call($v['class']));
+            $tab = App::call($v['class']);
+
+            if ($tab) {
+                $tabs->addTab(...$tab);
+            }
         }
 
         return $tabs->toArray();

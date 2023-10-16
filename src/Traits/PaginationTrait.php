@@ -24,8 +24,10 @@ trait PaginationTrait
 
         return [
             'total' => $result->total(),
-            'prev' => str_replace(route('manager.api'), '', $result->previousPageUrl()),
-            'next' => str_replace(route('manager.api'), '', $result->nextPageUrl()),
+            //'prev' => str_replace(route('manager.api'), '', $result->previousPageUrl()),
+            //'next' => str_replace(route('manager.api'), '', $result->nextPageUrl()),
+            'prev' => $result->previousPageUrl(),
+            'next' => $result->nextPageUrl(),
             'current' => $current,
             'per' => $result->perPage(),
             'info' => Lang::get('global.showing') . ' ' . $from . '-' . $to . '/' . $result->total(),
