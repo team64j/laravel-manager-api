@@ -55,11 +55,11 @@ class Tree extends Component
     }
 
     /**
-     * @param string $value
+     * @param string|array $value
      *
      * @return $this
      */
-    public function setRoute(string $value): static
+    public function setRoute(string|array $value): static
     {
         $this->attributes['attrs']['route'] = $value;
 

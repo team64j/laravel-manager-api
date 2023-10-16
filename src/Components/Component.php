@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Components;
 
 use Closure;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Fluent;
 
 abstract class Component extends Fluent
@@ -68,5 +69,19 @@ abstract class Component extends Fluent
         }
 
         return $this;
+    }
+
+    /**
+     * @param bool|array|string $permissions
+     *
+     * @return bool
+     */
+    protected function hasPermissions(bool|array|string $permissions = true): bool
+    {
+        if (is_bool($permissions)) {
+            return $permissions;
+        }
+
+        return Gate::check($permissions);
     }
 }

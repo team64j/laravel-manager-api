@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Components;
 
-use Illuminate\Support\Facades\Gate;
-
 class Tabs extends Component
 {
     /**
@@ -163,17 +161,12 @@ class Tabs extends Component
         array|Component $slot = null,
         bool $needUpdate = false): static
     {
-        if ($this->hasPermissions($permissions) &&
-            !in_array($id, array_column($this->attributes['attrs']['data'], 'id'))
-        ) {
-            $data = get_defined_vars();
+        if ($tab = Tab::make(...func_get_args())->toArray()) {
+            $this->attributes['attrs']['data'][] = $tab;
 
-            if ($slot) {
-                $this->attributes['slots'][$id] = $data['slot'];
-                unset($data['slot']);
+            if (!empty($tab['slot'])) {
+                $this->attributes['slots'][$id] = $tab['slot'];
             }
-
-            $this->attributes['attrs']['data'][] = $data;
         }
 
         return $this;
@@ -274,19 +267,5 @@ class Tabs extends Component
     public function hasSlot(string $id): bool
     {
         return !empty($this->attributes['slots'][$id]);
-    }
-
-    /**
-     * @param bool|array|string $permissions
-     *
-     * @return bool
-     */
-    protected function hasPermissions(bool|array|string $permissions = true): bool
-    {
-        if (is_bool($permissions)) {
-            return $permissions;
-        }
-
-        return Gate::check($permissions);
     }
 }
