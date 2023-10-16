@@ -72,6 +72,9 @@ class CategoryController extends Controller
             'data' => [
                 'data' => $result->items(),
                 'pagination' => $this->pagination($result),
+                'filters' => [
+                    'category',
+                ],
             ],
         ])
             ->additional([
