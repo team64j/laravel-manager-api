@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
+use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Title;
 use Team64j\LaravelManagerApi\Components\Tree;
@@ -221,36 +222,36 @@ class CategoryLayout extends Layout
      */
     public function tree(): array
     {
-        return [
-            'categories',
-            null,
-            'fa fa-object-group',
-            '!bg-inherit',
-            ['category_manager'],
-            ['Category'],
-            Lang::get('global.category_management'),
-            Tree::make()
-                ->setId('categories')
-                ->setRoute('Category')
-                ->setUrl('/categories/tree?order=category')
-                ->isCategory()
-                ->setAliases([
-                    'category' => 'title',
-                ])
-                ->setAppends(['id'])
-                ->setIcons([
-                    'default' => 'fa fa-object-group',
-                ])
-                ->setMenu([
-                    'actions' => [
-                        [
-                            'icon' => 'fa fa-refresh',
-                            'click' => 'update',
-                            'loader' => true,
+        return Tab::make()
+            ->setId('categories')
+            ->setIcon('fa fa-object-group')
+            ->setTitle(Lang::get('global.category_management'))
+            ->setPermissions(['category_manager'])
+            ->setRoute(['Category'])
+            ->isNeedUpdate()
+            ->setSlot(
+                Tree::make()
+                    ->setId('categories')
+                    ->setRoute('Category')
+                    ->setUrl('/categories/tree?order=category')
+                    ->isCategory()
+                    ->setAliases([
+                        'category' => 'title',
+                    ])
+                    ->setAppends(['id'])
+                    ->setIcons([
+                        'default' => 'fa fa-object-group',
+                    ])
+                    ->setMenu([
+                        'actions' => [
+                            [
+                                'icon' => 'fa fa-refresh',
+                                'click' => 'update',
+                                'loader' => true,
+                            ],
                         ],
-                    ],
-                ]),
-            true,
-        ];
+                    ])
+            )
+            ->toArray();
     }
 }

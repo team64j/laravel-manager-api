@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Models\SiteSnippet;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
+use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Title;
 use Team64j\LaravelManagerApi\Components\Tree;
@@ -195,41 +196,41 @@ class SnippetLayout extends Layout
      */
     public function tree(): array
     {
-        return [
-            'snippets',
-            null,
-            'fa fa-code',
-            '!bg-inherit',
-            ['edit_snippet'],
-            ['Snippet'],
-            Lang::get('global.snippets'),
-            Tree::make()
-                ->setId('snippets')
-                ->setRoute('Snippet')
-                ->setUrl('/snippets/tree')
-                ->isCategory()
-                ->setAliases([
-                    'name' => 'title',
-                    'locked' => 'private',
-                    'disabled' => 'deleted',
-                ])
-                ->setAppends(['id'])
-                ->setIcons([
-                    'default' => 'fa fa-code',
-                ])
-                ->setMenu([
-                    'actions' => [
-                        [
-                            'icon' => 'fa fa-refresh',
-                            'click' => 'update',
-                            'loader' => true,
+        return Tab::make()
+            ->setId('snippets')
+            ->setTitle(Lang::get('global.snippets'))
+            ->setIcon('fa fa-code')
+            ->setPermissions('edit_snippet')
+            ->setRoute('Snippet')
+            ->isNeedUpdate()
+            ->setSlot(
+                Tree::make()
+                    ->setId('snippets')
+                    ->setRoute('Snippet')
+                    ->setUrl('/snippets/tree')
+                    ->isCategory()
+                    ->setAliases([
+                        'name' => 'title',
+                        'locked' => 'private',
+                        'disabled' => 'deleted',
+                    ])
+                    ->setAppends(['id'])
+                    ->setIcons([
+                        'default' => 'fa fa-code',
+                    ])
+                    ->setMenu([
+                        'actions' => [
+                            [
+                                'icon' => 'fa fa-refresh',
+                                'click' => 'update',
+                                'loader' => true,
+                            ],
                         ],
-                    ],
-                ])
-                ->setSettings([
-                    'parent' => -1,
-                ]),
-            true,
-        ];
+                    ])
+                    ->setSettings([
+                        'parent' => -1,
+                    ])
+            )
+            ->toArray();
     }
 }

@@ -224,7 +224,7 @@ class Tabs extends Component
      */
     public function addSlot(string $id, array|Component $data = [], bool|array|string $permissions = true): static
     {
-        if ($this->hasPermissions($permissions) && !isset($this->attributes['slots'][$id])) {
+        if (!isset($this->attributes['slots'][$id])) {
             $this->attributes['slots'][$id] = $data;
         }
 
@@ -240,9 +240,7 @@ class Tabs extends Component
      */
     public function putSlot(string $id, array|Component $data = [], bool|array|string $permissions = true): static
     {
-        if ($this->hasPermissions($permissions)) {
-            $this->attributes['slots'][$id][] = $data;
-        }
+        $this->attributes['slots'][$id][] = $data;
 
         return $this;
     }

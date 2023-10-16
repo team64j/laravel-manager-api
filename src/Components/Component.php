@@ -38,6 +38,10 @@ abstract class Component extends Fluent
         }
 
         $this->attributes = array_filter($this->attributes, fn($i) => !is_null($i));
+
+        if (!empty($this->attributes['permissions']) && !$this->hasPermissions($this->attributes['permissions'])) {
+            $this->attributes = [];
+        }
     }
 
     /**

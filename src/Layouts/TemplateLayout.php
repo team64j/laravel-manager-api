@@ -13,6 +13,7 @@ use Team64j\LaravelManagerApi\Components\CodeEditor;
 use Team64j\LaravelManagerApi\Components\Input;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Select;
+use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Template;
 use Team64j\LaravelManagerApi\Components\Textarea;
@@ -323,44 +324,44 @@ class TemplateLayout extends Layout
      */
     public function tree(): array
     {
-        return [
-            'templates',
-            null,
-            'fa fa-newspaper',
-            '!bg-inherit',
-            ['edit_template'],
-            ['Template'],
-            Lang::get('global.templates'),
-            Tree::make()
-                ->setId('templates')
-                ->setRoute('Template')
-                ->setUrl('/templates/tree')
-                ->isCategory()
-                ->setAliases([
-                    'name' => 'title',
-                    'templatename' => 'title',
-                    'locked' => 'private',
-                    'category' => 'parent',
-                    'selectable' => 'unhidden',
-                ])
-                ->setAppends(['id'])
-                ->setIcons([
-                    'default' => 'fa fa-newspaper',
-                    Config::get('global.default_template') => 'fa fa-home fa-fw text-blue-500',
-                ])
-                ->setMenu([
-                    'actions' => [
-                        [
-                            'icon' => 'fa fa-refresh',
-                            'click' => 'update',
-                            'loader' => true,
+        return Tab::make()
+            ->setId('templates')
+            ->setTitle(Lang::get('global.templates'))
+            ->setIcon('fa fa-newspaper')
+            ->setPermissions('edit_template')
+            ->setRoute('Template')
+            ->isNeedUpdate()
+            ->setSlot(
+                Tree::make()
+                    ->setId('templates')
+                    ->setRoute('Template')
+                    ->setUrl('/templates/tree')
+                    ->isCategory()
+                    ->setAliases([
+                        'name' => 'title',
+                        'templatename' => 'title',
+                        'locked' => 'private',
+                        'category' => 'parent',
+                        'selectable' => 'unhidden',
+                    ])
+                    ->setAppends(['id'])
+                    ->setIcons([
+                        'default' => 'fa fa-newspaper',
+                        Config::get('global.default_template') => 'fa fa-home fa-fw text-blue-500',
+                    ])
+                    ->setMenu([
+                        'actions' => [
+                            [
+                                'icon' => 'fa fa-refresh',
+                                'click' => 'update',
+                                'loader' => true,
+                            ],
                         ],
-                    ],
-                ])
-                ->setSettings([
-                    'parent' => -1,
-                ]),
-            true,
-        ];
+                    ])
+                    ->setSettings([
+                        'parent' => -1,
+                    ])
+            )
+            ->toArray();
     }
 }

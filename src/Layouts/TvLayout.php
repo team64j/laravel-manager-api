@@ -12,6 +12,7 @@ use Team64j\LaravelManagerApi\Components\CodeEditor;
 use Team64j\LaravelManagerApi\Components\Input;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Select;
+use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Template;
 use Team64j\LaravelManagerApi\Components\Textarea;
@@ -323,41 +324,41 @@ class TvLayout extends Layout
      */
     public function tree(): array
     {
-        return [
-            'tvs',
-            null,
-            'fa fa-list-alt',
-            '!bg-inherit',
-            ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-            ['Tv'],
-            Lang::get('global.tmplvars'),
-            Tree::make()
-                ->setId('tvs')
-                ->setRoute('Tv')
-                ->setUrl('/tvs/tree')
-                ->isCategory()
-                ->setAliases([
-                    'name' => 'title',
-                    'locked' => 'private',
-                    'category' => 'parent',
-                ])
-                ->setAppends(['id'])
-                ->setIcons([
-                    'default' => 'fa fa-list-alt',
-                ])
-                ->setMenu([
-                    'actions' => [
-                        [
-                            'icon' => 'fa fa-refresh',
-                            'click' => 'update',
-                            'loader' => true,
+        return Tab::make()
+            ->setId('tvs')
+            ->setTitle(Lang::get('global.tmplvars'))
+            ->setIcon('fa fa-list-alt')
+            ->setPermissions(['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'])
+            ->setRoute('Tv')
+            ->isNeedUpdate()
+            ->setSlot(
+                Tree::make()
+                    ->setId('tvs')
+                    ->setRoute('Tv')
+                    ->setUrl('/tvs/tree')
+                    ->isCategory()
+                    ->setAliases([
+                        'name' => 'title',
+                        'locked' => 'private',
+                        'category' => 'parent',
+                    ])
+                    ->setAppends(['id'])
+                    ->setIcons([
+                        'default' => 'fa fa-list-alt',
+                    ])
+                    ->setMenu([
+                        'actions' => [
+                            [
+                                'icon' => 'fa fa-refresh',
+                                'click' => 'update',
+                                'loader' => true,
+                            ],
                         ],
-                    ],
-                ])
-                ->setSettings([
-                    'parent' => -1,
-                ]),
-            true,
-        ];
+                    ])
+                    ->setSettings([
+                        'parent' => -1,
+                    ])
+            )
+            ->toArray();
     }
 }

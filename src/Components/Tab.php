@@ -28,18 +28,7 @@ class Tab extends Component
         array|Component $slot = null,
         bool $needUpdate = false)
     {
-        if ($this->hasPermissions($permissions)) {
-            parent::__construct([
-                'id' => $id,
-                'name' => $name,
-                'title' => $title,
-                'icon' => $icon,
-                'class' => $class,
-                'route' => $route,
-                'needUpdate' => $needUpdate,
-                'slot' => $slot,
-            ]);
-        }
+        parent::__construct(get_defined_vars());
     }
 
     /**
@@ -143,7 +132,7 @@ class Tab extends Component
      *
      * @return $this
      */
-    public function setPermission(bool|array|string $value): static
+    public function setPermissions(bool|array|string $value): static
     {
         $this->attributes['permissions'] = $value;
 

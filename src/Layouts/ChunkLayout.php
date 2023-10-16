@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Models\SiteHtmlSnippet;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
+use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Title;
 use Team64j\LaravelManagerApi\Components\Tree;
@@ -195,41 +196,41 @@ class ChunkLayout extends Layout
      */
     public function tree(): array
     {
-        return [
-            'chunks',
-            null,
-            'fa fa-th-large',
-            '!bg-inherit',
-            ['edit_chunk'],
-            ['Chunk'],
-            Lang::get('global.htmlsnippets'),
-            Tree::make()
-                ->setId('chunks')
-                ->setRoute('Chunk')
-                ->setUrl('/chunks/tree')
-                ->isCategory()
-                ->setAliases([
-                    'name' => 'title',
-                    'locked' => 'private',
-                    'disabled' => 'deleted',
-                ])
-                ->setAppends(['id'])
-                ->setIcons([
-                    'default' => 'fa fa-th-large',
-                ])
-                ->setMenu([
-                    'actions' => [
-                        [
-                            'icon' => 'fa fa-refresh',
-                            'click' => 'update',
-                            'loader' => true,
+        return Tab::make()
+            ->setId('chunks')
+            ->setTitle(Lang::get('global.htmlsnippets'))
+            ->setIcon('fa fa-th-large')
+            ->setPermissions('edit_chunk')
+            ->setRoute('Chunk')
+            ->isNeedUpdate()
+            ->setSlot(
+                Tree::make()
+                    ->setId('chunks')
+                    ->setRoute('Chunk')
+                    ->setUrl('/chunks/tree')
+                    ->isCategory()
+                    ->setAliases([
+                        'name' => 'title',
+                        'locked' => 'private',
+                        'disabled' => 'deleted',
+                    ])
+                    ->setAppends(['id'])
+                    ->setIcons([
+                        'default' => 'fa fa-th-large',
+                    ])
+                    ->setMenu([
+                        'actions' => [
+                            [
+                                'icon' => 'fa fa-refresh',
+                                'click' => 'update',
+                                'loader' => true,
+                            ],
                         ],
-                    ],
-                ])
-                ->setSettings([
-                    'parent' => -1,
-                ]),
-            true,
-        ];
+                    ])
+                    ->setSettings([
+                        'parent' => -1,
+                    ])
+            )
+            ->toArray();
     }
 }

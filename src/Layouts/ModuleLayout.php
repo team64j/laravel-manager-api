@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Models\SiteModule;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
+use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Components\Title;
 use Team64j\LaravelManagerApi\Components\Tree;
@@ -198,41 +199,41 @@ class ModuleLayout extends Layout
      */
     public function tree(): array
     {
-        return [
-            'modules',
-            null,
-            'fa fa-cubes',
-            '!bg-inherit',
-            ['edit_module'],
-            ['Module'],
-            Lang::get('global.modules'),
-            Tree::make()
-                ->setId('modules')
-                ->setRoute('Module')
-                ->setUrl('/modules/tree')
-                ->isCategory()
-                ->setAliases([
-                    'name' => 'title',
-                    'locked' => 'private',
-                    'disabled' => 'deleted',
-                ])
-                ->setAppends(['id'])
-                ->setIcons([
-                    'default' => 'fa fa-cubes',
-                ])
-                ->setMenu([
-                    'actions' => [
-                        [
-                            'icon' => 'fa fa-refresh',
-                            'click' => 'update',
-                            'loader' => true,
+        return Tab::make()
+            ->setId('modules')
+            ->setTitle(Lang::get('global.modules'))
+            ->setIcon('fa fa-cubes')
+            ->setPermissions('edit_module')
+            ->setRoute('Module')
+            ->isNeedUpdate()
+            ->setSlot(
+                Tree::make()
+                    ->setId('modules')
+                    ->setRoute('Module')
+                    ->setUrl('/modules/tree')
+                    ->isCategory()
+                    ->setAliases([
+                        'name' => 'title',
+                        'locked' => 'private',
+                        'disabled' => 'deleted',
+                    ])
+                    ->setAppends(['id'])
+                    ->setIcons([
+                        'default' => 'fa fa-cubes',
+                    ])
+                    ->setMenu([
+                        'actions' => [
+                            [
+                                'icon' => 'fa fa-refresh',
+                                'click' => 'update',
+                                'loader' => true,
+                            ],
                         ],
-                    ],
-                ])
-                ->setSettings([
-                    'parent' => -1,
-                ]),
-            true,
-        ];
+                    ])
+                    ->setSettings([
+                        'parent' => -1,
+                    ])
+            )
+            ->toArray();
     }
 }
