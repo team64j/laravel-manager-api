@@ -503,10 +503,10 @@ class DocumentController extends Controller
         /** @var LengthAwarePaginator $result */
         $result = SiteContent::query()
             ->select($fields)
-            ->when(!is_null($parent), fn(Builder $query) => $query->where('parent', $parent))
+            ->when(is_null($filter), fn(Builder $query) => $query->where('parent', $parent))
             ->with('documentGroups')
             ->when(
-                $filter,
+                !is_null($filter),
                 fn(Builder $query) => $query
                     ->where('pagetitle', 'like', '%' . $filter . '%')
                     ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
@@ -527,7 +527,7 @@ class DocumentController extends Controller
                     ->with('documentGroups')
                     ->without('children')
                     ->when(
-                        $filter,
+                        !is_null($filter),
                         fn(Builder $query) => $query
                             ->where('pagetitle', 'like', '%' . $filter . '%')
                             ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))

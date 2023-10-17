@@ -331,7 +331,7 @@ class ChunkController extends Controller
         $result = SiteHtmlSnippet::withoutLocked()
             ->with('category')
             ->select($fields)
-            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('name'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
@@ -363,7 +363,7 @@ class ChunkController extends Controller
                         $result = $category->chunks()
                             ->select($fields)
                             ->withoutLocked()
-                            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+                            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
                             ->orderBy('name')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());

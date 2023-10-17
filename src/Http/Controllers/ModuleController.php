@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
@@ -405,7 +404,7 @@ class ModuleController extends Controller
         $result = SiteModule::withoutLocked()
             ->with('category')
             ->select($fields)
-            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('name'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
@@ -437,7 +436,7 @@ class ModuleController extends Controller
                         $result = $category->modules()
                             ->select($fields)
                             ->withoutLocked()
-                            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+                            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
                             ->orderBy('name')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());

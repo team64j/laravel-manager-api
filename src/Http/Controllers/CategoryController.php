@@ -372,7 +372,7 @@ class CategoryController extends Controller
         $filter = $request->input('filter');
 
         $result = Category::query()
-            ->when($filter, fn($query) => $query->where('category', 'like', '%' . $filter . '%'))
+            ->when(!is_null($filter), fn($query) => $query->where('category', 'like', '%' . $filter . '%'))
             ->paginate(Config::get('global.number_of_results'), [
                 'id',
                 'category as name',

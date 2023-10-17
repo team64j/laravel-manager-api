@@ -389,7 +389,7 @@ class PluginController extends Controller
         $result = SitePlugin::withoutLocked()
             ->with('category')
             ->select($fields)
-            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('name'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
@@ -421,7 +421,7 @@ class PluginController extends Controller
                         $result = $category->plugins()
                             ->select($fields)
                             ->withoutLocked()
-                            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+                            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
                             ->orderBy('name')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());

@@ -518,7 +518,7 @@ class TemplateController extends Controller
         $result = SiteTemplate::withoutLocked()
             ->with('category')
             ->select($fields)
-            ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
+            ->when(!is_null($filter), fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
             ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('templatename'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
@@ -550,7 +550,10 @@ class TemplateController extends Controller
                         $result = $category->templates()
                             ->select($fields)
                             ->withoutLocked()
-                            ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
+                            ->when(
+                                !is_null($filter),
+                                fn($query) => $query->where('templatename', 'like', '%' . $filter . '%')
+                            )
                             ->orderBy('templatename')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());
