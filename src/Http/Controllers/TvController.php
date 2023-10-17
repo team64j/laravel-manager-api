@@ -458,7 +458,7 @@ class TvController extends Controller
 
         return CategoryResource::collection([
             'data' => [
-                'data' => $result->map(function (SiteTmplvar $template) use ($request, $opened) {
+                'data' => $result->map(function (SiteTmplvar $template) use ($request, $opened, $fields, $filter) {
                     /** @var Category $category */
                     $category = $template->getRelation('category') ?? new Category();
                     $category->id = $template->category;
@@ -471,7 +471,9 @@ class TvController extends Controller
 
                         /** @var LengthAwarePaginator $result */
                         $result = $category->tvs()
+                            ->select($fields)
                             ->withoutLocked()
+                            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
                             ->orderBy('name')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());

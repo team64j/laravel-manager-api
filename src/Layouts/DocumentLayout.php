@@ -611,6 +611,7 @@ class DocumentLayout extends Layout
                             ],
                             [
                                 'icon' => 'fa fa-sort',
+                                'position' => 'right',
                                 'actions' => [
                                     [
                                         'title' => Lang::get('global.sort_tree'),
@@ -688,6 +689,7 @@ class DocumentLayout extends Layout
                             ],
                             [
                                 'icon' => 'fa fa-eye',
+                                'position' => 'right',
                                 'actions' => [
                                     [
                                         'title' => Lang::get('global.setting_resource_tree_node_name'),
@@ -744,9 +746,8 @@ class DocumentLayout extends Layout
                                 ],
                             ],
                             [
-                                'icon' => 'fa fa-search',
-                                'click' => 'toggleSearch',
-                            ]
+                                'component' => 'search',
+                            ],
                         ],
                     ])
                     ->setSettings([

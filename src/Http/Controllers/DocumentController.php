@@ -451,7 +451,8 @@ class DocumentController extends Controller
      */
     public function tree(DocumentRequest $request): AnonymousResourceCollection
     {
-        $parent = $request->input('parent', 0);
+        $parent = $request->input('parent');
+        $filter = $request->input('filter');
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
         $opened = $request->has('opened') ? $request->string('opened')
@@ -502,17 +503,19 @@ class DocumentController extends Controller
         /** @var LengthAwarePaginator $result */
         $result = SiteContent::query()
             ->select($fields)
-            ->where('parent', $parent)
+            ->when(!is_null($parent), fn(Builder $query) => $query->where('parent', $parent))
             ->with('documentGroups')
             ->when(
-                !empty($settings['filter']),
-                fn(Builder $query) => $query->where('pagetitle', 'like', '%' . $settings['filter'] . '%')
+                $filter,
+                fn(Builder $query) => $query
+                    ->where('pagetitle', 'like', '%' . $filter . '%')
+                    ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
             )
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $result->map(function (SiteContent $item) use ($opened, $request, $fields, $order, $dir, $settings) {
+        $result->map(function (SiteContent $item) use ($opened, $request, $fields, $filter, $order, $dir, $settings) {
             if (in_array($item->getKey(), $opened, true)) {
                 $request->query->replace([
                     'parent' => $item->getKey()
@@ -523,6 +526,12 @@ class DocumentController extends Controller
                     ->select($fields)
                     ->with('documentGroups')
                     ->without('children')
+                    ->when(
+                        $filter,
+                        fn(Builder $query) => $query
+                            ->where('pagetitle', 'like', '%' . $filter . '%')
+                            ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
+                    )
                     ->orderBy($order, $dir)
                     ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                     ->appends($request->all());

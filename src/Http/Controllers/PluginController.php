@@ -406,7 +406,7 @@ class PluginController extends Controller
 
         return CategoryResource::collection([
             'data' => [
-                'data' => $result->map(function (SitePlugin $template) use ($request, $opened) {
+                'data' => $result->map(function (SitePlugin $template) use ($request, $opened, $fields, $filter) {
                     /** @var Category $category */
                     $category = $template->getRelation('category') ?? new Category();
                     $category->id = $template->category;
@@ -419,7 +419,9 @@ class PluginController extends Controller
 
                         /* @var LengthAwarePaginator $result */
                         $result = $category->plugins()
+                            ->select($fields)
                             ->withoutLocked()
+                            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
                             ->orderBy('name')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());

@@ -225,6 +225,9 @@ class ChunkLayout extends Layout
                                 'click' => 'update',
                                 'loader' => true,
                             ],
+                            [
+                                'component' => 'search',
+                            ],
                         ],
                     ])
                     ->setSettings([

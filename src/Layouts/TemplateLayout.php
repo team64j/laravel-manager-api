@@ -356,6 +356,9 @@ class TemplateLayout extends Layout
                                 'click' => 'update',
                                 'loader' => true,
                             ],
+                            [
+                                'component' => 'search',
+                            ],
                         ],
                     ])
                     ->setSettings([
