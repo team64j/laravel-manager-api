@@ -136,7 +136,7 @@ class DocumentLayout extends Layout
                                     ->setData([
                                         [
                                             'key' => $model->template,
-                                            'value' => $model->tpl->templatename ?? 'blank',
+                                            'value' => $model->tpl->templatename ?? $model->template,
                                             'selected' => true,
                                         ],
                                     ])

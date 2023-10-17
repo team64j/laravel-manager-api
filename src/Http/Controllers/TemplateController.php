@@ -7,6 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
@@ -450,20 +451,29 @@ class TemplateController extends Controller
     public function select(TemplateRequest $request): AnonymousResourceCollection
     {
         return TemplateResource::collection(
-            SiteTemplate::with('category')
-                ->select(['id', 'templatename', 'category'])
-                ->get()
-                ->groupBy('category')
-                ->map(fn($group) => [
-                    'id' => $group->first()->category,
-                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
-                    'data' => $group->map(fn($item) => [
-                        'key' => $item->getKey(),
-                        'value' => $item->templatename . ' (' . $item->getKey() . ')',
-                        'selected' => $item->getKey() == $request->integer('selected'),
-                    ]),
+            Collection::make()
+                ->add([
+                    'key' => 0,
+                    'value' => 'blank (0)',
+                    'selected' => 0 == $request->integer('selected'),
                 ])
-                ->values()
+                ->merge(
+                    SiteTemplate::with('category')
+                        ->select(['id', 'templatename', 'category'])
+                        ->get()
+                        ->groupBy('category')
+                        ->map(fn($group) => [
+                            'id' => $group->first()->category,
+                            'name' => $group->first()->getRelation('category')->category ??
+                                Lang::get('global.no_category'),
+                            'data' => $group->map(fn($item) => [
+                                'key' => $item->getKey(),
+                                'value' => $item->templatename . ' (' . $item->getKey() . ')',
+                                'selected' => $item->getKey() == $request->integer('selected'),
+                            ]),
+                        ])
+                        ->values()
+                )
         );
     }
 
