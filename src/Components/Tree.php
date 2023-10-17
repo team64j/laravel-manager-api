@@ -171,4 +171,14 @@ class Tree extends Component
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function isSearchable(): static
+    {
+        $this->attributes['attrs']['search'] = true;
+
+        return $this;
+    }
 }
