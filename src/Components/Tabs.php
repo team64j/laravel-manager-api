@@ -162,7 +162,9 @@ class Tabs extends Component
         bool $needUpdate = false): static
     {
         if ($tab = Tab::make(...func_get_args())->toArray()) {
-            $this->attributes['attrs']['data'][] = $tab;
+            if (!$this->hasTab($id)) {
+                $this->attributes['attrs']['data'][] = $tab;
+            }
 
             if (!empty($tab['slot'])) {
                 $this->attributes['slots'][$id] = $tab['slot'];
@@ -224,8 +226,8 @@ class Tabs extends Component
      */
     public function addSlot(string $id, array|Component $data = [], bool|array|string $permissions = true): static
     {
-        if (!isset($this->attributes['slots'][$id])) {
-            $this->attributes['slots'][$id] = $data;
+        if ($this->hasPermissions($permissions)) {
+            $this->attributes['slots'][$id] ??= $data;
         }
 
         return $this;
@@ -240,19 +242,24 @@ class Tabs extends Component
      */
     public function putSlot(string $id, array|Component $data = [], bool|array|string $permissions = true): static
     {
-        $this->attributes['slots'][$id][] = $data;
+        if ($this->hasPermissions($permissions)) {
+            $this->attributes['slots'][$id][] = $data;
+        }
 
         return $this;
     }
 
     /**
      * @param array $data
+     * @param bool|array|string $permissions
      *
      * @return $this
      */
-    public function setSlots(array $data): static
+    public function setSlots(array $data, bool|array|string $permissions = true): static
     {
-        $this->attributes['slots'] = $data;
+        if ($this->hasPermissions($permissions)) {
+            $this->attributes['slots'] = $data;
+        }
 
         return $this;
     }
