@@ -2,6 +2,7 @@
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -503,6 +504,10 @@ class DocumentController extends Controller
             ->select($fields)
             ->where('parent', $parent)
             ->with('documentGroups')
+            ->when(
+                !empty($settings['filter']),
+                fn(Builder $query) => $query->where('pagetitle', 'like', '%' . $settings['filter'] . '%')
+            )
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());

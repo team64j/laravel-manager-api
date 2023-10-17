@@ -743,6 +743,10 @@ class DocumentLayout extends Layout
                                     ],
                                 ],
                             ],
+                            [
+                                'icon' => 'fa fa-search',
+                                'click' => 'toggleSearch',
+                            ]
                         ],
                     ])
                     ->setSettings([
