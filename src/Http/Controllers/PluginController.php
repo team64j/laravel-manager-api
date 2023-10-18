@@ -10,6 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SitePlugin;
@@ -385,11 +386,22 @@ class PluginController extends Controller
         $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
         $showFromCategory = $category >= 0;
 
+        if (!is_null($filter)) {
+            return PluginResource::collection([
+                'data' => [
+                    'data' => SitePlugin::withoutLocked()
+                        ->select($fields)
+                        ->where('name', 'like', '%' . $filter . '%')
+                        ->orderBy('name')
+                        ->get(),
+                ],
+            ]);
+        }
+
         /** @var LengthAwarePaginator $result */
         $result = SitePlugin::withoutLocked()
             ->with('category')
             ->select($fields)
-            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('name'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
@@ -406,7 +418,7 @@ class PluginController extends Controller
 
         return CategoryResource::collection([
             'data' => [
-                'data' => $result->map(function (SitePlugin $template) use ($request, $opened, $fields, $filter) {
+                'data' => $result->map(function (SitePlugin $template) use ($request, $opened, $fields) {
                     /** @var Category $category */
                     $category = $template->getRelation('category') ?? new Category();
                     $category->id = $template->category;
@@ -421,7 +433,6 @@ class PluginController extends Controller
                         $result = $category->plugins()
                             ->select($fields)
                             ->withoutLocked()
-                            ->when(!is_null($filter), fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
                             ->orderBy('name')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());
@@ -442,7 +453,7 @@ class PluginController extends Controller
                             'folder' => true,
                         ] + $data;
                 })
-                    ->sortBy('name')
+                    ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
                     ->values(),
             ],
         ]);

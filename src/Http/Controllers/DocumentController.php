@@ -436,6 +436,7 @@ class DocumentController extends Controller
      *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
      *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
      *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
      *     },
      *     @OA\Response(
      *          response="200",
@@ -500,22 +501,42 @@ class DocumentController extends Controller
             $dir = 'asc';
         }
 
+        if (!is_null($filter)) {
+            return DocumentResource::collection([
+                'data' => [
+                    'data' => SiteContent::query()
+                        ->select($fields)
+                        ->with('documentGroups')
+                        ->where('pagetitle', 'like', '%' . $filter . '%')
+                        ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
+                        ->orderBy($order, $dir)
+                        ->get()
+                        ->map(function (SiteContent $item) use ($fields, $settings) {
+                            $title =
+                                in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
+                                    : '';
+
+                            if ((string) $title == '') {
+                                $title = $item->getAttribute('pagetitle');
+                            }
+
+                            return $item->setAttribute('title', $title)
+                                ->setAttribute('private', $item->documentGroups->isNotEmpty());
+                        }),
+                ],
+            ]);
+        }
+
         /** @var LengthAwarePaginator $result */
         $result = SiteContent::query()
             ->select($fields)
-            ->when(is_null($filter), fn(Builder $query) => $query->where('parent', $parent))
+            ->where('parent', $parent)
             ->with('documentGroups')
-            ->when(
-                !is_null($filter),
-                fn(Builder $query) => $query
-                    ->where('pagetitle', 'like', '%' . $filter . '%')
-                    ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
-            )
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $result->map(function (SiteContent $item) use ($opened, $request, $fields, $filter, $order, $dir, $settings) {
+        $result->map(function (SiteContent $item) use ($opened, $request, $fields, $order, $dir, $settings) {
             if (in_array($item->getKey(), $opened, true)) {
                 $request->query->replace([
                     'parent' => $item->getKey()
@@ -526,12 +547,6 @@ class DocumentController extends Controller
                     ->select($fields)
                     ->with('documentGroups')
                     ->without('children')
-                    ->when(
-                        !is_null($filter),
-                        fn(Builder $query) => $query
-                            ->where('pagetitle', 'like', '%' . $filter . '%')
-                            ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
-                    )
                     ->orderBy($order, $dir)
                     ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                     ->appends($request->all());

@@ -10,6 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\Category;
 use Team64j\LaravelEvolution\Models\SiteTemplate;
@@ -514,11 +515,22 @@ class TemplateController extends Controller
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked', 'selectable'];
         $showFromCategory = $category >= 0;
 
+        if (!is_null($filter)) {
+            return TemplateResource::collection([
+                'data' => [
+                    'data' => SiteTemplate::withoutLocked()
+                        ->select($fields)
+                        ->where('templatename', 'like', '%' . $filter . '%')
+                        ->orderBy('templatename')
+                        ->get(),
+                ],
+            ]);
+        }
+
         /** @var LengthAwarePaginator $result */
         $result = SiteTemplate::withoutLocked()
             ->with('category')
             ->select($fields)
-            ->when(!is_null($filter), fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
             ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('templatename'))
             ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
             ->paginate(Config::get('global.number_of_results'))
@@ -535,7 +547,7 @@ class TemplateController extends Controller
 
         return CategoryResource::collection([
             'data' => [
-                'data' => $result->map(function (SiteTemplate $template) use ($request, $opened, $filter, $fields) {
+                'data' => $result->map(function (SiteTemplate $template) use ($request, $opened, $fields) {
                     /** @var Category $category */
                     $category = $template->getRelation('category') ?? new Category();
                     $category->id = $template->category;
@@ -550,10 +562,6 @@ class TemplateController extends Controller
                         $result = $category->templates()
                             ->select($fields)
                             ->withoutLocked()
-                            ->when(
-                                !is_null($filter),
-                                fn($query) => $query->where('templatename', 'like', '%' . $filter . '%')
-                            )
                             ->orderBy('templatename')
                             ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
                             ->appends($request->all());
@@ -574,7 +582,7 @@ class TemplateController extends Controller
                             'folder' => true,
                         ] + $data;
                 })
-                    ->sortBy('name')
+                    ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
                     ->values(),
             ],
         ]);
