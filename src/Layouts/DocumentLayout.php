@@ -34,7 +34,7 @@ class DocumentLayout extends Layout
      *
      * @return array
      */
-    public function default(SiteContent $model = null): array
+    public function default(SiteContent $model = null, string $url = ''): array
     {
         return [
             ActionsButtons::make()
@@ -42,10 +42,11 @@ class DocumentLayout extends Layout
                 ->setSaveAnd()
                 ->when(
                     $model->deleted,
-                    fn(ActionsButtons $actions) => $actions->setView()->setRestore(),
+                    fn(ActionsButtons $actions) => $actions->setView()->setViewTo(['href' => $url])->setRestore(),
                     fn(ActionsButtons $actions) => $actions->when(
                         $model->getKey(),
-                        fn(ActionsButtons $actions) => $actions->setView()->setDelete()->setCopy()
+                        fn(ActionsButtons $actions) => $actions->setView()->setViewTo(['href' => $url])->setDelete()
+                            ->setCopy()
                     )
                 ),
 
