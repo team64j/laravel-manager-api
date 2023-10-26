@@ -39,7 +39,6 @@ class DocumentLayout extends Layout
         return [
             ActionsButtons::make()
                 ->setCancel()
-                ->setSaveAnd()
                 ->when(
                     $model->deleted,
                     fn(ActionsButtons $actions) => $actions->setView()->setRestore(),
@@ -47,7 +46,8 @@ class DocumentLayout extends Layout
                         $model->getKey(),
                         fn(ActionsButtons $actions) => $actions->setView()->setDelete()->setCopy()
                     )
-                ),
+                )
+                ->setSaveAnd(),
 
             Title::make()
                 ->setModel('pagetitle')

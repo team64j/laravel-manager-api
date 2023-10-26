@@ -55,19 +55,8 @@ class BootstrapController extends Controller
 
         return new BootstrapResource([
             'config' => [
-                'APP_NAME' => Env::get('APP_NAME'),
-                'site_id' => Config::get('global.site_id'),
                 'site_name' => Config::get('global.site_name'),
-                'site_url' => URL::to('/', [], Config::get('global.server_protocol') == 'https'),
-                'site_start' => (int) Config::get('global.site_start'),
-                'site_status' => (int) Config::get('global.site_status'),
-                'error_page' => (int) Config::get('global.error_page'),
-                'unauthorized_page' => (int) Config::get('global.unauthorized_page'),
-                'site_unavailable_page' => (int) Config::get('global.site_unavailable_page'),
                 'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
-                'datetime_format' => Config::get('global.datetime_format'),
-                'rb_base_url' => Config::get('global.rb_base_url'),
-                'session_timeout' => Config::get('global.session_timeout'),
             ],
             'user' => [
                 'username' => Auth::user()->username,

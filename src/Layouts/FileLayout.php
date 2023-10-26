@@ -18,11 +18,11 @@ class FileLayout extends Layout
         return [
             ActionsButtons::make()
                 ->setCancel()
-                ->setSaveAnd()
                 ->when(
                     $data['basename'] ?? false,
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
-                ),
+                )
+                ->setSaveAnd(),
 
             Title::make()
                 ->setModel('path')

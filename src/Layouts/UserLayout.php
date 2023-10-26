@@ -28,11 +28,11 @@ class UserLayout extends Layout
                         'close' => true,
                     ]
                 )
-                ->setSaveAnd()
                 ->when(
                     $model->getKey(),
                     fn($actions) => $actions->setDelete()->setCopy()
-                ),
+                )
+                ->setSaveAnd(),
 
             Title::make()
                 ->setModel('username')

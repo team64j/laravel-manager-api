@@ -34,11 +34,11 @@ class PluginLayout extends Layout
                         'close' => true,
                     ]
                 )
-                ->setSaveAnd()
                 ->when(
                     $model->getKey(),
                     fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
-                ),
+                )
+                ->setSaveAnd(),
 
             Title::make()
                 ->setModel('name')

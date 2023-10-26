@@ -48,7 +48,6 @@ use Illuminate\Support\Str;
  * @method self setSaveTitle(string $lang)
  * @method self setSaveClass(string $class)
  * @method self setSaveIcon(string $icon)
- * @method self setSaveAnd(string $lang = null, string|array $to = null, string $class = null, string $icon = null)
  */
 class ActionsButtons extends Component
 {
@@ -139,19 +138,16 @@ class ActionsButtons extends Component
      */
     public function setAction($action, $lang = null, $to = null, $class = null, $icon = null): static
     {
-        if (!in_array($action, $this->attributes['attrs']['data'])) {
-            $this->attributes['attrs']['data'][] = $action;
+        if (in_array($action, $this->attributes['attrs']['data'])) {
+            return $this;
         }
 
-        !is_null($to) && $this->setActionTo($action, $to);
+        $this->attributes['attrs']['data'][] = $action;
 
-        !is_null($lang) && $this->setActionTitle($action, $lang);
-
-        !is_null($class) && $this->setActionClass($action, $class);
-
-        !is_null($icon) && $this->setActionIcon($action, $icon);
-
-        return $this;
+        return $this->setActionTo($action, $to)
+            ->setActionTitle($action, $lang)
+            ->setActionClass($action, $class)
+            ->setActionIcon($action, $icon);
     }
 
     /**
@@ -168,12 +164,18 @@ class ActionsButtons extends Component
             $this->attributes['attrs']['lang'] = [];
         }
 
-        if (is_null($lang)) {
-            $lang = Lang::get('global.create_new');
-        }
-
         if (!isset($this->attributes['attrs']['lang'][$action])) {
-            $this->attributes['attrs']['lang'][$action] = $lang;
+            $this->attributes['attrs']['lang'][$action] = match ($action) {
+                'cancel' => $lang ?? Lang::get('global.cancel'),
+                'delete' => $lang ?? Lang::get('global.delete'),
+                'clear' => $lang ?? Lang::get('global.clear'),
+                'restore' => $lang ?? Lang::get('global.undelete_resource'),
+                'copy' => $lang ?? Lang::get('global.duplicate'),
+                'view' => $lang ?? Lang::get('global.view'),
+                'new' => $lang ?? Lang::get('global.new_resource'),
+                'save', 'saveAnd' => $lang ?? Lang::get('global.save'),
+                default => $lang ?? Lang::get('global.create_new')
+            };
         }
 
         return $this;
@@ -245,9 +247,49 @@ class ActionsButtons extends Component
             $this->attributes['attrs']['icon'] = [];
         }
 
-        if (!is_null($icon) && !isset($this->attributes['attrs']['icon'][$action])) {
-            $this->attributes['attrs']['icon'][$action] = $icon;
+        if (!isset($this->attributes['attrs']['icon'][$action])) {
+            $this->attributes['attrs']['icon'][$action] = match ($action) {
+                'cancel' => $icon ?? 'fa fa-reply',
+                'delete' => $icon ?? 'fa fa-trash-alt',
+                'clear' => $icon ?? 'fa fa-remove',
+                'restore' => $icon ?? 'fa fa-undo',
+                'copy' => $icon ?? 'fa fa-copy',
+                'view' => $icon ?? 'fa fa-eye',
+                'new' => $icon ?? 'fa fa-plus',
+                'save', 'saveAnd' => $icon ?? 'fa fa-save',
+                default => $icon ?? 'fa fa-circle'
+            };
         }
+
+        return $this;
+    }
+
+    public function setSaveAnd($lang = null, $class = null, $icon = null): static
+    {
+        $this->attributes['attrs']['data'][] = [
+            'action' => 'save',
+            'icon' => $icon ?? 'fa fa-save',
+            'class' => $class,
+            'data' => [
+                [
+                    'stay' => 0,
+                    'icon' => 'fa fa-reply fa-fw',
+                    'title' => Lang::get('global.close'),
+                ],
+                [
+                    'stay' => 1,
+                    'icon' => 'fa fa-copy fa-fw',
+                    'title' => Lang::get('global.stay_new'),
+                ],
+                [
+                    'stay' => 2,
+                    'icon' => 'fa fa-pencil fa-fw',
+                    'title' => Lang::get('global.stay'),
+                ],
+            ],
+        ];
+
+        $this->attributes['attrs']['lang']['save'] = $lang ?? Lang::get('global.save');
 
         return $this;
     }
