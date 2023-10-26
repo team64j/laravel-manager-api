@@ -210,7 +210,7 @@ class DocumentController extends Controller
 
         return DocumentResource::make($document->withoutRelations())
             ->additional([
-                'layout' => $layout->default($document),
+                'layout' => $layout->default($document, $route['url'] ?? ''),
                 'meta' => [
                     'tab' => $layout->titleDefault($document),
                     'url' => $route['url'] ?? '',
