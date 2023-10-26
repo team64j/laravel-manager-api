@@ -53,6 +53,7 @@ hr {
 }
 table td, table th {
     border: none;
+    font-size: 100%;
 }
 table {
     width: 100%;
