@@ -460,7 +460,7 @@ class DocumentController extends Controller
             ->explode(',')
             ->map(fn($i) => intval($i))
             ->toArray() : [];
-        $settings = $request->whenFilled('settings', fn($i) => json_decode($i, true));
+        $settings = $request->whenFilled('settings', fn($i) => is_array($i) ? $i : json_decode($i, true));
         $settings['keyTitle'] = $settings['keyTitle'] ?? 'pagetitle';
 
         if (!empty($settings['order'])) {
