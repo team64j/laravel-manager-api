@@ -19,7 +19,7 @@ class Textarea extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'EvoFields/Textarea',
+            'component' => 'EvoFieldsTextarea',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,

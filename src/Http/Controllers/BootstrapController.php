@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Support\Env;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Components\Tabs;
@@ -25,12 +23,39 @@ use Team64j\LaravelManagerApi\Layouts\PluginLayout;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
-use Team64j\LaravelManagerApi\Models\UserAttribute;
 
 class BootstrapController extends Controller
 {
     /**
      * @OA\Get(
+     *     path="/bootstrap",
+     *     summary="Стартовые данные",
+     *     tags={"Bootstrap"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     *
+     * @return BootstrapResource
+     */
+    public function init(): BootstrapResource
+    {
+        return BootstrapResource::make([])
+            ->additional([
+                'meta' => [
+                    'version' => Config::get('global.settings_version'),
+                    'languages' => $this->getLanguages(),
+                    'siteName' => Config::get('global.site_name'),
+                ],
+            ]);
+    }
+
+    /**
+     * @OA\Post(
      *     path="/bootstrap",
      *     summary="Глобальные данные для формирования админ панели",
      *     tags={"Bootstrap"},
@@ -50,24 +75,209 @@ class BootstrapController extends Controller
      */
     public function index(BootstrapRequest $request): BootstrapResource
     {
-        /** @var UserAttribute $userAttributes */
-        $userAttributes = Auth::user()->attributes;
+        return BootstrapResource::make([])
+            ->additional([
+                'meta' => [
+                    'routes' => $this->getRoutes(),
+                    'assets' => $this->getAssets(),
+                    'config' => [
+                        'site_name' => Config::get('global.site_name'),
+                        'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
+                    ]
+                ],
+                'layout' => [
+                    'menu' => $this->getMenu(),
+                    'sidebar' => $this->getTree(),
+                ],
+            ]);
+    }
 
-        return new BootstrapResource([
-            'config' => [
-                'site_name' => Config::get('global.site_name'),
-                'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
+    /**
+     * @return array
+     */
+    protected function getRoutes(): array
+    {
+        return [
+            [
+                'path' => '/',
+                'redirect' => '/dashboard',
             ],
-            'user' => [
-                'username' => Auth::user()->username,
-                'role' => $userAttributes->role,
-                'permissions' => $userAttributes->rolePermissions->pluck('permission'),
+            [
+                'path' => '/dashboard',
+                'name' => 'Dashboard',
+                'meta' => [
+                    'fixed' => true,
+                    'title' => '',
+                    'icon' => 'fa fa-home',
+                ],
             ],
-            'lexicon' => Lang::get('global'),
-            'menu' => $this->getMenu(),
-            'tree' => $this->getTree(),
-            'assets' => $this->getAssets(),
-        ]);
+            [
+                'path' => '/document/:id',
+                'name' => 'Document',
+            ],
+            [
+                'path' => '/documents/:id',
+                'name' => 'Documents',
+            ],
+            [
+                'path' => '/elements/:element',
+                'name' => 'Elements',
+                'meta' => [
+                    'url' => '/:element?groupBy=category',
+                    'group' => true,
+                ],
+            ],
+            [
+                'path' => '/templates/:id',
+                'name' => 'Template',
+            ],
+            [
+                'path' => '/tvs/:id',
+                'name' => 'Tv',
+            ],
+            [
+                'path' => '/tvs/sort',
+                'name' => 'TvSort',
+            ],
+            [
+                'path' => '/chunks/:id',
+                'name' => 'Chunk',
+            ],
+            [
+                'path' => '/snippets/:id',
+                'name' => 'Snippet',
+            ],
+            [
+                'path' => '/plugins/:id',
+                'name' => 'Plugin',
+            ],
+            [
+                'path' => '/plugins/sort',
+                'name' => 'PluginSort',
+            ],
+            [
+                'path' => '/modules/:id',
+                'name' => 'Module',
+            ],
+            [
+                'path' => '/modules/exec/:id',
+                'name' => 'ModuleExec',
+                'meta' => [
+                    'icon' => 'fa fa-cube',
+                    'isIframe' => true,
+                ],
+            ],
+            [
+                'path' => '/categories/:id',
+                'name' => 'Category',
+            ],
+            [
+                'path' => '/categories/sort',
+                'name' => 'CategorySort',
+            ],
+            [
+                'path' => '/users/:id?',
+                'name' => 'User',
+            ],
+            [
+                'path' => '/roles/:element',
+                'name' => 'Roles',
+                'meta' => [
+                    'group' => true,
+                ],
+            ],
+            [
+                'path' => '/roles/users/:id',
+                'name' => 'RoleUser',
+            ],
+            [
+                'path' => '/roles/categories/:id',
+                'name' => 'RoleCategory',
+            ],
+            [
+                'path' => '/roles/permissions/:id',
+                'name' => 'RolePermission',
+            ],
+            [
+                'path' => '/permissions/:element',
+                'name' => 'Permissions',
+                'meta' => [
+                    'group' => true,
+                ],
+            ],
+            [
+                'path' => '/permissions/groups/:id',
+                'name' => 'PermissionGroup',
+            ],
+            [
+                'path' => '/permissions/relations/:id',
+                'name' => 'PermissionRelation',
+            ],
+            [
+                'path' => '/permissions/resources/:id',
+                'name' => 'PermissionResource',
+            ],
+            [
+                'path' => '/cache',
+                'name' => 'Cache',
+            ],
+            [
+                'path' => '/configuration',
+                'name' => 'Configuration',
+            ],
+            [
+                'path' => '/workspace',
+                'name' => 'Workspace',
+            ],
+            [
+                'path' => '/schedule',
+                'name' => 'Schedules',
+            ],
+            [
+                'path' => '/event-log',
+                'name' => 'EventLogs',
+            ],
+            [
+                'path' => '/event-log/:id',
+                'name' => 'EventLog',
+            ],
+            [
+                'path' => '/system-log',
+                'name' => 'SystemLog',
+            ],
+            [
+                'path' => '/system-info',
+                'name' => 'SystemInfo',
+            ],
+            [
+                'path' => '/phpinfo',
+                'name' => 'PhpInfo',
+                'meta' => [
+                    'url' => '/system-info/phpinfo',
+                    'icon' => 'fab fa-php',
+                    'isIframe' => true,
+                ],
+            ],
+            [
+                'path' => '/help',
+                'name' => 'Help',
+            ],
+            [
+                'path' => '/password',
+                'name' => 'Password',
+            ],
+            [
+                'path' => '/files/:id?',
+                'name' => 'Files',
+                'meta' => [
+                    'group' => true,
+                ],
+            ],
+            [
+                'path' => '/file/:id?',
+                'name' => 'File',
+            ],
+        ];
     }
 
     /**
@@ -118,15 +328,25 @@ class BootstrapController extends Controller
                     'key' => 'primary',
                     'data' => [
                         [
-                            'key' => 'toggleSidebar',
+                            'key' => 'sidebarShow',
                             'icon' => 'fa fa-bars',
-                            'click' => 'toggleSidebar',
+                            'icons' => [
+                                0 => [
+                                    'key' => 'fa fa-ellipsis-vertical fa-fw',
+                                    'value' => 1,
+                                ],
+                                1 => [
+                                    'key' => 'fa fa-bars fa-fw',
+                                    'value' => 0,
+                                ],
+                            ],
                         ],
                         [
                             'key' => 'dashboard',
-                            'icon' => 'fa-logo',
+                            'icon' => Config::get('global.login_logo')
+                                ?: 'https://avatars.githubusercontent.com/u/46722965?s=64&v=4',
                             'class' => 'line-height-1',
-                            'click' => [
+                            'to' => [
                                 'name' => 'Dashboard',
                             ],
                             'permissions' => ['home'],
@@ -140,7 +360,7 @@ class BootstrapController extends Controller
                                     'key' => 'templates',
                                     'name' => '[%templates%]',
                                     'icon' => 'fa fa-newspaper',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Elements',
                                         'params' => [
                                             'element' => 'templates',
@@ -153,7 +373,7 @@ class BootstrapController extends Controller
                                     'key' => 'tvs',
                                     'name' => '[%tmplvars%]',
                                     'icon' => 'fa fa-list-alt',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Elements',
                                         'params' => [
                                             'element' => 'tvs',
@@ -166,7 +386,7 @@ class BootstrapController extends Controller
                                     'key' => 'chunks',
                                     'name' => '[%htmlsnippets%]',
                                     'icon' => 'fa fa-th-large',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Elements',
                                         'params' => [
                                             'element' => 'chunks',
@@ -179,7 +399,7 @@ class BootstrapController extends Controller
                                     'key' => 'snippets',
                                     'name' => '[%snippets%]',
                                     'icon' => 'fa fa-code',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Elements',
                                         'params' => [
                                             'element' => 'snippets',
@@ -192,7 +412,7 @@ class BootstrapController extends Controller
                                     'key' => 'plugins',
                                     'name' => '[%plugins%]',
                                     'icon' => 'fa fa-plug',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Elements',
                                         'params' => [
                                             'element' => 'plugins',
@@ -205,7 +425,7 @@ class BootstrapController extends Controller
                                     'key' => 'modules',
                                     'name' => '[%modules%]',
                                     'icon' => 'fa fa-cubes',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Elements',
                                         'params' => [
                                             'element' => 'modules',
@@ -218,7 +438,7 @@ class BootstrapController extends Controller
                                     'key' => 'categories',
                                     'name' => '[%category_management%]',
                                     'icon' => 'fa fa-object-group',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Elements',
                                         'params' => [
                                             'element' => 'categories',
@@ -230,7 +450,7 @@ class BootstrapController extends Controller
                                     'key' => 'files',
                                     'name' => '[%manage_files%]',
                                     'icon' => 'far fa-folder-open',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Files',
                                     ],
                                     'permissions' => ['file_manager'],
@@ -253,7 +473,7 @@ class BootstrapController extends Controller
                                     'key' => 'managers',
                                     'name' => '[%users%]',
                                     'icon' => 'fa fa-user-circle',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'User',
                                     ],
                                     'url' => '/users/list',
@@ -263,7 +483,7 @@ class BootstrapController extends Controller
                                     'key' => 'roles',
                                     'name' => '[%role_management_title%]',
                                     'icon' => 'fa fa-legal',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Roles',
                                         'params' => [
                                             'element' => 'users',
@@ -275,7 +495,7 @@ class BootstrapController extends Controller
                                     'key' => 'permissions',
                                     'name' => '[%web_permissions%]',
                                     'icon' => 'fa fa-male',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Permissions',
                                         'params' => [
                                             'element' => 'groups',
@@ -294,19 +514,11 @@ class BootstrapController extends Controller
                                     'key' => 'cache',
                                     'name' => '[%refresh_site%]',
                                     'icon' => 'fa fa-recycle',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Cache',
                                     ],
                                     'permissions' => ['empty_cache'],
                                 ],
-                                //                            [
-                                //                                'key' => 'search',
-                                //                                'name' => '[%search%]',
-                                //                                'icon' => 'fa fa-search',
-                                //                                'click' => [
-                                //                                    'name' => 'Search',
-                                //                                ],
-                                //                            ],
                             ],
                         ],
                     ],
@@ -316,24 +528,30 @@ class BootstrapController extends Controller
                     'key' => 'secondary',
                     'data' => [
                         [
-                            'key' => 'search',
+                            'key' => 'searchShow',
                             'icon' => 'fa fa-search',
-                            'click' => 'toggleSearch',
-                        ],
-                        [
-                            'key' => 'theme',
-                            'icon' => 'fa fa-moon',
                             'icons' => [
-                                'theme' => [
-                                    'dark' => [
-                                        'icon' => 'fa fa-sun',
-                                    ],
-                                    'light' => [
-                                        'icon' => 'fa fa-moon',
-                                    ],
+                                0 => [
+                                    'value' => 1,
+                                ],
+                                1 => [
+                                    'value' => 0,
                                 ],
                             ],
-                            'click' => 'toggleTheme',
+                        ],
+                        [
+                            'key' => 'dark',
+                            'icon' => 'fa fa-moon fa-fw',
+                            'icons' => [
+                                0 => [
+                                    'key' => 'fa fa-sun fa-fw',
+                                    'value' => 1,
+                                ],
+                                1 => [
+                                    'key' => 'fa fa-moon fa-fw',
+                                    'value' => 0,
+                                ],
+                            ],
                         ],
                         [
                             'key' => 'site_desktop',
@@ -362,7 +580,7 @@ class BootstrapController extends Controller
                                     'key' => 'password',
                                     'icon' => 'fa fa-lock',
                                     'name' => '[%change_password%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Password',
                                     ],
                                     'permissions' => ['change_password'],
@@ -371,7 +589,7 @@ class BootstrapController extends Controller
                                     'key' => 'logout',
                                     'icon' => 'fa fa-sign-out',
                                     'name' => '[%logout%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Logout',
                                     ],
                                 ],
@@ -385,7 +603,7 @@ class BootstrapController extends Controller
                                     'key' => 'edit_settings',
                                     'icon' => 'fa fa-sliders',
                                     'name' => '[%edit_settings%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Configuration',
                                     ],
                                     'permissions' => ['settings'],
@@ -394,7 +612,7 @@ class BootstrapController extends Controller
                                     'key' => 'workspace',
                                     'icon' => 'fa fa-eye',
                                     'name' => '[%settings_ui%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Workspace',
                                     ],
                                     'permissions' => ['settings'],
@@ -403,7 +621,7 @@ class BootstrapController extends Controller
                                     'key' => 'site_schedule',
                                     'icon' => 'far fa-calendar',
                                     'name' => '[%site_schedule%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Schedules',
                                     ],
                                     'permissions' => ['view_eventlog'],
@@ -412,7 +630,7 @@ class BootstrapController extends Controller
                                     'key' => 'eventlog_viewer',
                                     'icon' => 'fa fa-exclamation-triangle',
                                     'name' => '[%eventlog_viewer%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'EventLogs',
                                     ],
                                     'permissions' => ['view_eventlog'],
@@ -421,7 +639,7 @@ class BootstrapController extends Controller
                                     'key' => 'view_logging',
                                     'icon' => 'fa fa-user-secret',
                                     'name' => '[%view_logging%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'SystemLog',
                                     ],
                                     'permissions' => ['logs'],
@@ -430,7 +648,7 @@ class BootstrapController extends Controller
                                     'key' => 'view_sysinfo',
                                     'icon' => 'fa fa-info',
                                     'name' => '[%view_sysinfo%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'SystemInfo',
                                     ],
                                 ],
@@ -438,7 +656,7 @@ class BootstrapController extends Controller
                                     'key' => 'help',
                                     'icon' => 'far fa-question-circle',
                                     'name' => '[%help%]',
-                                    'click' => [
+                                    'to' => [
                                         'name' => 'Help',
                                     ],
                                     'permissions' => ['help'],
@@ -446,7 +664,7 @@ class BootstrapController extends Controller
                                 [
                                     'key' => 'settings_version',
                                     'name' => 'Evolution CE [(settings_version)]',
-                                    'item.class' => 'text-center text-sm events-none',
+                                    'class' => 'text-center text-sm events-none',
                                 ],
                             ],
                         ],
@@ -778,5 +996,56 @@ class BootstrapController extends Controller
         }
 
         return $tabs->toArray();
+    }
+
+    /**
+     * get languages
+     *
+     * @return array
+     */
+    protected function getLanguages(): array
+    {
+        $data = [];
+
+        $languages = [
+            'be' => 'Беларуская мова',
+            'bg' => 'Български език',
+            'cs' => 'Čeština',
+            'da' => 'Dansk',
+            'de' => 'Deutsch',
+            'en' => 'English',
+            'es' => 'Español',
+            'he' => 'עברית ʿ',
+            'ja' => '日本語',
+            'fa' => 'فارسی',
+            'fi' => 'Suomi',
+            'fr' => 'Français',
+            'it' => 'Italiano',
+            'nl' => 'Nederlands',
+            'nn' => 'Nynorsk',
+            'pl' => 'Język polski',
+            'pt' => 'Português',
+            'ru' => 'Русский',
+            'sv' => 'Svenska',
+            'uk' => 'Українська мова',
+            'zh' => '中文',
+        ];
+
+        foreach (glob(dirname(__DIR__, 3) . '/lang/*/global.php') as $file) {
+            $lang = require $file;
+
+            if (isset($modx_lang_attribute) && !empty($languages[$modx_lang_attribute])) {
+                $data[] = [
+                    'key' => $modx_lang_attribute,
+                    'value' => $languages[$modx_lang_attribute],
+                    'user' => $lang['username'] ?? null,
+                    'password' => $lang['password'] ?? null,
+                    'remember' => $lang['remember_username'] ?? null,
+                    'login' => $lang['login_button'] ?? null,
+                ];
+            }
+        }
+
+        return $data;
     }
 }

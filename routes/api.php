@@ -61,7 +61,9 @@ Route::prefix($apiPath)
         /** Boostrap */
         Route::prefix('bootstrap')
             ->group(fn() => [
-                Route::get('/', [BootstrapController::class, 'index']),
+                Route::withoutMiddleware($authMiddleware)
+                    ->get('/', [BootstrapController::class, 'init']),
+                Route::post('/', [BootstrapController::class, 'index']),
                 Route::get('select-pages', [BootstrapController::class, 'selectPages']),
             ]),
 

@@ -66,7 +66,7 @@ class ActionsButtons extends Component
         array $icon = [])
     {
         $attributes = [
-            'component' => 'EvoActionsButtons',
+            'component' => 'EvoLayoutActionsButtons',
             'attrs' => [
                 'data' => $data,
                 'classes' => $classes,

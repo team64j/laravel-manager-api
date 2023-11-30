@@ -21,7 +21,7 @@ class Section extends Component
         string|array|Component $slot = null
     ) {
         $attributes = [
-            'component' => 'EvoSection',
+            'component' => 'EvoLayoutSection',
             'attrs' => [
                 'icon' => $icon,
                 'label' => $label,

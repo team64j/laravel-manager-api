@@ -19,7 +19,7 @@ class Select extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'EvoFields/Select',
+            'component' => 'EvoFieldsSelect',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,
