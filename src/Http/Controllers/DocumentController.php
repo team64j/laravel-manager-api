@@ -212,6 +212,8 @@ class DocumentController extends Controller
             ->additional([
                 'layout' => $layout->default($document, $route['url'] ?? ''),
                 'meta' => [
+                    'icon' => $layout->getIcon(),
+                    'title' => $document->pagetitle ?: Lang::get('global.new_resource'),
                     'tab' => $layout->titleDefault($document),
                     'url' => $route['url'] ?? '',
                 ],

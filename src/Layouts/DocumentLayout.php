@@ -326,8 +326,16 @@ class DocumentLayout extends Layout
     {
         return [
             'title' => $model->pagetitle ?: Lang::get('global.new_resource'),
-            'icon' => 'fa fa-edit',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-edit';
     }
 
     /**
