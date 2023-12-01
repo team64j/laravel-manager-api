@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
@@ -223,7 +224,7 @@ class FileController extends Controller
             if (in_array($key, $opened)) {
                 $newRequest = clone $request;
                 $newRequest->query->set('after', null);
-                $item['data'] = $this->tree($newRequest, $key)['data'] ?? [];
+                $item += $this->tree($newRequest, $key)['data'] ?? [];
             }
 
             $data[] = $item;
@@ -290,11 +291,15 @@ class FileController extends Controller
         }
 
         return FileResource::collection([
-            'data' => [
-                'data' => $data,
+            'data' => $data,
+            'meta' => [
                 'category' => true,
                 'pagination' => [
                     'next' => $next,
+                    'lang' => [
+                        'prev' => Lang::get('global.paging_prev'),
+                        'next' => Lang::get('global.paging_next'),
+                    ],
                 ],
             ],
         ]);

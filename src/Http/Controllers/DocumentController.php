@@ -456,22 +456,10 @@ class DocumentController extends Controller
     {
         $parent = $request->input('parent');
         $filter = $request->input('filter');
-        $order = $request->input('order', 'id');
-        $dir = $request->input('dir', 'asc');
-        $opened = $request->has('opened') ? $request->string('opened')
-            ->explode(',')
-            ->map(fn($i) => intval($i))
-            ->toArray() : [];
-        $settings = $request->whenFilled('settings', fn($i) => is_array($i) ? $i : json_decode($i, true));
+        $settings = $request->collect('settings')->toArray();
         $settings['keyTitle'] = $settings['keyTitle'] ?? 'pagetitle';
-
-        if (!empty($settings['order'])) {
-            $order = $settings['order'];
-        }
-
-        if (!empty($settings['dir'])) {
-            $dir = $settings['dir'];
-        }
+        $order = $settings['order'] ?? 'id';
+        $dir = $settings['dir'] ?? 'asc';
 
         $fields = [
             'id',
@@ -504,60 +492,85 @@ class DocumentController extends Controller
         }
 
         if (!is_null($filter)) {
-            return DocumentResource::collection([
-                'data' => [
-                    'data' => SiteContent::query()
-                        ->select($fields)
-                        ->with('documentGroups')
-                        ->where('pagetitle', 'like', '%' . $filter . '%')
-                        ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
-                        ->orderBy($order, $dir)
-                        ->get()
-                        ->map(function (SiteContent $item) use ($fields, $settings) {
-                            $title =
-                                in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
-                                    : '';
+            return DocumentResource::collection(
+                SiteContent::query()
+                    ->select($fields)
+                    ->with('documentGroups')
+                    ->where('pagetitle', 'like', '%' . $filter . '%')
+                    ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
+                    ->orderBy($order, $dir)
+                    ->get()
+                    ->map(function (SiteContent $item) use ($fields, $settings) {
+                        $title =
+                            in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
+                                : '';
 
-                            if ((string) $title == '') {
-                                $title = $item->getAttribute('pagetitle');
-                            }
+                        if ((string) $title == '') {
+                            $title = $item->getAttribute('pagetitle');
+                        }
 
-                            return $item->setAttribute('title', $title)
-                                ->setAttribute('private', $item->documentGroups->isNotEmpty());
-                        }),
-                ],
-            ]);
+                        return $item->setAttribute('title', $title)
+                            ->setAttribute('private', $item->documentGroups->isNotEmpty());
+                    })
+            );
         }
 
+        $result = $this->treeChildren($fields, (int) $parent, $order, $dir, $settings, $request->all());
+
+        return DocumentResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
+    }
+
+    /**
+     * @param array $fields
+     * @param int $parent
+     * @param string $order
+     * @param string $dir
+     * @param array $settings
+     * @param array $params
+     * @param int|null $page
+     *
+     * @return LengthAwarePaginator
+     */
+    protected function treeChildren(
+        array $fields,
+        int $parent,
+        string $order,
+        string $dir,
+        array $settings,
+        array $params,
+        int $page = null)
+    {
         /** @var LengthAwarePaginator $result */
         $result = SiteContent::query()
             ->select($fields)
             ->where('parent', $parent)
-            ->with('documentGroups')
+            ->with(['documentGroups'])
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
-            ->appends($request->all());
+            ->paginate(Config::get('global.number_of_results'), ['*'], 'page', $page)
+            ->appends($params);
 
-        $result->map(function (SiteContent $item) use ($opened, $request, $fields, $order, $dir, $settings) {
+        $result->map(function (SiteContent $item) use ($params, $fields, $order, $dir, $settings) {
+            $opened = array_map('intval', $settings['opened'] ?? []);
+
             if (in_array($item->getKey(), $opened, true)) {
-                $request->query->replace([
-                    'parent' => $item->getKey()
-                ]);
+                $params['parent'] = $item->getKey();
+                $parent = $item->getKey();
 
-                /** @var LengthAwarePaginator $result */
-                $result = $item->children()
-                    ->select($fields)
-                    ->with('documentGroups')
-                    ->without('children')
-                    ->orderBy($order, $dir)
-                    ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
-                    ->appends($request->all());
+                $result = $this->treeChildren($fields, $parent, $order, $dir, $settings, $params, 1);
 
                 if ($result->isNotEmpty()) {
-                    $item->setAttribute('data', [
-                        'data' => $result->map(function (SiteContent $item) use ($settings, $fields) {
+                    $item->setAttribute(
+                        'data',
+                        $result->map(function (SiteContent $item) use ($settings, $fields) {
                             $title =
-                                in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
+                                in_array($settings['keyTitle'], $fields) ? $item->getAttribute(
+                                    $settings['keyTitle']
+                                )
                                     : '';
 
                             if ((string) $title == '') {
@@ -566,9 +579,11 @@ class DocumentController extends Controller
 
                             return $item->setAttribute('title', $title)
                                 ->setAttribute('private', $item->documentGroups->isNotEmpty());
-                        }),
-                        'pagination' => $this->pagination($result),
-                    ]);
+                        })
+                    )
+                        ->setAttribute('meta', [
+                            'pagination' => $this->pagination($result),
+                        ]);
                 }
             }
 
@@ -582,12 +597,7 @@ class DocumentController extends Controller
                 ->setAttribute('private', $item->documentGroups->isNotEmpty());
         });
 
-        return DocumentResource::collection([
-            'data' => [
-                'data' => $result->items(),
-                'pagination' => $this->pagination($result),
-            ],
-        ]);
+        return $result;
     }
 
     /**

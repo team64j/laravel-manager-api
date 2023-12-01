@@ -329,15 +329,13 @@ class ChunkController extends Controller
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
-            return ChunkResource::collection([
-                'data' => [
-                    'data' => SiteHtmlSnippet::withoutLocked()
-                        ->select($fields)
-                        ->where('name', 'like', '%' . $filter . '%')
-                        ->orderBy('name')
-                        ->get(),
-                ],
-            ]);
+            return ChunkResource::collection(
+                SiteHtmlSnippet::withoutLocked()
+                    ->select($fields)
+                    ->where('name', 'like', '%' . $filter . '%')
+                    ->orderBy('name')
+                    ->get()
+            );
         }
 
         /** @var LengthAwarePaginator $result */
@@ -351,53 +349,49 @@ class ChunkController extends Controller
 
         if ($showFromCategory) {
             return ChunkResource::collection([
-                'data' => [
-                    'data' => $result->items(),
+                'data' => $result->items(),
+                'meta' => [
                     'pagination' => $this->pagination($result),
                 ],
             ]);
         }
 
-        return CategoryResource::collection([
-            'data' => [
-                'data' => $result->map(function (SiteHtmlSnippet $template) use ($request, $opened, $fields) {
-                    /** @var Category $category */
-                    $category = $template->getRelation('category') ?? new Category();
-                    $category->id = $template->category;
-                    $data = [];
+        return CategoryResource::collection(
+            $result->map(function (SiteHtmlSnippet $template) use ($request, $opened, $fields) {
+                /** @var Category $category */
+                $category = $template->getRelation('category') ?? new Category();
+                $category->id = $template->category;
+                $data = [];
 
-                    if (in_array($category->getKey(), $opened, true)) {
-                        $request->query->replace([
-                            'parent' => $category->getKey(),
-                        ]);
+                if (in_array($category->getKey(), $opened, true)) {
+                    $request->query->replace([
+                        'parent' => $category->getKey(),
+                    ]);
 
-                        /** @var LengthAwarePaginator $result */
-                        $result = $category->chunks()
-                            ->select($fields)
-                            ->withoutLocked()
-                            ->orderBy('name')
-                            ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
-                            ->appends($request->all());
+                    /** @var LengthAwarePaginator $result */
+                    $result = $category->chunks()
+                        ->select($fields)
+                        ->withoutLocked()
+                        ->orderBy('name')
+                        ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
+                        ->appends($request->all());
 
-                        if ($result->isNotEmpty()) {
-                            $data = [
-                                'data' => [
-                                    'data' => $result->items(),
-                                    'pagination' => $this->pagination($result),
-                                ],
-                            ];
-                        }
+                    if ($result->isNotEmpty()) {
+                        $data = [
+                            'data' => $result->items(),
+                            'pagination' => $this->pagination($result),
+                        ];
                     }
+                }
 
-                    return [
-                            'id' => $category->getKey(),
-                            'name' => $category->category ?? Lang::get('global.no_category'),
-                            'folder' => true,
-                        ] + $data;
-                })
-                    ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
-                    ->values(),
-            ],
-        ]);
+                return [
+                        'id' => $category->getKey(),
+                        'name' => $category->category ?? Lang::get('global.no_category'),
+                        'folder' => true,
+                    ] + $data;
+            })
+                ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+                ->values()
+        );
     }
 }

@@ -28,6 +28,10 @@ trait PaginationTrait
             //'next' => str_replace(route('manager.api'), '', $result->nextPageUrl()),
             'prev' => $result->previousPageUrl(),
             'next' => $result->nextPageUrl(),
+            'lang' => [
+                'prev' => Lang::get('global.paging_prev'),
+                'next' => Lang::get('global.paging_next'),
+            ],
             'current' => $current,
             'per' => $result->perPage(),
             'info' => Lang::get('global.showing') . ' ' . $from . '-' . $to . '/' . $result->total(),

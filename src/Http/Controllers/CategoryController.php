@@ -318,7 +318,6 @@ class CategoryController extends Controller
      */
     public function tree(CategoryRequest $request): AnonymousResourceCollection
     {
-        $data = [];
         $filter = $request->input('filter');
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
@@ -338,11 +337,11 @@ class CategoryController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $data['data'] = $result->items();
-        $data['pagination'] = $this->pagination($result);
-
         return CategoryResource::collection([
-            'data' => $data,
+            'data' => $result->items(),
+            'meta' => [
+                'pagination' => $this->pagination($result),
+            ],
         ]);
     }
 
