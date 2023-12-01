@@ -269,27 +269,23 @@ class PluginController extends Controller
                 'category',
             ]);
 
-        $data = array_merge(
-            [
-                [
-                    'name' => Lang::get('global.new_plugin'),
-                    'icon' => 'fa fa-plus-circle',
-                    'click' => [
-                        'name' => 'Plugin',
-                        'params' => [
-                            'id' => 'new',
+        return PluginResource::collection([
+            'data' => $result->items(),
+            'meta' => [
+                'name' => 'Plugin',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_plugin'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'Plugin',
+                            'params' => [
+                                'id' => 'new',
+                            ],
                         ],
                     ],
                 ],
-            ],
-            $result->items()
-        );
-
-        return PluginResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'route' => 'Plugin',
             ],
         ]);
     }
@@ -387,13 +383,16 @@ class PluginController extends Controller
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
-            return PluginResource::collection(
-                SitePlugin::withoutLocked()
-                    ->select($fields)
-                    ->where('name', 'like', '%' . $filter . '%')
-                    ->orderBy('name')
-                    ->get()
-            );
+            $result = SitePlugin::withoutLocked()
+                ->select($fields)
+                ->where('name', 'like', '%' . $filter . '%')
+                ->orderBy('name')
+                ->get();
+
+            return PluginResource::collection([
+                'data' => $result,
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
         }
 
         /** @var LengthAwarePaginator $result */

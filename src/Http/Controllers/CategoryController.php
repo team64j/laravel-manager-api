@@ -341,7 +341,7 @@ class CategoryController extends Controller
             'data' => $result->items(),
             'meta' => [
                 'pagination' => $this->pagination($result),
-            ],
+            ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
         ]);
     }
 
@@ -379,10 +379,22 @@ class CategoryController extends Controller
             ]);
 
         return CategoryResource::collection([
-            'data' => [
-                'data' => $result->items(),
+            'data' => $result->items(),
+            'meta' => [
+                'name' => 'Category',
                 'pagination' => $this->pagination($result),
-                'route' => 'Category',
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_category'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'Category',
+                            'params' => [
+                                'id' => 'new',
+                            ],
+                        ],
+                    ],
+                ],
             ],
         ]);
     }

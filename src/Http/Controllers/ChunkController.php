@@ -266,27 +266,23 @@ class ChunkController extends Controller
                 'category',
             ]);
 
-        $data = array_merge(
-            [
-                [
-                    'name' => Lang::get('global.new_htmlsnippet'),
-                    'icon' => 'fa fa-plus-circle',
-                    'click' => [
-                        'name' => 'Chunk',
-                        'params' => [
-                            'id' => 'new',
+        return ChunkResource::collection([
+            'data' => $result->items(),
+            'meta' => [
+                'route' => 'name',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_htmlsnippet'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'Chunk',
+                            'params' => [
+                                'id' => 'new',
+                            ],
                         ],
                     ],
                 ],
-            ],
-            $result->items()
-        );
-
-        return ChunkResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'route' => 'Chunk',
             ],
         ]);
     }
@@ -329,13 +325,16 @@ class ChunkController extends Controller
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
-            return ChunkResource::collection(
-                SiteHtmlSnippet::withoutLocked()
-                    ->select($fields)
-                    ->where('name', 'like', '%' . $filter . '%')
-                    ->orderBy('name')
-                    ->get()
-            );
+            $result = SiteHtmlSnippet::withoutLocked()
+                ->select($fields)
+                ->where('name', 'like', '%' . $filter . '%')
+                ->orderBy('name')
+                ->get();
+
+            return ChunkResource::collection([
+                'data' => $result,
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
         }
 
         /** @var LengthAwarePaginator $result */

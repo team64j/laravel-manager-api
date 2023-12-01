@@ -294,27 +294,23 @@ class TvController extends Controller
                 'category',
             ]);
 
-        $data = array_merge(
-            [
-                [
-                    'name' => Lang::get('global.new_tmplvars'),
-                    'icon' => 'fa fa-plus-circle',
-                    'click' => [
-                        'name' => 'Tv',
-                        'params' => [
-                            'id' => 'new',
+        return TvResource::collection([
+            'data' => $result->items(),
+            'meta' => [
+                'name' => 'Tv',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_tmplvars'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'Tv',
+                            'params' => [
+                                'id' => 'new',
+                            ],
                         ],
                     ],
-                ]
-            ],
-            $result->items()
-        );
-
-        return TvResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'route' => 'Tv',
+                ],
             ],
         ]);
     }
@@ -439,13 +435,16 @@ class TvController extends Controller
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
-            return TvResource::collection(
-                SiteTmplvar::withoutLocked()
-                    ->select($fields)
-                    ->where('name', 'like', '%' . $filter . '%')
-                    ->orderBy('name')
-                    ->get()
-            );
+            $result = SiteTmplvar::withoutLocked()
+                ->select($fields)
+                ->where('name', 'like', '%' . $filter . '%')
+                ->orderBy('name')
+                ->get();
+
+            return TvResource::collection([
+                'data' => $result,
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
         }
 
         /** @var LengthAwarePaginator $result */

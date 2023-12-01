@@ -268,27 +268,23 @@ class SnippetController extends Controller
                 'category',
             ]);
 
-        $data = array_merge(
-            [
-                [
-                    'name' => Lang::get('global.new_snippet'),
-                    'icon' => 'fa fa-plus-circle',
-                    'click' => [
-                        'name' => 'Snippet',
-                        'params' => [
-                            'id' => 'new',
+        return SnippetResource::collection([
+            'data' => $result->items(),
+            'meta' => [
+                'name' => 'Snippet',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_snippet'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'Snippet',
+                            'params' => [
+                                'id' => 'new',
+                            ],
                         ],
                     ],
                 ],
-            ],
-            $result->items()
-        );
-
-        return SnippetResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'route' => 'Snippet',
             ],
         ]);
     }
@@ -331,13 +327,16 @@ class SnippetController extends Controller
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
-            return SnippetResource::collection(
-                SiteSnippet::withoutLocked()
-                    ->select($fields)
-                    ->where('name', 'like', '%' . $filter . '%')
-                    ->orderBy('name')
-                    ->get()
-            );
+            $result = SiteSnippet::withoutLocked()
+                ->select($fields)
+                ->where('name', 'like', '%' . $filter . '%')
+                ->orderBy('name')
+                ->get();
+
+            return SnippetResource::collection([
+                'data' => $result,
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
         }
 
         /** @var LengthAwarePaginator $result */

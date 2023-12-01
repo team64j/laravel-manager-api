@@ -320,27 +320,23 @@ class TemplateController extends Controller
             ])
             ->appends($request->all());
 
-        $data = array_merge(
-            [
-                [
-                    'name' => Lang::get('global.new_template'),
-                    'icon' => 'fa fa-plus-circle',
-                    'click' => [
-                        'name' => 'Template',
-                        'params' => [
-                            'id' => 'new',
+        return TemplateResource::collection([
+            'data' => $result->items(),
+            'meta' => [
+                'name' => 'Template',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_template'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'Template',
+                            'params' => [
+                                'id' => 'new',
+                            ],
                         ],
                     ],
                 ],
-            ],
-            $result->items()
-        );
-
-        return TemplateResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'route' => 'Template',
             ],
         ]);
     }
@@ -516,13 +512,16 @@ class TemplateController extends Controller
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
-            return TemplateResource::collection(
-                SiteTemplate::withoutLocked()
-                    ->select($fields)
-                    ->where('templatename', 'like', '%' . $filter . '%')
-                    ->orderBy('templatename')
-                    ->get()
-            );
+            $result = SiteTemplate::withoutLocked()
+                ->select($fields)
+                ->where('templatename', 'like', '%' . $filter . '%')
+                ->orderBy('templatename')
+                ->get();
+
+            return TemplateResource::collection([
+                'data' => $result,
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
         }
 
         /** @var LengthAwarePaginator $result */

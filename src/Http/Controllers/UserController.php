@@ -254,27 +254,23 @@ class UserController extends Controller
             )
             ->paginate(Config::get('global.number_of_results'), ['id', 'username as name']);
 
-        $data = array_merge(
-            [
-                [
-                    'name' => Lang::get('global.new_user'),
-                    'icon' => 'fa fa-plus-circle',
-                    'click' => [
-                        'name' => 'User',
-                        'params' => [
-                            'id' => 'new',
+        return UserResource::collection([
+            'data' => $result->items(),
+            'meta' => [
+                'name' => 'User',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_user'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'User',
+                            'params' => [
+                                'id' => 'new',
+                            ],
                         ],
                     ],
                 ],
-            ],
-            $result->items()
-        );
-
-        return UserResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'route' => 'User',
             ],
         ]);
     }

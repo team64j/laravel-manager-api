@@ -444,6 +444,7 @@ class BootstrapController extends Controller
                                             'element' => 'categories',
                                         ],
                                     ],
+                                    'url' => '/categories/list',
                                     'permissions' => ['category_manager'],
                                 ],
                                 [
@@ -909,7 +910,7 @@ class BootstrapController extends Controller
         $tabs = Tabs::make()
             ->setId('tree')
             ->setUid('TREE')
-            ->setClass('h-full !bg-gray-800')
+            ->setClass('h-full')
             ->setNavigation(false)
             ->isSmallTabs()
             ->isLoadOnce();

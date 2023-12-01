@@ -267,27 +267,23 @@ class ModuleController extends Controller
                 'disabled',
             ]);
 
-        $data = array_merge(
-            [
-                [
-                    'name' => Lang::get('global.new_module'),
-                    'icon' => 'fa fa-plus-circle',
-                    'click' => [
-                        'name' => 'Module',
-                        'params' => [
-                            'id' => 'new',
+        return ModuleResource::collection([
+            'data' => $result->items(),
+            'meta' => [
+                'name' => 'Module',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_module'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'name' => 'Module',
+                            'params' => [
+                                'id' => 'new',
+                            ],
                         ],
                     ],
                 ],
-            ],
-            $result->items()
-        );
-
-        return ModuleResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'route' => 'Module',
             ],
         ]);
     }
@@ -318,16 +314,16 @@ class ModuleController extends Controller
     public function exec(ModuleRequest $request): AnonymousResourceCollection
     {
         return ModuleResource::collection([
-            'data' => [
-                'data' => SiteModule::withoutLocked()
-                    ->withoutProtected()
-                    ->orderBy('name')
-                    ->whereIn('disabled', Auth::user()->isAdmin() ? [0, 1] : [0])
-                    ->get([
-                        'id',
-                        'name',
-                    ]),
-                'route' => 'ModuleExec',
+            'data' => SiteModule::withoutLocked()
+                ->withoutProtected()
+                ->orderBy('name')
+                ->whereIn('disabled', Auth::user()->isAdmin() ? [0, 1] : [0])
+                ->get([
+                    'id',
+                    'name',
+                ]),
+            'meta' => [
+                'name' => 'ModuleExec',
             ],
         ]);
     }
@@ -402,13 +398,16 @@ class ModuleController extends Controller
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
-            return ModuleResource::collection(
-                SiteModule::withoutLocked()
-                    ->select($fields)
-                    ->where('name', 'like', '%' . $filter . '%')
-                    ->orderBy('name')
-                    ->get()
-            );
+            $result = SiteModule::withoutLocked()
+                ->select($fields)
+                ->where('name', 'like', '%' . $filter . '%')
+                ->orderBy('name')
+                ->get();
+
+            return ModuleResource::collection([
+                'data' => $result,
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
         }
 
         /** @var LengthAwarePaginator $result */
