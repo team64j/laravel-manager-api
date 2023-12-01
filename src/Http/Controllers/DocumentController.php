@@ -134,8 +134,8 @@ class DocumentController extends Controller
             ->appends($request->all());
 
         return DocumentResource::collection([
-            'data' => [
-                'data' => $result->items(),
+            'data' => $result->items(),
+            'meta' => [
                 'columns' => $columns,
                 'pagination' => $this->pagination($result),
             ],

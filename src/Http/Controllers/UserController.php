@@ -302,8 +302,8 @@ class UserController extends Controller
             ->paginate(Config::get('global.number_of_results'));
 
         return UserResource::collection([
-            'data' => [
-                'data' => $result->items(),
+            'data' => $result->items(),
+            'meta' => [
                 'columns' => [
                     [
                         'key' => 'id',
