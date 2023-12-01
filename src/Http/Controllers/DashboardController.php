@@ -91,7 +91,7 @@ class DashboardController extends Controller
      */
     public function news(DashboardRequest $request): array
     {
-        $data = Cache::remember('cms.dashboard.news', 86400, function () {
+        return Cache::remember('cms.dashboard.news', 86400, function () {
             $data = [];
 
             if (Config::get('global.rss_url_news')) {
@@ -118,12 +118,6 @@ class DashboardController extends Controller
 
             return $data;
         });
-
-        return [
-            'data' => [
-                'data' => $data,
-            ],
-        ];
     }
 
     /**
@@ -146,7 +140,7 @@ class DashboardController extends Controller
      */
     public function newsSecurity(DashboardRequest $request): array
     {
-        $data = Cache::remember('cms.dashboard.news-security', 86400, function () {
+        return Cache::remember('cms.dashboard.news-security', 86400, function () {
             $data = [];
 
             if (Config::get('global.rss_url_security')) {
@@ -173,12 +167,6 @@ class DashboardController extends Controller
 
             return $data;
         });
-
-        return [
-            'data' => [
-                'data' => $data,
-            ],
-        ];
     }
 
 //    /**

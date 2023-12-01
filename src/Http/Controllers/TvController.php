@@ -138,7 +138,7 @@ class TvController extends Controller
 
         $data = $tv->withoutRelations();
 
-        return (new TvResource($data))
+        return TvResource::make($data)
             ->additional([
                 'meta' => [],
                 'layout' => $layout->default($tv),
@@ -180,7 +180,7 @@ class TvController extends Controller
 
         $data = $tv->withoutRelations();
 
-        return (new TvResource($data))
+        return TvResource::make($data)
             ->additional([
                 'layout' => $layout->default($tv),
                 'meta' => [
@@ -220,7 +220,7 @@ class TvController extends Controller
 
         $data = $tv->withoutRelations();
 
-        return (new TvResource($data))
+        return TvResource::make($data)
             ->additional([
                 'meta' => [
                     'tab' => $layout->titleDefault($tv),
@@ -292,25 +292,25 @@ class TvController extends Controller
                 'category',
             ]);
 
-        return TvResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'name' => 'Tv',
-                'pagination' => $this->pagination($result),
-                'prepend' => [
-                    [
-                        'name' => Lang::get('global.new_tmplvars'),
-                        'icon' => 'fa fa-plus-circle',
-                        'to' => [
-                            'name' => 'Tv',
-                            'params' => [
-                                'id' => 'new',
+        return TvResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'name' => 'Tv',
+                    'pagination' => $this->pagination($result),
+                    'prepend' => [
+                        [
+                            'name' => Lang::get('global.new_tmplvars'),
+                            'icon' => 'fa fa-plus-circle',
+                            'to' => [
+                                'name' => 'Tv',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
                             ],
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**
@@ -342,18 +342,14 @@ class TvController extends Controller
             ->orderBy('rank')
             ->paginate(Config::get('global.number_of_results'));
 
-        return TvResource::collection([
-            'data' => [
-                'pagination' => $this->pagination($result),
-                'draggable' => true,
-                'data' => $result->items(),
-            ],
-        ])
+        return TvResource::collection($result->items())
             ->additional([
                 'layout' => $layout->sort(),
                 'meta' => [
                     'tab' => $layout->titleSort(),
                 ],
+                'pagination' => $this->pagination($result),
+                'draggable' => true,
             ]);
     }
 

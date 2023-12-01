@@ -63,15 +63,13 @@ class PermissionController extends Controller
                     ->setAttribute('users.html', $users);
             });
 
-        return PermissionResource::collection([
-            'data' => [
-                'data' => $groups,
-            ],
-            'layout' => $layout->list(),
-            'meta' => [
-                'tab' => $layout->titleList(),
-            ],
-        ]);
+        return PermissionResource::collection($groups)
+            ->additional([
+                'layout' => $layout->list(),
+                'meta' => [
+                    'tab' => $layout->titleList(),
+                ],
+            ]);
     }
 
     /**
@@ -101,13 +99,13 @@ class PermissionController extends Controller
     {
         $data = MembergroupName::query()->findOrNew($id);
 
-        return PermissionResource::make([
-            'data' => $data,
-            'layout' => $layout->default($data),
-            'meta' => [
-                'tab' => $layout->titleDefault($data),
-            ],
-        ]);
+        return PermissionResource::make($data)
+            ->additional([
+                'layout' => $layout->default($data),
+                'meta' => [
+                    'tab' => $layout->titleDefault($data),
+                ],
+            ]);
     }
 
     /**
@@ -156,15 +154,13 @@ class PermissionController extends Controller
                     ->setAttribute('documents.html', $documents);
             });
 
-        return PermissionResource::collection([
-            'data' => [
-                'data' => $resources,
-            ],
-            'layout' => $layout->list(),
-            'meta' => [
-                'tab' => $layout->titleList(),
-            ],
-        ]);
+        return PermissionResource::collection($resources)
+            ->additional([
+                'layout' => $layout->list(),
+                'meta' => [
+                    'tab' => $layout->titleList(),
+                ],
+            ]);
     }
 
     /**
@@ -194,13 +190,13 @@ class PermissionController extends Controller
     {
         $data = DocumentgroupName::query()->findOrNew($id);
 
-        return PermissionResource::make([
-            'data' => $data,
-            'layout' => $layout->default($data),
-            'meta' => [
-                'tab' => $layout->titleDefault($data),
-            ],
-        ]);
+        return PermissionResource::make($data)
+            ->additional([
+                'layout' => $layout->default($data),
+                'meta' => [
+                    'tab' => $layout->titleDefault($data),
+                ],
+            ]);
     }
 
     /**
@@ -255,15 +251,13 @@ class PermissionController extends Controller
             ->orderBy('name')
             ->get();
 
-        return PermissionResource::collection([
-            'data' => [
-                'data' => $groups,
-            ],
-            'layout' => $layout->list($groups, $documents),
-            'meta' => [
-                'tab' => $layout->titleList(),
-            ],
-        ]);
+        return PermissionResource::collection($groups)
+            ->additional([
+                'layout' => $layout->list($groups, $documents),
+                'meta' => [
+                    'tab' => $layout->titleList(),
+                ],
+            ]);
     }
 
     /**
@@ -293,13 +287,13 @@ class PermissionController extends Controller
     {
         $data = MembergroupName::query()->findOrNew($id);
 
-        return PermissionResource::make([
-            'data' => $data,
-            'layout' => $layout->default($data),
-            'meta' => [
-                'tab' => $layout->titleDefault($data),
-            ],
-        ]);
+        return PermissionResource::make($data)
+            ->additional([
+                'layout' => $layout->default($data),
+                'meta' => [
+                    'tab' => $layout->titleDefault($data),
+                ],
+            ]);
     }
 
     /**

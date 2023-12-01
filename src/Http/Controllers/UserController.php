@@ -171,21 +171,19 @@ class UserController extends Controller
             ],
         ];
 
-        return UserResource::collection([
-            'data' => [
-                'data' => $result->items(),
-                'pagination' => $this->pagination($result),
-                'sorting' => [
-                    'order' => $order,
-                    'dir' => $dir,
+        return UserResource::collection($result->items())
+            ->additional([
+                'layout' => $layout->list(),
+                'meta' => [
+                    'tab' => $layout->tabList(),
+                    'pagination' => $this->pagination($result),
+                    'sorting' => [
+                        'order' => $order,
+                        'dir' => $dir,
+                    ],
+                    'filters' => $filters,
                 ],
-                'filters' => $filters,
-            ],
-            'layout' => $layout->list(),
-            'meta' => [
-                'tab' => $layout->tabList(),
-            ],
-        ]);
+            ]);
     }
 
     /**

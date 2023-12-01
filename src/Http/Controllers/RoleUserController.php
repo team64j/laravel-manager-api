@@ -45,16 +45,14 @@ class RoleUserController extends Controller
             ->orderBy('id')
             ->paginate(Config::get('global.number_of_results'));
 
-        return RoleUserResource::collection([
-            'data' => [
-                'data' => $result->items(),
-                'pagination' => $this->pagination($result),
-            ],
-            'layout' => $layout->list(),
-            'meta' => [
-                'tab' => $layout->titleList(),
-            ],
-        ]);
+        return RoleUserResource::collection($result->items())
+            ->additional([
+                'layout' => $layout->list(),
+                'meta' => [
+                    'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
     }
 
     /**
@@ -88,12 +86,12 @@ class RoleUserController extends Controller
             ]);
         }
 
-        return RoleUserResource::make([
-            'data' => [],
-            'layout' => $layout->default($roleUser),
-            'meta' => [
-                'tab' => $layout->titleDefault($roleUser),
-            ],
-        ]);
+        return RoleUserResource::make([])
+            ->additional([
+                'layout' => $layout->default($roleUser),
+                'meta' => [
+                    'tab' => $layout->titleDefault($roleUser),
+                ],
+            ]);
     }
 }

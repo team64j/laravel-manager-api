@@ -136,7 +136,7 @@ class PluginController extends Controller
     {
         $plugin = SitePlugin::query()->create($request->validated());
 
-        return new PluginResource($plugin);
+        return PluginResource::make($plugin);
     }
 
     /**
@@ -200,7 +200,7 @@ class PluginController extends Controller
     {
         $plugin->update($request->validated());
 
-        return new PluginResource($plugin);
+        return PluginResource::make($plugin);
     }
 
     /**
@@ -267,25 +267,25 @@ class PluginController extends Controller
                 'category',
             ]);
 
-        return PluginResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'name' => 'Plugin',
-                'pagination' => $this->pagination($result),
-                'prepend' => [
-                    [
-                        'name' => Lang::get('global.new_plugin'),
-                        'icon' => 'fa fa-plus-circle',
-                        'to' => [
-                            'name' => 'Plugin',
-                            'params' => [
-                                'id' => 'new',
+        return PluginResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'name' => 'Plugin',
+                    'pagination' => $this->pagination($result),
+                    'prepend' => [
+                        [
+                            'name' => Lang::get('global.new_plugin'),
+                            'icon' => 'fa fa-plus-circle',
+                            'to' => [
+                                'name' => 'Plugin',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
                             ],
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**
@@ -314,27 +314,25 @@ class PluginController extends Controller
     {
         $filter = $request->input('filter');
 
-        return PluginResource::collection([
-            'data' => [
-                'data' => SystemEventname::query()
-                    ->with(
-                        'plugins',
-                        fn($q) => $q
-                            ->select(['id', 'name', 'disabled', 'priority'])
-                            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
-                            ->orderBy('pivot_priority')
-                    )
-                    ->whereHas('plugins')
-                    ->orderBy('name')
-                    ->get()
-                    ->map(function (SystemEventname $item) {
-                        $item->setAttribute('data', $item->plugins);
-                        $item->setAttribute('draggable', true);
+        return PluginResource::collection(
+            SystemEventname::query()
+                ->with(
+                    'plugins',
+                    fn($q) => $q
+                        ->select(['id', 'name', 'disabled', 'priority'])
+                        ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+                        ->orderBy('pivot_priority')
+                )
+                ->whereHas('plugins')
+                ->orderBy('name')
+                ->get()
+                ->map(function (SystemEventname $item) {
+                    $item->setAttribute('data', $item->plugins);
+                    $item->setAttribute('draggable', true);
 
-                        return $item->withoutRelations();
-                    }),
-            ],
-        ])
+                    return $item->withoutRelations();
+                })
+        )
             ->additional([
                 'layout' => $layout->sort(),
                 'meta' => [
@@ -403,12 +401,12 @@ class PluginController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return PluginResource::collection([
-                'data' => $result->items(),
-                'meta' => [
-                    'pagination' => $this->pagination($result),
-                ],
-            ]);
+            return PluginResource::collection($result->items())
+                ->additional([
+                    'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ],
+                ]);
         }
 
         return CategoryResource::collection(

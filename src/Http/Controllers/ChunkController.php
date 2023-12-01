@@ -134,7 +134,7 @@ class ChunkController extends Controller
     {
         $chunk = SiteHtmlSnippet::query()->create($request->validated());
 
-        return new ChunkResource($chunk);
+        return ChunkResource::make($chunk);
     }
 
     /**
@@ -198,7 +198,7 @@ class ChunkController extends Controller
     {
         $chunk->update($request->validated());
 
-        return new ChunkResource($chunk);
+        return ChunkResource::make($chunk);
     }
 
     /**
@@ -264,25 +264,25 @@ class ChunkController extends Controller
                 'category',
             ]);
 
-        return ChunkResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'route' => 'name',
-                'pagination' => $this->pagination($result),
-                'prepend' => [
-                    [
-                        'name' => Lang::get('global.new_htmlsnippet'),
-                        'icon' => 'fa fa-plus-circle',
-                        'to' => [
-                            'name' => 'Chunk',
-                            'params' => [
-                                'id' => 'new',
+        return ChunkResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'route' => 'name',
+                    'pagination' => $this->pagination($result),
+                    'prepend' => [
+                        [
+                            'name' => Lang::get('global.new_htmlsnippet'),
+                            'icon' => 'fa fa-plus-circle',
+                            'to' => [
+                                'name' => 'Chunk',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
                             ],
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**
@@ -329,10 +329,10 @@ class ChunkController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            return ChunkResource::collection([
-                'data' => $result,
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            return ChunkResource::collection($result)
+                ->additional([
+                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+                ]);
         }
 
         /** @var LengthAwarePaginator $result */
@@ -345,12 +345,12 @@ class ChunkController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return ChunkResource::collection([
-                'data' => $result->items(),
-                'meta' => [
-                    'pagination' => $this->pagination($result),
-                ],
-            ]);
+            return ChunkResource::collection($result->items())
+                ->additional([
+                    'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ],
+                ]);
         }
 
         return CategoryResource::collection(

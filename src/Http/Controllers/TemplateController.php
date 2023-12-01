@@ -401,25 +401,27 @@ class TemplateController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        return TemplateResource::collection([
-            'data' => [
-                'data' => $result->groupBy('category')
-                    ->map(fn($category) => [
-                        'id' => $category->first()->category,
-                        'name' => $category->first()->getRelation('category')->category ??
-                            Lang::get('global.no_category'),
-                        'data' => $category->map(function (SiteTmplvar $item) {
-                            return $item->setAttribute(
-                                'attach',
-                                Checkbox::make('tvs')->setValue($item->id)
-                            )
-                                ->withoutRelations();
-                        }),
-                    ])
-                    ->values(),
-                'pagination' => $this->pagination($result),
-            ],
-        ]);
+        return TemplateResource::collection(
+            $result->groupBy('category')
+                ->map(fn($category) => [
+                    'id' => $category->first()->category,
+                    'name' => $category->first()->getRelation('category')->category ??
+                        Lang::get('global.no_category'),
+                    'data' => $category->map(function (SiteTmplvar $item) {
+                        return $item->setAttribute(
+                            'attach',
+                            Checkbox::make('tvs')->setValue($item->id)
+                        )
+                            ->withoutRelations();
+                    }),
+                ])
+                ->values()
+        )
+            ->additional([
+                'meta' => [
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
     }
 
     /**

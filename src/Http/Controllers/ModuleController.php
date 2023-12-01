@@ -136,7 +136,7 @@ class ModuleController extends Controller
     {
         $module = SiteModule::query()->create($request->validated());
 
-        return new ModuleResource($module);
+        return ModuleResource::make($module);
     }
 
     /**
@@ -200,7 +200,7 @@ class ModuleController extends Controller
     {
         $module->update($request->validated());
 
-        return new ModuleResource($module);
+        return ModuleResource::make($module);
     }
 
     /**
@@ -265,25 +265,25 @@ class ModuleController extends Controller
                 'disabled',
             ]);
 
-        return ModuleResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'name' => 'Module',
-                'pagination' => $this->pagination($result),
-                'prepend' => [
-                    [
-                        'name' => Lang::get('global.new_module'),
-                        'icon' => 'fa fa-plus-circle',
-                        'to' => [
-                            'name' => 'Module',
-                            'params' => [
-                                'id' => 'new',
+        return ModuleResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'name' => 'Module',
+                    'pagination' => $this->pagination($result),
+                    'prepend' => [
+                        [
+                            'name' => Lang::get('global.new_module'),
+                            'icon' => 'fa fa-plus-circle',
+                            'to' => [
+                                'name' => 'Module',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
                             ],
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**
@@ -311,19 +311,21 @@ class ModuleController extends Controller
      */
     public function exec(ModuleRequest $request): AnonymousResourceCollection
     {
-        return ModuleResource::collection([
-            'data' => SiteModule::withoutLocked()
+        return ModuleResource::collection(
+            SiteModule::withoutLocked()
                 ->withoutProtected()
                 ->orderBy('name')
                 ->whereIn('disabled', Auth::user()->isAdmin() ? [0, 1] : [0])
                 ->get([
                     'id',
                     'name',
-                ]),
-            'meta' => [
-                'name' => 'ModuleExec',
-            ],
-        ]);
+                ])
+        )
+            ->additional([
+                'meta' => [
+                    'name' => 'ModuleExec',
+                ],
+            ]);
     }
 
     /**
@@ -402,10 +404,10 @@ class ModuleController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            return ModuleResource::collection([
-                'data' => $result,
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            return ModuleResource::collection($result)
+                ->additional([
+                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+                ]);
         }
 
         /** @var LengthAwarePaginator $result */
@@ -418,12 +420,12 @@ class ModuleController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return ModuleResource::collection([
-                'data' => $result->items(),
-                'meta' => [
-                    'pagination' => $this->pagination($result),
-                ],
-            ]);
+            return ModuleResource::collection($result->items())
+                ->additional([
+                    'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ],
+                ]);
         }
 
         return CategoryResource::collection(

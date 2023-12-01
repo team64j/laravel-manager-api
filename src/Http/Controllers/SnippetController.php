@@ -199,7 +199,7 @@ class SnippetController extends Controller
     {
         $snippet->update($request->validated());
 
-        return new SnippetResource($snippet);
+        return SnippetResource::make($snippet);
     }
 
     /**
@@ -266,25 +266,25 @@ class SnippetController extends Controller
                 'category',
             ]);
 
-        return SnippetResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'name' => 'Snippet',
-                'pagination' => $this->pagination($result),
-                'prepend' => [
-                    [
-                        'name' => Lang::get('global.new_snippet'),
-                        'icon' => 'fa fa-plus-circle',
-                        'to' => [
-                            'name' => 'Snippet',
-                            'params' => [
-                                'id' => 'new',
+        return SnippetResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'name' => 'Snippet',
+                    'pagination' => $this->pagination($result),
+                    'prepend' => [
+                        [
+                            'name' => Lang::get('global.new_snippet'),
+                            'icon' => 'fa fa-plus-circle',
+                            'to' => [
+                                'name' => 'Snippet',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
                             ],
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**
@@ -331,10 +331,10 @@ class SnippetController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            return SnippetResource::collection([
-                'data' => $result,
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            return SnippetResource::collection($result)
+                ->additional([
+                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+                ]);
         }
 
         /** @var LengthAwarePaginator $result */
@@ -347,12 +347,12 @@ class SnippetController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return SnippetResource::collection([
-                'data' => $result->items(),
-                'meta' => [
-                    'pagination' => $this->pagination($result),
-                ],
-            ]);
+            return SnippetResource::collection($result->items())
+                ->additional([
+                    'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ],
+                ]);
         }
 
         return CategoryResource::collection(

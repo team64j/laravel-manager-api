@@ -57,16 +57,14 @@ class RoleCategoryController extends Controller
                 return $item;
             });
 
-        return RoleCategoryResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-            ],
-            'layout' => $layout->list(),
-            'meta' => [
-                'tab' => $layout->titleList(),
-            ],
-        ]);
+        return RoleCategoryResource::collection($data)
+            ->additional([
+                'layout' => $layout->list(),
+                'meta' => [
+                    'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
     }
 
     /**
@@ -103,12 +101,12 @@ class RoleCategoryController extends Controller
             ]);
         }
 
-        return RoleCategoryResource::make([
-            'data' => [],
-            'layout' => $layout->default($roleCategory),
-            'meta' => [
-                'tab' => $layout->titleDefault($roleCategory),
-            ],
-        ]);
+        return RoleCategoryResource::make([])
+            ->additional([
+                'layout' => $layout->default($roleCategory),
+                'meta' => [
+                    'tab' => $layout->titleDefault($roleCategory),
+                ],
+            ]);
     }
 }

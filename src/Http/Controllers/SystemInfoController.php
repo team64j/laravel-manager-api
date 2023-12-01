@@ -43,55 +43,55 @@ class SystemInfoController extends Controller
         $data = [
             [
                 'name' => Lang::get('global.modx_version'),
-                'data' => Config::get('global.settings_version'),
+                'value' => Config::get('global.settings_version'),
             ],
             [
                 'name' => Lang::get('global.release_date'),
-                'data' => '',//$this->managerTheme->getCore()->getVersionData('release_date')
+                'value' => '',//$this->managerTheme->getCore()->getVersionData('release_date')
             ],
             [
                 'name' => 'PHP Version',
-                'data' => '<a href="/phpinfo" style="text-decoration: underline">' . phpversion() . '</a>',
+                'value' => '<a href="/phpinfo" style="text-decoration: underline">' . phpversion() . '</a>',
             ],
             [
                 'name' => Lang::get('global.access_permissions'),
-                'data' => Lang::get('global.' . (Config::get('global.use_udperms') ? 'enabled' : 'disabled')),
+                'value' => Lang::get('global.' . (Config::get('global.use_udperms') ? 'enabled' : 'disabled')),
             ],
             [
                 'name' => Lang::get('global.servertime'),
-                'data' => Carbon::now()->toTimeString(),
+                'value' => Carbon::now()->toTimeString(),
             ],
             [
                 'name' => Lang::get('global.localtime'),
-                'data' => Carbon::now()->addHours(Config::get('global.server_offset_time'))->toTimeString(),
+                'value' => Carbon::now()->addHours(Config::get('global.server_offset_time'))->toTimeString(),
             ],
             [
                 'name' => Lang::get('global.serveroffset'),
-                'data' => Config::get('global.server_offset_time') . ' h',
+                'value' => Config::get('global.server_offset_time') . ' h',
             ],
             [
                 'name' => Lang::get('global.database_name'),
-                'data' => DB::connection()->getDatabaseName(),
+                'value' => DB::connection()->getDatabaseName(),
             ],
             [
                 'name' => Lang::get('global.database_server'),
-                'data' => DB::connection()->getConfig('host'),
+                'value' => DB::connection()->getConfig('host'),
             ],
             [
                 'name' => Lang::get('global.database_version'),
-                'data' => DB::connection()->getPdo()->getAttribute(DB::connection()->getPdo()::ATTR_SERVER_VERSION),
+                'value' => DB::connection()->getPdo()->getAttribute(DB::connection()->getPdo()::ATTR_SERVER_VERSION),
             ],
             [
                 'name' => Lang::get('global.database_charset'),
-                'data' => $this->resolveCharset(),
+                'value' => $this->resolveCharset(),
             ],
             [
                 'name' => Lang::get('global.database_collation'),
-                'data' => $this->resolveCollation(),
+                'value' => $this->resolveCollation(),
             ],
             [
                 'name' => Lang::get('global.table_prefix'),
-                'data' => DB::connection()->getTablePrefix(),
+                'value' => DB::connection()->getTablePrefix(),
             ],
         ];
 
@@ -99,24 +99,18 @@ class SystemInfoController extends Controller
             if (Str::startsWith($key, ['MODX_', 'EVO_'])) {
                 $data[] = [
                     'name' => $key,
-                    'data' => $value,
+                    'value' => $value,
                 ];
             }
         }
 
-        return SystemInfoResource::collection([
-            'data' => [
-                'data' => [
-                    [
-                        'data' => $data,
-                    ],
+        return SystemInfoResource::collection($data)
+            ->additional([
+                'layout' => $layout->default(),
+                'meta' => [
+                    'tab' => $layout->title(),
                 ],
-            ],
-            'layout' => $layout->default(),
-            'meta' => [
-                'tab' => $layout->title(),
-            ],
-        ]);
+            ]);
     }
 
     /**

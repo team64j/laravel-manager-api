@@ -35,7 +35,10 @@ class ConfigurationController extends Controller
      */
     public function index(ConfigurationRequest $request, ConfigurationLayout $layout): ConfigurationResource
     {
-        return (new ConfigurationResource(SystemSetting::all()->pluck('setting_value', 'setting_name')))
+        return ConfigurationResource::make(
+            SystemSetting::all()
+                ->pluck('setting_value', 'setting_name')
+        )
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
@@ -86,8 +89,11 @@ class ConfigurationController extends Controller
         Artisan::call('optimize:clear');
         Artisan::call('config:cache');
 
-        return new ConfigurationResource([
-            'reload' => true,
-        ]);
+        return ConfigurationResource::make([])
+            ->additional([
+                'meta' => [
+                    'reload' => true,
+                ],
+            ]);
     }
 }

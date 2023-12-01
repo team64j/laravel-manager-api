@@ -110,7 +110,7 @@ class CategoryController extends Controller
     {
         $category = Category::query()->create($request->validated());
 
-        return new CategoryResource($category);
+        return CategoryResource::make($category);
     }
 
     /**
@@ -174,7 +174,7 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
 
-        return new CategoryResource($category);
+        return CategoryResource::make($category);
     }
 
     /**
@@ -224,16 +224,12 @@ class CategoryController extends Controller
      */
     public function sort(CategoryRequest $request, CategoryLayout $layout): AnonymousResourceCollection
     {
-        return CategoryResource::collection([
-            'data' => [
-                'data' => Category::query()->orderBy('rank')->get(),
-                'draggable' => true,
-            ],
-        ])
+        return CategoryResource::collection(Category::query()->orderBy('rank')->get())
             ->additional([
                 'layout' => $layout->sort(),
                 'meta' => [
                     'tab' => $layout->titleSort(),
+                    'draggable' => true,
                 ],
             ]);
     }
@@ -335,12 +331,12 @@ class CategoryController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        return CategoryResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'pagination' => $this->pagination($result),
-            ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-        ]);
+        return CategoryResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
+            ]);
     }
 
     /**
@@ -376,24 +372,24 @@ class CategoryController extends Controller
                 'rank',
             ]);
 
-        return CategoryResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'name' => 'Category',
-                'pagination' => $this->pagination($result),
-                'prepend' => [
-                    [
-                        'name' => Lang::get('global.new_category'),
-                        'icon' => 'fa fa-plus-circle',
-                        'to' => [
-                            'name' => 'Category',
-                            'params' => [
-                                'id' => 'new',
+        return CategoryResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'name' => 'Category',
+                    'pagination' => $this->pagination($result),
+                    'prepend' => [
+                        [
+                            'name' => Lang::get('global.new_category'),
+                            'icon' => 'fa fa-plus-circle',
+                            'to' => [
+                                'name' => 'Category',
+                                'params' => [
+                                    'id' => 'new',
+                                ],
                             ],
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 }

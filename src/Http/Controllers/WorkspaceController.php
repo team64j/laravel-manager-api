@@ -138,8 +138,11 @@ class WorkspaceController extends Controller
         Artisan::call('optimize:clear');
         Artisan::call('config:cache');
 
-        return WorkspaceResource::make([
-            'reload' => true,
-        ]);
+        return WorkspaceResource::make([])
+            ->additional([
+                'meta' => [
+                    'reload' => true,
+                ],
+            ]);
     }
 }

@@ -133,13 +133,13 @@ class DocumentController extends Controller
             ->paginate($limit, $fields)
             ->appends($request->all());
 
-        return DocumentResource::collection([
-            'data' => $result->items(),
-            'meta' => [
-                'columns' => $columns,
-                'pagination' => $this->pagination($result),
-            ],
-        ]);
+        return DocumentResource::collection($result->items())
+            ->additional([
+                'meta' => [
+                    'columns' => $columns,
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
     }
 
     /**
@@ -543,7 +543,7 @@ class DocumentController extends Controller
         string $dir,
         array $settings,
         array $params,
-        int $page = null)
+        int $page = null): LengthAwarePaginator
     {
         /** @var LengthAwarePaginator $result */
         $result = SiteContent::query()

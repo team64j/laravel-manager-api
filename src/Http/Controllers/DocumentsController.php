@@ -84,20 +84,16 @@ class DocumentsController extends Controller
             'pagetitle',
         ]);
 
-        return DocumentsResource::make([
-            'data' => [
-                'data' => $result->items(),
-                'pagination' => $this->pagination($result),
-                'sorting' => [
-                    'order' => $order,
-                    'dir' => $dir,
-                ],
-            ],
-        ])
+        return DocumentsResource::make($result->items())
             ->additional([
                 'layout' => $layout->default($document),
                 'meta' => [
                     'tab' => $layout->titleDefault($document),
+                    'pagination' => $this->pagination($result),
+                    'sorting' => [
+                        'order' => $order,
+                        'dir' => $dir,
+                    ],
                 ],
             ]);
     }

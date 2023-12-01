@@ -13,9 +13,12 @@ use Team64j\LaravelEvolution\Models\EventLog;
 use Team64j\LaravelManagerApi\Http\Requests\EventLogRequest;
 use Team64j\LaravelManagerApi\Http\Resources\EventLogResource;
 use Team64j\LaravelManagerApi\Layouts\EventLogLayout;
+use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class EventLogController extends Controller
 {
+    use PaginationTrait;
+
     /**
      * @OA\Get(
      *     path="/event-log",
@@ -72,7 +75,7 @@ class EventLogController extends Controller
             ->when($filterEventId, fn($query) => $query->where('eventid', $filterEventId))
             ->when($filterDatetime->count() == 2, fn($query) => $query->whereBetween('createdon', $filterDatetime))
             ->orderByDesc('id')
-            ->simplePaginate(Config::get('global.number_of_results'))
+            ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
         $datetime = EventLog::query()
@@ -150,18 +153,13 @@ class EventLogController extends Controller
             ],
         ];
 
-        return EventLogResource::collection(
-            [
-                'data' => [
-                    'data' => $result->items(),
-                    'filters' => $filters,
-                ],
-            ],
-        )
+        return EventLogResource::collection($result->items())
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->tabList(),
+                    'pagination' => $this->pagination($result),
+                    'filters' => $filters,
                 ],
             ]);
     }

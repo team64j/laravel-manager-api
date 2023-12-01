@@ -183,21 +183,18 @@ class SystemLogController extends Controller
             ],
         ];
 
-        return SystemLogResource::collection([
-            'data' => [
-                'data' => $result->items(),
-                'sorting' => [
-                    'order' => $order,
-                    'dir' => $dir,
+        return SystemLogResource::collection($result->items())
+            ->additional([
+                'layout' => $layout->list(),
+                'meta' => [
+                    'tab' => $layout->title(),
+                    'sorting' => [
+                        'order' => $order,
+                        'dir' => $dir,
+                    ],
+                    'filters' => $filters,
+                    'pagination' => $this->pagination($result),
                 ],
-                'filters' => $filters,
-                'pagination' => $this->pagination($result),
-            ],
-        ])->additional([
-            'layout' => $layout->list(),
-            'meta' => [
-                'tab' => $layout->title(),
-            ]
-        ]);
+            ]);
     }
 }

@@ -73,16 +73,14 @@ class RolePermissionController extends Controller
             $data[$item->group_id]['data']->add($item->withoutRelations());
         }
 
-        return RolePermissionResource::collection([
-            'data' => [
-                'data' => $data->values(),
-                'pagination' => $this->pagination($result),
-            ],
-            'layout' => $layout->list(),
-            'meta' => [
-                'tab' => $layout->titleList(),
-            ],
-        ]);
+        return RolePermissionResource::collection($data->values())
+            ->additional([
+                'layout' => $layout->list(),
+                'meta' => [
+                    'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                ],
+            ]);
     }
 
     /**
@@ -119,12 +117,12 @@ class RolePermissionController extends Controller
             ]);
         }
 
-        return RoleCategoryResource::make([
-            'data' => [],
-            'layout' => $layout->default($rolePermission),
-            'meta' => [
-                'tab' => $layout->titleDefault($rolePermission),
-            ],
-        ]);
+        return RoleCategoryResource::make([])
+            ->additional([
+                'layout' => $layout->default($rolePermission),
+                'meta' => [
+                    'tab' => $layout->titleDefault($rolePermission),
+                ],
+            ]);
     }
 }

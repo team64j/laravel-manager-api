@@ -335,126 +335,122 @@ class ConfigurationLayout extends Layout
                 ->setId('tab2')
                 ->setClass('grow')
                 ->setColumns($this->columns())
-                ->setData(
+                ->setData([
                     [
-                        'data' => [
-                            [
-                                'name' => Lang::get('global.friendlyurls_title'),
-                                'name.help' => Lang::get('global.friendlyurls_message'),
-                                'key' => 'friendly_urls',
-                                'value' => Select::make('friendly_urls')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.xhtml_urls_title'),
-                                'name.help' => Lang::get('global.xhtml_urls_message'),
-                                'key' => 'xhtml_urls',
-                                'value' => Select::make('xhtml_urls')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.friendlyurlsprefix_title'),
-                                'name.help' => Lang::get('global.friendlyurlsprefix_message'),
-                                'key' => 'friendly_url_prefix',
-                                'value' => Input::make('friendly_url_prefix'),
-                            ],
-                            [
-                                'name' => Lang::get('global.friendlyurlsuffix_title'),
-                                'name.help' => Lang::get('global.friendlyurlsuffix_message'),
-                                'key' => 'friendly_url_suffix',
-                                'value' => Input::make('friendly_url_suffix'),
-                            ],
-                            [
-                                'name' => Lang::get('global.make_folders_title'),
-                                'name.help' => Lang::get('global.make_folders_message'),
-                                'key' => 'make_folders',
-                                'value' => Select::make('make_folders')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.seostrict_title'),
-                                'name.help' => Lang::get('global.seostrict_message'),
-                                'key' => 'seostrict',
-                                'value' => Select::make('seostrict')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.friendly_alias_title'),
-                                'name.help' => Lang::get('global.friendlyurls_message'),
-                                'key' => 'friendly_alias_urls',
-                                'value' => Select::make('friendly_alias_urls')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.use_alias_path_title'),
-                                'name.help' => Lang::get('global.use_alias_path_message'),
-                                'key' => 'use_alias_path',
-                                'value' => Select::make('use_alias_path')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.alias_listing_title'),
-                                'name.help' => Lang::get('global.alias_listing_message'),
-                                'key' => 'alias_listing',
-                                'value' => Select::make('alias_listing')
-                                    ->setData(
-                                        [
-                                            [
-                                                'key' => 1,
-                                                'value' => Lang::get('global.alias_listing_enabled'),
-                                            ],
-                                            [
-                                                'key' => 2,
-                                                'value' => Lang::get('global.alias_listing_folders'),
-                                            ],
-                                            [
-                                                'key' => 0,
-                                                'value' => Lang::get('global.alias_listing_disabled'),
-                                            ],
-                                        ]
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.duplicate_alias_title'),
-                                'name.help' => Lang::get('global.duplicate_alias_message'),
-                                'key' => 'allow_duplicate_alias',
-                                'value' => Select::make('allow_duplicate_alias')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                            [
-                                'name' => Lang::get('global.automatic_alias_title'),
-                                'name.help' => Lang::get('global.automatic_alias_message'),
-                                'key' => 'automatic_alias',
-                                'value' => Select::make('automatic_alias')
-                                    ->addYesNo(
-                                        Lang::get('global.yes'),
-                                        Lang::get('global.no')
-                                    ),
-                            ],
-                        ],
-                    ]
-                ),
+                        'name' => Lang::get('global.friendlyurls_title'),
+                        'name.help' => Lang::get('global.friendlyurls_message'),
+                        'key' => 'friendly_urls',
+                        'value' => Select::make('friendly_urls')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.xhtml_urls_title'),
+                        'name.help' => Lang::get('global.xhtml_urls_message'),
+                        'key' => 'xhtml_urls',
+                        'value' => Select::make('xhtml_urls')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.friendlyurlsprefix_title'),
+                        'name.help' => Lang::get('global.friendlyurlsprefix_message'),
+                        'key' => 'friendly_url_prefix',
+                        'value' => Input::make('friendly_url_prefix'),
+                    ],
+                    [
+                        'name' => Lang::get('global.friendlyurlsuffix_title'),
+                        'name.help' => Lang::get('global.friendlyurlsuffix_message'),
+                        'key' => 'friendly_url_suffix',
+                        'value' => Input::make('friendly_url_suffix'),
+                    ],
+                    [
+                        'name' => Lang::get('global.make_folders_title'),
+                        'name.help' => Lang::get('global.make_folders_message'),
+                        'key' => 'make_folders',
+                        'value' => Select::make('make_folders')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.seostrict_title'),
+                        'name.help' => Lang::get('global.seostrict_message'),
+                        'key' => 'seostrict',
+                        'value' => Select::make('seostrict')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.friendly_alias_title'),
+                        'name.help' => Lang::get('global.friendlyurls_message'),
+                        'key' => 'friendly_alias_urls',
+                        'value' => Select::make('friendly_alias_urls')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.use_alias_path_title'),
+                        'name.help' => Lang::get('global.use_alias_path_message'),
+                        'key' => 'use_alias_path',
+                        'value' => Select::make('use_alias_path')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.alias_listing_title'),
+                        'name.help' => Lang::get('global.alias_listing_message'),
+                        'key' => 'alias_listing',
+                        'value' => Select::make('alias_listing')
+                            ->setData(
+                                [
+                                    [
+                                        'key' => 1,
+                                        'value' => Lang::get('global.alias_listing_enabled'),
+                                    ],
+                                    [
+                                        'key' => 2,
+                                        'value' => Lang::get('global.alias_listing_folders'),
+                                    ],
+                                    [
+                                        'key' => 0,
+                                        'value' => Lang::get('global.alias_listing_disabled'),
+                                    ],
+                                ]
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.duplicate_alias_title'),
+                        'name.help' => Lang::get('global.duplicate_alias_message'),
+                        'key' => 'allow_duplicate_alias',
+                        'value' => Select::make('allow_duplicate_alias')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.automatic_alias_title'),
+                        'name.help' => Lang::get('global.automatic_alias_message'),
+                        'key' => 'automatic_alias',
+                        'value' => Select::make('automatic_alias')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                ]),
         ];
     }
 
@@ -471,316 +467,314 @@ class ConfigurationLayout extends Layout
                 ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([
-                    'data' => [
-                        [
-                            'name' => Lang::get('global.language_title'),
-                            'name.help' => Lang::get('global.language_message'),
-                            'key' => 'manager_language',
-                            'value' => Select::make('manager_language')
-                                ->setData(
-                                    array_map(fn($dir) => [
-                                        'key' => basename($dir),
-                                        'value' => Str::upper(basename($dir)),
-                                    ], File::directories(App::langPath()))
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.charset_title'),
-                            'name.help' => Lang::get('global.charset_message'),
-                            'key' => 'modx_charset',
-                            'value' => Select::make('modx_charset')
-                                ->setData([
-                                    [
-                                        'key' => 'UTF-8',
-                                        'value' => 'Unicode (UTF-8) - utf-8',
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.manager_theme'),
-                            'name.help' => Lang::get('global.manager_theme'),
-                            'key' => 'manager_theme',
-                            'value' => Select::make('manager_theme')
-                                ->setData([
-                                    [
-                                        'key' => 'default',
-                                        'value' => 'Default',
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.manager_theme_mode'),
-                            'name.help' => Lang::get('global.manager_theme_mode_message'),
-                            'key' => 'manager_theme_mode',
-                            'value' => Select::make('manager_theme_mode')
-                                ->setData([
-                                    [
-                                        'key' => 1,
-                                        'value' => Lang::get('global.manager_theme_mode1'),
-                                    ],
-                                    [
-                                        'key' => 2,
-                                        'value' => Lang::get('global.manager_theme_mode2'),
-                                    ],
-                                    [
-                                        'key' => 3,
-                                        'value' => Lang::get('global.manager_theme_mode3'),
-                                    ],
-                                    [
-                                        'key' => 4,
-                                        'value' => Lang::get('global.manager_theme_mode4'),
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.login_logo_title'),
-                            'name.help' => Lang::get('global.login_logo_message'),
-                            'key' => 'login_logo',
-                            'value' => \Team64j\LaravelManagerApi\Components\File::make('login_logo'),
-                        ],
-                        [
-                            'name' => Lang::get('global.login_bg_title'),
-                            'name.help' => Lang::get('global.login_bg_message'),
-                            'key' => 'login_bg',
-                            'value' => \Team64j\LaravelManagerApi\Components\File::make('login_bg'),
-                        ],
-                        [
-                            'name' => Lang::get('global.login_form_position_title'),
-                            'key' => 'login_form_position',
-                            'value' => Select::make('login_form_position')
-                                ->setData([
-                                    [
-                                        'key' => 'left',
-                                        'value' => Lang::get('global.login_form_position_left'),
-                                    ],
-                                    [
-                                        'key' => 'center',
-                                        'value' => Lang::get('global.login_form_position_center'),
-                                    ],
-                                    [
-                                        'key' => 'right',
-                                        'value' => Lang::get('global.login_form_position_right'),
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.login_form_style'),
-                            'key' => 'login_form_style',
-                            'value' => Select::make('login_form_style')
-                                ->setData([
-                                    [
-                                        'key' => 'dark',
-                                        'value' => Lang::get('global.login_form_style_dark'),
-                                    ],
-                                    [
-                                        'key' => 'light',
-                                        'value' => Lang::get('global.login_form_style_light'),
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.manager_menu_position_title'),
-                            'key' => 'manager_menu_position',
-                            'value' => Select::make('manager_menu_position')
-                                ->setData([
-                                    [
-                                        'key' => 'top',
-                                        'value' => Lang::get('global.manager_menu_position_top'),
-                                    ],
-                                    [
-                                        'key' => 'left',
-                                        'value' => Lang::get('global.manager_menu_position_left'),
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.show_picker'),
-                            'name.help' => Lang::get('global.settings_show_picker_message'),
-                            'key' => 'show_picker',
-                            'value' => Select::make('show_picker')
-                                ->addYesNo(
-                                    Lang::get('global.yes'),
-                                    Lang::get('global.no')
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.warning_visibility'),
-                            'name.help' => Lang::get('global.warning_visibility_message'),
-                            'key' => 'warning_visibility',
-                            'value' => Select::make('warning_visibility')
-                                ->addYesNo(
-                                    Lang::get('global.everybody'),
-                                    Lang::get('global.administrators'),
-                                    0,
-                                    1
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.tree_page_click'),
-                            'name.help' => Lang::get('global.tree_page_click_message'),
-                            'key' => 'tree_page_click',
-                            'value' => Select::make('tree_page_click')
-                                ->addYesNo(
-                                    Lang::get('global.edit'),
-                                    Lang::get('global.resource_overview'),
-                                    27,
-                                    3
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.use_breadcrumbs'),
-                            'name.help' => Lang::get('global.use_breadcrumbs_message'),
-                            'key' => 'use_breadcrumbs',
-                            'value' => Select::make('use_breadcrumbs')
-                                ->addYesNo(
-                                    Lang::get('global.yes'),
-                                    Lang::get('global.no')
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.remember_last_tab'),
-                            'name.help' => Lang::get('global.remember_last_tab_message'),
-                            'key' => 'remember_last_tab',
-                            'value' => Select::make('remember_last_tab')
-                                ->addYesNo(
-                                    Lang::get('global.yes'),
-                                    Lang::get('global.no')
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.use_global_tabs'),
-                            'key' => 'global_tabs',
-                            'value' => Select::make('global_tabs')
-                                ->addYesNo(
-                                    Lang::get('global.yes'),
-                                    Lang::get('global.no')
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.group_tvs'),
-                            'name.help' => Lang::get('global.settings_group_tv_message'),
-                            'key' => 'group_tvs',
-                            'value' => Select::make('group_tvs')
-                                ->setData(
-                                    array_map(fn($key, $value) => [
-                                        'key' => $key,
-                                        'value' => $value,
-                                    ],
-                                        array_keys($settings_group_tv_options),
-                                        $settings_group_tv_options
-                                    )
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.show_newresource_btn'),
-                            'name.help' => Lang::get('global.show_newresource_btn_message'),
-                            'key' => 'show_newresource_btn',
-                            'value' => Select::make('show_newresource_btn')
-                                ->addYesNo(
-                                    Lang::get('global.yes'),
-                                    Lang::get('global.no')
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.show_fullscreen_btn'),
-                            'name.help' => Lang::get('global.show_fullscreen_btn_message'),
-                            'key' => 'show_fullscreen_btn',
-                            'value' => Select::make('show_fullscreen_btn')
-                                ->addYesNo(
-                                    Lang::get('global.yes'),
-                                    Lang::get('global.no')
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.setting_resource_tree_node_name'),
-                            'name.help' => Lang::get('global.setting_resource_tree_node_name_desc'),
-                            'key' => 'resource_tree_node_name',
-                            'value' => Select::make('resource_tree_node_name')
-                                ->setData([
-                                    [
-                                        'key' => 'pagetitle',
-                                        'value' => '[*pagetitle*]',
-                                    ],
-                                    [
-                                        'key' => 'longtitle',
-                                        'value' => '[*longtitle*]',
-                                    ],
-                                    [
-                                        'key' => 'menutitle',
-                                        'value' => '[*menutitle*]',
-                                    ],
-                                    [
-                                        'key' => 'alias',
-                                        'value' => '[*alias*]',
-                                    ],
-                                    [
-                                        'key' => 'createdon',
-                                        'value' => '[*createdon*]',
-                                    ],
-                                    [
-                                        'key' => 'editedon',
-                                        'value' => '[*editedon*]',
-                                    ],
-                                    [
-                                        'key' => 'publishedon',
-                                        'value' => '[*publishedon*]',
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.session_timeout'),
-                            'name.help' => Lang::get('global.session_timeout_msg'),
-                            'key' => 'session_timeout',
-                            'value' => Number::make('session_timeout'),
-                        ],
-                        [
-                            'name' => Lang::get('global.tree_show_protected'),
-                            'name.help' => Lang::get('global.tree_show_protected_message'),
-                            'key' => 'tree_show_protected',
-                            'value' => Select::make('tree_show_protected')
-                                ->addYesNo(
-                                    Lang::get('global.yes'),
-                                    Lang::get('global.no')
-                                ),
-                        ],
-                        [
-                            'name' => Lang::get('global.datepicker_offset'),
-                            'name.help' => Lang::get('global.datepicker_offset_message'),
-                            'key' => 'datepicker_offset',
-                            'value' => Number::make('datepicker_offset'),
-                        ],
-                        [
-                            'name' => Lang::get('global.datetime_format'),
-                            'name.help' => Lang::get('global.datetime_format_message'),
-                            'key' => 'datetime_format',
-                            'value' => Select::make('datetime_format')
-                                ->setData([
-                                    [
-                                        'key' => 'dd-mm-YYYY',
-                                        'value' => 'dd-mm-YYYY',
-                                    ],
-                                    [
-                                        'key' => 'mm/dd/YYYY',
-                                        'value' => 'mm/dd/YYYY',
-                                    ],
-                                    [
-                                        'key' => 'YYYY/mm/dd',
-                                        'value' => 'YYYY/mm/dd',
-                                    ],
-                                ]),
-                        ],
-                        [
-                            'name' => Lang::get('global.nologentries_title'),
-                            'name.help' => Lang::get('global.nologentries_message'),
-                            'key' => 'number_of_logs',
-                            'value' => Number::make('number_of_logs'),
-                        ],
-                        [
-                            'name' => Lang::get('global.noresults_title'),
-                            'name.help' => Lang::get('global.noresults_message'),
-                            'key' => 'number_of_results',
-                            'value' => Number::make('number_of_results'),
-                        ],
+                    [
+                        'name' => Lang::get('global.language_title'),
+                        'name.help' => Lang::get('global.language_message'),
+                        'key' => 'manager_language',
+                        'value' => Select::make('manager_language')
+                            ->setData(
+                                array_map(fn($dir) => [
+                                    'key' => basename($dir),
+                                    'value' => Str::upper(basename($dir)),
+                                ], File::directories(App::langPath()))
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.charset_title'),
+                        'name.help' => Lang::get('global.charset_message'),
+                        'key' => 'modx_charset',
+                        'value' => Select::make('modx_charset')
+                            ->setData([
+                                [
+                                    'key' => 'UTF-8',
+                                    'value' => 'Unicode (UTF-8) - utf-8',
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.manager_theme'),
+                        'name.help' => Lang::get('global.manager_theme'),
+                        'key' => 'manager_theme',
+                        'value' => Select::make('manager_theme')
+                            ->setData([
+                                [
+                                    'key' => 'default',
+                                    'value' => 'Default',
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.manager_theme_mode'),
+                        'name.help' => Lang::get('global.manager_theme_mode_message'),
+                        'key' => 'manager_theme_mode',
+                        'value' => Select::make('manager_theme_mode')
+                            ->setData([
+                                [
+                                    'key' => 1,
+                                    'value' => Lang::get('global.manager_theme_mode1'),
+                                ],
+                                [
+                                    'key' => 2,
+                                    'value' => Lang::get('global.manager_theme_mode2'),
+                                ],
+                                [
+                                    'key' => 3,
+                                    'value' => Lang::get('global.manager_theme_mode3'),
+                                ],
+                                [
+                                    'key' => 4,
+                                    'value' => Lang::get('global.manager_theme_mode4'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.login_logo_title'),
+                        'name.help' => Lang::get('global.login_logo_message'),
+                        'key' => 'login_logo',
+                        'value' => \Team64j\LaravelManagerApi\Components\File::make('login_logo'),
+                    ],
+                    [
+                        'name' => Lang::get('global.login_bg_title'),
+                        'name.help' => Lang::get('global.login_bg_message'),
+                        'key' => 'login_bg',
+                        'value' => \Team64j\LaravelManagerApi\Components\File::make('login_bg'),
+                    ],
+                    [
+                        'name' => Lang::get('global.login_form_position_title'),
+                        'key' => 'login_form_position',
+                        'value' => Select::make('login_form_position')
+                            ->setData([
+                                [
+                                    'key' => 'left',
+                                    'value' => Lang::get('global.login_form_position_left'),
+                                ],
+                                [
+                                    'key' => 'center',
+                                    'value' => Lang::get('global.login_form_position_center'),
+                                ],
+                                [
+                                    'key' => 'right',
+                                    'value' => Lang::get('global.login_form_position_right'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.login_form_style'),
+                        'key' => 'login_form_style',
+                        'value' => Select::make('login_form_style')
+                            ->setData([
+                                [
+                                    'key' => 'dark',
+                                    'value' => Lang::get('global.login_form_style_dark'),
+                                ],
+                                [
+                                    'key' => 'light',
+                                    'value' => Lang::get('global.login_form_style_light'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.manager_menu_position_title'),
+                        'key' => 'manager_menu_position',
+                        'value' => Select::make('manager_menu_position')
+                            ->setData([
+                                [
+                                    'key' => 'top',
+                                    'value' => Lang::get('global.manager_menu_position_top'),
+                                ],
+                                [
+                                    'key' => 'left',
+                                    'value' => Lang::get('global.manager_menu_position_left'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.show_picker'),
+                        'name.help' => Lang::get('global.settings_show_picker_message'),
+                        'key' => 'show_picker',
+                        'value' => Select::make('show_picker')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.warning_visibility'),
+                        'name.help' => Lang::get('global.warning_visibility_message'),
+                        'key' => 'warning_visibility',
+                        'value' => Select::make('warning_visibility')
+                            ->addYesNo(
+                                Lang::get('global.everybody'),
+                                Lang::get('global.administrators'),
+                                0,
+                                1
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.tree_page_click'),
+                        'name.help' => Lang::get('global.tree_page_click_message'),
+                        'key' => 'tree_page_click',
+                        'value' => Select::make('tree_page_click')
+                            ->addYesNo(
+                                Lang::get('global.edit'),
+                                Lang::get('global.resource_overview'),
+                                27,
+                                3
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.use_breadcrumbs'),
+                        'name.help' => Lang::get('global.use_breadcrumbs_message'),
+                        'key' => 'use_breadcrumbs',
+                        'value' => Select::make('use_breadcrumbs')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.remember_last_tab'),
+                        'name.help' => Lang::get('global.remember_last_tab_message'),
+                        'key' => 'remember_last_tab',
+                        'value' => Select::make('remember_last_tab')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.use_global_tabs'),
+                        'key' => 'global_tabs',
+                        'value' => Select::make('global_tabs')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.group_tvs'),
+                        'name.help' => Lang::get('global.settings_group_tv_message'),
+                        'key' => 'group_tvs',
+                        'value' => Select::make('group_tvs')
+                            ->setData(
+                                array_map(fn($key, $value) => [
+                                    'key' => $key,
+                                    'value' => $value,
+                                ],
+                                    array_keys($settings_group_tv_options),
+                                    $settings_group_tv_options
+                                )
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.show_newresource_btn'),
+                        'name.help' => Lang::get('global.show_newresource_btn_message'),
+                        'key' => 'show_newresource_btn',
+                        'value' => Select::make('show_newresource_btn')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.show_fullscreen_btn'),
+                        'name.help' => Lang::get('global.show_fullscreen_btn_message'),
+                        'key' => 'show_fullscreen_btn',
+                        'value' => Select::make('show_fullscreen_btn')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.setting_resource_tree_node_name'),
+                        'name.help' => Lang::get('global.setting_resource_tree_node_name_desc'),
+                        'key' => 'resource_tree_node_name',
+                        'value' => Select::make('resource_tree_node_name')
+                            ->setData([
+                                [
+                                    'key' => 'pagetitle',
+                                    'value' => '[*pagetitle*]',
+                                ],
+                                [
+                                    'key' => 'longtitle',
+                                    'value' => '[*longtitle*]',
+                                ],
+                                [
+                                    'key' => 'menutitle',
+                                    'value' => '[*menutitle*]',
+                                ],
+                                [
+                                    'key' => 'alias',
+                                    'value' => '[*alias*]',
+                                ],
+                                [
+                                    'key' => 'createdon',
+                                    'value' => '[*createdon*]',
+                                ],
+                                [
+                                    'key' => 'editedon',
+                                    'value' => '[*editedon*]',
+                                ],
+                                [
+                                    'key' => 'publishedon',
+                                    'value' => '[*publishedon*]',
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.session_timeout'),
+                        'name.help' => Lang::get('global.session_timeout_msg'),
+                        'key' => 'session_timeout',
+                        'value' => Number::make('session_timeout'),
+                    ],
+                    [
+                        'name' => Lang::get('global.tree_show_protected'),
+                        'name.help' => Lang::get('global.tree_show_protected_message'),
+                        'key' => 'tree_show_protected',
+                        'value' => Select::make('tree_show_protected')
+                            ->addYesNo(
+                                Lang::get('global.yes'),
+                                Lang::get('global.no')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.datepicker_offset'),
+                        'name.help' => Lang::get('global.datepicker_offset_message'),
+                        'key' => 'datepicker_offset',
+                        'value' => Number::make('datepicker_offset'),
+                    ],
+                    [
+                        'name' => Lang::get('global.datetime_format'),
+                        'name.help' => Lang::get('global.datetime_format_message'),
+                        'key' => 'datetime_format',
+                        'value' => Select::make('datetime_format')
+                            ->setData([
+                                [
+                                    'key' => 'dd-mm-YYYY',
+                                    'value' => 'dd-mm-YYYY',
+                                ],
+                                [
+                                    'key' => 'mm/dd/YYYY',
+                                    'value' => 'mm/dd/YYYY',
+                                ],
+                                [
+                                    'key' => 'YYYY/mm/dd',
+                                    'value' => 'YYYY/mm/dd',
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.nologentries_title'),
+                        'name.help' => Lang::get('global.nologentries_message'),
+                        'key' => 'number_of_logs',
+                        'value' => Number::make('number_of_logs'),
+                    ],
+                    [
+                        'name' => Lang::get('global.noresults_title'),
+                        'name.help' => Lang::get('global.noresults_message'),
+                        'key' => 'number_of_results',
+                        'value' => Number::make('number_of_results'),
                     ],
                 ]),
         ];

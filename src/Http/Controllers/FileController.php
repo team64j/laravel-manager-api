@@ -290,19 +290,19 @@ class FileController extends Controller
             $next = null;
         }
 
-        return FileResource::collection([
-            'data' => $data,
-            'meta' => [
-                'category' => true,
-                'pagination' => [
-                    'next' => $next,
-                    'lang' => [
-                        'prev' => Lang::get('global.paging_prev'),
-                        'next' => Lang::get('global.paging_next'),
+        return FileResource::collection($data)
+            ->additional([
+                'meta' => [
+                    'category' => true,
+                    'pagination' => [
+                        'next' => $next,
+                        'lang' => [
+                            'prev' => Lang::get('global.paging_prev'),
+                            'next' => Lang::get('global.paging_next'),
+                        ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**

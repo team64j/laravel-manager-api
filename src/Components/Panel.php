@@ -72,7 +72,7 @@ class Panel extends Component
      */
     public function setData(array $value = null): static
     {
-        $this->attributes['attrs']['data'] = array_key_exists('data', $value) ? $value : ['data' => $value];
+        $this->attributes['attrs']['data'] = array_key_exists('data', $value) ? $value['data'] : $value;
 
         return $this;
     }
