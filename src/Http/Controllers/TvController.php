@@ -97,6 +97,8 @@ class TvController extends Controller
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.tmplvars'),
+                    'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'filters' => [
                         'name',

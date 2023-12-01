@@ -116,6 +116,8 @@ class TemplateController extends Controller
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.templates'),
+                    'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'filters' => [
                         'templatename',

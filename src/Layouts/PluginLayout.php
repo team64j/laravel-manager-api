@@ -191,8 +191,16 @@ class PluginLayout extends Layout
     {
         return [
             'title' => Lang::get('global.plugins'),
-            'icon' => 'fa fa-plug',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-plug';
     }
 
     /**

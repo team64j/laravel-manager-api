@@ -99,6 +99,8 @@ class ModuleController extends Controller
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.modules'),
+                    'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'filters' => [
                         'name',

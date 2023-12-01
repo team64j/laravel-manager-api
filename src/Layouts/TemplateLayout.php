@@ -315,8 +315,16 @@ class TemplateLayout extends Layout
     {
         return [
             'title' => Lang::get('global.templates'),
-            'icon' => 'fa fa-newspaper',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-newspaper';
     }
 
     /**

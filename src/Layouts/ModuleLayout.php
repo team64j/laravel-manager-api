@@ -190,8 +190,16 @@ class ModuleLayout extends Layout
     {
         return [
             'title' => Lang::get('global.modules'),
-            'icon' => 'fa fa-cubes',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-cubes';
     }
 
     /**

@@ -73,6 +73,8 @@ class CategoryController extends Controller
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.category_management'),
+                    'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'filters' => [
                         'category',

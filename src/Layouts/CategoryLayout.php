@@ -153,8 +153,16 @@ class CategoryLayout extends Layout
     {
         return [
             'title' => Lang::get('global.category_management'),
-            'icon' => 'fa fa-object-group',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-object-group';
     }
 
     /**

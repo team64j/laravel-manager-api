@@ -253,8 +253,16 @@ class TvLayout extends Layout
     {
         return [
             'title' => Lang::get('global.tmplvars'),
-            'icon' => 'fa fa-list-alt',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-list-alt';
     }
 
     /**

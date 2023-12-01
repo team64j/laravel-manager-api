@@ -187,8 +187,16 @@ class SnippetLayout extends Layout
     {
         return [
             'title' => Lang::get('global.snippets'),
-            'icon' => 'fa fa-code',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-code';
     }
 
     /**

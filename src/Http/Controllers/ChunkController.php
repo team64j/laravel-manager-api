@@ -97,6 +97,8 @@ class ChunkController extends Controller
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.htmlsnippets'),
+                    'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'filters' => [
                         'name',

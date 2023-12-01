@@ -187,8 +187,16 @@ class ChunkLayout extends Layout
     {
         return [
             'title' => Lang::get('global.htmlsnippets'),
-            'icon' => 'fa fa-th-large',
+            'icon' => $this->getIcon(),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'fa fa-th-large';
     }
 
     /**
