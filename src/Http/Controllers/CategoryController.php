@@ -68,19 +68,15 @@ class CategoryController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        return CategoryResource::collection([
-            'data' => [
-                'data' => $result->items(),
-                'pagination' => $this->pagination($result),
-                'filters' => [
-                    'category',
-                ],
-            ],
-        ])
+        return CategoryResource::collection($result->items())
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                    'filters' => [
+                        'category',
+                    ],
                 ],
             ]);
     }

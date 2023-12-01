@@ -94,19 +94,15 @@ class ModuleController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return ModuleResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'filters' => [
-                    'name',
-                ],
-            ],
-        ])
+        return ModuleResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                    'filters' => [
+                        'name',
+                    ],
                 ],
             ]);
     }

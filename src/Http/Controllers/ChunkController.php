@@ -92,19 +92,15 @@ class ChunkController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return ChunkResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'filters' => [
-                    'name',
-                ],
-            ],
-        ])
+        return ChunkResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                    'filters' => [
+                        'name',
+                    ],
                 ],
             ]);
     }

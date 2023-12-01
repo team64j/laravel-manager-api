@@ -92,19 +92,15 @@ class TvController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return TvResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'filters' => [
-                    'name',
-                ],
-            ],
-        ])
+        return TvResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                    'filters' => [
+                        'name',
+                    ],
                 ],
             ]);
     }

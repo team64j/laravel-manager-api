@@ -111,19 +111,15 @@ class TemplateController extends Controller
             $data = $result->map($callbackItem);
         }
 
-        return TemplateResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'filters' => [
-                    'templatename',
-                ],
-            ],
-        ])
+        return TemplateResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                    'filters' => [
+                        'templatename',
+                    ],
                 ],
             ]);
     }

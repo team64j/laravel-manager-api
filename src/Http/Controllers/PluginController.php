@@ -94,19 +94,15 @@ class PluginController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return PluginResource::collection([
-            'data' => [
-                'data' => $data,
-                'pagination' => $this->pagination($result),
-                'filters' => [
-                    'name',
-                ],
-            ],
-        ])
+        return PluginResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'tab' => $layout->titleList(),
+                    'pagination' => $this->pagination($result),
+                    'filters' => [
+                        'name',
+                    ],
                 ],
             ]);
     }
