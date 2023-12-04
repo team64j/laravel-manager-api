@@ -492,27 +492,30 @@ class DocumentController extends Controller
         }
 
         if (!is_null($filter)) {
-            return DocumentResource::collection(
-                SiteContent::query()
-                    ->select($fields)
-                    ->with('documentGroups')
-                    ->where('pagetitle', 'like', '%' . $filter . '%')
-                    ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
-                    ->orderBy($order, $dir)
-                    ->get()
-                    ->map(function (SiteContent $item) use ($fields, $settings) {
-                        $title =
-                            in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
-                                : '';
+            $result = SiteContent::query()
+                ->select($fields)
+                ->with('documentGroups')
+                ->where('pagetitle', 'like', '%' . $filter . '%')
+                ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
+                ->orderBy($order, $dir)
+                ->get()
+                ->map(function (SiteContent $item) use ($fields, $settings) {
+                    $title =
+                        in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
+                            : '';
 
-                        if ((string) $title == '') {
-                            $title = $item->getAttribute('pagetitle');
-                        }
+                    if ((string) $title == '') {
+                        $title = $item->getAttribute('pagetitle');
+                    }
 
-                        return $item->setAttribute('title', $title)
-                            ->setAttribute('private', $item->documentGroups->isNotEmpty());
-                    })
-            );
+                    return $item->setAttribute('title', $title)
+                        ->setAttribute('private', $item->documentGroups->isNotEmpty());
+                });
+
+            return DocumentResource::collection($result)
+                ->additional([
+                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+                ]);
         }
 
         $result = $this->treeChildren($fields, (int) $parent, $order, $dir, $settings, $request->all());

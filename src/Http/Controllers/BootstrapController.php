@@ -297,8 +297,8 @@ class BootstrapController extends Controller
         $assets[] = [
             'rel' => 'manifest',
             'source' => str_replace(
-                ['"' . $publicFolder, '"' . \url('/'), '/..'],
-                ['"', '"', \url('/')],
+                ['"' . $publicFolder, '"' . url('/'), '/..'],
+                ['"', '"', url('/')],
                 Vite::useBuildDirectory('../' . $packageFolder . '/dist')
                     ->withEntryPoints([
                         'resources/css/styles.css',
@@ -568,7 +568,7 @@ class BootstrapController extends Controller
                                     ],
                                 ],
                             ],
-                            'href' => \url('/'),
+                            'href' => url('/'),
                             'target' => '_blank',
                         ],
                         [
