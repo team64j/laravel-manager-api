@@ -271,14 +271,15 @@ class TvLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make(['cancel', 'save'])
+            ActionsButtons::make()
                 ->setCancelTo([
                     'name' => 'Elements',
                     'params' => [
                         'element' => 'tvs',
                     ],
                     'close' => true,
-                ]),
+                ])
+                ->setSave(),
 
             Title::make()
                 ->setTitle(Lang::get('global.template_tv_edit_title'))

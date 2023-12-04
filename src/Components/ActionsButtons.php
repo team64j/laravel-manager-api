@@ -53,30 +53,30 @@ class ActionsButtons extends Component
 {
     /**
      * @param array $data
-     * @param array $lang
-     * @param array $to
-     * @param array $classes
-     * @param array $icon
      */
-    public function __construct(
-        array $data = [],
-        array $lang = [],
-        array $to = [],
-        array $classes = [],
-        array $icon = [])
+    public function __construct(array $data = [])
     {
         $attributes = [
             'component' => 'EvoLayoutActionsButtons',
-            'attrs' => [
-                'data' => $data,
-                'classes' => $classes,
-                'icon' => $icon,
-                'lang' => $lang,
-                'to' => $to,
-            ],
         ];
 
+        foreach ($data as $item) {
+            if (is_string($item)) {
+                $this->setAction($item);
+            }
+        }
+
         parent::__construct($attributes);
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $this->attributes['attrs']['data'] = array_values($this->attributes['attrs']['data']);
+
+        return parent::toArray();
     }
 
     /**
@@ -138,11 +138,13 @@ class ActionsButtons extends Component
      */
     public function setAction($action, $lang = null, $to = null, $class = null, $icon = null): static
     {
-        if (in_array($action, $this->attributes['attrs']['data'])) {
+        if (isset($this->attributes['attrs']['data'][$action])) {
             return $this;
         }
 
-        $this->attributes['attrs']['data'][] = $action;
+        $this->attributes['attrs']['data'][$action] = [
+            'action' => $action,
+        ];
 
         return $this->setActionTo($action, $to)
             ->setActionTitle($action, $lang)
@@ -160,12 +162,8 @@ class ActionsButtons extends Component
     {
         $this->setAction($action);
 
-        if (!isset($this->attributes['attrs']['lang'])) {
-            $this->attributes['attrs']['lang'] = [];
-        }
-
-        if (!isset($this->attributes['attrs']['lang'][$action])) {
-            $this->attributes['attrs']['lang'][$action] = match ($action) {
+        if (!isset($this->attributes['attrs']['data'][$action]['title'])) {
+            $this->attributes['attrs']['data'][$action]['title'] = match ($action) {
                 'cancel' => $lang ?? Lang::get('global.cancel'),
                 'delete' => $lang ?? Lang::get('global.delete'),
                 'clear' => $lang ?? Lang::get('global.clear'),
@@ -191,20 +189,16 @@ class ActionsButtons extends Component
     {
         $this->setAction($action);
 
-        if (!isset($this->attributes['attrs']['to'])) {
-            $this->attributes['attrs']['to'] = [];
-        }
-
-        if (!is_null($to) && !isset($this->attributes['attrs']['to'][$action])) {
+        if (!is_null($to) && !isset($this->attributes['attrs']['data'][$action]['to'])) {
             if (is_array($to)) {
-                $this->attributes['attrs']['to'][$action] = $to;
+                $this->attributes['attrs']['data'][$action]['to'] = $to;
             } else {
-                $this->attributes['attrs']['to'][$action] = [
+                $this->attributes['attrs']['data'][$action]['to'] = [
                     'name' => $to,
                 ];
 
                 if ($action == 'new') {
-                    $this->attributes['attrs']['to'][$action]['params']['id'] = 'new';
+                    $this->attributes['attrs']['data'][$action]['to']['params']['id'] = 'new';
                 }
             }
         }
@@ -222,12 +216,8 @@ class ActionsButtons extends Component
     {
         $this->setAction($action);
 
-        if (!isset($this->attributes['attrs']['classes'])) {
-            $this->attributes['attrs']['classes'] = [];
-        }
-
-        if (!is_null($class) && !isset($this->attributes['attrs']['classes'][$action])) {
-            $this->attributes['attrs']['classes'][$action] = $class;
+        if (!is_null($class) && !isset($this->attributes['attrs']['data'][$action]['class'])) {
+            $this->attributes['attrs']['data'][$action]['class'] = $class;
         }
 
         return $this;
@@ -243,12 +233,8 @@ class ActionsButtons extends Component
     {
         $this->setAction($action);
 
-        if (!isset($this->attributes['attrs']['icon'])) {
-            $this->attributes['attrs']['icon'] = [];
-        }
-
-        if (!isset($this->attributes['attrs']['icon'][$action])) {
-            $this->attributes['attrs']['icon'][$action] = match ($action) {
+        if (!isset($this->attributes['attrs']['data'][$action]['icon'])) {
+            $this->attributes['attrs']['data'][$action]['icon'] = match ($action) {
                 'cancel' => $icon ?? 'fa fa-reply',
                 'delete' => $icon ?? 'fa fa-trash-alt',
                 'clear' => $icon ?? 'fa fa-remove',
@@ -266,9 +252,10 @@ class ActionsButtons extends Component
 
     public function setSaveAnd($lang = null, $class = null, $icon = null): static
     {
-        $this->attributes['attrs']['data'][] = [
+        $this->attributes['attrs']['data']['save'] = [
             'action' => 'save',
             'icon' => $icon ?? 'fa fa-save',
+            'title' => $lang ?? Lang::get('global.save'),
             'class' => $class,
             'data' => [
                 [
@@ -288,8 +275,6 @@ class ActionsButtons extends Component
                 ],
             ],
         ];
-
-        $this->attributes['attrs']['lang']['save'] = $lang ?? Lang::get('global.save');
 
         return $this;
     }

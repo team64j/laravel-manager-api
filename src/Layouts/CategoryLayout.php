@@ -171,13 +171,15 @@ class CategoryLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make(['cancel', 'save'])
+            ActionsButtons::make()
                 ->setCancelTo([
                     'name' => 'Elements',
                     'params' => [
                         'element' => 'categories',
                     ],
-                ]),
+                    'close' => true,
+                ])
+                ->setSave(),
 
             Title::make()
                 ->setTitle(Lang::get('global.cm_sort_categories'))

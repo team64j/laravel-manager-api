@@ -209,14 +209,15 @@ class PluginLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make(['cancel', 'save'])
+            ActionsButtons::make()
                 ->setCancelTo([
                     'name' => 'Elements',
                     'params' => [
                         'element' => 'plugins',
                     ],
                     'close' => true,
-                ]),
+                ])
+                ->setSave(),
 
             Title::make()
                 ->setTitle(Lang::get('global.plugin_priority_title'))
