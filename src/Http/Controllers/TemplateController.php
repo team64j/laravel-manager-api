@@ -121,7 +121,7 @@ class TemplateController extends Controller
                     'filters' => [
                         'templatename',
                     ],
-                ],
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 

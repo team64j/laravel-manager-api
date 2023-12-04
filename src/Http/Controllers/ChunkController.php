@@ -102,7 +102,7 @@ class ChunkController extends Controller
                     'filters' => [
                         'name',
                     ],
-                ],
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 
@@ -164,7 +164,7 @@ class ChunkController extends Controller
             ->additional([
                 'layout' => $layout->default($chunk),
                 'meta' => [
-                    'title' => $chunk->name ?: Lang::get('global.new_htmlsnippet'),
+                    'title' => $chunk->name ?? Lang::get('global.new_htmlsnippet'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -281,7 +281,7 @@ class ChunkController extends Controller
                             ],
                         ],
                     ],
-                ],
+                ]
             ]);
     }
 

@@ -78,7 +78,7 @@ class CategoryController extends Controller
                     'filters' => [
                         'category',
                     ],
-                ],
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 

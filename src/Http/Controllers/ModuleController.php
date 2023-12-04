@@ -104,7 +104,7 @@ class ModuleController extends Controller
                     'filters' => [
                         'name',
                     ],
-                ],
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 
