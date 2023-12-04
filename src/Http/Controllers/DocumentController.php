@@ -456,7 +456,7 @@ class DocumentController extends Controller
     {
         $parent = $request->input('parent');
         $filter = $request->input('filter');
-        $settings = $request->collect('settings')->toArray();
+        $settings = json_decode($request->input('settings', '{}'), true);
         $settings['keyTitle'] = $settings['keyTitle'] ?? 'pagetitle';
         $order = $settings['order'] ?? 'id';
         $dir = $settings['dir'] ?? 'asc';
