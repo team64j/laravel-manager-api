@@ -98,7 +98,6 @@ class ModuleController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
                     'title' => Lang::get('global.modules'),
                     'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
@@ -167,7 +166,8 @@ class ModuleController extends Controller
             ->additional([
                 'layout' => $layout->default($module),
                 'meta' => [
-                    'tab' => $layout->titleDefault($module),
+                    'title' => $module->name ?? Lang::get('global.new_module'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -428,42 +428,45 @@ class ModuleController extends Controller
                 ]);
         }
 
-        return CategoryResource::collection(
-            $result->map(function (SiteModule $template) use ($request, $opened, $fields) {
-                /** @var Category $category */
-                $category = $template->getRelation('category') ?? new Category();
-                $category->id = $template->category;
-                $data = [];
+        $result = $result->map(function (SiteModule $template) use ($request, $opened, $fields) {
+            /** @var Category $category */
+            $category = $template->getRelation('category') ?? new Category();
+            $category->id = $template->category;
+            $data = [];
 
-                if (in_array($category->getKey(), $opened, true)) {
-                    $request->query->replace([
-                        'parent' => $category->getKey(),
-                    ]);
+            if (in_array($category->getKey(), $opened, true)) {
+                $request->query->replace([
+                    'parent' => $category->getKey(),
+                ]);
 
-                    /* @var LengthAwarePaginator $result */
-                    $result = $category->modules()
-                        ->select($fields)
-                        ->withoutLocked()
-                        ->orderBy('name')
-                        ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
-                        ->appends($request->all());
+                /* @var LengthAwarePaginator $result */
+                $result = $category->modules()
+                    ->select($fields)
+                    ->withoutLocked()
+                    ->orderBy('name')
+                    ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
+                    ->appends($request->all());
 
-                    if ($result->isNotEmpty()) {
-                        $data = [
-                            'data' => $result->items(),
-                            'pagination' => $this->pagination($result),
-                        ];
-                    }
+                if ($result->isNotEmpty()) {
+                    $data = [
+                        'data' => $result->items(),
+                        'pagination' => $this->pagination($result),
+                    ];
                 }
+            }
 
-                return [
-                        'id' => $category->getKey(),
-                        'name' => $category->category ?? Lang::get('global.no_category'),
-                        'folder' => true,
-                    ] + $data;
-            })
-                ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
-                ->values()
-        );
+            return [
+                    'id' => $category->getKey(),
+                    'name' => $category->category ?? Lang::get('global.no_category'),
+                    'folder' => true,
+                ] + $data;
+        })
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->values();
+
+        return CategoryResource::collection($result)
+            ->additional([
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
     }
 }

@@ -108,7 +108,8 @@ class SystemInfoController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'tab' => $layout->title(),
+                    'title' => Lang::get('global.view_sysinfo'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }

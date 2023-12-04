@@ -31,6 +31,7 @@ class DocumentLayout extends Layout
 {
     /**
      * @param SiteContent|null $model
+     * @param string $url
      *
      * @return array
      */
@@ -314,19 +315,6 @@ class DocumentLayout extends Layout
                     Config::get('global.use_udperms'),
                     fn(Tabs $tabs) => $this->tabPermissions($tabs)
                 ),
-        ];
-    }
-
-    /**
-     * @param SiteContent|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(SiteContent $model = null): array
-    {
-        return [
-            'title' => $model->pagetitle ?: Lang::get('global.new_resource'),
-            'icon' => $this->getIcon(),
         ];
     }
 

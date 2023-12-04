@@ -96,7 +96,6 @@ class TvController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
                     'title' => Lang::get('global.tmplvars'),
                     'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
@@ -184,7 +183,8 @@ class TvController extends Controller
             ->additional([
                 'layout' => $layout->default($tv),
                 'meta' => [
-                    'tab' => $layout->titleDefault($tv),
+                    'title' => $tv->name ?? Lang::get('global.new_tmplvars'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -223,7 +223,8 @@ class TvController extends Controller
         return TvResource::make($data)
             ->additional([
                 'meta' => [
-                    'tab' => $layout->titleDefault($tv),
+                    'title' => $tv->name,
+                    'icon' => $layout->getIcon(),
                 ],
                 'layout' => $layout->default($tv),
             ]);
@@ -346,7 +347,8 @@ class TvController extends Controller
             ->additional([
                 'layout' => $layout->sort(),
                 'meta' => [
-                    'tab' => $layout->titleSort(),
+                    'title' => Lang::get('global.template_tv_edit_title'),
+                    'icon' => $layout->getIconSort(),
                 ],
                 'pagination' => $this->pagination($result),
                 'draggable' => true,
@@ -435,10 +437,10 @@ class TvController extends Controller
                 ->orderBy('name')
                 ->get();
 
-            return TvResource::collection([
-                'data' => $result,
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            return TvResource::collection($result)
+                ->additional([
+                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+                ]);
         }
 
         /** @var LengthAwarePaginator $result */
@@ -451,50 +453,53 @@ class TvController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return TvResource::collection([
-                'data' => $result->items(),
-                'meta' => [
-                    'pagination' => $this->pagination($result),
-                ]
-            ]);
+            return TvResource::collection($result->items())
+                ->additional([
+                    'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ]
+                ]);
         }
 
-        return CategoryResource::collection(
-            $result->map(function (SiteTmplvar $template) use ($request, $opened, $fields) {
-                /** @var Category $category */
-                $category = $template->getRelation('category') ?? new Category();
-                $category->id = $template->category;
-                $data = [];
+        $result = $result->map(function (SiteTmplvar $template) use ($request, $opened, $fields) {
+            /** @var Category $category */
+            $category = $template->getRelation('category') ?? new Category();
+            $category->id = $template->category;
+            $data = [];
 
-                if (in_array($category->getKey(), $opened, true)) {
-                    $request->query->replace([
-                        'parent' => $category->getKey(),
-                    ]);
+            if (in_array($category->getKey(), $opened, true)) {
+                $request->query->replace([
+                    'parent' => $category->getKey(),
+                ]);
 
-                    /** @var LengthAwarePaginator $result */
-                    $result = $category->tvs()
-                        ->select($fields)
-                        ->withoutLocked()
-                        ->orderBy('name')
-                        ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
-                        ->appends($request->all());
+                /** @var LengthAwarePaginator $result */
+                $result = $category->tvs()
+                    ->select($fields)
+                    ->withoutLocked()
+                    ->orderBy('name')
+                    ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
+                    ->appends($request->all());
 
-                    if ($result->isNotEmpty()) {
-                        $data = [
-                            'data' => $result->items(),
-                            'pagination' => $this->pagination($result),
-                        ];
-                    }
+                if ($result->isNotEmpty()) {
+                    $data = [
+                        'data' => $result->items(),
+                        'pagination' => $this->pagination($result),
+                    ];
                 }
+            }
 
-                return [
-                        'id' => $category->getKey(),
-                        'name' => $category->category ?? Lang::get('global.no_category'),
-                        'folder' => true,
-                    ] + $data;
-            })
-                ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
-                ->values()
-        );
+            return [
+                    'id' => $category->getKey(),
+                    'name' => $category->category ?? Lang::get('global.no_category'),
+                    'folder' => true,
+                ] + $data;
+        })
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->values();
+
+        return CategoryResource::collection($result)
+            ->additional([
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
     }
 }

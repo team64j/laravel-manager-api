@@ -73,21 +73,16 @@ class PermissionRelationLayout extends Layout
     {
         return [
             Title::make()
-                ->setTitle($model->name ?: Lang::get('global.manage_permission'))
-                ->setIcon('fa fa-male')
+                ->setTitle($model->name ?? Lang::get('global.manage_permission'))
+                ->setIcon($this->getIcon())
         ];
     }
 
     /**
-     * @param $model
-     *
-     * @return array
+     * @return string
      */
-    public function titleDefault($model = null): array
+    public function getIcon(): string
     {
-        return [
-            'title' => $model->name ?: Lang::get('global.manage_permission'),
-            'icon' => 'fa fa-male',
-        ];
+        return 'fa fa-male';
     }
 }

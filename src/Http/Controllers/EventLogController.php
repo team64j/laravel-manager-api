@@ -157,7 +157,8 @@ class EventLogController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->tabList(),
+                    'title' => Lang::get('global.eventlog_viewer'),
+                    'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'filters' => $filters,
                 ],
@@ -195,7 +196,8 @@ class EventLogController extends Controller
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
-                    'tab' => $layout->title(),
+                    'title' => Lang::get('global.eventlog'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }

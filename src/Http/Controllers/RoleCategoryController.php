@@ -61,7 +61,8 @@ class RoleCategoryController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.role_management_title'),
+                    'icon' => 'fa fa-legal',
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -105,7 +106,9 @@ class RoleCategoryController extends Controller
             ->additional([
                 'layout' => $layout->default($roleCategory),
                 'meta' => [
-                    'tab' => $layout->titleDefault($roleCategory),
+                    'title' => Lang::has('global.' . $roleCategory->lang_key) ? Lang::get('global.' . $roleCategory->lang_key)
+                        : Lang::get('global.new_category'),
+                    'icon' => 'fa fa-object-group',
                 ],
             ]);
     }

@@ -72,7 +72,6 @@ class CategoryController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
                     'title' => Lang::get('global.category_management'),
                     'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
@@ -141,7 +140,8 @@ class CategoryController extends Controller
             ->additional([
                 'layout' => $layout->default($category),
                 'meta' => [
-                    'tab' => $layout->titleDefault($category),
+                    'title' => $category->category ?? Lang::get('global.new_category'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -228,7 +228,8 @@ class CategoryController extends Controller
             ->additional([
                 'layout' => $layout->sort(),
                 'meta' => [
-                    'tab' => $layout->titleSort(),
+                    'title' => Lang::get('global.cm_sort_categories'),
+                    'icon' => $layout->getIconSort(),
                     'draggable' => true,
                 ],
             ]);
@@ -263,7 +264,7 @@ class CategoryController extends Controller
         return TemplateResource::collection(
             Collection::make()
                 ->add([
-                    'key' => (string)$request->input('itemNew', 'newcategory'),
+                    'key' => (string) $request->input('itemNew', 'newcategory'),
                     'value' => Lang::get('global.cm_create_new_category'),
                 ])
                 ->add([
@@ -328,14 +329,11 @@ class CategoryController extends Controller
         $result = Category::query()
             ->when($filter, fn($query) => $query->where('category', 'like', '%' . $filter . '%'))
             ->orderByRaw('upper(' . $order . ') ' . $dir)
-            ->paginate(Config::get('global.number_of_results'))
-            ->appends($request->all());
+            ->get();
 
-        return CategoryResource::collection($result->items())
+        return CategoryResource::collection($result)
             ->additional([
-                'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
             ]);
     }
 

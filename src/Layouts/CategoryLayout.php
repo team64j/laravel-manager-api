@@ -49,19 +49,6 @@ class CategoryLayout extends Layout
     }
 
     /**
-     * @param Category|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(Category $model = null): array
-    {
-        return [
-            'title' => $model->category ?: Lang::get('global.new_category'),
-            'icon' => 'fa fa-object-group',
-        ];
-    }
-
-    /**
      * @return array
      */
     public function list(): array
@@ -217,14 +204,11 @@ class CategoryLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleSort(): array
+    public function getIconSort(): string
     {
-        return [
-            'title' => Lang::get('global.cm_sort_categories'),
-            'icon' => 'fa fa-sort-numeric-asc',
-        ];
+        return 'fa fa-sort-numeric-asc';
     }
 
     /**

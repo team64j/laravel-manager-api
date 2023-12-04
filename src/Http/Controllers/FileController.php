@@ -136,7 +136,8 @@ class FileController extends Controller
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
-                    'tab' => $layout->titleDefault($data['path']),
+                    'title' => $data['path'] ?? Lang::get('global.new_file'),
+                    'icon' => $layout->getIcon($data['ext']),
                 ],
             ]);
     }

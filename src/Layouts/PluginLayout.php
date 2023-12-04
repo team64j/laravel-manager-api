@@ -49,19 +49,6 @@ class PluginLayout extends Layout
     }
 
     /**
-     * @param SitePlugin|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(SitePlugin $model = null): array
-    {
-        return [
-            'title' => $model->name ?: Lang::get('global.new_plugin'),
-            'icon' => 'fa fa-plug',
-        ];
-    }
-
-    /**
      * @return array
      */
     public function list(): array
@@ -255,16 +242,16 @@ class PluginLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleSort(): array
+    public function getIconSort(): string
     {
-        return [
-            'title' => Lang::get('global.plugin_priority_title'),
-            'icon' => 'fa fa-sort-numeric-asc',
-        ];
+        return 'fa fa-sort-numeric-asc';
     }
 
+    /**
+     * @return array
+     */
     public function tree(): array
     {
         return Tab::make()

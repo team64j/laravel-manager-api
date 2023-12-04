@@ -48,19 +48,6 @@ class ChunkLayout extends Layout
         ];
     }
 
-    /**
-     * @param SiteHtmlSnippet|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(SiteHtmlSnippet $model = null): array
-    {
-        return [
-            'title' => $model->name ?: Lang::get('global.new_htmlsnippet'),
-            'icon' => 'fa fa-th-large',
-        ];
-    }
-
     public function list(): array
     {
         return [

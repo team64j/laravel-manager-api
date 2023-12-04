@@ -187,7 +187,8 @@ class SystemLogController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->title(),
+                    'title' => Lang::get('global.mgrlog_view'),
+                    'icon' => $layout->getIcon(),
                     'sorting' => [
                         'order' => $order,
                         'dir' => $dir,

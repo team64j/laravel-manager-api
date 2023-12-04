@@ -48,19 +48,6 @@ class SnippetLayout extends Layout
         ];
     }
 
-    /**
-     * @param SiteSnippet|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(SiteSnippet $model = null): array
-    {
-        return [
-            'title' => $model->name ?: Lang::get('global.new_snippet'),
-            'icon' => 'fa fa-code',
-        ];
-    }
-
     public function list(): array
     {
         return [

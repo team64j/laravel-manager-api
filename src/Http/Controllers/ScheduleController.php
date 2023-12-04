@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ScheduleRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ScheduleResource;
@@ -37,7 +38,8 @@ class ScheduleController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'tab' => $layout->title(),
+                    'title' => Lang::get('global.site_schedule'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }

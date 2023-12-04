@@ -56,14 +56,11 @@ class RoleUserLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleList(): array
+    public function getIconList(): string
     {
-        return [
-            'title' => Lang::get('global.role_management_title'),
-            'icon' => 'fa fa-legal',
-        ];
+        return 'fa fa-legal';
     }
 
     /**
@@ -81,15 +78,10 @@ class RoleUserLayout extends Layout
     }
 
     /**
-     * @param UserRole|null $model
-     *
-     * @return array
+     * @return string
      */
-    public function titleDefault(UserRole $model = null): array
+    public function getIcon(): string
     {
-        return [
-            'title' => $model->name ?: Lang::get('global.new_role'),
-            'icon' => 'fa fa-legal',
-        ];
+        return 'fa fa-legal';
     }
 }

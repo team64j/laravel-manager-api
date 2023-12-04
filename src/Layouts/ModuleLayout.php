@@ -49,19 +49,6 @@ class ModuleLayout extends Layout
     }
 
     /**
-     * @param SiteModule|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(SiteModule $model = null): array
-    {
-        return [
-            'title' => $model->name ?: Lang::get('global.new_module'),
-            'icon' => 'fa fa-cube',
-        ];
-    }
-
-    /**
      * @return array
      */
     public function list(): array
@@ -180,17 +167,6 @@ class ModuleLayout extends Layout
                         ),
                     ['edit_module']
                 ),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.modules'),
-            'icon' => $this->getIcon(),
         ];
     }
 

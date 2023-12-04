@@ -21,11 +21,11 @@ class ScheduleLayout extends Layout
         ];
     }
 
-    public function title(): array
+    /**
+     * @return string
+     */
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::get('global.site_schedule'),
-            'icon' => 'far fa-calendar',
-        ];
+        return 'far fa-calendar';
     }
 }

@@ -115,7 +115,6 @@ class TemplateController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
                     'title' => Lang::get('global.templates'),
                     'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
@@ -159,7 +158,8 @@ class TemplateController extends Controller
             ->additional([
                 'layout' => $layout->default($template),
                 'meta' => [
-                    'tab' => $layout->titleDefault($template),
+                    'title' => $template->templatename ?? Lang::get('global.new_template'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -518,10 +518,10 @@ class TemplateController extends Controller
                 ->orderBy('templatename')
                 ->get();
 
-            return TemplateResource::collection([
-                'data' => $result,
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            return TemplateResource::collection($result)
+                ->additional([
+                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+                ]);
         }
 
         /** @var LengthAwarePaginator $result */
@@ -534,50 +534,53 @@ class TemplateController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return TemplateResource::collection([
-                'data' => $result->items(),
-                'meta' => [
-                    'pagination' => $this->pagination($result),
-                ],
-            ]);
+            return TemplateResource::collection($result->items())
+                ->additional([
+                    'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ],
+                ]);
         }
 
-        return CategoryResource::collection(
-            $result->map(function (SiteTemplate $template) use ($request, $opened, $fields) {
-                /** @var Category $category */
-                $category = $template->getRelation('category') ?? new Category();
-                $category->id = $template->category;
-                $data = [];
+        $result = $result->map(function (SiteTemplate $template) use ($request, $opened, $fields) {
+            /** @var Category $category */
+            $category = $template->getRelation('category') ?? new Category();
+            $category->id = $template->category;
+            $data = [];
 
-                if (in_array($category->getKey(), $opened, true)) {
-                    $request->query->replace([
-                        'parent' => $category->getKey(),
-                    ]);
+            if (in_array($category->getKey(), $opened, true)) {
+                $request->query->replace([
+                    'parent' => $category->getKey(),
+                ]);
 
-                    /** @var LengthAwarePaginator $result */
-                    $result = $category->templates()
-                        ->select($fields)
-                        ->withoutLocked()
-                        ->orderBy('templatename')
-                        ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
-                        ->appends($request->all());
+                /** @var LengthAwarePaginator $result */
+                $result = $category->templates()
+                    ->select($fields)
+                    ->withoutLocked()
+                    ->orderBy('templatename')
+                    ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
+                    ->appends($request->all());
 
-                    if ($result->isNotEmpty()) {
-                        $data = [
-                            'data' => $result->items(),
-                            'pagination' => $this->pagination($result),
-                        ];
-                    }
+                if ($result->isNotEmpty()) {
+                    $data = [
+                        'data' => $result->items(),
+                        'pagination' => $this->pagination($result),
+                    ];
                 }
+            }
 
-                return [
-                        'id' => $category->getKey(),
-                        'name' => $category->category ?? Lang::get('global.no_category'),
-                        'folder' => true,
-                    ] + $data;
-            })
-                ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
-                ->values()
-        );
+            return [
+                    'id' => $category->getKey(),
+                    'name' => $category->category ?? Lang::get('global.no_category'),
+                    'folder' => true,
+                ] + $data;
+        })
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->values();
+
+        return CategoryResource::collection($result)
+            ->additional([
+                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
+            ]);
     }
 }

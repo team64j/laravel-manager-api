@@ -64,15 +64,9 @@ class RolePermissionLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function titleList(): array
+    public function getIconList(): string
     {
-        return [
-            'title' => Lang::get('global.role_management_title'),
-            'icon' => 'fa fa-legal',
-        ];
+        return 'fa fa-legal';
     }
 
     /**
@@ -93,16 +87,10 @@ class RolePermissionLayout extends Layout
     }
 
     /**
-     * @param Permissions|null $model
-     *
-     * @return array
+     * @return string
      */
-    public function titleDefault(Permissions $model = null): array
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key)
-                : Lang::get('global.new_permission'),
-            'icon' => 'fa fa-user-tag',
-        ];
+        return 'fa fa-user-tag';
     }
 }

@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
@@ -42,7 +43,8 @@ class ConfigurationController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'tab' => $layout->titleDefault(),
+                    'title' => Lang::get('global.settings_title'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }

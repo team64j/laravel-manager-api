@@ -77,7 +77,8 @@ class RolePermissionController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.role_management_title'),
+                    'icon' => $layout->getIconList(),
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -121,7 +122,9 @@ class RolePermissionController extends Controller
             ->additional([
                 'layout' => $layout->default($rolePermission),
                 'meta' => [
-                    'tab' => $layout->titleDefault($rolePermission),
+                    'title' => Lang::has('global.' . $rolePermission->lang_key) ? Lang::get('global.' . $rolePermission->lang_key)
+                        : Lang::get('global.new_permission'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }

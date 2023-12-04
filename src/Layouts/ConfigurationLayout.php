@@ -837,13 +837,10 @@ class ConfigurationLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleDefault(): array
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::get('global.settings_title'),
-            'icon' => 'fa fa-sliders',
-        ];
+        return 'fa fa-sliders';
     }
 }

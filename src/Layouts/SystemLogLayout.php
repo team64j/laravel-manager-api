@@ -40,13 +40,10 @@ class SystemLogLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function title(): array
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::get('global.mgrlog_view'),
-            'icon' => 'fa fa-user-secret',
-        ];
+        return 'fa fa-user-secret';
     }
 }

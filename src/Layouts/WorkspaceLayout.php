@@ -47,13 +47,10 @@ class WorkspaceLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleDefault(): array
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::get('global.settings_ui'),
-            'icon' => 'fa fa-eye',
-        ];
+        return 'fa fa-eye';
     }
 }

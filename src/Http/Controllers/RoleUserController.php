@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\UserRole;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
@@ -49,7 +50,8 @@ class RoleUserController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.role_management_title'),
+                    'icon' => $layout->getIconList(),
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -90,7 +92,8 @@ class RoleUserController extends Controller
             ->additional([
                 'layout' => $layout->default($roleUser),
                 'meta' => [
-                    'tab' => $layout->titleDefault($roleUser),
+                    'title' => $roleUser->name ?? Lang::get('global.new_role'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }

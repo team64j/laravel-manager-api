@@ -99,24 +99,10 @@ class EventLogLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function tabList(): array
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::get('global.eventlog_viewer'),
-            'icon' => 'fa fa-exclamation-triangle',
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function title(): array
-    {
-        return [
-            'title' => Lang::get('global.eventlog'),
-            'icon' => 'fa fa-exclamation-triangle',
-        ];
+        return 'fa fa-exclamation-triangle';
     }
 }

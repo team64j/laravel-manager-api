@@ -60,15 +60,10 @@ class DocumentsLayout extends Layout
     }
 
     /**
-     * @param SiteContent|null $model
-     *
-     * @return array
+     * @return string
      */
-    public function titleDefault(SiteContent $model = null): array
+    public function getIcon(): string
     {
-        return [
-            'title' => $model->pagetitle,
-            'icon' => 'fa fa-edit',
-        ];
+        return 'fa fa-edit';
     }
 }

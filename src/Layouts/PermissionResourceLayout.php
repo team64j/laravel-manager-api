@@ -65,14 +65,11 @@ class PermissionResourceLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleList(): array
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::get('global.manage_permission'),
-            'icon' => 'fa fa-male',
-        ];
+        return 'fa fa-male';
     }
 
     /**
@@ -84,21 +81,8 @@ class PermissionResourceLayout extends Layout
     {
         return [
             Title::make()
-                ->setTitle($model->name ?: Lang::get('global.manage_permission'))
-                ->setIcon('fa fa-male')
-        ];
-    }
-
-    /**
-     * @param $model
-     *
-     * @return array
-     */
-    public function titleDefault($model = null): array
-    {
-        return [
-            'title' => $model->name ?: Lang::get('global.manage_permission'),
-            'icon' => 'fa fa-male',
+                ->setTitle($model->name ?? Lang::get('global.manage_permission'))
+                ->setIcon($this->getIcon())
         ];
     }
 }

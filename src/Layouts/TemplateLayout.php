@@ -172,19 +172,6 @@ class TemplateLayout extends Layout
     }
 
     /**
-     * @param SiteTemplate|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(SiteTemplate $model = null): array
-    {
-        return [
-            'title' => $model->templatename ?: Lang::get('global.new_template'),
-            'icon' => 'fa fa-newspaper',
-        ];
-    }
-
-    /**
      * @return array
      */
     public function list(): array

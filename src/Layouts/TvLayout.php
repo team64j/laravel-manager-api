@@ -117,19 +117,6 @@ class TvLayout extends Layout
     }
 
     /**
-     * @param SiteTmplvar|null $model
-     *
-     * @return array
-     */
-    public function titleDefault(SiteTmplvar $model = null): array
-    {
-        return [
-            'title' => $model->name ?: Lang::get('global.new_tmplvars'),
-            'icon' => 'fa fa-list-alt',
-        ];
-    }
-
-    /**
      * @return array
      */
     public function list(): array
@@ -247,17 +234,6 @@ class TvLayout extends Layout
     }
 
     /**
-     * @return array
-     */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.tmplvars'),
-            'icon' => $this->getIcon(),
-        ];
-    }
-
-    /**
      * @return string
      */
     public function getIcon(): string
@@ -318,14 +294,11 @@ class TvLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleSort(): array
+    public function getIconSort(): string
     {
-        return [
-            'title' => Lang::get('global.template_tv_edit_title'),
-            'icon' => 'fa fa-sort-numeric-asc',
-        ];
+        return 'fa fa-sort-numeric-asc';
     }
 
     /**

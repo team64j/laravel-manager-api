@@ -101,26 +101,18 @@ class UserLayout extends Layout
     }
 
     /**
-     * @param User $user
-     *
-     * @return array
+     * @return string
      */
-    public function tabDefault(User $user): array
+    public function getIcon(): string
     {
-        return [
-            'title' => $user->getKey() ? $user->username : Lang::get('global.new_user'),
-            'icon' => 'fa fa-user-circle',
-        ];
+        return 'fa fa-user-circle';
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function tabList(): array
+    public function getIconList(): string
     {
-        return [
-            'title' => Lang::get('global.users'),
-            'icon' => 'fa fa-users',
-        ];
+        return 'fa fa-users';
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Http\Requests\WorkspaceRequest;
@@ -71,7 +72,8 @@ class WorkspaceController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'tab' => $layout->titleDefault(),
+                    'title' => Lang::get('global.settings_ui'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }

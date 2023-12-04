@@ -88,7 +88,8 @@ class DocumentsController extends Controller
             ->additional([
                 'layout' => $layout->default($document),
                 'meta' => [
-                    'tab' => $layout->titleDefault($document),
+                    'title' => $document->pagetitle,
+                    'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'sorting' => [
                         'order' => $order,

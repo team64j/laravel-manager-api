@@ -28,13 +28,10 @@ class SystemInfoLayout extends Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function title(): array
+    public function getIcon(): string
     {
-        return [
-            'title' => Lang::get('global.view_sysinfo'),
-            'icon' => 'fa fa-info',
-        ];
+        return 'fa fa-info';
     }
 }

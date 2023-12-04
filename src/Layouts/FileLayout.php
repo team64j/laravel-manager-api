@@ -47,15 +47,22 @@ class FileLayout extends Layout
     }
 
     /**
-     * @param string|null $filename
+     * @param string|null $type
      *
-     * @return array
+     * @return string
      */
-    public function titleDefault(string $filename = null): array
+    public function getIcon(string $type = null): string
     {
-        return [
-            'title' => $filename ?: Lang::get('global.new_file'),
-            'icon' => 'fa fa-cube',
-        ];
+        return match ($type) {
+            'default' => 'fa fa-ban',
+            'editorconfig', 'htm', 'phtml', 'html', 'txt', 'yml', 'md', 'htaccess', 'env', 'ts', 'js', 'json', 'xml', 'mjs', 'cjs', 'css', 'less', 'cass', 'artisan' => 'fa fa-code',
+            'php' => 'fab fa-php',
+            'vue' => 'fab fa-vuejs',
+            'svg', 'webp', 'jpg', 'jpeg', 'png', 'gif' => 'far fa-image',
+            'lock' => 'fa fa-lock',
+            'bat' => 'fa fa-file-code',
+            'gitignore', 'gitattributes' => 'fab fa-git',
+            default => 'far fa-file'
+        };
     }
 }

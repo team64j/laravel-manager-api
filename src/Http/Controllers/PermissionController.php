@@ -67,7 +67,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.manage_permission'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -103,7 +104,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
-                    'tab' => $layout->titleDefault($data),
+                    'title' => $data->name ?? Lang::get('global.manage_permission'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -158,7 +160,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.manage_permission'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -194,7 +197,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
-                    'tab' => $layout->titleDefault($data),
+                    'title' => $data->name ?? Lang::get('global.manage_permission'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -255,7 +259,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->list($groups, $documents),
                 'meta' => [
-                    'tab' => $layout->titleList(),
+                    'title' => Lang::get('global.manage_permission'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
@@ -291,7 +296,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
-                    'tab' => $layout->titleDefault($data),
+                    'title' => $data->name ?? Lang::get('global.manage_permission'),
+                    'icon' => $layout->getIcon(),
                 ],
             ]);
     }
