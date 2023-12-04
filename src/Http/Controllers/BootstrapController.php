@@ -665,7 +665,7 @@ class BootstrapController extends Controller
                                 [
                                     'key' => 'settings_version',
                                     'name' => 'Evolution CE [(settings_version)]',
-                                    'class' => 'text-center text-sm events-none',
+                                    'class' => 'text-center text-sm',
                                 ],
                             ],
                         ],
