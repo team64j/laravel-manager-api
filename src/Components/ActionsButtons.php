@@ -57,7 +57,7 @@ class ActionsButtons extends Component
     public function __construct(array $data = [])
     {
         $attributes = [
-            'component' => 'EvoLayoutActionsButtons',
+            'component' => 'AppLayoutActionsButtons',
         ];
 
         foreach ($data as $item) {

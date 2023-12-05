@@ -695,14 +695,14 @@ class DashboardLayout extends Layout
     {
         return [
             Template::make(
-                'block evo-alert-warning p-4 mt-4 mx-6 rounded',
+                'block app-alert__warning p-4 mt-4 mx-6 rounded',
                 Lang::get('global.siteunavailable_message_default') .
                 ' ' . Lang::get('global.update_settings_from_language') .
                 '<a href="configuration" class="btn-sm btn-green ml-2">' . Lang::get('global.online') . '</a>'
             ),
 
             Template::make(
-                'block evo-alert-warning p-4 mt-4 mx-6 rounded',
+                'block app-alert__warning p-4 mt-4 mx-6 rounded',
                 '<strong>' . Lang::get('global.configcheck_warning') . '</strong>' .
                 '<br>' . Lang::get('global.configcheck_installer') .
                 '<br><br><i>' . Lang::get('global.configcheck_what') . '</i>' .

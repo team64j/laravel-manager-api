@@ -31,14 +31,14 @@ class WorkspaceLayout extends Layout
                 ->addTab('sidebar', 'Sidebar', null, 'p-6')
                 ->addSlot('sidebar', [
                     [
-                        'component' => 'EvoTreeBuilder',
+                        'component' => 'AppTreeBuilder',
                         'model' => 'data.tree.data',
                     ],
                 ])
                 ->addTab('topmenu', 'Top menu', null, 'p-6')
                 ->addSlot('topmenu', [
                     [
-                        'component' => 'EvoMenuBuilder',
+                        'component' => 'AppMenuBuilder',
                         'model' => 'data.topmenu.data',
                     ],
                 ])

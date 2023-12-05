@@ -19,7 +19,7 @@ class CodeEditor extends Component
         string $class = null
     ) {
         $attributes = [
-            'component' => 'EvoLayoutCodeEditor',
+            'component' => 'AppLayoutCodeEditor',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,

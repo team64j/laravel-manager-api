@@ -19,7 +19,7 @@ class Input extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'EvoFieldsInput',
+            'component' => 'AppFieldsInput',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,

@@ -11,7 +11,7 @@ class Tree extends Component
      */
     public function __construct(array $data = []) {
         $attributes = [
-            'component' => 'EvoTree',
+            'component' => 'AppTree',
             'attrs' => [...$data],
         ];
 

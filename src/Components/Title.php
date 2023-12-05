@@ -12,7 +12,7 @@ class Title extends Component
     public function __construct(array $data = [])
     {
         $attributes = [
-            'component' => 'EvoLayoutTitle',
+            'component' => 'AppLayoutTitle',
             'attrs' => [
                 'title' => $data['title'] ?? null,
                 'icon' => $data['icon'] ?? null,

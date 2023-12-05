@@ -19,7 +19,7 @@ class Media extends Component
         string $class = null
     ) {
         $attributes = [
-            'component' => 'EvoLayoutMedia',
+            'component' => 'AppLayoutMedia',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,
