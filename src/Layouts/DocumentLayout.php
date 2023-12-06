@@ -79,7 +79,8 @@ class DocumentLayout extends Layout
                                     Lang::get('global.resource_alias'),
                                     '<b>[*alias*]</b><br>' . Lang::get('global.resource_alias_help'),
                                     'md:pl-2 md:basis-1/3'
-                                ),
+                                )
+                                    ->isRequired(),
 
                                 Input::make(
                                     'longtitle',
@@ -207,7 +208,6 @@ class DocumentLayout extends Layout
                                     Lang::get('global.resource_type'),
                                     '<b>[*type*]</b><br>' . Lang::get('global.resource_type_message')
                                 )
-                                    ->isRequired()
                                     ->setData([
                                         [
                                             'key' => 'document',
@@ -224,7 +224,6 @@ class DocumentLayout extends Layout
                                     Lang::get('global.page_data_contentType'),
                                     '<b>[*contentType*]</b><br>' . Lang::get('global.page_data_contentType_help')
                                 )
-                                    ->isRequired()
                                     ->setData(
                                         array_map(fn($k) => [
                                             'key' => $k,
