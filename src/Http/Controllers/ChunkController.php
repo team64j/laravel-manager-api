@@ -267,7 +267,7 @@ class ChunkController extends Controller
         return ChunkResource::collection($result->items())
             ->additional([
                 'meta' => [
-                    'route' => 'name',
+                    'name' => 'Chunk',
                     'pagination' => $this->pagination($result),
                     'prepend' => [
                         [
