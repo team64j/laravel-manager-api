@@ -354,7 +354,7 @@ class BootstrapController extends Controller
                         [
                             'key' => 'elements',
                             'name' => '[%elements%]',
-                            'icon' => 'fa fa-th md:hidden',
+                            'icon' => 'fa fa-th',
                             'data' => [
                                 [
                                     'key' => 'templates',
@@ -461,14 +461,14 @@ class BootstrapController extends Controller
                         [
                             'key' => 'modules',
                             'name' => '[%modules%]',
-                            'icon' => 'fa fa-cubes md:hidden',
+                            'icon' => 'fa fa-cubes',
                             'url' => '/modules/exec',
                             'permissions' => ['exec_module'],
                         ],
                         [
                             'key' => 'users',
                             'name' => '[%users%]',
-                            'icon' => 'fa fa-users md:hidden',
+                            'icon' => 'fa fa-users',
                             'data' => [
                                 [
                                     'key' => 'managers',
@@ -509,7 +509,7 @@ class BootstrapController extends Controller
                         [
                             'key' => 'tools',
                             'name' => '[%tools%]',
-                            'icon' => 'fa fa-wrench md:hidden',
+                            'icon' => 'fa fa-wrench',
                             'data' => [
                                 [
                                     'key' => 'cache',

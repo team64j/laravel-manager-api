@@ -371,7 +371,7 @@ class DocumentController extends Controller
     {
         $parent = $request->input('parent');
         $filter = $request->input('filter');
-        $settings = json_decode($request->input('settings', '{}'), true);
+        $settings = $request->whenFilled('settings', fn($i) => is_array($i) ? $i : json_decode($i, true));
         $settings['keyTitle'] = $settings['keyTitle'] ?? 'pagetitle';
         $order = $settings['order'] ?? 'id';
         $dir = $settings['dir'] ?? 'asc';
