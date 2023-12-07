@@ -175,7 +175,6 @@ class CategoryLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('categories')
-                ->setClass('py-4')
                 ->addColumn(
                     '#',
                     '#',

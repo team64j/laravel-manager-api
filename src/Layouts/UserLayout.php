@@ -64,7 +64,6 @@ class UserLayout extends Layout
                 ->setModel('data')
                 ->setRoute('User')
                 ->setHistory(true)
-                ->setClass('grow py-4')
                 ->addColumn(
                     'id',
                     Lang::get('global.id'),

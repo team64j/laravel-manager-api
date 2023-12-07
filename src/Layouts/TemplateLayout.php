@@ -60,7 +60,7 @@ class TemplateLayout extends Layout
 
             Tabs::make()
                 ->setId('template')
-                ->addTab('default', Lang::get('global.settings_general'), null, 'p-6 flex flex-wrap')
+                ->addTab('default', Lang::get('global.settings_general'))
                 ->addSlot(
                     'default',
                     [
@@ -130,7 +130,7 @@ class TemplateLayout extends Layout
                             ->setRows(20),
                     ]
                 )
-                ->addTab('tvs', Lang::get('global.template_assignedtv_tab'), null, 'py-8 flex flex-wrap')
+                ->addTab('tvs', Lang::get('global.template_assignedtv_tab'))
                 ->addSlot(
                     'tvs',
                     Panel::make()

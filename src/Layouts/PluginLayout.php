@@ -213,7 +213,6 @@ class PluginLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('plugins')
-                ->setClass('py-4')
                 ->addColumn(
                     '#',
                     '#',

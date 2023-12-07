@@ -34,9 +34,9 @@ class RoleUserLayout extends Layout
             Tabs::make()
                 ->setId('userManagement')
                 ->setHistory('element')
-                ->addTab('users', Lang::get('global.role_role_management'), 'fa fa-legal', 'py-4')
-                ->addTab('categories', Lang::get('global.category_heading'), 'fa fa-object-group', 'py-4')
-                ->addTab('permissions', Lang::get('global.manage_permission'), 'fa fa-user-tag', 'py-4')
+                ->addTab('users', Lang::get('global.role_role_management'), 'fa fa-legal')
+                ->addTab('categories', Lang::get('global.category_heading'), 'fa fa-object-group')
+                ->addTab('permissions', Lang::get('global.manage_permission'), 'fa fa-user-tag')
                 ->addSlot(
                     'users',
                     Panel::make()

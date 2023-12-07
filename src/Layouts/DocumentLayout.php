@@ -59,7 +59,7 @@ class DocumentLayout extends Layout
 
             Tabs::make()
                 ->setId('document')
-                ->addTab('general', Lang::get('global.settings_general'), null, 'flex flex-wrap p-6')
+                ->addTab('general', Lang::get('global.settings_general'))
                 ->addSlot(
                     'general',
                     [
@@ -196,7 +196,7 @@ class DocumentLayout extends Layout
                             ]),
                     ]
                 )
-                ->addTab('settings', Lang::get('global.settings_page_settings'), null, 'flex flex-wrap p-6')
+                ->addTab('settings', Lang::get('global.settings_page_settings'))
                 ->addSlot(
                     'settings',
                     [
@@ -440,16 +440,11 @@ class DocumentLayout extends Layout
             ->toArray();
 
         return $tabs
-            ->addTab(
-                'permissions',
-                Lang::get('global.access_permissions'),
-                null,
-                'flex flex-wrap p-6'
-            )
+            ->addTab('permissions', Lang::get('global.access_permissions'), null, 'flex-col')
             ->addSlot(
                 'permissions',
                 [
-                    '<div class="pb-4">' . Lang::get('global.access_permissions_docs_message') . '</div>',
+                    '<div class="pb-4 w-full">' . Lang::get('global.access_permissions_docs_message') . '</div>',
 
                     Checkbox::make()
                         ->setModel('data.is_document_group')

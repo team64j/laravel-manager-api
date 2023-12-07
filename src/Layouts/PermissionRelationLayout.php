@@ -37,9 +37,9 @@ class PermissionRelationLayout extends Layout
             Tabs::make()
                 ->setId('permissions')
                 ->setHistory('element')
-                ->addTab('groups', Lang::get('global.web_access_permissions_user_groups'), null, 'py-4')
-                ->addTab('resources', Lang::get('global.access_permissions_resource_groups'), null, 'py-4')
-                ->addTab('relations', Lang::get('global.access_permissions_links'), null, 'py-4')
+                ->addTab('groups', Lang::get('global.web_access_permissions_user_groups'))
+                ->addTab('resources', Lang::get('global.access_permissions_resource_groups'))
+                ->addTab('relations', Lang::get('global.access_permissions_links'))
                 ->addSlot(
                     'relations',
                     Panel::make()
