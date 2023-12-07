@@ -58,9 +58,13 @@ class EventLogLayout extends Layout
     {
         return [
             ActionsButtons::make()
+                ->setCancel()
+                ->setCancelTo([
+                    'name' => 'EventLogs',
+                    'close' => true,
+                ])
                 ->setDelete()
-                ->setDeleteClass('btn-red')
-                ->setCancel(),
+                ->setDeleteClass('btn-red'),
 
             Title::make()
                 ->setTitle(Lang::get('global.eventlog'))
