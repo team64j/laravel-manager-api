@@ -22,8 +22,7 @@ class SystemInfoLayout extends Layout
 
             Panel::make()
                 ->setId('system-info')
-                ->setModel('data')
-                ->setClass('py-4'),
+                ->setModel('data'),
         ];
     }
 

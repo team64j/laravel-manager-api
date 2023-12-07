@@ -28,7 +28,6 @@ class SystemLogLayout extends Layout
                 ->setId('system-log')
                 ->setModel('data')
                 ->setHistory(true)
-                ->setClass('py-4')
                 ->addColumn('username', Lang::get('global.mgrlog_user'), [], true)
                 ->addColumn(['action', 'message'], Lang::get('global.mgrlog_actionid'), [], true)
                 ->addColumn('itemid', Lang::get('global.mgrlog_itemid'), [], true)

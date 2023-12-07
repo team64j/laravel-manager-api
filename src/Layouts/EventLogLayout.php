@@ -27,7 +27,6 @@ class EventLogLayout extends Layout
 
             Panel::make()
                 ->setModel('data')
-                ->setClass('py-4')
                 ->setRoute('EventLog')
                 ->addColumn(
                     'type',
@@ -67,12 +66,12 @@ class EventLogLayout extends Layout
                 ->setTitle(Lang::get('global.eventlog'))
                 ->setIcon('fa fa-exclamation-triangle'),
 
-            '<div class="py-4 bg-white dark:bg-gray-700">
+            '<div class="mx-4 mb-4 rounded p-6 bg-white dark:bg-gray-700">
               <div class="data data-event-log mb-4">
-                <table>
+                <table class="w-full">
                   <thead>
                   <tr>
-                    <th colspan="4">' . e($model->source . ' - ' . Lang::get('global.eventlog_viewer')) . '</th>
+                    <th colspan="4" class="text-lg pb-4">' . e($model->source . ' - ' . Lang::get('global.eventlog_viewer')) . '</th>
                   </tr>
                   <tr>
                     <th>' . Lang::get('global.event_id') . '</th>

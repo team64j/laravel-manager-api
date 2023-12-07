@@ -26,7 +26,6 @@ class DocumentsLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('documents')
-                ->setClass('py-4')
                 ->setRoute('Document')
                 ->addColumn('id', Lang::get('global.id'), ['width' => '4rem', 'textAlign' => 'right'], true)
                 ->addColumn('isfolder', Lang::get('global.folder'), ['width' => '4rem', 'textAlign' => 'right'], true, [

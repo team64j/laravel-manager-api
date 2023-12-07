@@ -721,7 +721,7 @@ class DashboardLayout extends Layout
         )
             ->putSlot(
                 Template::make(
-                    'grow w-full lg:basis-1/2 px-2',
+                    'grow w-full h-full lg:basis-1/2 px-2',
                     Section::make(
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
@@ -752,8 +752,8 @@ class DashboardLayout extends Layout
                             date('H:i:s') . '</b>)</div>',
                             Panel::make()
                                 ->setId('widgetUsers')
-                                ->setClass('-mx-4 -mb-4 pb-4 grow')
                                 ->setUrl('/users/active')
+                                ->setClass('p-0 m-0 -mx-4')
                                 ->setHistory(false)
                                 ->setRoute('User'),
                         ]
@@ -772,7 +772,7 @@ class DashboardLayout extends Layout
                             Panel::make()
                                 ->setId('widgetDocuments')
                                 ->setHistory(false)
-                                ->setClass('-m-4 pb-4 grow')
+                                ->setClass('py-0 m-0 -mx-4')
                                 ->setUrl(
                                     '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
                                 )
@@ -792,7 +792,6 @@ class DashboardLayout extends Layout
                             'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNews')
-                                ->setClass('-m-4 grow h-80 overflow-auto')
                                 ->setUrl('/dashboard/news')
                         )
                     )
@@ -809,7 +808,6 @@ class DashboardLayout extends Layout
                             'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNewsSecurity')
-                                ->setClass('-m-4 grow h-80 overflow-auto')
                                 ->setUrl('/dashboard/news-security')
                         )
                     )

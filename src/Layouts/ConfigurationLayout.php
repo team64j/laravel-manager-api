@@ -128,7 +128,6 @@ class ConfigurationLayout extends Layout
         return [
             Panel::make()
                 ->setId('tab1')
-                ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([
                     [
@@ -333,7 +332,6 @@ class ConfigurationLayout extends Layout
         return [
             Panel::make()
                 ->setId('tab2')
-                ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([
                     [
@@ -464,7 +462,6 @@ class ConfigurationLayout extends Layout
         return [
             Panel::make()
                 ->setId('tab3')
-                ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([
                     [
@@ -788,7 +785,6 @@ class ConfigurationLayout extends Layout
         return [
             Panel::make()
                 ->setId('tab4')
-                ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([]),
         ];
@@ -802,7 +798,6 @@ class ConfigurationLayout extends Layout
         return [
             Panel::make()
                 ->setId('tab5')
-                ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([]),
         ];
@@ -816,7 +811,6 @@ class ConfigurationLayout extends Layout
         return [
             Panel::make()
                 ->setId('tab6')
-                ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([]),
         ];
@@ -830,7 +824,6 @@ class ConfigurationLayout extends Layout
         return [
             Panel::make()
                 ->setId('tab7')
-                ->setClass('grow')
                 ->setColumns($this->columns())
                 ->setData([]),
         ];
