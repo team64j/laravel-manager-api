@@ -27,11 +27,12 @@ class FilesLayout extends Layout
                 ->setClass('grow flex h-full')
                 ->setSlot([
                     Template::make()
-                        ->setClass('grow-0 w-[20rem]')
+                        ->setClass('grow-0 w-[20rem] pl-4 pb-4 pr-0')
                         ->setSlot(
                             Tree::make()
                                 ->setId('FilesTree')
                                 ->setUrl('files/tree')
+                                ->setClass('rounded bg-white dark:bg-gray-700 shadow')
                         ),
                     Template::make()
                         ->setClass('grow')

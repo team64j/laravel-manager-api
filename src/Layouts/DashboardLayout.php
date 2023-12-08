@@ -721,7 +721,7 @@ class DashboardLayout extends Layout
         )
             ->putSlot(
                 Template::make(
-                    'grow w-full h-full lg:basis-1/2 px-2',
+                    'grow w-full lg:basis-1/2 px-2',
                     Section::make(
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
