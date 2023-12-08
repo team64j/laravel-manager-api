@@ -225,4 +225,14 @@ class Panel extends Component
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function isRerender(): static
+    {
+        $this->attributes['attrs']['rerender'] = true;
+
+        return $this;
+    }
 }

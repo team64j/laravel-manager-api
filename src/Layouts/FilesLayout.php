@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
+use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Tab;
+use Team64j\LaravelManagerApi\Components\Template;
 use Team64j\LaravelManagerApi\Components\Title;
 use Team64j\LaravelManagerApi\Components\Tree;
 
@@ -19,8 +21,36 @@ class FilesLayout extends Layout
         return [
             Title::make()
                 ->setTitle(Lang::get('global.files_management'))
-                ->setIcon('far fa-folder-open'),
+                ->setIcon($this->getIcon()),
+
+            Template::make()
+                ->setClass('grow flex h-full')
+                ->setSlot([
+                    Template::make()
+                        ->setClass('grow-0 w-[20rem]')
+                        ->setSlot(
+                            Tree::make()
+                                ->setId('FilesTree')
+                                ->setUrl('files/tree')
+                        ),
+                    Template::make()
+                        ->setClass('grow')
+                        ->setSlot(
+                            Panel::make()
+                                ->setId('FilesPanel')
+                                ->setModel('data')
+                                ->isRerender()
+                        ),
+                ]),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return 'far fa-folder-open';
     }
 
     /**

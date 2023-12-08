@@ -158,7 +158,7 @@ class FilesController extends Controller
                     $folderBase . str_replace($root, '', $file->getPathname())
                 );
 
-                $item['icon'] = '<img src="' . URL::to($imageUrl) . '" />';
+                $item['icon'] = '<img src="' . URL::to($imageUrl) . '" class="inline-block" />';
             }
 
             $data[] = $item;
@@ -168,6 +168,8 @@ class FilesController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
+                    'title' => Lang::get('global.files_management'),
+                    'icon' => $layout->getIcon(),
                     'category' => true,
                     'columns' => [
                         [
@@ -265,11 +267,11 @@ class FilesController extends Controller
                 'category' => true,
             ];
 
-            if (in_array($key, $opened)) {
+            if (in_array($key, $opened, true)) {
                 $newRequest = clone $request;
                 $newRequest->query->set('after', null);
                 $newRequest->query->set('parent', $key);
-                $item['data'] = $this->tree($newRequest)['data'] ?? [];
+                $item['data'] = $this->tree($newRequest)->resource->toArray();
             }
 
             $item['hideChildren'] = !File::directories($directory);
@@ -277,7 +279,12 @@ class FilesController extends Controller
             $data[] = $item;
         }
 
-        return FilesResource::collection($data);
+        return FilesResource::collection($data)
+            ->additional([
+                'meta' => [
+                    'category' => false,
+                ],
+            ]);
     }
 
     /**

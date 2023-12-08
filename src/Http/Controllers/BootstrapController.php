@@ -102,6 +102,9 @@ class BootstrapController extends Controller
             [
                 'path' => '/',
                 'redirect' => '/dashboard',
+                'meta' => [
+                    'hidden' => true,
+                ],
             ],
             [
                 'path' => '/dashboard',
