@@ -64,13 +64,13 @@ class DocumentLayout extends Layout
                     'general',
                     [
                         Template::make()
-                            ->setClass('flex flex-wrap grow md:basis-2/3 xl:basis-9/12 md:pr-3')
+                            ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 lg:pr-6')
                             ->setSlot([
                                 Input::make(
                                     'pagetitle',
                                     Lang::get('global.resource_title'),
                                     '<b>[*pagetitle*]</b><br>' . Lang::get('global.resource_title_help'),
-                                    'md:pr-2 md:basis-2/3'
+                                    'lg:pr-2 lg:basis-2/3'
                                 )
                                     ->isRequired(),
 
@@ -78,7 +78,7 @@ class DocumentLayout extends Layout
                                     'alias',
                                     Lang::get('global.resource_alias'),
                                     '<b>[*alias*]</b><br>' . Lang::get('global.resource_alias_help'),
-                                    'md:pl-2 md:basis-1/3'
+                                    'lg:pl-2 lg:basis-1/3'
                                 )
                                     ->isRequired(),
 
@@ -92,7 +92,7 @@ class DocumentLayout extends Layout
                                     'description',
                                     Lang::get('global.resource_description'),
                                     '<b>[*description*]</b><br>' . Lang::get('global.resource_description_help'),
-                                    'md:pr-2 md:basis-1/2'
+                                    'lg:pr-2 lg:basis-1/2'
                                 )
                                     ->setRows(3),
 
@@ -100,7 +100,7 @@ class DocumentLayout extends Layout
                                     'introtext',
                                     Lang::get('global.resource_summary'),
                                     '<b>[*introtext*]</b><br>' . Lang::get('global.resource_summary_help'),
-                                    'md:pl-2 md:basis-1/2'
+                                    'lg:pl-2 lg:basis-1/2'
                                 )
                                     ->setRows(3)
                                     ->setLanguage('html'),
@@ -115,7 +115,7 @@ class DocumentLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow md:basis-1/3 xl:basis-3/12 md:pl-3')
+                            ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12')
                             ->setSlot([
                                 Input::make(
                                     'parent',
@@ -201,7 +201,7 @@ class DocumentLayout extends Layout
                     'settings',
                     [
                         Template::make()
-                            ->setClass('flex flex-wrap grow md:basis-1/2 md:pr-3')
+                            ->setClass('flex flex-wrap grow lg:basis-1/2 lg:pr-3')
                             ->setSlot([
                                 Select::make(
                                     'type',
@@ -249,7 +249,7 @@ class DocumentLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow md:basis-1/2 md:pl-3')
+                            ->setClass('flex flex-wrap grow lg:basis-1/2 lg:pl-3')
                             ->setSlot([
                                 Checkbox::make(
                                     'isfolder',

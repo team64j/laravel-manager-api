@@ -82,12 +82,13 @@ class BootstrapController extends Controller
                     'assets' => $this->getAssets(),
                     'config' => [
                         'site_name' => Config::get('global.site_name'),
+                        'site_status' => (bool) Config::get('global.site_status'),
                         'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
                     ]
                 ],
                 'layout' => [
                     'menu' => $this->getMenu(),
-                    'sidebar' => $this->getTree(),
+                    'sidebar' => $this->getSidebar(),
                 ],
             ]);
     }
@@ -905,7 +906,7 @@ class BootstrapController extends Controller
      *
      * @return array
      */
-    public function getTree(bool $edit = false): array
+    public function getSidebar(bool $edit = false): array
     {
         $tabs = Tabs::make()
             ->setId('tree')

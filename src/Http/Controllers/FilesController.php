@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
 use Team64j\LaravelManagerApi\Http\Resources\FilesResource;
+use Team64j\LaravelManagerApi\Layouts\FilesLayout;
 
 class FilesController extends Controller
 {
@@ -32,12 +33,13 @@ class FilesController extends Controller
      *      )
      * )
      * @param FilesRequest $request
+     * @param FilesLayout $layout
      *
      * @return AnonymousResourceCollection
      */
-    public function index(FilesRequest $request): AnonymousResourceCollection
+    public function index(FilesRequest $request, FilesLayout $layout): AnonymousResourceCollection
     {
-        return $this->show($request, '');
+        return $this->show($request, '', $layout);
     }
 
     /**
@@ -59,10 +61,11 @@ class FilesController extends Controller
      * )
      * @param FilesRequest $request
      * @param string $files
+     * @param FilesLayout $layout
      *
      * @return AnonymousResourceCollection
      */
-    public function show(FilesRequest $request, string $files): AnonymousResourceCollection
+    public function show(FilesRequest $request, string $files, FilesLayout $layout): AnonymousResourceCollection
     {
         $data = [];
         $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
@@ -163,6 +166,7 @@ class FilesController extends Controller
 
         return FilesResource::collection($data)
             ->additional([
+                'layout' => $layout->default(),
                 'meta' => [
                     'category' => true,
                     'columns' => [
