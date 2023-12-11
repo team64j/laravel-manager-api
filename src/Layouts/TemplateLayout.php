@@ -135,7 +135,6 @@ class TemplateLayout extends Layout
                     'tvs',
                     Panel::make()
                         ->setId('tvs')
-                        ->setModel('')
                         ->setHistory(true)
                         ->isFilter()
                         ->setSlotTop('<div class="font-bold">' . Lang::get('global.template_tv_msg') . '</div>')
