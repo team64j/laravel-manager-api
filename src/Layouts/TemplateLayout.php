@@ -139,6 +139,7 @@ class TemplateLayout extends Layout
                         ->isFilter()
                         ->setSlotTop('<div class="font-bold">' . Lang::get('global.template_tv_msg') . '</div>')
                         ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs')
+                        ->setModel('tvs')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),
@@ -216,7 +217,6 @@ class TemplateLayout extends Layout
                     Panel::make()
                         ->setId('templates')
                         ->setModel('data')
-                        ->setData([])
                         ->setRoute('Template')
                         ->setHistory(true)
                         ->addColumn(

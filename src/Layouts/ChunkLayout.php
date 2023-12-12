@@ -91,7 +91,6 @@ class ChunkLayout extends Layout
                     Panel::make()
                         ->setId('chunks')
                         ->setModel('data')
-                        ->setData([])
                         ->setRoute('Chunk')
                         ->setHistory(true)
                         ->addColumn(

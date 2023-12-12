@@ -60,7 +60,7 @@ class Panel extends Component
      */
     public function setModel(string $value = null): static
     {
-        $this->attributes['data'] = $value;
+        $this->attributes['model'] = $value;
 
         return $this;
     }

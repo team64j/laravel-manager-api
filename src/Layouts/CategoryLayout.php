@@ -94,7 +94,6 @@ class CategoryLayout extends Layout
                     Panel::make()
                         ->setId('categories')
                         ->setModel('data')
-                        ->setData([])
                         ->setRoute('Category')
                         ->setHistory(true)
                         ->addColumn(

@@ -129,6 +129,7 @@ class ConfigurationLayout extends Layout
             Panel::make()
                 ->setId('tab1')
                 ->setColumns($this->columns())
+                ->setModel('data')
                 ->setData([
                     [
                         'name' => Lang::get('global.sitename_title'),
@@ -333,6 +334,7 @@ class ConfigurationLayout extends Layout
             Panel::make()
                 ->setId('tab2')
                 ->setColumns($this->columns())
+                ->setModel('data')
                 ->setData([
                     [
                         'name' => Lang::get('global.friendlyurls_title'),
@@ -463,6 +465,7 @@ class ConfigurationLayout extends Layout
             Panel::make()
                 ->setId('tab3')
                 ->setColumns($this->columns())
+                ->setModel('data')
                 ->setData([
                     [
                         'name' => Lang::get('global.language_title'),
@@ -786,6 +789,7 @@ class ConfigurationLayout extends Layout
             Panel::make()
                 ->setId('tab4')
                 ->setColumns($this->columns())
+                ->setModel('data')
                 ->setData([]),
         ];
     }
@@ -799,6 +803,7 @@ class ConfigurationLayout extends Layout
             Panel::make()
                 ->setId('tab5')
                 ->setColumns($this->columns())
+                ->setModel('data')
                 ->setData([]),
         ];
     }
@@ -812,6 +817,7 @@ class ConfigurationLayout extends Layout
             Panel::make()
                 ->setId('tab6')
                 ->setColumns($this->columns())
+                ->setModel('data')
                 ->setData([]),
         ];
     }
@@ -825,6 +831,7 @@ class ConfigurationLayout extends Layout
             Panel::make()
                 ->setId('tab7')
                 ->setColumns($this->columns())
+                ->setModel('data')
                 ->setData([]),
         ];
     }

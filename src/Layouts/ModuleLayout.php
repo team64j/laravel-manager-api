@@ -94,7 +94,6 @@ class ModuleLayout extends Layout
                     Panel::make()
                         ->setId('modules')
                         ->setModel('data')
-                        ->setData([])
                         ->setRoute('Module')
                         ->setHistory(true)
                         ->addColumn(

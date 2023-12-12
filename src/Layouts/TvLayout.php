@@ -163,7 +163,6 @@ class TvLayout extends Layout
                     Panel::make()
                         ->setId('tvs')
                         ->setModel('data')
-                        ->setData([])
                         ->setRoute('Tv')
                         ->setHistory(true)
                         ->addColumn(
