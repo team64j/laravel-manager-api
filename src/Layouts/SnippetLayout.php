@@ -91,7 +91,6 @@ class SnippetLayout extends Layout
                     Panel::make()
                         ->setId('snippets')
                         ->setModel('data')
-                        ->setData([])
                         ->setRoute('Snippet')
                         ->setHistory(true)
                         ->addColumn(
