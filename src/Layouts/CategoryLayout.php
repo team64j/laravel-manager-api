@@ -195,7 +195,7 @@ class CategoryLayout extends Layout
                     Lang::get('global.cm_category_position'),
                     ['width' => '15rem', 'textAlign' => 'center']
                 )
-                ->isDraggable('priority'),
+                ->isDraggable('rank'),
         ];
     }
 
