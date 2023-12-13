@@ -38,13 +38,13 @@ class ConfigurationLayout extends Layout
 
             Tabs::make()
                 ->setId('configuration')
-                ->addTab('tab1', Lang::get('global.settings_site'), null, 'flex flex-wrap py-4 mb-4')
-                ->addTab('tab2', Lang::get('global.settings_furls'), null, 'flex flex-wrap py-4 mb-4')
-                ->addTab('tab3', Lang::get('global.settings_ui'), null, 'flex flex-wrap py-4 mb-4')
-                ->addTab('tab4', Lang::get('global.settings_security'), null, 'flex flex-wrap py-4 mb-4')
-                ->addTab('tab5', Lang::get('global.settings_misc'), null, 'flex flex-wrap py-4 mb-4')
-                ->addTab('tab6', Lang::get('global.settings_KC'), null, 'flex flex-wrap py-4 mb-4')
-                ->addTab('tab7', Lang::get('global.settings_email_templates'), null, 'flex flex-wrap py-4 mb-4')
+                ->addTab('tab1', Lang::get('global.settings_site'))
+                ->addTab('tab2', Lang::get('global.settings_furls'))
+                ->addTab('tab3', Lang::get('global.settings_ui'))
+                ->addTab('tab4', Lang::get('global.settings_security'))
+                ->addTab('tab5', Lang::get('global.settings_misc'))
+                ->addTab('tab6', Lang::get('global.settings_KC'))
+                ->addTab('tab7', Lang::get('global.settings_email_templates'))
                 ->addSlot('tab1', $this->tab1())
                 ->addSlot('tab2', $this->tab2())
                 ->addSlot('tab3', $this->tab3())
@@ -64,7 +64,7 @@ class ConfigurationLayout extends Layout
             [
                 'name' => 'name',
                 'label' => Lang::get('global.description'),
-                'width' => '25rem',
+                'width' => '20%',
                 'style' => [
                     'minWidth' => '15rem',
                 ],
@@ -72,6 +72,7 @@ class ConfigurationLayout extends Layout
             [
                 'name' => 'key',
                 'label' => Lang::get('global.name'),
+                'width' => '10rem',
                 'style' => [
                     'fontWeight' => 500,
                 ],
@@ -79,7 +80,7 @@ class ConfigurationLayout extends Layout
             [
                 'name' => 'value',
                 'label' => Lang::get('global.value'),
-                'width' => '35rem',
+                'width' => '60%',
                 'style' => [
                     'minWidth' => '15rem',
                 ],
@@ -340,21 +341,13 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.friendlyurls_title'),
                         'name.help' => Lang::get('global.friendlyurls_message'),
                         'key' => 'friendly_urls',
-                        'value' => Select::make('friendly_urls')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('friendly_urls')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.xhtml_urls_title'),
                         'name.help' => Lang::get('global.xhtml_urls_message'),
                         'key' => 'xhtml_urls',
-                        'value' => Select::make('xhtml_urls')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('xhtml_urls')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.friendlyurlsprefix_title'),
@@ -372,41 +365,25 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.make_folders_title'),
                         'name.help' => Lang::get('global.make_folders_message'),
                         'key' => 'make_folders',
-                        'value' => Select::make('make_folders')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('make_folders')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.seostrict_title'),
                         'name.help' => Lang::get('global.seostrict_message'),
                         'key' => 'seostrict',
-                        'value' => Select::make('seostrict')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('seostrict')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.friendly_alias_title'),
                         'name.help' => Lang::get('global.friendlyurls_message'),
                         'key' => 'friendly_alias_urls',
-                        'value' => Select::make('friendly_alias_urls')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('friendly_alias_urls')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.use_alias_path_title'),
                         'name.help' => Lang::get('global.use_alias_path_message'),
                         'key' => 'use_alias_path',
-                        'value' => Select::make('use_alias_path')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('use_alias_path')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.alias_listing_title'),
@@ -434,21 +411,13 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.duplicate_alias_title'),
                         'name.help' => Lang::get('global.duplicate_alias_message'),
                         'key' => 'allow_duplicate_alias',
-                        'value' => Select::make('allow_duplicate_alias')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('allow_duplicate_alias')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.automatic_alias_title'),
                         'name.help' => Lang::get('global.automatic_alias_message'),
                         'key' => 'automatic_alias',
-                        'value' => Select::make('automatic_alias')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('automatic_alias')->addYesNo(),
                     ],
                 ]),
         ];
@@ -592,11 +561,7 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.show_picker'),
                         'name.help' => Lang::get('global.settings_show_picker_message'),
                         'key' => 'show_picker',
-                        'value' => Select::make('show_picker')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('show_picker')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.warning_visibility'),
@@ -626,30 +591,18 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.use_breadcrumbs'),
                         'name.help' => Lang::get('global.use_breadcrumbs_message'),
                         'key' => 'use_breadcrumbs',
-                        'value' => Select::make('use_breadcrumbs')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('use_breadcrumbs')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.remember_last_tab'),
                         'name.help' => Lang::get('global.remember_last_tab_message'),
                         'key' => 'remember_last_tab',
-                        'value' => Select::make('remember_last_tab')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('remember_last_tab')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.use_global_tabs'),
                         'key' => 'global_tabs',
-                        'value' => Select::make('global_tabs')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('global_tabs')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.group_tvs'),
@@ -670,21 +623,13 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.show_newresource_btn'),
                         'name.help' => Lang::get('global.show_newresource_btn_message'),
                         'key' => 'show_newresource_btn',
-                        'value' => Select::make('show_newresource_btn')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('show_newresource_btn')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.show_fullscreen_btn'),
                         'name.help' => Lang::get('global.show_fullscreen_btn_message'),
                         'key' => 'show_fullscreen_btn',
-                        'value' => Select::make('show_fullscreen_btn')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('show_fullscreen_btn')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.setting_resource_tree_node_name'),
@@ -732,11 +677,7 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.tree_show_protected'),
                         'name.help' => Lang::get('global.tree_show_protected_message'),
                         'key' => 'tree_show_protected',
-                        'value' => Select::make('tree_show_protected')
-                            ->addYesNo(
-                                Lang::get('global.yes'),
-                                Lang::get('global.no')
-                            ),
+                        'value' => Select::make('tree_show_protected')->addYesNo(),
                     ],
                     [
                         'name' => Lang::get('global.datepicker_offset'),
@@ -790,7 +731,187 @@ class ConfigurationLayout extends Layout
                 ->setId('tab4')
                 ->setColumns($this->columns())
                 ->setModel('data')
-                ->setData([]),
+                ->setData([
+                    [
+                        'name' => Lang::get('global.udperms_title'),
+                        'name.help' => Lang::get('global.udperms_message'),
+                        'key' => 'use_udperms',
+                        'value' => Select::make('use_udperms')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.udperms_allowroot_title'),
+                        'name.help' => Lang::get('global.udperms_allowroot_message'),
+                        'key' => 'udperms_allowroot',
+                        'value' => Select::make('use_udperms')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.allow_eval_title'),
+                        'name.help' => Lang::get('global.allow_eval_msg'),
+                        'key' => 'allow_eval',
+                        'value' => Select::make('allow_eval')
+                            ->setData([
+                                [
+                                    'key' => 'with_scan',
+                                    'value' => Lang::get('global.allow_eval_with_scan'),
+                                ],
+                                [
+                                    'key' => 'with_scan_at_post',
+                                    'value' => Lang::get('global.allow_eval_with_scan_at_post'),
+                                ],
+                                [
+                                    'key' => 'everytime_eval',
+                                    'value' => Lang::get('global.allow_eval_everytime_eval'),
+                                ],
+                                [
+                                    'key' => 'dont_eval',
+                                    'value' => Lang::get('global.allow_eval_dont_eval'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.safe_functions_at_eval_title'),
+                        'name.help' => Lang::get('global.safe_functions_at_eval_msg'),
+                        'key' => 'safe_functions_at_eval',
+                        'value' => Input::make('safe_functions_at_eval'),
+                    ],
+                    [
+                        'name' => Lang::get('global.check_files_onlogin_title'),
+                        'name.help' => '',
+                        'key' => 'check_files_onlogin',
+                        'value' => Textarea::make('check_files_onlogin'),
+                    ],
+                    [
+                        'name' => Lang::get('global.validate_referer_title'),
+                        'name.help' => '',
+                        'key' => 'validate_referer',
+                        'value' => Select::make('validate_referer')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.a17_error_reporting_title'),
+                        'name.help' => Lang::get('global.a17_error_reporting_msg'),
+                        'key' => 'error_reporting',
+                        'value' => Select::make('error_reporting')
+                            ->setData([
+                                [
+                                    'key' => 0,
+                                    'value' => Lang::get('global.a17_error_reporting_opt0'),
+                                ],
+                                [
+                                    'key' => 1,
+                                    'value' => strip_tags(Lang::get('global.a17_error_reporting_opt1')),
+                                ],
+                                [
+                                    'key' => 2,
+                                    'value' => Lang::get('global.a17_error_reporting_opt2'),
+                                ],
+                                [
+                                    'key' => 99,
+                                    'value' => Lang::get('global.a17_error_reporting_opt99'),
+                                ],
+                                [
+                                    'key' => 199,
+                                    'value' => Lang::get('global.a17_error_reporting_opt199'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.mutate_settings.dynamic.php6'),
+                        'name.help' => str_replace(
+                            '[+emailsender+]',
+                            Config::get('global.emailsender'),
+                            Lang::get('global.mutate_settings.dynamic.php8')
+                        ),
+                        'key' => 'send_errormail',
+                        'value' => Select::make('send_errormail')
+                            ->setData([
+                                [
+                                    'key' => 0,
+                                    'value' => Lang::get('global.mutate_settings.dynamic.php7'),
+                                ],
+                                [
+                                    'key' => 3,
+                                    'value' => 'error',
+                                ],
+                                [
+                                    'key' => 2,
+                                    'value' => 'error + warning',
+                                ],
+                                [
+                                    'key' => 1,
+                                    'value' => 'error + warning + information',
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.enable_bindings_title'),
+                        'name.help' => Lang::get('global.enable_bindings_message') . '<br><br>' .
+                            Lang::get('global.check_files_onlogin_message'),
+                        'key' => 'enable_bindings',
+                        'value' => Select::make('enable_bindings')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.failed_login_title'),
+                        'name.help' => Lang::get('global.failed_login_message'),
+                        'key' => 'failed_login_attempts',
+                        'value' => Input::make('failed_login_attempts'),
+                    ],
+                    [
+                        'name' => Lang::get('global.blocked_minutes_title'),
+                        'name.help' => Lang::get('global.blocked_minutes_message'),
+                        'key' => 'blocked_minutes',
+                        'value' => Input::make('blocked_minutes'),
+                    ],
+                    [
+                        'name' => Lang::get('global.pwd_hash_algo_title'),
+                        'name.help' => Lang::get('global.pwd_hash_algo_message'),
+                        'key' => 'pwd_hash_algo',
+                        'value' => Select::make('pwd_hash_algo')
+                            ->setData([
+                                [
+                                    'key' => 'BLOWFISH_Y',
+                                    'value' => 'CRYPT_BLOWFISH_Y (salt & stretch)',
+                                    'disabled' => !$this->checkHashAlgorithm('BLOWFISH_Y'),
+                                ],
+                                [
+                                    'key' => 'BLOWFISH_A',
+                                    'value' => 'CRYPT_BLOWFISH_A (salt & stretch)',
+                                    'disabled' => !$this->checkHashAlgorithm('BLOWFISH_A'),
+                                ],
+                                [
+                                    'key' => 'SHA512',
+                                    'value' => 'CRYPT_SHA512 (salt & stretch)',
+                                    'disabled' => !$this->checkHashAlgorithm('SHA512'),
+                                ],
+                                [
+                                    'key' => 'SHA256',
+                                    'value' => 'CRYPT_SHA256 (salt & stretch)',
+                                    'disabled' => !$this->checkHashAlgorithm('SHA256'),
+                                ],
+                                [
+                                    'key' => 'MD5',
+                                    'value' => 'CRYPT_MD5 (salt & stretch)',
+                                    'disabled' => !$this->checkHashAlgorithm('MD5'),
+                                ],
+                                [
+                                    'key' => 'UNCRYPT',
+                                    'value' => 'UNCRYPT(32 chars salt + SHA-1 hash)',
+                                    'disabled' => !$this->checkHashAlgorithm('UNCRYPT'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.captcha_title'),
+                        'name.help' => Lang::get('global.captcha_message'),
+                        'key' => 'use_captcha',
+                        'value' => Select::make('use_captcha')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.check_files_onlogin_title'),
+                        'name.help' => Lang::get('global.captcha_words_message'),
+                        'key' => 'captcha_words',
+                        'value' => Textarea::make('captcha_words'),
+                    ],
+                ]),
         ];
     }
 
@@ -804,7 +925,50 @@ class ConfigurationLayout extends Layout
                 ->setId('tab5')
                 ->setColumns($this->columns())
                 ->setModel('data')
-                ->setData([]),
+                ->setData([
+                    [
+                        'name' => Lang::get('global.filemanager_path_title'),
+                        'name.help' => Lang::get('global.filemanager_path_message'),
+                        'key' => 'filemanager_path',
+                        'value' => Input::make('filemanager_path'),
+                    ],
+                    [
+                        'name' => Lang::get('global.uploadable_files_title'),
+                        'name.help' => Lang::get('global.uploadable_files_message'),
+                        'key' => 'upload_files',
+                        'value' => Input::make('upload_files'),
+                    ],
+                    [
+                        'name' => Lang::get('global.uploadable_images_title'),
+                        'name.help' => Lang::get('global.uploadable_images_message'),
+                        'key' => 'upload_images',
+                        'value' => Input::make('upload_images'),
+                    ],
+                    [
+                        'name' => Lang::get('global.uploadable_media_title'),
+                        'name.help' => Lang::get('global.uploadable_media_message'),
+                        'key' => 'upload_media',
+                        'value' => Input::make('upload_media'),
+                    ],
+                    [
+                        'name' => Lang::get('global.upload_maxsize_title'),
+                        'name.help' => Lang::get('global.upload_maxsize_message'),
+                        'key' => 'upload_maxsize',
+                        'value' => Input::make('upload_maxsize'),
+                    ],
+                    [
+                        'name' => Lang::get('global.new_file_permissions_title'),
+                        'name.help' => Lang::get('global.new_file_permissions_message'),
+                        'key' => 'new_file_permissions',
+                        'value' => Input::make('new_file_permissions'),
+                    ],
+                    [
+                        'name' => Lang::get('global.new_folder_permissions_title'),
+                        'name.help' => Lang::get('global.new_folder_permissions_message'),
+                        'key' => 'new_folder_permissions',
+                        'value' => Input::make('new_folder_permissions'),
+                    ],
+                ]),
         ];
     }
 
@@ -818,7 +982,117 @@ class ConfigurationLayout extends Layout
                 ->setId('tab6')
                 ->setColumns($this->columns())
                 ->setModel('data')
-                ->setData([]),
+                ->setData([
+                    [
+                        'name' => Lang::get('global.rb_title'),
+                        'name.help' => Lang::get('global.rb_message'),
+                        'key' => 'use_browser',
+                        'value' => Select::make('use_browser')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.which_browser_default_title'),
+                        'name.help' => Lang::get('global.which_browser_default_msg'),
+                        'key' => 'which_browser',
+                        'value' => Select::make('which_browser')
+                            ->setData($this->getFileBrowsers()),
+                    ],
+                    [
+                        'name' => Lang::get('global.rb_webuser_title'),
+                        'name.help' => Lang::get('global.rb_webuser_message'),
+                        'key' => 'rb_webuser',
+                        'value' => Select::make('rb_webuser')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.rb_base_dir_title'),
+                        'name.help' => Lang::get('global.rb_base_dir_message'),
+                        'key' => 'rb_base_dir',
+                        'value' => Input::make('rb_base_dir'),
+                    ],
+                    [
+                        'name' => Lang::get('global.rb_base_url_title'),
+                        'name.help' => Lang::get('global.rb_base_url_message'),
+                        'key' => 'rb_base_url',
+                        'value' => Input::make('rb_base_url'),
+                    ],
+                    [
+                        'name' => Lang::get('global.clean_uploaded_filename'),
+                        'name.help' => Lang::get('global.clean_uploaded_filename_message'),
+                        'key' => 'clean_uploaded_filename',
+                        'value' => Select::make('clean_uploaded_filename')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.settings_strip_image_paths_title'),
+                        'name.help' => Lang::get('global.settings_strip_image_paths_message'),
+                        'key' => 'strip_image_paths',
+                        'value' => Select::make('strip_image_paths')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.maxImageWidth'),
+                        'name.help' => Lang::get('global.maxImageWidth_message'),
+                        'key' => 'maxImageWidth',
+                        'value' => Input::make('maxImageWidth'),
+                    ],
+                    [
+                        'name' => Lang::get('global.maxImageHeight'),
+                        'name.help' => Lang::get('global.maxImageHeight_message'),
+                        'key' => 'maxImageHeight',
+                        'value' => Input::make('maxImageHeight'),
+                    ],
+                    [
+                        'name' => Lang::get('global.clientResize'),
+                        'name.help' => Lang::get('global.clientResize_message'),
+                        'key' => 'clientResize',
+                        'value' => Select::make('clientResize')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.noThumbnailsRecreation'),
+                        'name.help' => Lang::get('global.noThumbnailsRecreation_message'),
+                        'key' => 'noThumbnailsRecreation',
+                        'value' => Select::make('noThumbnailsRecreation')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.thumbWidth'),
+                        'name.help' => Lang::get('global.thumbWidth_message'),
+                        'key' => 'thumbWidth',
+                        'value' => Input::make('thumbWidth'),
+                    ],
+                    [
+                        'name' => Lang::get('global.thumbHeight'),
+                        'name.help' => Lang::get('global.thumbHeight_message'),
+                        'key' => 'thumbHeight',
+                        'value' => Input::make('thumbHeight'),
+                    ],
+                    [
+                        'name' => Lang::get('global.thumbsDir'),
+                        'name.help' => Lang::get('global.thumbsDir_message'),
+                        'key' => 'thumbsDir',
+                        'value' => Input::make('thumbsDir'),
+                    ],
+                    [
+                        'name' => Lang::get('global.jpegQuality'),
+                        'name.help' => Lang::get('global.jpegQuality_message'),
+                        'key' => 'jpegQuality',
+                        'value' => Input::make('jpegQuality'),
+                    ],
+                    [
+                        'name' => Lang::get('global.denyZipDownload'),
+                        'name.help' => '',
+                        'key' => 'denyZipDownload',
+                        'value' => Select::make('denyZipDownload')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.denyExtensionRename'),
+                        'name.help' => '',
+                        'key' => 'denyExtensionRename',
+                        'value' => Select::make('denyExtensionRename')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.showHiddenFiles'),
+                        'name.help' => '',
+                        'key' => 'showHiddenFiles',
+                        'value' => Select::make('showHiddenFiles')->addYesNo(),
+                    ],
+                ]),
         ];
     }
 
@@ -832,7 +1106,120 @@ class ConfigurationLayout extends Layout
                 ->setId('tab7')
                 ->setColumns($this->columns())
                 ->setModel('data')
-                ->setData([]),
+                ->setData([
+                    [
+                        'name' => Lang::get('global.emailsender_title'),
+                        'name.help' => Lang::get('global.emailsender_message'),
+                        'key' => 'emailsender',
+                        'value' => Input::make('emailsender'),
+                    ],
+                    [
+                        'name' => Lang::get('global.email_sender_method'),
+                        'name.help' => Lang::get('global.email_sender_method_message'),
+                        'key' => 'email_sender_method',
+                        'value' => Select::make('email_sender_method')
+                            ->addYesNo(
+                                Lang::get('global.auto'),
+                                Lang::get('global.use_emailsender')
+                            ),
+                    ],
+                    [
+                        'name' => Lang::get('global.email_method_title'),
+                        'name.help' => Lang::get('global.email_sender_method_message'),
+                        'key' => 'email_method',
+                        'value' => Select::make('email_method')
+                            ->setData([
+                                [
+                                    'key' => 'mail',
+                                    'value' => Lang::get('global.email_method_mail'),
+                                ],
+                                [
+                                    'key' => 'smtp',
+                                    'value' => Lang::get('global.email_method_smtp'),
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.smtp_auth_title'),
+                        'name.help' => '',
+                        'key' => 'smtp_auth',
+                        'value' => Select::make('smtp_auth')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.smtp_autotls_title'),
+                        'name.help' => '',
+                        'key' => 'smtp_autotls',
+                        'value' => Select::make('smtp_autotls')->addYesNo(),
+                    ],
+                    [
+                        'name' => Lang::get('global.smtp_secure_title'),
+                        'name.help' => '',
+                        'key' => 'smtp_secure',
+                        'value' => Select::make('smtp_secure')
+                            ->setData([
+                                [
+                                    'key' => 'none',
+                                    'value' => Lang::get('global.no'),
+                                ],
+                                [
+                                    'key' => 'ssl',
+                                    'value' => 'SSL',
+                                ],
+                                [
+                                    'key' => 'tls',
+                                    'value' => 'TLS',
+                                ],
+                            ]),
+                    ],
+                    [
+                        'name' => Lang::get('global.smtp_host_title'),
+                        'name.help' => '',
+                        'key' => 'smtp_host',
+                        'value' => Input::make('smtp_host'),
+                    ],
+                    [
+                        'name' => Lang::get('global.smtp_port_title'),
+                        'name.help' => '',
+                        'key' => 'smtp_port',
+                        'value' => Input::make('smtp_port'),
+                    ],
+                    [
+                        'name' => Lang::get('global.smtp_username_title'),
+                        'name.help' => '',
+                        'key' => 'smtp_username',
+                        'value' => Input::make('smtp_username'),
+                    ],
+                    [
+                        'name' => Lang::get('global.smtp_password_title'),
+                        'name.help' => '',
+                        'key' => 'smtppw',
+                        'value' => Input::make('smtppw'),
+                    ],
+                    [
+                        'name' => Lang::get('global.emailsubject_title'),
+                        'name.help' => Lang::get('global.emailsubject_message'),
+                        'key' => 'emailsubject',
+                        'value' => Input::make('emailsubject'),
+                    ],
+                    [
+                        'name' => Lang::get('global.websignupemail_title'),
+                        'name.help' => Lang::get('global.websignupemail_message'),
+                        'key' => 'websignupemail_message',
+                        'value' => Textarea::make('websignupemail_message')->setRows(3),
+                    ],
+                    [
+                        'name' => Lang::get('global.webpwdreminder_title'),
+                        'name.help' => Lang::get('global.webpwdreminder_message'),
+                        'key' => 'webpwdreminder_message',
+                        'value' => Textarea::make('webpwdreminder_message')->setRows(3),
+                    ],
+                    [
+                        'name' => Lang::get('global.allow_multiple_emails_title'),
+                        'name.help' => Lang::get('global.allow_multiple_emails_message'),
+                        'key' => 'allow_multiple_emails',
+                        'value' => Select::make('allow_multiple_emails')->addYesNo(),
+                    ],
+                ]),
         ];
     }
 
@@ -842,5 +1229,70 @@ class ConfigurationLayout extends Layout
     public function getIcon(): string
     {
         return 'fa fa-sliders';
+    }
+
+    /**
+     * @param string $algorithm
+     *
+     * @return bool
+     */
+    public function checkHashAlgorithm(string $algorithm = ''): bool
+    {
+        $result = false;
+
+        if (!empty($algorithm)) {
+            switch ($algorithm) {
+                case 'BLOWFISH_Y':
+                    if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) {
+                        if (version_compare('5.3.7', PHP_VERSION) <= 0) {
+                            $result = true;
+                        }
+                    }
+                    break;
+                case 'BLOWFISH_A':
+                    if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) {
+                        $result = true;
+                    }
+                    break;
+                case 'SHA512':
+                    if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) {
+                        $result = true;
+                    }
+                    break;
+                case 'SHA256':
+                    if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) {
+                        $result = true;
+                    }
+                    break;
+                case 'MD5':
+                    if (defined('CRYPT_MD5') && CRYPT_MD5 == 1 && PHP_VERSION != '5.3.7') {
+                        $result = true;
+                    }
+                    break;
+                case 'UNCRYPT':
+                    $result = true;
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getFileBrowsers(): array
+    {
+        $out = [];
+        foreach (glob('media/browser/*', GLOB_ONLYDIR) as $dir) {
+            $dir = str_replace('\\', '/', $dir);
+            $key = substr($dir, strrpos($dir, '/') + 1);
+            $out[] = [
+                'key' => $key,
+                'value' => $key,
+            ];
+        }
+
+        return $out;
     }
 }

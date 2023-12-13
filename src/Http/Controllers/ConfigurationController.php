@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
@@ -36,9 +37,30 @@ class ConfigurationController extends Controller
      */
     public function index(ConfigurationRequest $request, ConfigurationLayout $layout): ConfigurationResource
     {
+        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', App::basePath()) . '/';
+
         return ConfigurationResource::make(
             SystemSetting::all()
                 ->pluck('setting_value', 'setting_name')
+                ->map(function ($value, $key) use ($basePath) {
+                    if ($key == 'filemanager_path') {
+                        $path = str_replace(DIRECTORY_SEPARATOR, '/', $value);
+
+                        if ($path == $basePath) {
+                            $value = '[(base_path)]';
+                        }
+                    }
+
+                    if ($key == 'rb_base_dir') {
+                        $value = str_replace($basePath, '[(base_path)]', $value);
+                    }
+
+                    if ($key == 'smtppw') {
+                        $value = '**********';
+                    }
+
+                    return $value;
+                })
         )
             ->additional([
                 'layout' => $layout->default(),
