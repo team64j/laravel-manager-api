@@ -230,7 +230,6 @@ class CategoryController extends Controller
                 'meta' => [
                     'title' => Lang::get('global.cm_sort_categories'),
                     'icon' => $layout->getIconSort(),
-                    'draggable' => true,
                 ],
             ]);
     }

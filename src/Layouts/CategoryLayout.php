@@ -180,12 +180,9 @@ class CategoryLayout extends Layout
                     ['width' => '5rem', 'textAlign' => 'center'],
                     false,
                     [],
-                    [
-                        'sortable' => [
-                            'icon' => 'fa fa-bars fa-fw draggable-handle',
-                            'noOpacity' => true,
-                        ],
-                    ]
+                    [],
+                    false,
+                    'fa fa-bars fa-fw'
                 )
                 ->addColumn(
                     'id',
@@ -197,7 +194,8 @@ class CategoryLayout extends Layout
                     'rank',
                     Lang::get('global.cm_category_position'),
                     ['width' => '15rem', 'textAlign' => 'center']
-                ),
+                )
+                ->isDraggable('priority'),
         ];
     }
 

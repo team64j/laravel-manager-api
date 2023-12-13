@@ -218,12 +218,9 @@ class PluginLayout extends Layout
                     ['width' => '5rem', 'textAlign' => 'center'],
                     false,
                     [],
-                    [
-                        'sortable' => [
-                            'icon' => 'fa fa-bars fa-fw draggable-handle',
-                            'noOpacity' => true,
-                        ],
-                    ]
+                    [],
+                    false,
+                    'fa fa-bars fa-fw'
                 )
                 ->addColumn(
                     'id',

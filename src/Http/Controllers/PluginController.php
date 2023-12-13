@@ -328,7 +328,7 @@ class PluginController extends Controller
                 ->get()
                 ->map(function (SystemEventname $item) {
                     $item->setAttribute('data', $item->plugins);
-                    $item->setAttribute('draggable', true);
+                    $item->setAttribute('draggable', 'priority');
 
                     return $item->withoutRelations();
                 })

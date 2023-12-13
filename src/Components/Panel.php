@@ -133,6 +133,7 @@ class Panel extends Component
      * @param array $values
      * @param array $actions
      * @param array|false $html
+     * @param string|null $icon
      *
      * @return $this
      */
@@ -143,7 +144,8 @@ class Panel extends Component
         bool $sort = false,
         array $values = [],
         array $actions = [],
-        bool $html = false
+        bool $html = false,
+        string $icon = null,
     ): static {
         $data = get_defined_vars();
 
@@ -232,6 +234,16 @@ class Panel extends Component
     public function isRerender(): static
     {
         $this->attributes['attrs']['rerender'] = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function isDraggable(string $value = null): static
+    {
+        $this->attributes['attrs']['draggable'] = is_null($value) ? true : $value;
 
         return $this;
     }
