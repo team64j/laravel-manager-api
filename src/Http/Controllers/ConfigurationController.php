@@ -98,8 +98,19 @@ class ConfigurationController extends Controller
     public function store(ConfigurationRequest $request, SystemSetting $configuration): ConfigurationResource
     {
         $data = [];
+        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', App::basePath()) . '/';
 
         foreach ($request->all() as $key => $value) {
+            if ($key == 'filemanager_path') {
+                if ($value == '[(base_path)]') {
+                    $value = $basePath;
+                }
+            }
+
+            if ($key == 'rb_base_dir') {
+                $value = str_replace('[(base_path)]', $basePath, $value);
+            }
+
             $data[] = [
                 'setting_name' => $key,
                 'setting_value' => $value,

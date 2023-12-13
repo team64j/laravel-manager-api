@@ -68,7 +68,7 @@ class FilesController extends Controller
     public function show(FilesRequest $request, string $files, FilesLayout $layout): AnonymousResourceCollection
     {
         $data = [];
-        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
+        $root = Config::get('global.rb_base_dir', App::basePath());
         $parent = trim(base64_decode($files), './');
         $parentPath = $root . ($parent ? DIRECTORY_SEPARATOR . $parent : '');
         $opened = $request->has('opened') ? $request->string('opened')
@@ -76,92 +76,103 @@ class FilesController extends Controller
             ->map(fn($i) => $i)
             ->toArray() : [];
 
-        $directories = File::directories($parentPath);
-        $files = File::files($parentPath, true);
+        if (file_exists($parentPath)) {
+            $directories = File::directories($parentPath);
+            $files = File::files($parentPath, true);
 
-        foreach ($directories as $directory) {
-            $title = basename($directory);
-            $key = base64_encode(
-                trim(
+            //if ($root != $parentPath) {
+                $data[] = [
+                    'key' => 'back',
+                    'title' => '...',
+                    'icon' => '<i class="fa fa-arrow-left fa-fw"></i>',
+                    'folder' => false,
+                ];
+            //}
+
+            foreach ($directories as $directory) {
+                $title = basename($directory);
+                $key = base64_encode(
+                    trim(
+                        str_replace(
+                            $root,
+                            '',
+                            $directory
+                        ),
+                        DIRECTORY_SEPARATOR
+                    )
+                );
+
+                $item = [
+                    'key' => $key,
+                    'title' => $title,
+                    'folder' => true,
+                    'size' => $this->getSize(File::size($directory)),
+                    'date' => $this->getDate(filemtime($directory)),
+                ];
+
+                if (in_array($key, $opened)) {
+                    $newRequest = clone $request;
+                    $newRequest->query->set('after', null);
+                    $newRequest->query->set('parent', $key);
+                    $item['data'] = $this->show($newRequest, '')['data'] ?? [];
+                }
+
+                $data[] = $item;
+            }
+
+            foreach ($files as $file) {
+                $title = $file->getFilename();
+                $key = base64_encode(
                     str_replace(
-                        $root,
-                        '',
-                        $directory
-                    ),
-                    DIRECTORY_SEPARATOR
-                )
-            );
+                        DIRECTORY_SEPARATOR,
+                        '/',
+                        trim(str_replace($root, '', $file->getPathname()), DIRECTORY_SEPARATOR)
+                    )
+                );
 
-            $item = [
-                'key' => $key,
-                'title' => $title,
-                'folder' => true,
-                'size' => $this->getSize(File::size($directory)),
-                'date' => $this->getDate(filemtime($directory)),
-            ];
+                $type = $file->getExtension();
 
-            if (in_array($key, $opened)) {
-                $newRequest = clone $request;
-                $newRequest->query->set('after', null);
-                $newRequest->query->set('parent', $key);
-                $item['data'] = $this->show($newRequest, '')['data'] ?? [];
-            }
+                if (!$type) {
+                    $mimeType = File::mimeType($file->getPathname());
 
-            $data[] = $item;
-        }
+                    $type = match ($mimeType) {
+                        'text/plain' => 'txt',
+                        default => ''
+                    };
+                }
 
-        foreach ($files as $file) {
-            $title = $file->getFilename();
-            $key = base64_encode(
-                str_replace(
-                    DIRECTORY_SEPARATOR,
-                    '/',
-                    trim(str_replace($root, '', $file->getPathname()), DIRECTORY_SEPARATOR)
-                )
-            );
+                $item = [
+                    'key' => $key,
+                    'title' => $title,
+                    'folder' => false,
+                    'type' => $type,
+                    'unpublished' => !$file->isWritable() || !$file->isReadable(),
+                    'class' => 'f-ext-' . $file->getExtension(),
+                    'size' => $this->getSize($file->getSize()),
+                    'date' => $this->getDate($file->getATime()),
+                ];
 
-            $type = $file->getExtension();
-
-            if (!$type) {
                 $mimeType = File::mimeType($file->getPathname());
+                $isImage = str_starts_with($mimeType, 'image/') || $file->getExtension() == 'svg';
 
-                $type = match ($mimeType) {
-                    'text/plain' => 'txt',
-                    default => ''
-                };
+                if ($isImage) {
+                    $folderBase = str_replace(
+                        realpath(App::basePath()),
+                        '',
+                        realpath(Config::get('global.rb_base_dir'))
+                    );
+
+                    $imageUrl = str_replace(
+                        DIRECTORY_SEPARATOR,
+                        '/',
+                        $folderBase . str_replace($root, '', $file->getPathname())
+                    );
+
+                    $item['icon'] = '<img src="' . URL::to($imageUrl) . '" class="inline-block" />';
+                }
+
+                $data[] = $item;
             }
-
-            $item = [
-                'key' => $key,
-                'title' => $title,
-                'folder' => false,
-                'type' => $type,
-                'unpublished' => !$file->isWritable() || !$file->isReadable(),
-                'class' => 'f-ext-' . $file->getExtension(),
-                'size' => $this->getSize($file->getSize()),
-                'date' => $this->getDate($file->getATime()),
-            ];
-
-            $mimeType = File::mimeType($file->getPathname());
-            $isImage = str_starts_with($mimeType, 'image/') || $file->getExtension() == 'svg';
-
-            if ($isImage) {
-                $folderBase = str_replace(
-                    realpath(App::basePath()),
-                    '',
-                    realpath(Config::get('global.rb_base_dir'))
-                );
-
-                $imageUrl = str_replace(
-                    DIRECTORY_SEPARATOR,
-                    '/',
-                    $folderBase . str_replace($root, '', $file->getPathname())
-                );
-
-                $item['icon'] = '<img src="' . URL::to($imageUrl) . '" class="inline-block" />';
-            }
-
-            $data[] = $item;
         }
 
         return FilesResource::collection($data)
@@ -237,7 +248,7 @@ class FilesController extends Controller
     public function tree(FilesRequest $request): AnonymousResourceCollection
     {
         $data = [];
-        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
+        $root = Config::get('global.rb_base_dir', App::basePath());
         $parent = trim(base64_decode($request->input('parent', '')), './');
         $parentPath = $root . DIRECTORY_SEPARATOR . $parent;
         $opened = $request->has('opened') ? $request->string('opened')
@@ -245,38 +256,40 @@ class FilesController extends Controller
             ->map(fn($i) => $i)
             ->toArray() : [];
 
-        $directories = File::directories($parentPath);
+        if (file_exists($parentPath)) {
+            $directories = File::directories($parentPath);
 
-        foreach ($directories as $directory) {
-            $title = basename($directory);
-            $key = base64_encode(
-                trim(
-                    str_replace(
-                        $root,
-                        '',
-                        $directory
-                    ),
-                    DIRECTORY_SEPARATOR
-                )
-            );
+            foreach ($directories as $directory) {
+                $title = basename($directory);
+                $key = base64_encode(
+                    trim(
+                        str_replace(
+                            $root,
+                            '',
+                            $directory
+                        ),
+                        DIRECTORY_SEPARATOR
+                    )
+                );
 
-            $item = [
-                'key' => $key,
-                'title' => $title,
-                'folder' => true,
-                'category' => true,
-            ];
+                $item = [
+                    'key' => $key,
+                    'title' => $title,
+                    'folder' => true,
+                    'category' => true,
+                ];
 
-            if (in_array($key, $opened, true)) {
-                $newRequest = clone $request;
-                $newRequest->query->set('after', null);
-                $newRequest->query->set('parent', $key);
-                $item['data'] = $this->tree($newRequest)->resource->toArray();
+                if (in_array($key, $opened, true)) {
+                    $newRequest = clone $request;
+                    $newRequest->query->set('after', null);
+                    $newRequest->query->set('parent', $key);
+                    $item['data'] = $this->tree($newRequest)->resource->toArray();
+                }
+
+                $item['hideChildren'] = !File::directories($directory);
+
+                $data[] = $item;
             }
-
-            $item['hideChildren'] = !File::directories($directory);
-
-            $data[] = $item;
         }
 
         return FilesResource::collection($data)
