@@ -61,11 +61,11 @@ class WorkspaceController extends Controller
         }
 
         if (empty($data['tree']['data'])) {
-            $data['tree']['data'] = App::call(BootstrapController::class . '@getTree', ['edit' => true]);
+            $data['tree']['data'] = (new BootstrapController())->getSidebar(true);
         }
 
         if (empty($data['topmenu']['data'])) {
-            $data['topmenu']['data'] = App::call(BootstrapController::class . '@getMenu', ['edit' => true]);
+            $data['topmenu']['data'] = (new BootstrapController())->getMenu(true);
         }
 
         return WorkspaceResource::make($data)
@@ -74,6 +74,12 @@ class WorkspaceController extends Controller
                 'meta' => [
                     'title' => Lang::get('global.settings_ui'),
                     'icon' => $layout->getIcon(),
+                    'lang' => [
+                        'save' => Lang::get('global.save'),
+                        'stay_new' => Lang::get('global.stay_new'),
+                        'settings' => Lang::get('global.resource_setting'),
+                        'select' => Lang::get('global.element_selector_title'),
+                    ],
                 ],
             ]);
     }
