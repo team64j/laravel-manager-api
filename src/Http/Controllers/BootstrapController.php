@@ -111,7 +111,7 @@ class BootstrapController extends Controller
                 'name' => 'Dashboard',
                 'meta' => [
                     'fixed' => true,
-                    'title' => '',
+                    'title' => null,
                     'icon' => 'fa fa-home',
                 ],
             ],
