@@ -75,22 +75,17 @@ class BootstrapController extends Controller
      */
     public function index(BootstrapRequest $request): BootstrapResource
     {
-        return BootstrapResource::make([])
-            ->additional([
-                'meta' => [
-                    'routes' => $this->getRoutes(),
-                    'assets' => $this->getAssets(),
-                    'config' => [
-                        'site_name' => Config::get('global.site_name'),
-                        'site_status' => (bool) Config::get('global.site_status'),
-                        'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
-                    ]
-                ],
-                'layout' => [
-                    'menu' => $this->getMenu(),
-                    'sidebar' => $this->getSidebar(),
-                ],
-            ]);
+        return BootstrapResource::make([
+            'menu' => $this->getMenu(),
+            'sidebar' => $this->getSidebar(),
+            'routes' => $this->getRoutes(),
+            'assets' => $this->getAssets(),
+            'config' => [
+                'site_name' => Config::get('global.site_name'),
+                'site_status' => (bool) Config::get('global.site_status'),
+                'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
+            ]
+        ]);
     }
 
     /**
