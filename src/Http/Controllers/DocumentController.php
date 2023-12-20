@@ -17,6 +17,7 @@ use Team64j\LaravelEvolution\Models\SiteContent;
 use Team64j\LaravelManagerApi\Http\Requests\DocumentRequest;
 use Team64j\LaravelManagerApi\Http\Resources\DocumentResource;
 use Team64j\LaravelManagerApi\Layouts\DocumentLayout;
+use Team64j\LaravelManagerApi\Support\Url;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class DocumentController extends Controller
@@ -206,7 +207,7 @@ class DocumentController extends Controller
             );
         }
 
-        $route = Uri::getRouteById($document->getKey());
+        $route = Url::getRouteById($document->getKey());
 
         return DocumentResource::make($document->withoutRelations())
             ->additional([
@@ -539,6 +540,6 @@ class DocumentController extends Controller
      */
     public function parents(DocumentRequest $request, int $id): DocumentResource
     {
-        return DocumentResource::make(Uri::getParentsById($id));
+        return DocumentResource::make(Url::getParentsById($id));
     }
 }
