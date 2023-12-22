@@ -174,6 +174,7 @@ class CategoryLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('categories')
+                ->isDraggable('priority')
                 ->addColumn(
                     '#',
                     '#',

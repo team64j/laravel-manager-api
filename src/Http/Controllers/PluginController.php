@@ -98,13 +98,13 @@ class PluginController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.plugins'),
-                    'icon' => $layout->getIcon(),
-                    'pagination' => $this->pagination($result),
-                    'filters' => [
-                        'name',
-                    ],
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
+                        'title' => Lang::get('global.plugins'),
+                        'icon' => $layout->getIcon(),
+                        'pagination' => $this->pagination($result),
+                        'filters' => [
+                            'name',
+                        ],
+                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 
@@ -326,12 +326,10 @@ class PluginController extends Controller
                 ->whereHas('plugins')
                 ->orderBy('name')
                 ->get()
-                ->map(function (SystemEventname $item) {
-                    $item->setAttribute('data', $item->plugins);
-                    $item->setAttribute('draggable', 'priority');
-
-                    return $item->withoutRelations();
-                })
+                ->map(fn(SystemEventname $item) => $item->withoutRelations()
+                    ->setAttribute('data', $item->plugins)
+                    //->setAttribute('draggable', 'priority')
+                )
         )
             ->additional([
                 'layout' => $layout->sort(),

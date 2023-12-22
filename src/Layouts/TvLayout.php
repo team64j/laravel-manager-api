@@ -263,18 +263,16 @@ class TvLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('plugins')
+                ->isDraggable('rank')
                 ->addColumn(
                     '#',
                     '#',
                     ['width' => '5rem', 'textAlign' => 'center'],
                     false,
                     [],
-                    [
-                        'sortable' => [
-                            'icon' => 'fa fa-bars fa-fw draggable-handle',
-                            'noOpacity' => true,
-                        ],
-                    ]
+                    [],
+                    false,
+                    'fa fa-bars fa-fw'
                 )
                 ->addColumn(
                     'id',

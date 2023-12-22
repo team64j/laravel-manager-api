@@ -351,7 +351,6 @@ class TvController extends Controller
                     'icon' => $layout->getIconSort(),
                 ],
                 'pagination' => $this->pagination($result),
-                'draggable' => true,
             ]);
     }
 

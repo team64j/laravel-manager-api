@@ -212,6 +212,7 @@ class PluginLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('plugins')
+                ->isDraggable('priority')
                 ->addColumn(
                     '#',
                     '#',
