@@ -70,7 +70,7 @@ class EventLogLayout extends Layout
                 ->setTitle(Lang::get('global.eventlog'))
                 ->setIcon('fa fa-exclamation-triangle'),
 
-            '<div class="mx-4 mb-4 rounded border p-6 bg-white dark:bg-gray-700">
+            '<div class="mx-4 mb-4 rounded border p-6 bg-white dark:bg-gray-700 overflow-auto">
               <div class="data data-event-log mb-4">
                 <table class="w-full">
                   <thead>
