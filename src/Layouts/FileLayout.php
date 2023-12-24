@@ -30,14 +30,14 @@ class FileLayout extends Layout
                 ->setId($data['size'] ?? null),
 
             Template::make()
-                ->setClass('px-6 pb-4')
+                ->setClass('px-6 pb-4 grow overflow-hidden')
                 ->setSlot(
                     match (true) {
                         (stripos($data['type'], 'text/') !== false ||
                             stripos($data['type'], 'application/json') !== false) => CodeEditor::make('content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
-                            ->setClass('!m-0'),
+                            ->setClass('!m-0 h-full flex'),
                         stripos($data['type'], 'image/') !== false => Media::make('path')
                             ->setData($data),
                         default => [],

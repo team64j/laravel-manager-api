@@ -160,12 +160,13 @@ class TemplateLayout extends Layout
                         )
                         ->addColumn(
                             'caption',
-                            Lang::get('global.tmplvars_caption')
+                            Lang::get('global.tmplvars_caption'),
+                            ['width' => '50%'],
                         )
                         ->addColumn(
                             'rank',
                             Lang::get('global.tmplvars_rank'),
-                            ['textAlign' => 'center']
+                            ['width' => '12rem', 'textAlign' => 'center']
                         )
                 ),
         ];
