@@ -540,20 +540,6 @@ class BootstrapController extends Controller
                             ],
                         ],
                         [
-                            'key' => 'dark',
-                            'icon' => 'fa fa-moon fa-fw',
-                            'icons' => [
-                                0 => [
-                                    'key' => 'fa fa-sun fa-fw',
-                                    'value' => 1,
-                                ],
-                                1 => [
-                                    'key' => 'fa fa-moon fa-fw',
-                                    'value' => 0,
-                                ],
-                            ],
-                        ],
-                        [
                             'key' => 'site_desktop',
                             'icon' => 'fa fa-desktop',
                             'icons' => [
@@ -576,6 +562,32 @@ class BootstrapController extends Controller
                             'image' => '[+user.photo+]',
                             'name' => '[+user.username+]',
                             'data' => [
+                                [
+                                    'key' => 'dark',
+                                    'icon' => 'fa fa-moon fa-fw',
+                                    'name' => 'Dark theme',
+                                    'icons' => [
+                                        0 => [
+                                            'key' => 'fa fa-sun fa-fw',
+                                            'value' => 1,
+                                            'name' => 'Light theme',
+                                        ],
+                                        1 => [
+                                            'key' => 'fa fa-moon fa-fw',
+                                            'value' => 0,
+                                            'name' => 'Dark theme',
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'key' => 'workspace',
+                                    'icon' => 'fa fa-eye',
+                                    'name' => '[%settings_ui%]',
+                                    'to' => [
+                                        'name' => 'Workspace',
+                                    ],
+                                    'permissions' => ['settings'],
+                                ],
                                 [
                                     'key' => 'password',
                                     'icon' => 'fa fa-lock',
@@ -605,15 +617,6 @@ class BootstrapController extends Controller
                                     'name' => '[%edit_settings%]',
                                     'to' => [
                                         'name' => 'Configuration',
-                                    ],
-                                    'permissions' => ['settings'],
-                                ],
-                                [
-                                    'key' => 'workspace',
-                                    'icon' => 'fa fa-eye',
-                                    'name' => '[%settings_ui%]',
-                                    'to' => [
-                                        'name' => 'Workspace',
                                     ],
                                     'permissions' => ['settings'],
                                 ],
@@ -664,7 +667,7 @@ class BootstrapController extends Controller
                                 [
                                     'key' => 'settings_version',
                                     'name' => 'Evolution CE [(settings_version)]',
-                                    'class' => 'text-center text-sm',
+                                    'class' => 'text-center text-sm disabled',
                                 ],
                             ],
                         ],
