@@ -19,54 +19,6 @@ use Team64j\LaravelManagerApi\Layouts\FileLayout;
 
 class FileController extends Controller
 {
-//    /**
-//     * @param FileRequest $request
-//     * @param string $file
-//     *
-//     * @return FileResource
-//     */
-//    public function index(FileRequest $request, string $file): FileResource
-//    {
-//        $data = [];
-//        $root = realpath(Config::get('global.filemanager_path', App::basePath('../')));
-//        $filename = trim(base64_decode(urldecode($file)), '/');
-//        $path = $root . DIRECTORY_SEPARATOR . $filename;
-//        $types = [
-//            'text/plain',
-//            'image/svg+xml',
-//            'application/json',
-//            'application/octet-stream',
-//        ];
-//
-//        $ignoreExtensions = [
-//            'woff',
-//            'woff2',
-//        ];
-//
-//        if (File::isFile($path)) {
-//            $data['path'] = $filename;
-//            $data['name'] = File::name($path);
-//            $data['basename'] = File::basename($path);
-//            $data['type'] = File::mimeType($path);
-//            $data['ext'] = File::extension($path);
-//            $data['lang'] = '';
-//
-//            $content = File::get($path);
-//
-//            if (str_starts_with($content, '#!/usr/bin/env php')) {
-//                $data['lang'] = 'php';
-//            }
-//
-//            if (!in_array($data['ext'], $ignoreExtensions, true)) {
-//                if (in_array($data['type'], $types) || Str::startsWith($data['type'], 'text/')) {
-//                    $data['content'] = $content;
-//                }
-//            }
-//        }
-//
-//        return FileResource::make($data);
-//    }
-
     /**
      * @OA\Get(
      *     path="/file/{file}",

@@ -49,28 +49,6 @@ class DashboardController extends Controller
             ]);
     }
 
-//    /**
-//     * @param DashboardRequest $request
-//     *
-//     * @return Application|Factory|View
-//     */
-//    public function show(DashboardRequest $request): View | Factory | Application
-//    {
-//        $userAttributes = Auth::user()->attributes;
-//
-//        return view('dashboard', [
-//            'user' => [
-//                'username' => Auth::user()->username,
-//                'role' => $userAttributes->role,
-//                'permissions' => $userAttributes->rolePermissions->pluck('permission'),
-//            ],
-//            'config' => [
-//                'site_url' => URL::to('/', [], Config::get('global.server_protocol') == 'https'),
-//            ],
-//            'lexicon' => Lang::get('global'),
-//        ]);
-//    }
-
     /**
      * @OA\Get(
      *     path="/dashboard/news",
@@ -168,32 +146,4 @@ class DashboardController extends Controller
             return $data;
         });
     }
-
-//    /**
-//     * @OA\Get(
-//     *     path="/dashboard/sidebar",
-//     *     summary="Получение шаблона сайдбара",
-//     *     tags={"Dashboard"},
-//     *     security={{"Api":{}}},
-//     *     @OA\Response(
-//     *          response="200",
-//     *          description="ok",
-//     *          @OA\JsonContent(
-//     *              type="object"
-//     *          )
-//     *      )
-//     * )
-//     * @param DashboardRequest $request
-//     * @param DashboardLayout $layout
-//     *
-//     * @return AnonymousResourceCollection
-//     */
-//    public function sidebar(DashboardRequest $request, DashboardLayout $layout): AnonymousResourceCollection
-//    {
-//        return DashboardResource::collection([
-//            'data' => [],
-//            'meta' => [],
-//            'layout' => $layout->sidebar(),
-//        ]);
-//    }
 }
