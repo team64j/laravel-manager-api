@@ -69,33 +69,35 @@ class DashboardController extends Controller
      */
     public function news(DashboardRequest $request): array
     {
-        return Cache::remember('cms.dashboard.news', 86400, function () {
-            $data = [];
+        return [
+            'data' => Cache::remember('cms.dashboard.news', 86400, function () {
+                $data = [];
 
-            if (Config::get('global.rss_url_news')) {
-                $result = \simplexml_load_string(
-                    Http::get(Config::get('global.rss_url_news'))
-                        ->body()
-                );
+                if (Config::get('global.rss_url_news')) {
+                    $result = \simplexml_load_string(
+                        Http::get(Config::get('global.rss_url_news'))
+                            ->body()
+                    );
 
-                foreach ($result->entry as $item) {
-                    $content = strip_tags((string) $item->content);
+                    foreach ($result->entry as $item) {
+                        $content = strip_tags((string) $item->content);
 
-                    if (strlen($content) > 199) {
-                        $content = Str::words($content, 15, '...');
-                        $content .= '<br />Read <a href="' . $item->link['href'] . '" target="_blank">more</a>.';
+                        if (strlen($content) > 199) {
+                            $content = Str::words($content, 15, '...');
+                            $content .= '<br />Read <a href="' . $item->link['href'] . '" target="_blank">more</a>.';
+                        }
+
+                        $data[] = [
+                            'content' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
+                                '</a> - <strong>' .
+                                $item->updated . '</strong><div class="text-sm">' . $content . '</div>',
+                        ];
                     }
-
-                    $data[] = [
-                        'content' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
-                            '</a> - <strong>' .
-                            $item->updated . '</strong><div class="text-sm">' . $content . '</div>',
-                    ];
                 }
-            }
 
-            return $data;
-        });
+                return $data;
+            }),
+        ];
     }
 
     /**
@@ -118,32 +120,34 @@ class DashboardController extends Controller
      */
     public function newsSecurity(DashboardRequest $request): array
     {
-        return Cache::remember('cms.dashboard.news-security', 86400, function () {
-            $data = [];
+        return [
+            'data' => Cache::remember('cms.dashboard.news-security', 86400, function () {
+                $data = [];
 
-            if (Config::get('global.rss_url_security')) {
-                $result = \simplexml_load_string(
-                    Http::get(Config::get('global.rss_url_security'))
-                        ->body()
-                );
+                if (Config::get('global.rss_url_security')) {
+                    $result = \simplexml_load_string(
+                        Http::get(Config::get('global.rss_url_security'))
+                            ->body()
+                    );
 
-                foreach ($result->entry as $item) {
-                    $content = strip_tags((string) $item->content);
+                    foreach ($result->entry as $item) {
+                        $content = strip_tags((string) $item->content);
 
-                    if (strlen($content) > 199) {
-                        $content = Str::words($content, 15, '...');
-                        $content .= '<br />Read <a href="' . $item->link['href'] . '" target="_blank">more</a>.';
+                        if (strlen($content) > 199) {
+                            $content = Str::words($content, 15, '...');
+                            $content .= '<br />Read <a href="' . $item->link['href'] . '" target="_blank">more</a>.';
+                        }
+
+                        $data[] = [
+                            'content' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
+                                '</a> - <strong>' .
+                                $item->updated . '</strong><div class="text-sm">' . $content . '</div>',
+                        ];
                     }
-
-                    $data[] = [
-                        'content' => '<a href="' . $item->link['href'] . '" target="_blank">' . $item->title .
-                            '</a> - <strong>' .
-                            $item->updated . '</strong><div class="text-sm">' . $content . '</div>',
-                    ];
                 }
-            }
 
-            return $data;
-        });
+                return $data;
+            }),
+        ];
     }
 }

@@ -789,9 +789,10 @@ class DashboardLayout extends Layout
                         Section::make(
                             'fa fa-rss',
                             Lang::get('global.modx_news'),
-                            'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg border transition',
+                            'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNews')
+                                ->setClass('h-40')
                                 ->setUrl('/dashboard/news')
                         )
                     )
@@ -805,9 +806,10 @@ class DashboardLayout extends Layout
                         Section::make(
                             'fa fa-exclamation-triangle',
                             Lang::get('global.modx_security_notices'),
-                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg border transition',
+                            'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNewsSecurity')
+                                ->setClass('h-40')
                                 ->setUrl('/dashboard/news-security')
                         )
                     )
