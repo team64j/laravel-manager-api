@@ -329,6 +329,7 @@ class BootstrapController extends Controller
                         [
                             'key' => 'sidebarShow',
                             'icon' => 'fa fa-bars',
+                            'value' => 1,
                             'icons' => [
                                 0 => [
                                     'key' => 'fa fa-ellipsis-vertical fa-fw',

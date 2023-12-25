@@ -48,7 +48,7 @@ class DocumentRequest extends FormRequest
             'createdon' => 'string|nullable',
             'deleted' => 'int',
             'deletedby' => 'int',
-            'deletedon' => 'int',
+            //'deletedon' => 'string|int',
             'description' => 'string|nullable',
             'editedby' => 'int',
             'editedon' => 'string|nullable',
