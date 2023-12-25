@@ -725,7 +725,7 @@ class DashboardLayout extends Layout
                     Section::make(
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
-                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg border transition',
+                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-750 hover:shadow-lg transition',
                         '<div class="data"><table>' .
                         '<tr><td class="w-52">' . Lang::get('global.yourinfo_username') .
                         '</td><td><strong>' .
@@ -746,7 +746,7 @@ class DashboardLayout extends Layout
                     Section::make(
                         'fa fa-user',
                         Lang::get('global.onlineusers_title'),
-                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-700 hover:shadow-lg border transition',
+                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-750 hover:shadow-lg transition',
                         [
                             '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
                             date('H:i:s') . '</b>)</div>',
@@ -768,7 +768,7 @@ class DashboardLayout extends Layout
                         Section::make(
                             'fa fa-pencil',
                             Lang::get('global.activity_title'),
-                            'hover:shadow-lg bg-white dark:bg-gray-700 transition overflow-hidden border',
+                            'hover:shadow-lg bg-white dark:bg-gray-750 overflow-hidden transition',
                             Panel::make()
                                 ->setId('widgetDocuments')
                                 ->setHistory(false)
@@ -789,7 +789,7 @@ class DashboardLayout extends Layout
                         Section::make(
                             'fa fa-rss',
                             Lang::get('global.modx_news'),
-                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg border transition',
+                            'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg border transition',
                             Panel::make()
                                 ->setId('widgetNews')
                                 ->setUrl('/dashboard/news')

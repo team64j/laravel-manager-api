@@ -342,7 +342,6 @@ class DocumentLayout extends Layout
 
         $tvTabs = Tabs::make()
             ->setId('tvs')
-            ->setClass('h-full')
             ->setData([])
             ->isVertical();
 
@@ -366,9 +365,7 @@ class DocumentLayout extends Layout
 
             $tvTabs->addTab(
                 $categoryId,
-                $tv['category_name'],
-                null,
-                'flex flex-wrap h-full p-6'
+                $tv['category_name']
             );
 
             $custom = str_starts_with($tv['type'], 'custom_tv:');
