@@ -329,15 +329,17 @@ class BootstrapController extends Controller
                         [
                             'key' => 'sidebarShow',
                             'icon' => 'fa fa-bars',
-                            'value' => 1,
+                            'value' => true,
                             'icons' => [
-                                0 => [
-                                    'key' => 'fa fa-ellipsis-vertical fa-fw',
-                                    'value' => 1,
+                                [
+                                    'icon' => 'fa fa-bars',
+                                    'key' => false,
+                                    'value' => true,
                                 ],
-                                1 => [
-                                    'key' => 'fa fa-bars fa-fw',
-                                    'value' => 0,
+                                [
+                                    'icon' => 'fa fa-ellipsis-vertical',
+                                    'key' => true,
+                                    'value' => false,
                                 ],
                             ],
                         ],
@@ -531,27 +533,31 @@ class BootstrapController extends Controller
                         [
                             'key' => 'searchShow',
                             'icon' => 'fa fa-search',
+                            'value' => false,
                             'icons' => [
-                                0 => [
-                                    'value' => 1,
+                                [
+                                    'key' => false,
+                                    'value' => true,
                                 ],
-                                1 => [
-                                    'value' => 0,
+                                [
+                                    'key' => true,
+                                    'value' => false,
                                 ],
                             ],
                         ],
                         [
-                            'key' => 'site_desktop',
+                            'key' => 'siteStatus',
                             'icon' => 'fa fa-desktop',
+                            'value' => Config::get('global.site_status'),
                             'icons' => [
-                                'site_status' => [
-                                    '0' => [
-                                        'icon' => 'fa fa-triangle-exclamation text-amber-400',
-                                        'title' => '[(site_unavailable_message)]',
-                                    ],
-                                    '1' => [
-                                        'icon' => 'fa fa-desktop relative',
-                                    ],
+                                [
+                                    'icon' => 'fa fa-triangle-exclamation text-amber-400',
+                                    'title' => '[(site_unavailable_message)]',
+                                    'value' => false
+                                ],
+                                [
+                                    'icon' => 'fa fa-desktop relative',
+                                    'value' => true
                                 ],
                             ],
                             'href' => url('/'),
@@ -567,16 +573,19 @@ class BootstrapController extends Controller
                                     'key' => 'dark',
                                     'icon' => 'fa fa-moon fa-fw',
                                     'name' => 'Dark theme',
+                                    'value' => false,
                                     'icons' => [
-                                        0 => [
-                                            'key' => 'fa fa-sun fa-fw',
-                                            'value' => 1,
+                                        [
+                                            'icon' => 'fa fa-sun fa-fw',
                                             'name' => 'Light theme',
+                                            'key' => false,
+                                            'value' => true,
                                         ],
-                                        1 => [
-                                            'key' => 'fa fa-moon fa-fw',
-                                            'value' => 0,
+                                        [
+                                            'icon' => 'fa fa-moon fa-fw',
                                             'name' => 'Dark theme',
+                                            'key' => true,
+                                            'value' => false,
                                         ],
                                     ],
                                 ],

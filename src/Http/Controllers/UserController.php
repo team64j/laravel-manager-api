@@ -183,7 +183,7 @@ class UserController extends Controller
                         'dir' => $dir,
                     ],
                     'filters' => $filters,
-                ],
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 
