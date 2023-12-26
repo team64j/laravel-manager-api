@@ -328,18 +328,14 @@ class BootstrapController extends Controller
                     'data' => [
                         [
                             'key' => 'sidebarShow',
-                            'icon' => 'fa fa-bars',
-                            'value' => true,
-                            'icons' => [
+                            'values' => [
                                 [
-                                    'icon' => 'fa fa-bars',
-                                    'key' => false,
                                     'value' => true,
+                                    'icon' => 'fa fa-bars',
                                 ],
                                 [
-                                    'icon' => 'fa fa-ellipsis-vertical',
-                                    'key' => true,
                                     'value' => false,
+                                    'icon' => 'fa fa-ellipsis-vertical',
                                 ],
                             ],
                         ],
@@ -533,14 +529,12 @@ class BootstrapController extends Controller
                         [
                             'key' => 'searchShow',
                             'icon' => 'fa fa-search',
-                            'value' => false,
-                            'icons' => [
+                            'value' => true,
+                            'values' => [
                                 [
-                                    'key' => false,
                                     'value' => true,
                                 ],
                                 [
-                                    'key' => true,
                                     'value' => false,
                                 ],
                             ],
@@ -549,15 +543,15 @@ class BootstrapController extends Controller
                             'key' => 'siteStatus',
                             'icon' => 'fa fa-desktop',
                             'value' => Config::get('global.site_status'),
-                            'icons' => [
+                            'values' => [
+                                [
+                                    'icon' => 'fa fa-desktop relative',
+                                    'value' => '1'
+                                ],
                                 [
                                     'icon' => 'fa fa-triangle-exclamation text-amber-400',
                                     'title' => '[(site_unavailable_message)]',
-                                    'value' => false
-                                ],
-                                [
-                                    'icon' => 'fa fa-desktop relative',
-                                    'value' => true
+                                    'value' => '0'
                                 ],
                             ],
                             'href' => url('/'),
@@ -571,20 +565,15 @@ class BootstrapController extends Controller
                             'data' => [
                                 [
                                     'key' => 'dark',
-                                    'icon' => 'fa fa-moon fa-fw',
-                                    'name' => 'Dark theme',
-                                    'value' => false,
-                                    'icons' => [
+                                    'values' => [
                                         [
                                             'icon' => 'fa fa-sun fa-fw',
                                             'name' => 'Light theme',
-                                            'key' => false,
                                             'value' => true,
                                         ],
                                         [
                                             'icon' => 'fa fa-moon fa-fw',
                                             'name' => 'Dark theme',
-                                            'key' => true,
                                             'value' => false,
                                         ],
                                     ],
