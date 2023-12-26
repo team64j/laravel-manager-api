@@ -529,7 +529,6 @@ class BootstrapController extends Controller
                         [
                             'key' => 'searchShow',
                             'icon' => 'fa fa-search',
-                            'value' => true,
                             'values' => [
                                 [
                                     'value' => true,
