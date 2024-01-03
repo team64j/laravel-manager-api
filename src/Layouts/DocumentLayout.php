@@ -37,6 +37,22 @@ class DocumentLayout extends Layout
      */
     public function default(SiteContent $model = null, string $url = ''): array
     {
+        if (request()->input('type') == 'reference') {
+            $filedContent = Input::make(
+                'content',
+                Lang::get('global.resource_content'),
+                '<b>[*content*]</b>'
+            );
+        } else {
+            $filedContent = CodeEditor::make(
+                'content',
+                Lang::get('global.resource_content'),
+                '<b>[*content*]</b>'
+            )
+                ->setRows(20)
+                ->setLanguage('html');
+        }
+
         return [
             ActionsButtons::make()
                 ->setCancel()
@@ -105,13 +121,7 @@ class DocumentLayout extends Layout
                                     ->setRows(3)
                                     ->setLanguage('html'),
 
-                                CodeEditor::make(
-                                    'content',
-                                    Lang::get('global.resource_content'),
-                                    '<b>[*content*]</b>'
-                                )
-                                    ->setRows(20)
-                                    ->setLanguage('html'),
+                                $filedContent,
                             ]),
 
                         Template::make()
@@ -217,7 +227,8 @@ class DocumentLayout extends Layout
                                             'key' => 'reference',
                                             'value' => Lang::get('global.resource_type_weblink'),
                                         ],
-                                    ]),
+                                    ])
+                                    ->setEmitInput('inputChangeQuery'),
 
                                 Select::make(
                                     'contentType',

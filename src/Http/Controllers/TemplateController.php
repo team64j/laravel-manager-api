@@ -501,12 +501,8 @@ class TemplateController extends Controller
     {
         $category = $request->input('parent', -1);
         $filter = $request->input('filter');
-        $opened = $request->string('opened')
-            ->explode(',')
-            ->filter(fn($i) => $i !== '')
-            ->map(fn($i) => intval($i))
-            ->values()
-            ->toArray();
+        $settings = $request->whenFilled('settings', fn($i) => is_array($i) ? $i : json_decode($i, true));
+        $settings['opened'] ?? [];
 
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked', 'selectable'];
         $showFromCategory = $category >= 0;
@@ -542,7 +538,8 @@ class TemplateController extends Controller
                 ]);
         }
 
-        $result = $result->map(function (SiteTemplate $template) use ($request, $opened, $fields) {
+        $result = $result->map(function (SiteTemplate $template) use ($request, $settings, $fields) {
+            $opened = array_map('intval', $settings['opened'] ?? []);
             /** @var Category $category */
             $category = $template->getRelation('category') ?? new Category();
             $category->id = $template->category;
