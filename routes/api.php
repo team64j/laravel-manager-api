@@ -49,45 +49,45 @@ Route::prefix($apiPath)
             ->group(fn() => [
                 Route::withoutMiddleware($authMiddleware)
                     ->group(fn() => [
-                        Route::get('/', [AuthController::class, 'loginForm']),
-                        Route::post('/', [AuthController::class, 'login']),
-                        Route::get('forgot', [AuthController::class, 'forgotForm']),
-                        Route::post('forgot', [AuthController::class, 'forgot']),
+                        Route::get('/', [AuthController::class, 'loginForm'])->name('auth.login-form'),
+                        Route::post('/', [AuthController::class, 'login'])->name('auth.login'),
+                        Route::get('forgot', [AuthController::class, 'forgotForm'])->name('auth.forgot-form'),
+                        Route::post('forgot', [AuthController::class, 'forgot'])->name('auth.forgot'),
                     ]),
 
-                Route::post('refresh', [AuthController::class, 'refresh']),
+                Route::post('refresh', [AuthController::class, 'refresh'])->name('auth.refresh'),
             ]),
 
         /** Boostrap */
         Route::prefix('bootstrap')
             ->group(fn() => [
                 Route::withoutMiddleware($authMiddleware)
-                    ->get('/', [BootstrapController::class, 'init']),
-                Route::post('/', [BootstrapController::class, 'index']),
-                Route::get('select-pages', [BootstrapController::class, 'selectPages']),
+                    ->get('/', [BootstrapController::class, 'init'])->name('bootstrap.init'),
+                Route::post('/', [BootstrapController::class, 'index'])->name('bootstrap.index'),
+                Route::get('select-pages', [BootstrapController::class, 'selectPages'])->name('bootstrap.select-pages'),
             ]),
 
         /** Cache */
         Route::prefix('cache')
             ->group(fn() => [
-                Route::get('/', [CacheController::class, 'index']),
+                Route::get('/', [CacheController::class, 'index'])->name('cache.index'),
             ]),
 
         /** Categories */
         Route::prefix('categories')
             ->group(fn() => [
-                Route::get('sort', [CategoryController::class, 'sort']),
-                Route::get('select', [CategoryController::class, 'select']),
-                Route::get('tree', [CategoryController::class, 'tree']),
-                Route::get('list', [CategoryController::class, 'list']),
+                Route::get('sort', [CategoryController::class, 'sort'])->name('categories.sort'),
+                Route::get('select', [CategoryController::class, 'select'])->name('categories.select'),
+                Route::get('tree', [CategoryController::class, 'tree'])->name('categories.tree'),
+                Route::get('list', [CategoryController::class, 'list'])->name('categories.list'),
             ])
             ->apiResource('categories', CategoryController::class),
 
         /** Chunks */
         Route::prefix('chunks')
             ->group(fn() => [
-                Route::get('tree', [ChunkController::class, 'tree']),
-                Route::get('list', [ChunkController::class, 'list']),
+                Route::get('tree', [ChunkController::class, 'tree'])->name('chunks.news'),
+                Route::get('list', [ChunkController::class, 'list'])->name('chunks.list'),
             ])
             ->apiResource('chunks', ChunkController::class),
 
@@ -98,20 +98,20 @@ Route::prefix($apiPath)
         Route::prefix('dashboard')
             ->group(fn() => [
                 //Route::get('sidebar', [DashboardController::class, 'sidebar']),
-                Route::get('news', [DashboardController::class, 'news']),
-                Route::get('news-security', [DashboardController::class, 'newsSecurity']),
+                Route::get('news', [DashboardController::class, 'news'])->name('dashboard.news'),
+                Route::get('news-security', [DashboardController::class, 'newsSecurity'])->name('dashboard.news-security'),
             ])
             ->apiResource('dashboard', DashboardController::class)->only(['index']),
 
         /** Documents */
         Route::prefix('document')
             ->group(fn() => [
-                Route::get('tree', [DocumentController::class, 'tree']),
-                Route::get('parents/{id}', [DocumentController::class, 'parents']),
+                Route::get('tree', [DocumentController::class, 'tree'])->name('document.tree'),
+                Route::get('parents/{id}', [DocumentController::class, 'parents'])->name('document.parents'),
             ])
             ->apiResource('document', DocumentController::class),
 
-        Route::get('documents/{id}', [DocumentsController::class, 'show']),
+        Route::get('documents/{id}', [DocumentsController::class, 'show'])->name('documents'),
 
         /** Event Logs */
         Route::prefix('event-log')
@@ -123,30 +123,30 @@ Route::prefix($apiPath)
         /** Files */
         Route::prefix('file')
             ->group(fn() => [
-                Route::get('tree/{path}', [FileController::class, 'tree']),
+                Route::get('tree/{path}', [FileController::class, 'tree'])->name('file.tree'),
             ])
             ->apiResource('file', FileController::class)->only(['show']),
 
         Route::prefix('files')
             ->group(fn() => [
-                Route::get('tree', [FilesController::class, 'tree']),
+                Route::get('tree', [FilesController::class, 'tree'])->name('files.tree'),
             ])
             ->apiResource('files', FilesController::class)->only(['index', 'show']),
 
         /** Help */
-        Route::get('help', [HelpController::class, 'index']),
+        Route::get('help', [HelpController::class, 'index'])->name('help'),
 
         /** Modules */
         Route::prefix('modules')
             ->group(fn() => [
-                Route::get('tree', [ModuleController::class, 'tree']),
-                Route::get('list', [ModuleController::class, 'list']),
-                Route::get('exec', [ModuleController::class, 'exec']),
+                Route::get('tree', [ModuleController::class, 'tree'])->name('modules.tree'),
+                Route::get('list', [ModuleController::class, 'list'])->name('modules.list'),
+                Route::get('exec', [ModuleController::class, 'exec'])->name('modules.exec'),
                 Route::addRoute(
                     ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
                     'exec/{id}',
                     [ModuleController::class, 'execRun']
-                ),
+                )->name('modules.run'),
             ])
             ->apiResource('modules', ModuleController::class),
 
@@ -156,26 +156,27 @@ Route::prefix($apiPath)
         /** Permissions */
         Route::prefix('permissions')
             ->group(fn() => [
-                Route::get('groups', [PermissionController::class, 'groups']),
-                Route::get('groups/{id}', [PermissionController::class, 'group']),
-                Route::get('resources', [PermissionController::class, 'resources']),
-                Route::get('resources/{id}', [PermissionController::class, 'resource']),
-                Route::get('relations', [PermissionController::class, 'relations']),
-                Route::get('relations/{id}', [PermissionController::class, 'relation']),
-                Route::get('select', [PermissionController::class, 'select']),
+                Route::get('groups', [PermissionController::class, 'groups'])->name('permissions.groups'),
+                Route::get('groups/{id}', [PermissionController::class, 'group'])->name('permissions.group'),
+                Route::get('resources', [PermissionController::class, 'resources'])->name('permissions.resources'),
+                Route::get('resources/{id}', [PermissionController::class, 'resource'])->name('permissions.resource'),
+                Route::get('relations', [PermissionController::class, 'relations'])->name('permissions.relations'),
+                Route::get('relations/{id}', [PermissionController::class, 'relation'])->name('permissions.relation'),
+                Route::get('select', [PermissionController::class, 'select'])->name('permissions.select'),
             ]),
 
         /** Plugins */
         Route::prefix('plugins')
             ->group(fn() => [
-                Route::get('sort', [PluginController::class, 'sort']),
-                Route::get('tree', [PluginController::class, 'tree']),
-                Route::get('list', [PluginController::class, 'list']),
+                Route::get('sort', [PluginController::class, 'sort'])->name('plugins.sort'),
+                Route::get('tree', [PluginController::class, 'tree'])->name('plugins.tree'),
+                Route::get('list', [PluginController::class, 'list'])->name('plugins.list'),
             ])
             ->apiResource('plugins', PluginController::class),
 
         /** Roles */
         Route::prefix('roles')
+            ->name('roles.')
             ->group(fn() => [
                 Route::apiResource('categories', RoleCategoryController::class)->only(['index', 'show']),
                 Route::apiResource('permissions', RolePermissionController::class)->only(['index', 'show']),
@@ -183,54 +184,54 @@ Route::prefix($apiPath)
             ]),
 
         /** Schedules */
-        Route::get('schedule', [ScheduleController::class, 'index']),
+        Route::get('schedule', [ScheduleController::class, 'index'])->name('schedule.index'),
 
         /** Schedules */
-        Route::get('search', [SearchController::class, 'index']),
+        Route::get('search', [SearchController::class, 'index'])->name('search.index'),
 
         /** Snippets */
         Route::prefix('snippets')
             ->group(fn() => [
-                Route::get('tree', [SnippetController::class, 'tree']),
-                Route::get('list', [SnippetController::class, 'list']),
+                Route::get('tree', [SnippetController::class, 'tree'])->name('snippets.tree'),
+                Route::get('list', [SnippetController::class, 'list'])->name('snippets.list'),
             ])
             ->apiResource('snippets', SnippetController::class),
 
         /** System Info */
         Route::prefix('system-info')
             ->group(fn() => [
-                Route::get('phpinfo', [SystemInfoController::class, 'phpinfo']),
+                Route::get('phpinfo', [SystemInfoController::class, 'phpinfo'])->name('system-info.phpinfo'),
             ])
             ->apiResource('system-info', SystemInfoController::class)->only(['index']),
 
         /** System Logs */
-        Route::get('system-log', [SystemLogController::class, 'index']),
+        Route::get('system-log', [SystemLogController::class, 'index'])->name('system-log.phpinfo'),
 
         /** Templates */
         Route::prefix('templates')
             ->group(fn() => [
-                Route::get('tree', [TemplateController::class, 'tree']),
-                Route::get('list', [TemplateController::class, 'list']),
-                Route::get('select', [TemplateController::class, 'select']),
-                Route::get('{id}/tvs', [TemplateController::class, 'tvs']),
+                Route::get('tree', [TemplateController::class, 'tree'])->name('templates.tree'),
+                Route::get('list', [TemplateController::class, 'list'])->name('templates.list'),
+                Route::get('select', [TemplateController::class, 'select'])->name('templates.select'),
+                Route::get('{id}/tvs', [TemplateController::class, 'tvs'])->name('templates.tvs'),
             ])
             ->apiResource('templates', TemplateController::class),
 
         /** Tvs */
         Route::prefix('tvs')
             ->group(fn() => [
-                Route::get('tree', [TvController::class, 'tree']),
-                Route::get('list', [TvController::class, 'list']),
-                Route::get('sort', [TvController::class, 'sort']),
-                Route::get('types', [TvController::class, 'types']),
+                Route::get('tree', [TvController::class, 'tree'])->name('tvs.tree'),
+                Route::get('list', [TvController::class, 'list'])->name('tvs.list'),
+                Route::get('sort', [TvController::class, 'sort'])->name('tvs.sort'),
+                Route::get('types', [TvController::class, 'types'])->name('tvs.types'),
             ])
             ->apiResource('tvs', TvController::class),
 
         /** Users */
         Route::prefix('users')
             ->group(fn() => [
-                Route::get('list', [UserController::class, 'list']),
-                Route::get('active', [UserController::class, 'active']),
+                Route::get('list', [UserController::class, 'list'])->name('users.list'),
+                Route::get('active', [UserController::class, 'active'])->name('users.active'),
             ])
             ->apiResource('users', UserController::class),
 
