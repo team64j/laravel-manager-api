@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
+use EvolutionCMS\Models\User;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelEvolution\Models\User;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Title;

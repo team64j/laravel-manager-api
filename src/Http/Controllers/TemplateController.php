@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\Category;
+use EvolutionCMS\Models\SiteTemplate;
+use EvolutionCMS\Models\SiteTmplvar;
+use EvolutionCMS\Models\SiteTmplvarTemplate;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -12,10 +16,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\Category;
-use Team64j\LaravelEvolution\Models\SiteTemplate;
-use Team64j\LaravelEvolution\Models\SiteTmplvar;
-use Team64j\LaravelEvolution\Models\SiteTmplvarTemplate;
 use Team64j\LaravelManagerApi\Components\Checkbox;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;

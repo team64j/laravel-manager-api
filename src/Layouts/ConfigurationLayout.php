@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use DateTimeImmutable;
+use EvolutionCMS\Models\SiteTemplate;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Team64j\LaravelEvolution\Models\SiteTemplate;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Input;
 use Team64j\LaravelManagerApi\Components\Number;

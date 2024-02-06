@@ -2,6 +2,8 @@
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\DocumentgroupName;
+use EvolutionCMS\Models\SiteContent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -12,8 +14,6 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelEvolution\Facades\Uri;
-use Team64j\LaravelEvolution\Models\DocumentgroupName;
-use Team64j\LaravelEvolution\Models\SiteContent;
 use Team64j\LaravelManagerApi\Http\Requests\DocumentRequest;
 use Team64j\LaravelManagerApi\Http\Resources\DocumentResource;
 use Team64j\LaravelManagerApi\Layouts\DocumentLayout;

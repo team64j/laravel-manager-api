@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\EventLog;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\EventLog;
 use Team64j\LaravelManagerApi\Http\Requests\EventLogRequest;
 use Team64j\LaravelManagerApi\Http\Resources\EventLogResource;
 use Team64j\LaravelManagerApi\Layouts\EventLogLayout;

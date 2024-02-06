@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\SiteContent;
 use Team64j\LaravelManagerApi\Http\Requests\DocumentsRequest;
 use Team64j\LaravelManagerApi\Http\Resources\DocumentsResource;
 use Team64j\LaravelManagerApi\Layouts\DocumentsLayout;

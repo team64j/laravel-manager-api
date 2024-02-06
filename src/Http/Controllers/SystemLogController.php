@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\ManagerLog;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\ManagerLog;
 use Team64j\LaravelManagerApi\Http\Requests\SystemLogRequest;
 use Team64j\LaravelManagerApi\Http\Resources\SystemLogResource;
 use Team64j\LaravelManagerApi\Layouts\SystemLogLayout;

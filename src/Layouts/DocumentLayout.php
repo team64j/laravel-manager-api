@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
+use EvolutionCMS\Models\DocumentgroupName;
+use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelEvolution\Models\DocumentgroupName;
-use Team64j\LaravelEvolution\Models\SiteContent;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
 use Team64j\LaravelManagerApi\Components\Checkbox;
 use Team64j\LaravelManagerApi\Components\CodeEditor;

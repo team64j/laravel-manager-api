@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\DocumentgroupName;
+use EvolutionCMS\Models\MembergroupName;
+use EvolutionCMS\Models\SiteContent;
+use EvolutionCMS\Models\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\DocumentgroupName;
-use Team64j\LaravelEvolution\Models\MembergroupName;
-use Team64j\LaravelEvolution\Models\SiteContent;
-use Team64j\LaravelEvolution\Models\User;
 use Team64j\LaravelManagerApi\Http\Requests\PermissionRequest;
 use Team64j\LaravelManagerApi\Http\Resources\PermissionResource;
 use Team64j\LaravelManagerApi\Layouts\PermissionGroupLayout;

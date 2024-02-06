@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Events;
 
+use EvolutionCMS\Models\SystemEventname;
 use Illuminate\Support\Facades\Cache;
-use Team64j\LaravelEvolution\Models\SystemEventname;
 
 class Event
 {

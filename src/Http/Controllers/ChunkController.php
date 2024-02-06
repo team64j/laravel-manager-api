@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\Category;
+use EvolutionCMS\Models\SiteHtmlSnippet;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -11,8 +13,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\Category;
-use Team64j\LaravelEvolution\Models\SiteHtmlSnippet;
 use Team64j\LaravelManagerApi\Http\Requests\ChunkRequest;
 use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\ChunkResource;

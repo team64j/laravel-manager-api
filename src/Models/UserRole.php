@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Models;
 
+use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Team64j\LaravelEvolution\Models\SiteTmplvar;
 
 class UserRole extends Model
 {

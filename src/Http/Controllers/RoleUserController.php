@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\UserRole;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\UserRole;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
 use Team64j\LaravelManagerApi\Http\Resources\RoleUserResource;
 use Team64j\LaravelManagerApi\Layouts\RoleUserLayout;

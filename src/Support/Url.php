@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Support;
 
+use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\URL as FacadeUrl;
-use Team64j\LaravelEvolution\Models\SiteContent;
 
 class Url
 {

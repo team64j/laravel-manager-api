@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use EvolutionCMS\Models\ActiveUserSession;
+use EvolutionCMS\Models\User;
+use EvolutionCMS\Models\UserAttribute;
+use EvolutionCMS\Models\UserRole;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Models\ActiveUserSession;
-use Team64j\LaravelEvolution\Models\User;
-use Team64j\LaravelEvolution\Models\UserAttribute;
-use Team64j\LaravelEvolution\Models\UserRole;
 use Team64j\LaravelManagerApi\Http\Requests\UserRequest;
 use Team64j\LaravelManagerApi\Http\Resources\UserResource;
 use Team64j\LaravelManagerApi\Layouts\UserLayout;
