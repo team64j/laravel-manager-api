@@ -478,7 +478,7 @@ class DocumentLayout extends Layout
             ->setId('documents')
             ->setTitle(Lang::get('global.manage_documents'))
             ->setIcon('fa fa-sitemap')
-            ->setPermissions('edit_document')
+            ->setPermissions('edit_document,view_document')
             ->setRoute(['Document', 'Documents'])
             ->setSlot(
                 Tree::make()

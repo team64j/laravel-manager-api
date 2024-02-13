@@ -95,6 +95,10 @@ abstract class Component extends Fluent
             return $permissions;
         }
 
+        if (is_string($permissions)) {
+            return Gate::any(explode(',', $permissions));
+        }
+
         return Gate::check($permissions);
     }
 }

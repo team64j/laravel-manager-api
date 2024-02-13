@@ -76,16 +76,24 @@ class BootstrapController extends Controller
     public function index(BootstrapRequest $request): BootstrapResource
     {
         return BootstrapResource::make([
-            'menu' => $this->getMenu(),
-            'sidebar' => $this->getSidebar(),
             'routes' => $this->getRoutes(),
             'assets' => $this->getAssets(),
             'config' => [
                 'site_name' => Config::get('global.site_name'),
                 'site_status' => (bool) Config::get('global.site_status'),
                 'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
-            ]
-        ]);
+            ],
+            'lang' => [
+                'warning_not_saved' => Lang::get('global.warning_not_saved'),
+            ],
+        ])
+            ->additional([
+                'layout' => [
+                    'menu' => $this->getMenu(),
+                    'sidebar' => $this->getSidebar(),
+                    'main' => [],
+                ]
+            ]);
     }
 
     /**
@@ -815,7 +823,7 @@ class BootstrapController extends Controller
 
             if (isset($item['data'])) {
                 if ($item['data']) {
-                    //$item['data'] = array_values($item['data']);
+                    $item['data'] = array_values($item['data']);
                 } elseif (empty($item['url'])) {
                     unset($data[$k]);
                 }
