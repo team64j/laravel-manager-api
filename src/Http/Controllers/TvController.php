@@ -418,13 +418,8 @@ class TvController extends Controller
     public function tree(TvRequest $request): AnonymousResourceCollection
     {
         $category = $request->input('parent', -1);
+        $settings = $request->collect('settings');
         $filter = $request->input('filter');
-        $opened = $request->string('opened')
-            ->explode(',')
-            ->filter(fn($i) => $i !== '')
-            ->map(fn($i) => intval($i))
-            ->values()
-            ->toArray();
 
         $fields = ['id', 'name', 'caption', 'description', 'category', 'locked'];
         $showFromCategory = $category >= 0;
@@ -460,13 +455,13 @@ class TvController extends Controller
                 ]);
         }
 
-        $result = $result->map(function (SiteTmplvar $template) use ($request, $opened, $fields) {
+        $result = $result->map(function (SiteTmplvar $template) use ($request, $settings, $fields) {
             /** @var Category $category */
             $category = $template->getRelation('category') ?? new Category();
             $category->id = $template->category;
             $data = [];
 
-            if (in_array($category->getKey(), $opened, true)) {
+            if (in_array((string) $category->getKey(), ($settings['opened'] ?? []), true)) {
                 $request->query->replace([
                     'parent' => $category->getKey(),
                 ]);

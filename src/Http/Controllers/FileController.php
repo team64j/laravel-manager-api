@@ -124,8 +124,7 @@ class FileController extends Controller
         $root = realpath(Config::get('global.filemanager_path', App::basePath()));
         $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
         $after = basename(base64_decode($request->string('after', '')->toString()));
-        $settings = $request->whenFilled('settings', fn($i) => is_array($i) ? $i : json_decode($i, true));
-        $opened = $settings['opened'] ?? [];
+        $settings = $request->collect('settings');
 
         $directories = File::directories($parentPath);
         $files = File::files($parentPath, true);
@@ -171,10 +170,10 @@ class FileController extends Controller
                 '_date' => $date,
             ];
 
-            if (in_array($key, $opened)) {
+            if (in_array($key, ($settings['opened'] ?? []), true)) {
                 $newRequest = clone $request;
                 $newRequest->query->set('after', null);
-                $item += $this->tree($newRequest, $key)['data'] ?? [];
+                $item['data'] = $this->tree($newRequest, $key) ?? [];
             }
 
             $data[] = $item;
