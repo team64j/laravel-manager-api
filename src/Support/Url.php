@@ -165,6 +165,10 @@ class Url
             ->with('parents', fn($query) => $query->select($fields))
             ->firstWhere('id', $id);
 
+        if (!$item) {
+            return $parents;
+        }
+
         if ($current || $item->parent == 0) {
             $parents[$item->id] = [
                 'id' => $item->id,

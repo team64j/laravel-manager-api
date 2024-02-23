@@ -107,8 +107,8 @@ Route::prefix($apiPath)
         Route::prefix('document')
             ->group(fn() => [
                 Route::get('tree', [DocumentController::class, 'tree'])->name('document.tree'),
-                Route::get('select', [DocumentController::class, 'select'])->name('document.select'),
                 Route::get('parents/{id}', [DocumentController::class, 'parents'])->name('document.parents'),
+                Route::get('parents/{parent}/{id}', [DocumentController::class, 'setParent'])->name('document.set-parent'),
             ])
             ->apiResource('document', DocumentController::class),
 

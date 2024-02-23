@@ -766,7 +766,7 @@ class DocumentLayout extends Layout
                         ],
                     ])
                     ->setSettings([
-                        'parent' => 0,
+                        'parent' => -1,
                         'dir' => 'asc',
                         'order' => 'menuindex',
                         'keyTitle' => 'pagetitle',

@@ -366,11 +366,11 @@ class DocumentController extends Controller
      * )
      * @param DocumentRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return DocumentResource
      */
-    public function tree(DocumentRequest $request): AnonymousResourceCollection
+    public function tree(DocumentRequest $request): DocumentResource
     {
-        $parent = $request->input('parent');
+        $parent = $request->input('parent', -1);
         $filter = $request->input('filter');
         $settings = $request->whenFilled('settings', fn($i) => is_array($i) ? $i : json_decode($i, true));
         $settings['keyTitle'] = $settings['keyTitle'] ?? 'pagetitle';
@@ -428,20 +428,46 @@ class DocumentController extends Controller
                         ->setAttribute('private', $item->documentGroups->isNotEmpty());
                 });
 
-            return DocumentResource::collection($result)
+            return DocumentResource::make($result)
                 ->additional([
                     'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
                 ]);
         }
 
-        $result = $this->treeChildren($fields, (int) $parent, $order, $dir, $settings, $request->all());
+        if ($parent < 0) {
+            $request->query->set('parent', 0);
+            $result = $this->treeChildren($fields, 0, $order, $dir, $settings, $request->all());
 
-        return DocumentResource::collection($result->items())
-            ->additional([
+            $context = [
+                [
+                    'id' => 0,
+                    'title' => 'root',
+                    'folder' => true,
+                    'category' => true,
+                    'contextMenu' => false,
+                    'templates' => [
+                        'title' => false,
+                        'help' => false,
+                    ],
+                    'data' => $result->items(),
+                    'meta' => [
+                        'pagination' => $this->pagination($result),
+                    ],
+                ],
+            ];
+        } else {
+            $result = $this->treeChildren($fields, (int) $parent, $order, $dir, $settings, $request->all());
+
+            $context = [
+                'data' => $result->items(),
                 'meta' => [
                     'pagination' => $this->pagination($result),
                 ],
-            ]);
+            ];
+        }
+
+
+        return DocumentResource::make($context);
     }
 
     /**
@@ -545,8 +571,8 @@ class DocumentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/document/select",
-     *     summary="Получение списка документов",
+     *     path="/document/parents/{parent}/{id}",
+     *     summary="Получение данных при смене родителя",
      *     tags={"Document"},
      *     security={{"Api":{}}},
      *     @OA\Response(
@@ -557,32 +583,41 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     *
      * @param DocumentRequest $request
+     * @param int $parent
+     * @param int $id
      *
      * @return DocumentResource
      */
-    public function select(DocumentRequest $request)
+    public function setParent(DocumentRequest $request, int $parent, int $id): DocumentResource
     {
-        $selected = $request->integer('selected');
-        $items = \Illuminate\Support\Collection::make();
+        if ($parent == $id) {
+            abort(422, Lang::get('global.illegal_parent_self'));
+        } else {
+            $parents = Url::getParentsById($id, true);
 
-        $items->add([
-            'key' => 0,
-            'value' => '0 - root',
-            'selected' => 0 == $selected,
-        ]);
+            if (isset($parents[$parent])) {
+                abort(422, Lang::get('global.illegal_parent_child'));
+            }
+        }
 
-        $items = $items->merge(SiteContent::query()
-            ->where('parent', 0)
-            ->get()
-            ->map(fn(SiteContent $item) => [
-                'key' => $item->getKey(),
-                'value' => $item->getKey() . ' - ' . $item->pagetitle,
-                'selected' => $item->getKey() == $selected,
-            ])
-        );
+        if ($id > 0) {
+            /** @var SiteContent $result */
+            $result = SiteContent::query()->find($id);
 
-        return DocumentResource::make($items);
+            $data = [
+                'id' => $result->getKey(),
+                'title' => $result->pagetitle,
+                'parent' => $result->parent,
+            ];
+        } else {
+            $data = [
+                'id' => 0,
+                'title' => 'root',
+                'parent' => null,
+            ];
+        }
+
+        return DocumentResource::make($data);
     }
 }
