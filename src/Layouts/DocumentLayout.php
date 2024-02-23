@@ -127,6 +127,22 @@ class DocumentLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12')
                             ->setSlot([
+//                                Select::make(
+//                                    'parent',
+//                                    Lang::get('global.import_parent_resource'),
+//                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
+//                                )
+//                                    ->setUrl('/document/select')
+//                                    ->setData([
+//                                        [
+//                                            'key' => $model->parent,
+//                                            'value' => $model->parent ? $model->parent . ' - ' .
+//                                                $model->parents->pagetitle : '0 - root',
+//                                            'selected' => true,
+//                                        ],
+//                                    ])
+//                                    ->setEmitInput('inputChangeQuery'),
+
                                 Input::make(
                                     'parent',
                                     Lang::get('global.import_parent_resource'),
@@ -134,7 +150,7 @@ class DocumentLayout extends Layout
                                 )
                                     ->setInputClass('cursor-pointer')
                                     ->setValue(
-                                        $model->parent ? $model->parents->pagetitle . ' (' . $model->parent . ')' : 0
+                                        $model->parent ? $model->parent . ' - ' . $model->parents->pagetitle : '0 - root'
                                     )
                                     ->setEmitClick('inputTreeSelect')
                                     ->isRequired()

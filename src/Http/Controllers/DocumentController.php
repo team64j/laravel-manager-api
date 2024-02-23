@@ -542,4 +542,47 @@ class DocumentController extends Controller
     {
         return DocumentResource::make(Url::getParentsById($id));
     }
+
+    /**
+     * @OA\Get(
+     *     path="/document/select",
+     *     summary="Получение списка документов",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     *
+     * @param DocumentRequest $request
+     *
+     * @return DocumentResource
+     */
+    public function select(DocumentRequest $request)
+    {
+        $selected = $request->integer('selected');
+        $items = \Illuminate\Support\Collection::make();
+
+        $items->add([
+            'key' => 0,
+            'value' => '0 - root',
+            'selected' => 0 == $selected,
+        ]);
+
+        $items = $items->merge(SiteContent::query()
+            ->where('parent', 0)
+            ->get()
+            ->map(fn(SiteContent $item) => [
+                'key' => $item->getKey(),
+                'value' => $item->getKey() . ' - ' . $item->pagetitle,
+                'selected' => $item->getKey() == $selected,
+            ])
+        );
+
+        return DocumentResource::make($items);
+    }
 }
