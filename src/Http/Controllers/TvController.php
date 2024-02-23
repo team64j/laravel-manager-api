@@ -417,8 +417,8 @@ class TvController extends Controller
      */
     public function tree(TvRequest $request): AnonymousResourceCollection
     {
-        $category = $request->input('parent', -1);
         $settings = $request->collect('settings');
+        $category = $settings['parent'] ?? -1;
         $filter = $request->input('filter');
 
         $fields = ['id', 'name', 'caption', 'description', 'category', 'locked'];

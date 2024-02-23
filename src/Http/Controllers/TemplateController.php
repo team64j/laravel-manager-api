@@ -499,8 +499,8 @@ class TemplateController extends Controller
      */
     public function tree(TemplateRequest $request): AnonymousResourceCollection
     {
-        $category = $request->input('parent', -1);
         $settings = $request->collect('settings');
+        $category = $settings['parent'] ?? -1;
         $filter = $request->input('filter');
 
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked', 'selectable'];

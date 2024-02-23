@@ -224,7 +224,7 @@ class CategoryLayout extends Layout
                 Tree::make()
                     ->setId('categories')
                     ->setRoute('Category')
-                    ->setUrl('/categories/tree?order=category')
+                    ->setUrl('/categories/tree')
                     ->isCategory()
                     ->setAliases([
                         'category' => 'title',
@@ -244,6 +244,9 @@ class CategoryLayout extends Layout
                                 'component' => 'search',
                             ],
                         ],
+                    ])
+                    ->setSettings([
+                        'order' => 'category',
                     ])
             )
             ->toArray();

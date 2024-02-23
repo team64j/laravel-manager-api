@@ -312,9 +312,10 @@ class CategoryController extends Controller
      */
     public function tree(CategoryRequest $request): AnonymousResourceCollection
     {
+        $settings = $request->collect('settings');
         $filter = $request->input('filter');
-        $order = $request->input('order', 'id');
-        $dir = $request->input('dir', 'asc');
+        $order = $settings['order'] ?? 'id';
+        $dir = $settings['dir'] ?? 'asc';
         $fields = ['id', 'category', 'rank'];
 
         if (!in_array($order, $fields)) {

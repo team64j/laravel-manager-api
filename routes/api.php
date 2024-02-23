@@ -124,7 +124,7 @@ Route::prefix($apiPath)
         /** Files */
         Route::prefix('file')
             ->group(fn() => [
-                Route::get('tree/{path}', [FileController::class, 'tree'])->name('file.tree'),
+                Route::get('tree', [FileController::class, 'tree'])->name('file.tree'),
             ])
             ->apiResource('file', FileController::class)->only(['show']),
 

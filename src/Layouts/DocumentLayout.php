@@ -501,7 +501,7 @@ class DocumentLayout extends Layout
                     ->setId('documents')
                     ->setRoute('Document')
                     ->setRouteList('Documents')
-                    ->setUrl('/document/tree?order=menuindex&dir=asc')
+                    ->setUrl('/document/tree')
                     ->setAliases([
                         'hide_from_tree' => 'hideChildren',
                         'isfolder' => 'folder',

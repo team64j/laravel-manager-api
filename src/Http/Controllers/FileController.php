@@ -118,10 +118,12 @@ class FileController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function tree(FileRequest $request, string $path): AnonymousResourceCollection
+    public function tree(FileRequest $request): AnonymousResourceCollection
     {
         $data = [];
+        $settings = $request->collect('settings');
         $root = realpath(Config::get('global.filemanager_path', App::basePath()));
+        $path = $settings['parent'] ?? '';
         $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
         $after = basename(base64_decode($request->string('after', '')->toString()));
         $settings = $request->collect('settings');

@@ -53,7 +53,7 @@ class FilesLayout extends Layout
                 Tree::make()
                     ->setId('treeFiles')
                     ->setRoute('File')
-                    ->setUrl('/file/tree/:parent')
+                    ->setUrl('/file/tree')
                     ->isCategory()
                     ->setIcons([
                         'default' => 'fa fa-ban',

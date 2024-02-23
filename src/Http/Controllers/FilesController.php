@@ -249,7 +249,8 @@ class FilesController extends Controller
     {
         $data = [];
         $root = Config::get('global.rb_base_dir', App::basePath());
-        $parent = trim(base64_decode($request->input('parent', '')), './');
+        $settings = $request->collect('settings');
+        $parent = trim(base64_decode($settings['parent'] ?? ''), './');
         $parentPath = $root . DIRECTORY_SEPARATOR . $parent;
         $opened = $request->has('opened') ? $request->string('opened')
             ->explode(',')
