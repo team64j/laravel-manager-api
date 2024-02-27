@@ -370,12 +370,12 @@ class DocumentController extends Controller
      */
     public function tree(DocumentRequest $request): DocumentResource
     {
-        $parent = $request->input('parent', -1);
-        $filter = $request->input('filter');
-        $settings = $request->whenFilled('settings', fn($i) => is_array($i) ? $i : json_decode($i, true));
+        $settings = $request->collect('settings')->toArray();
+        $parent = $settings['parent'] ?? -1;
         $settings['keyTitle'] = $settings['keyTitle'] ?? 'pagetitle';
         $order = $settings['order'] ?? 'id';
         $dir = $settings['dir'] ?? 'asc';
+        $filter = $request->input('filter');
 
         $fields = [
             'id',
@@ -435,8 +435,9 @@ class DocumentController extends Controller
         }
 
         if ($parent < 0) {
-            $request->query->set('parent', 0);
-            $result = $this->treeChildren($fields, 0, $order, $dir, $settings, $request->all());
+            $params = $request->all();
+            $params['settings']['parent'] = 0;
+            $result = $this->treeChildren($fields, 0, $order, $dir, $settings, $params);
 
             $context = [
                 [
