@@ -96,7 +96,7 @@ class FileController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/file/tree/{path}",
+     *     path="/file/tree",
      *     summary="Получение списка файлов с пагинацией для древовидного меню",
      *     tags={"File"},
      *     security={{"Api":{}}},
@@ -114,25 +114,23 @@ class FileController extends Controller
      *      )
      * )
      * @param FileRequest $request
-     * @param string $path
      *
      * @return AnonymousResourceCollection
      */
     public function tree(FileRequest $request): AnonymousResourceCollection
     {
         $data = [];
-        $settings = $request->collect('settings');
+        $settings = $request->collect('settings')->toArray();
         $root = realpath(Config::get('global.filemanager_path', App::basePath()));
         $path = $settings['parent'] ?? '';
         $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
-        $after = basename(base64_decode($request->string('after', '')->toString()));
-        $settings = $request->collect('settings');
+        $after = basename(base64_decode($settings['after'] ?? ''));
 
         $directories = File::directories($parentPath);
         $files = File::files($parentPath, true);
         $checkAfter = true;
         $limit = Config::get('global.number_of_results');
-        $counter = -1;
+        $counter = 0;
         $next = '';
 
         foreach ($directories as $directory) {
@@ -174,13 +172,19 @@ class FileController extends Controller
 
             if (in_array($key, ($settings['opened'] ?? []), true)) {
                 $newRequest = clone $request;
-                $newRequest->query->set('after', null);
-                $item['data'] = $this->tree($newRequest, $key) ?? [];
+                $query = $settings;
+                $query['after'] = null;
+                unset($query['opened']);
+                $newRequest->query->set('settings', $query);
+                $item['data'] = $this->tree($newRequest) ?? [];
             }
 
             $data[] = $item;
 
-            $next = '/file/tree/' . $path . '?after=' . base64_encode($title);
+            $query = $settings;
+            $query['after'] = base64_encode($title);
+
+            $next = '/file/tree?' . http_build_query(['settings' => $query]);
         }
 
         $checkAfter = true;
@@ -234,7 +238,10 @@ class FileController extends Controller
 
             $data[] = $item;
 
-            $next = '/file/tree/' . $path . '?after=' . base64_encode($title);
+            $query = $settings;
+            $query['after'] = base64_encode($title);
+
+            $next = '/file/tree?' . http_build_query(['settings' => $query]);
         }
 
         if (count($data) <= $limit) {
