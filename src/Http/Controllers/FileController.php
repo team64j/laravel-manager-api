@@ -171,7 +171,6 @@ class FileController extends Controller
                 'id' => $key,
                 'title' => $title,
                 'category' => true,
-                'data' => [],
                 'date' => $this->getDate(filemtime($directory)),
             ];
 

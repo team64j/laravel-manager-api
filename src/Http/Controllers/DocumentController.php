@@ -385,6 +385,7 @@ class DocumentController extends Controller
             'deleted',
         ];
 
+        /** @var LengthAwarePaginator|SiteContent $result */
         $result = SiteContent::query()
             ->with(['documentGroups'])
             ->select($fields)
@@ -403,11 +404,13 @@ class DocumentController extends Controller
             $meta = ['message' => Lang::get('global.no_results')];
         } else {
             $data = $result->map(function (SiteContent $item) use ($request, $settings) {
-                $append = [];
+                $data = [
+                    'id' => $item->getKey(),
+                    'title' => $item->pagetitle,
+                ];
 
                 if ($item->isfolder && !$item->hide_from_tree) {
-                    $append['data'] = [];
-                    $append['meta'] = [];
+                    $data['data'] = [];
 
                     if (in_array($item->getKey(), $settings['opened'], true)) {
                         $request = clone $request;
@@ -421,53 +424,40 @@ class DocumentController extends Controller
                                 ]
                             )
                         );
-                        $data = $this->tree($request);
+                        $result = $this->tree($request);
 
-                        $append['data'] = $data['data'];
-                        $append['meta'] = $data['meta'];
+                        $data['data'] = $result['data'];
+                        $data['meta'] = $result['meta'];
                     }
                 }
 
-                if ($item->getKey() == Config::get('global.error_page')) {
-                    $append['icon'] = 'fa fa-exclamation-triangle text-rose-600';
-                }
-
-                if ($item->getKey() == Config::get('global.unauthorized_page')) {
-                    $append['icon'] = 'fa fa-lock text-rose-600';
-                }
-
-                if ($item->getKey() == Config::get('global.site_unavailable_page')) {
-                    $append['icon'] = 'fa fa-ban text-amber-400';
-                }
-
                 if ($item->getKey() == Config::get('global.site_start')) {
-                    $append['icon'] = 'fa fa-home text-blue-500';
-                }
-
-                if ($item->type == 'reference') {
-                    $append['icon'] = 'fa fa-link';
+                    $data['icon'] = 'fa fa-home text-blue-500';
+                } elseif ($item->getKey() == Config::get('global.error_page')) {
+                    $data['icon'] = 'fa fa-exclamation-triangle text-rose-600';
+                } elseif ($item->getKey() == Config::get('global.unauthorized_page')) {
+                    $data['icon'] = 'fa fa-lock text-rose-600';
+                } elseif ($item->getKey() == Config::get('global.site_unavailable_page')) {
+                    $data['icon'] = 'fa fa-ban text-amber-400';
+                } elseif ($item->type == 'reference') {
+                    $data['icon'] = 'fa fa-link';
                 }
 
                 if (!$item->hidemenu) {
-                    $append['selected'] = true;
+                    $data['selected'] = true;
                 }
 
                 if ($item->deleted) {
-                    $append['deleted'] = true;
+                    $data['deleted'] = true;
                 }
 
                 if (!$item->published) {
-                    $append['unpublished'] = true;
+                    $data['unpublished'] = true;
                 }
 
-                return $item->withoutRelations()
-                    ->setRawAttributes(
-                        [
-                            'id' => $item->getKey(),
-                            'title' => $item->pagetitle,
-                        ] + $append
-                    );
+                return $data;
             });
+
             $meta = $parent ? ['pagination' => $this->pagination($result)] : [];
         }
 
