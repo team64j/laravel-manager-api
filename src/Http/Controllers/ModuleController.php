@@ -397,7 +397,11 @@ class ModuleController extends Controller
                 ->select($fields)
                 ->where('name', 'like', '%' . $filter . '%')
                 ->orderBy('name')
-                ->get();
+                ->get()
+                ->map(fn(SiteModule $item) => [
+                    'id' => $item->getKey(),
+                    'title' => $item->name,
+                ]);
 
             return ModuleResource::collection($result)
                 ->additional([
@@ -415,7 +419,10 @@ class ModuleController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return ModuleResource::collection($result->items())
+            return ModuleResource::collection($result->map(fn(SiteModule $item) => [
+                'id' => $item->getKey(),
+                'title' => $item->name,
+            ]))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -444,7 +451,10 @@ class ModuleController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->items(),
+                        'data' => $result->map(fn(SiteModule $item) => [
+                            'id' => $item->getKey(),
+                            'title' => $item->name,
+                        ]),
                         'pagination' => $this->pagination($result),
                     ];
                 }
@@ -453,7 +463,7 @@ class ModuleController extends Controller
             return [
                     'id' => $category->getKey(),
                     'name' => $category->category ?? Lang::get('global.no_category'),
-                    'folder' => true,
+                    'category' => true,
                 ] + $data;
         })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))

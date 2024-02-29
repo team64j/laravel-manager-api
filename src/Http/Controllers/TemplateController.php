@@ -511,7 +511,11 @@ class TemplateController extends Controller
                 ->select($fields)
                 ->where('templatename', 'like', '%' . $filter . '%')
                 ->orderBy('templatename')
-                ->get();
+                ->get()
+                ->map(fn(SiteTemplate $item) => [
+                    'id' => $item->getKey(),
+                    'title' => $item->templatename,
+                ]);
 
             return TemplateResource::collection($result)
                 ->additional([
@@ -529,7 +533,10 @@ class TemplateController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return TemplateResource::collection($result->items())
+            return TemplateResource::collection($result->map(fn(SiteTemplate $item) => [
+                'id' => $item->getKey(),
+                'title' => $item->templatename,
+            ]))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -558,7 +565,10 @@ class TemplateController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->items(),
+                        'data' => $result->map(fn(SiteTemplate $item) => [
+                            'id' => $item->getKey(),
+                            'title' => $item->templatename,
+                        ]),
                         'pagination' => $this->pagination($result),
                     ];
                 }
@@ -567,7 +577,7 @@ class TemplateController extends Controller
             return [
                     'id' => $category->getKey(),
                     'name' => $category->category ?? Lang::get('global.no_category'),
-                    'folder' => true,
+                    'category' => true,
                 ] + $data;
         })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))

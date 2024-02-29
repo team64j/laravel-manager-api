@@ -329,7 +329,11 @@ class CategoryController extends Controller
         $result = Category::query()
             ->when($filter, fn($query) => $query->where('category', 'like', '%' . $filter . '%'))
             ->orderByRaw('upper(' . $order . ') ' . $dir)
-            ->get();
+            ->get()
+            ->map(fn(Category $item) => [
+                'id' => $item->getKey(),
+                'title' => $item->category,
+            ]);
 
         return CategoryResource::collection($result)
             ->additional([

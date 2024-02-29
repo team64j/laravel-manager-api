@@ -377,7 +377,11 @@ class PluginController extends Controller
                 ->select($fields)
                 ->where('name', 'like', '%' . $filter . '%')
                 ->orderBy('name')
-                ->get();
+                ->get()
+                ->map(fn(SitePlugin $item) => [
+                    'id' => $item->getKey(),
+                    'title' => $item->name,
+                ]);
 
             return PluginResource::collection($result)
                 ->additional([
@@ -395,7 +399,10 @@ class PluginController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return PluginResource::collection($result->items())
+            return PluginResource::collection($result->map(fn(SitePlugin $item) => [
+                'id' => $item->getKey(),
+                'title' => $item->name,
+            ]))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -424,7 +431,10 @@ class PluginController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->items(),
+                        'data' => $result->map(fn(SitePlugin $item) => [
+                            'id' => $item->getKey(),
+                            'title' => $item->name,
+                        ]),
                         'pagination' => $this->pagination($result),
                     ];
                 }
@@ -433,7 +443,7 @@ class PluginController extends Controller
             return [
                     'id' => $category->getKey(),
                     'name' => $category->category ?? Lang::get('global.no_category'),
-                    'folder' => true,
+                    'category' => true,
                 ] + $data;
         })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))

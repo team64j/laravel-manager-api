@@ -204,7 +204,7 @@ class ChunkLayout extends Layout
                     ->setUrl('/chunks/tree')
                     ->isCategory()
                     ->setAliases([
-                        'name' => 'title',
+                        'title' => 'name',
                         'locked' => 'private',
                         'disabled' => 'deleted',
                     ])

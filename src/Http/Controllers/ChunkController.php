@@ -322,7 +322,11 @@ class ChunkController extends Controller
                 ->select($fields)
                 ->where('name', 'like', '%' . $filter . '%')
                 ->orderBy('name')
-                ->get();
+                ->get()
+                ->map(fn(SiteHtmlSnippet $item) => [
+                    'id' => $item->getKey(),
+                    'title' => $item->name,
+                ]);
 
             return ChunkResource::collection($result)
                 ->additional([
@@ -340,7 +344,10 @@ class ChunkController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return ChunkResource::collection($result->items())
+            return ChunkResource::collection($result->map(fn(SiteHtmlSnippet $item) => [
+                'id' => $item->getKey(),
+                'title' => $item->name,
+            ]))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -369,7 +376,10 @@ class ChunkController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->items(),
+                        'data' => $result->map(fn(SiteHtmlSnippet $item) => [
+                            'id' => $item->getKey(),
+                            'title' => $item->name,
+                        ]),
                         'pagination' => $this->pagination($result),
                     ];
                 }
@@ -377,8 +387,8 @@ class ChunkController extends Controller
 
             return [
                     'id' => $category->getKey(),
-                    'name' => $category->category ?? Lang::get('global.no_category'),
-                    'folder' => true,
+                    'title' => $category->category ?? Lang::get('global.no_category'),
+                    'category' => true,
                 ] + $data;
         })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))

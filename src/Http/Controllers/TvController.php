@@ -429,7 +429,11 @@ class TvController extends Controller
                 ->select($fields)
                 ->where('name', 'like', '%' . $filter . '%')
                 ->orderBy('name')
-                ->get();
+                ->get()
+                ->map(fn(SiteTmplvar $item) => [
+                    'id' => $item->getKey(),
+                    'title' => $item->name,
+                ]);
 
             return TvResource::collection($result)
                 ->additional([
@@ -447,7 +451,10 @@ class TvController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return TvResource::collection($result->items())
+            return TvResource::collection($result->map(fn(SiteTmplvar $item) => [
+                'id' => $item->getKey(),
+                'title' => $item->name,
+            ]))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -476,7 +483,10 @@ class TvController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->items(),
+                        'data' => $result->map(fn(SiteTmplvar $item) => [
+                            'id' => $item->getKey(),
+                            'title' => $item->name,
+                        ]),
                         'pagination' => $this->pagination($result),
                     ];
                 }
@@ -485,7 +495,7 @@ class TvController extends Controller
             return [
                     'id' => $category->getKey(),
                     'name' => $category->category ?? Lang::get('global.no_category'),
-                    'folder' => true,
+                    'category' => true,
                 ] + $data;
         })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))

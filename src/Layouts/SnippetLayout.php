@@ -204,7 +204,7 @@ class SnippetLayout extends Layout
                     ->setUrl('/snippets/tree')
                     ->isCategory()
                     ->setAliases([
-                        'name' => 'title',
+                        'title' => 'name',
                         'locked' => 'private',
                         'disabled' => 'deleted',
                     ])

@@ -34,7 +34,8 @@ class FileLayout extends Layout
                 ->setSlot(
                     match (true) {
                         (stripos($data['type'], 'text/') !== false ||
-                            stripos($data['type'], 'application/json') !== false) => CodeEditor::make('content')
+                            stripos($data['type'], 'application/json') !== false ||
+                            in_array($data['ext'], ['html'])) => CodeEditor::make('content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
                             ->setClass('!m-0 h-full flex'),

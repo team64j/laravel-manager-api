@@ -52,6 +52,10 @@ class FileController extends Controller
             //'application/octet-stream',
         ];
 
+        $extensions = [
+            'html',
+        ];
+
         $ignoreExtensions = [
             'woff',
             'woff2',
@@ -78,7 +82,11 @@ class FileController extends Controller
             }
 
             if (!in_array($data['ext'], $ignoreExtensions, true)) {
-                if (in_array($data['type'], $types) || Str::startsWith($data['type'], 'text/')) {
+                if (
+                    in_array($data['type'], $types) ||
+                    Str::startsWith($data['type'], 'text/') ||
+                    in_array($data['ext'], $extensions)
+                ) {
                     $data['content'] = $content;
                 }
             }
@@ -159,15 +167,12 @@ class FileController extends Controller
                 break;
             }
 
-            $date = $this->getDate(filemtime($directory));
-
             $item = [
-                'key' => $key,
+                'id' => $key,
                 'title' => $title,
-                'folder' => true,
-                'date' => !empty($settings['show']) && in_array('date', $settings['show']) ? $date : '',
-                '_size' => '-',
-                '_date' => $date,
+                'category' => true,
+                'data' => [],
+                'date' => $this->getDate(filemtime($directory)),
             ];
 
             if (in_array($key, ($settings['opened'] ?? []), true)) {
@@ -221,19 +226,14 @@ class FileController extends Controller
                 $type = preg_replace('/^.*\.([^.]+)\.example$/D', '$1', $title);
             }
 
-            $size = $this->getSize($file->getSize());
-            $date = $this->getDate($file->getATime());
-
             $item = [
-                'key' => $key,
+                'id' => $key,
                 'title' => $title,
                 'type' => $type,
                 'unpublished' => !$file->isWritable() || !$file->isReadable(),
                 'class' => 'f-ext-' . $file->getExtension(),
-                'size' => !empty($settings['show']) && in_array('size', $settings['show']) ? $size : '',
-                'date' => !empty($settings['show']) && in_array('date', $settings['show']) ? $date : '',
-                '_size' => $size,
-                '_date' => $date,
+                'size' => $this->getSize($file->getSize()),
+                'date' => $this->getDate($file->getATime()),
             ];
 
             $data[] = $item;

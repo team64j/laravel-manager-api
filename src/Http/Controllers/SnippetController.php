@@ -324,7 +324,11 @@ class SnippetController extends Controller
                 ->select($fields)
                 ->where('name', 'like', '%' . $filter . '%')
                 ->orderBy('name')
-                ->get();
+                ->get()
+                ->map(fn(SiteSnippet $item) => [
+                    'id' => $item->getKey(),
+                    'title' => $item->name,
+                ]);
 
             return SnippetResource::collection($result)
                 ->additional([
@@ -342,7 +346,10 @@ class SnippetController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return SnippetResource::collection($result->items())
+            return SnippetResource::collection($result->map(fn(SiteSnippet $item) => [
+                'id' => $item->getKey(),
+                'title' => $item->name,
+            ]))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -371,7 +378,10 @@ class SnippetController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->items(),
+                        'data' => $result->map(fn(SiteSnippet $item) => [
+                            'id' => $item->getKey(),
+                            'title' => $item->name,
+                        ]),
                         'pagination' => $this->pagination($result),
                     ];
                 }
@@ -380,7 +390,7 @@ class SnippetController extends Controller
             return [
                     'id' => $category->getKey(),
                     'name' => $category->category ?? Lang::get('global.no_category'),
-                    'folder' => true,
+                    'category' => true,
                 ] + $data;
         })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))

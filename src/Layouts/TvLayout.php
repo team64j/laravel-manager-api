@@ -316,7 +316,7 @@ class TvLayout extends Layout
                     ->setUrl('/tvs/tree')
                     ->isCategory()
                     ->setAliases([
-                        'name' => 'title',
+                        'title' => 'name',
                         'locked' => 'private',
                         'category' => 'parent',
                     ])

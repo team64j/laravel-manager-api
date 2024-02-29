@@ -342,14 +342,35 @@ class DocumentController extends Controller
         return response()->noContent();
     }
 
+    /**
+     * @param DocumentRequest $request
+     *
+     * @return DocumentResource
+     */
     public function tree(DocumentRequest $request)
     {
         $settings = $request->collect('settings')->toArray();
-        $parent = $settings['parent'] ?? 0;
+        $parent = $settings['parent'] ?? -1;
         $page = $settings['page'] ?? 1;
         $order = $settings['order'] ?? 'menuindex';
         $dir = $settings['dir'] ?? 'asc';
         $settings['opened'] = array_map('intval', $settings['opened'] ?? []);
+
+        if ($parent < 0) {
+            $data = [];
+
+            foreach ([0] as $id) {
+                $request->query->set('settings', array_merge($settings, ['parent' => $id]));
+                $data[] = [
+                    'id' => $id,
+                    'title' => 'root',
+                    'category' => true,
+                    'data' => $this->tree($request)->resource,
+                ];
+            }
+
+            return DocumentResource::make($data);
+        }
 
         $fields = [
             'id',
@@ -364,97 +385,91 @@ class DocumentController extends Controller
             'deleted',
         ];
 
-        if ($parent) {
-            /** @var LengthAwarePaginator $result */
-            $result = SiteContent::query()
-                ->with(['documentGroups'])
-                ->select($fields)
-                ->where('parent', $parent)
-                ->orderBy($order, $dir)
-                ->paginate(Config::get('global.number_of_results'), $fields, 'settings[page]', $page)
-                ->appends($request->all());
-        } else {
-            $result = SiteContent::query()
-                ->with(['documentGroups'])
-                ->select($fields)
-                ->where('parent', $parent)
-                ->orderBy($order, $dir)
-                ->get();
-        }
-
-        $data = $result->map(function (SiteContent $item) use ($request, $settings) {
-            $append = [];
-
-            if ($item->isfolder && !$item->hide_from_tree) {
-                $append['data'] = [];
-                $append['meta'] = [];
-
-                if (in_array($item->getKey(), $settings['opened'], true)) {
-                    $request = clone $request;
-                    $request->query->set(
-                        'settings',
-                        array_merge(
-                            $settings,
-                            [
-                                'parent' => $item->getKey(),
-                                'page' => null,
-                            ]
-                        )
-                    );
-                    $data = $this->tree($request);
-
-                    $append['data'] = $data['data'];
-                    $append['meta'] = $data['meta'];
-                }
-            }
-
-            if ($item->getKey() == Config::get('global.error_page')) {
-                $append['icon'] = 'fa fa-exclamation-triangle text-rose-600';
-            }
-
-            if ($item->getKey() == Config::get('global.unauthorized_page')) {
-                $append['icon'] = 'fa fa-lock text-rose-600';
-            }
-
-            if ($item->getKey() == Config::get('global.site_unavailable_page')) {
-                $append['icon'] = 'fa fa-ban text-amber-400';
-            }
-
-            if ($item->getKey() == Config::get('global.site_start')) {
-                $append['icon'] = 'fa fa-home text-blue-500';
-            }
-
-            if ($item->type == 'reference') {
-                $append['icon'] = 'fa fa-link';
-            }
-
-            if (!$item->hidemenu) {
-                $append['selected'] = true;
-            }
-
-            if ($item->deleted) {
-                $append['deleted'] = true;
-            }
-
-            if (!$item->published) {
-                $append['unpublished'] = true;
-            }
-
-            return $item->withoutRelations()
-                ->setRawAttributes(
-                    [
-                        'id' => $item->getKey(),
-                        'title' => $item->pagetitle,
-                    ] + $append
-                );
-        });
+        $result = SiteContent::query()
+            ->with(['documentGroups'])
+            ->select($fields)
+            ->where('parent', $parent)
+            ->orderBy($order, $dir)
+            ->when(
+                $parent,
+                fn($q) => $q
+                    ->paginate(Config::get('global.number_of_results'), $fields, 'settings[page]', $page)
+                    ->appends($request->all()),
+                fn($q) => $q->get()
+            );
 
         if ($result->isEmpty()) {
             $data = [null];
-        }
+            $meta = ['message' => Lang::get('global.no_results')];
+        } else {
+            $data = $result->map(function (SiteContent $item) use ($request, $settings) {
+                $append = [];
 
-        $meta = $result->isEmpty()
-            ? ['message' => Lang::get('global.no_results')] : ($parent ? $this->pagination($result) : []);
+                if ($item->isfolder && !$item->hide_from_tree) {
+                    $append['data'] = [];
+                    $append['meta'] = [];
+
+                    if (in_array($item->getKey(), $settings['opened'], true)) {
+                        $request = clone $request;
+                        $request->query->set(
+                            'settings',
+                            array_merge(
+                                $settings,
+                                [
+                                    'parent' => $item->getKey(),
+                                    'page' => null,
+                                ]
+                            )
+                        );
+                        $data = $this->tree($request);
+
+                        $append['data'] = $data['data'];
+                        $append['meta'] = $data['meta'];
+                    }
+                }
+
+                if ($item->getKey() == Config::get('global.error_page')) {
+                    $append['icon'] = 'fa fa-exclamation-triangle text-rose-600';
+                }
+
+                if ($item->getKey() == Config::get('global.unauthorized_page')) {
+                    $append['icon'] = 'fa fa-lock text-rose-600';
+                }
+
+                if ($item->getKey() == Config::get('global.site_unavailable_page')) {
+                    $append['icon'] = 'fa fa-ban text-amber-400';
+                }
+
+                if ($item->getKey() == Config::get('global.site_start')) {
+                    $append['icon'] = 'fa fa-home text-blue-500';
+                }
+
+                if ($item->type == 'reference') {
+                    $append['icon'] = 'fa fa-link';
+                }
+
+                if (!$item->hidemenu) {
+                    $append['selected'] = true;
+                }
+
+                if ($item->deleted) {
+                    $append['deleted'] = true;
+                }
+
+                if (!$item->published) {
+                    $append['unpublished'] = true;
+                }
+
+                return $item->withoutRelations()
+                    ->setRawAttributes(
+                        [
+                            'id' => $item->getKey(),
+                            'title' => $item->pagetitle,
+                        ] + $append
+                    );
+            });
+            $meta = $parent ? ['pagination' => $this->pagination($result)] : [];
+        }
 
         return DocumentResource::make($data)
             ->additional([

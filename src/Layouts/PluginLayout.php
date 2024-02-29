@@ -264,7 +264,7 @@ class PluginLayout extends Layout
                     ->setUrl('/plugins/tree')
                     ->isCategory()
                     ->setAliases([
-                        'name' => 'title',
+                        'title' => 'name',
                         'locked' => 'private',
                         'disabled' => 'deleted',
                     ])

@@ -333,6 +333,7 @@ class TemplateLayout extends Layout
                     ->setUrl('/templates/tree')
                     ->isCategory()
                     ->setAliases([
+                        'title' => ['name', 'templatename'],
                         'name' => 'title',
                         'templatename' => 'title',
                         'locked' => 'private',

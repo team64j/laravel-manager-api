@@ -196,7 +196,7 @@ class ModuleLayout extends Layout
                     ->setUrl('/modules/tree')
                     ->isCategory()
                     ->setAliases([
-                        'name' => 'title',
+                        'title' => 'name',
                         'locked' => 'private',
                         'disabled' => 'deleted',
                     ])
