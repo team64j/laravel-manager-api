@@ -365,7 +365,11 @@ class DocumentController extends Controller
                     'id' => $id,
                     'title' => 'root',
                     'category' => true,
-                    'data' => $this->tree($request)->resource,
+                    'data' => $this->tree($request),
+                    'templates' => [
+                        'title' => 'root',
+                    ],
+                    'contextMenu' => null,
                 ];
             }
 
@@ -376,17 +380,23 @@ class DocumentController extends Controller
             'id',
             'parent',
             'pagetitle',
+            'menutitle',
             'isfolder',
             'alias',
+            'type',
             'menuindex',
+            'template',
             'hide_from_tree',
             'hidemenu',
             'published',
             'deleted',
+            'richtext',
+            'searchable',
+            'cacheable',
         ];
 
         /** @var LengthAwarePaginator|SiteContent $result */
-        $result = SiteContent::query()
+        $result = SiteContent::withTrashed()
             ->with(['documentGroups'])
             ->select($fields)
             ->where('parent', $parent)
@@ -406,8 +416,27 @@ class DocumentController extends Controller
             $data = $result->map(function (SiteContent $item) use ($request, $settings) {
                 $data = [
                     'id' => $item->getKey(),
+                    'alias' => $item->alias,
+                    'type' => $item->type,
                     'title' => $item->pagetitle,
+                    'template' => $item->template,
+                    'menutitle' => $item->menutitle,
+                    'searchable' => $item->searchable,
+                    'menuindex' => $item->menuindex,
+                    'published' => $item->published,
+                    'cacheable' => $item->cacheable,
+                    'isfolder' => $item->isfolder,
+                    'richtext' => $item->richtext,
+                    'deleted' => $item->deleted,
                 ];
+
+                if (!$item->hidemenu) {
+                    $data['selected'] = true;
+                }
+
+                if (!$item->published) {
+                    $data['unpublished'] = true;
+                }
 
                 if ($item->isfolder && !$item->hide_from_tree) {
                     $data['data'] = [];
@@ -429,30 +458,6 @@ class DocumentController extends Controller
                         $data['data'] = $result['data'];
                         $data['meta'] = $result['meta'];
                     }
-                }
-
-                if ($item->getKey() == Config::get('global.site_start')) {
-                    $data['icon'] = 'fa fa-home text-blue-500';
-                } elseif ($item->getKey() == Config::get('global.error_page')) {
-                    $data['icon'] = 'fa fa-exclamation-triangle text-rose-600';
-                } elseif ($item->getKey() == Config::get('global.unauthorized_page')) {
-                    $data['icon'] = 'fa fa-lock text-rose-600';
-                } elseif ($item->getKey() == Config::get('global.site_unavailable_page')) {
-                    $data['icon'] = 'fa fa-ban text-amber-400';
-                } elseif ($item->type == 'reference') {
-                    $data['icon'] = 'fa fa-link';
-                }
-
-                if (!$item->hidemenu) {
-                    $data['selected'] = true;
-                }
-
-                if ($item->deleted) {
-                    $data['deleted'] = true;
-                }
-
-                if (!$item->published) {
-                    $data['unpublished'] = true;
                 }
 
                 return $data;

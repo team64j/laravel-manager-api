@@ -502,12 +502,6 @@ class DocumentLayout extends Layout
                     ->setRoute('Document')
                     ->setRouteList('Documents')
                     ->setUrl('/document/tree')
-                    ->setAliases([
-                        'hide_from_tree' => 'hideChildren',
-                        'isfolder' => 'folder',
-                        'hidemenu' => 'inhidden',
-                        'children' => 'data',
-                    ])
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => 'far fa-file',
@@ -519,7 +513,7 @@ class DocumentLayout extends Layout
                     ])
                     ->setTemplates([
                         'title' =>
-                            Lang::get('global.pagetitle') . ': {pagetitle}' . PHP_EOL .
+                            Lang::get('global.pagetitle') . ': {title}' . PHP_EOL .
                             Lang::get('global.id') . ': {id}' . PHP_EOL .
                             Lang::get('global.resource_opt_menu_title') . ': {menutitle}' . PHP_EOL .
                             Lang::get('global.resource_opt_menu_index') . ': {menuindex}' . PHP_EOL .
@@ -580,7 +574,7 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.sort_menuindex'),
                                 'icon' => 'fa fa-sort-numeric-asc',
                                 'hidden' => [
-                                    'folder' => 0,
+                                    'isfolder' => 0,
                                 ],
                             ],
                             [
@@ -588,6 +582,13 @@ class DocumentLayout extends Layout
                                 'icon' => 'fa fa-close',
                                 'hidden' => [
                                     'published' => 0,
+                                ],
+                            ],
+                            [
+                                'title' => Lang::get('global.publish_resource'),
+                                'icon' => 'fa fa-close',
+                                'hidden' => [
+                                    'published' => 1,
                                 ],
                             ],
                             [
