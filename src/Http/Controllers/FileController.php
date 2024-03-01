@@ -175,12 +175,18 @@ class FileController extends Controller
             ];
 
             if (in_array($key, ($settings['opened'] ?? []), true)) {
-                $newRequest = clone $request;
-                $query = $settings;
-                $query['after'] = null;
-                unset($query['opened']);
-                $newRequest->query->set('settings', $query);
-                $item['data'] = $this->tree($newRequest) ?? [];
+                $request->query->set(
+                    'settings',
+                    [
+                        'parent' => $key,
+                        'after' => null,
+                    ] + $settings
+                );
+
+                $result = $this->tree($request);
+
+                $item['data'] = $result->resource ?? [];
+                $item['meta'] = $result->additional['meta'] ?? [];
             }
 
             $data[] = $item;

@@ -536,6 +536,7 @@ class DocumentLayout extends Layout
                                     ],
                                     'query' => [
                                         'type' => 'document',
+                                        'parent' => ':parent',
                                     ],
                                 ],
                             ],
@@ -549,6 +550,7 @@ class DocumentLayout extends Layout
                                     ],
                                     'query' => [
                                         'type' => 'reference',
+                                        'parent' => ':parent',
                                     ],
                                 ],
                             ],
@@ -557,6 +559,9 @@ class DocumentLayout extends Layout
                                 'icon' => 'fa fa-edit',
                                 'to' => [
                                     'name' => 'Document',
+                                    'params' => [
+                                        'id' => ':id',
+                                    ],
                                 ],
                             ],
                             [
@@ -770,7 +775,6 @@ class DocumentLayout extends Layout
                         'parent' => -1,
                         'dir' => 'asc',
                         'order' => 'menuindex',
-                        'keyTitle' => 'pagetitle',
                     ])
             )
             ->toArray();

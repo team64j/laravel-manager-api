@@ -442,21 +442,18 @@ class DocumentController extends Controller
                     $data['data'] = [];
 
                     if (in_array($item->getKey(), $settings['opened'], true)) {
-                        $request = clone $request;
                         $request->query->set(
                             'settings',
-                            array_merge(
-                                $settings,
-                                [
-                                    'parent' => $item->getKey(),
-                                    'page' => null,
-                                ]
-                            )
+                            [
+                                'parent' => $item->getKey(),
+                                'page' => null,
+                            ] + $settings
                         );
+
                         $result = $this->tree($request);
 
-                        $data['data'] = $result['data'];
-                        $data['meta'] = $result['meta'];
+                        $data['data'] = $result->resource ?? [];
+                        $data['meta'] = $result->additional['meta'] ?? [];
                     }
                 }
 
