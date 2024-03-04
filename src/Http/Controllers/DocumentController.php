@@ -4,7 +4,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteContent;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -13,7 +12,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelEvolution\Facades\Uri;
 use Team64j\LaravelManagerApi\Http\Requests\DocumentRequest;
 use Team64j\LaravelManagerApi\Http\Resources\DocumentResource;
 use Team64j\LaravelManagerApi\Layouts\DocumentLayout;
@@ -343,6 +341,28 @@ class DocumentController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/document/tree",
+     *     summary="Получение списка документов с пагинацией для древовидного меню",
+     *     tags={"Document"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="int", default="0")),
+     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
+     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
+     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     *
      * @param DocumentRequest $request
      *
      * @return DocumentResource
@@ -350,11 +370,11 @@ class DocumentController extends Controller
     public function tree(DocumentRequest $request)
     {
         $settings = $request->collect('settings')->toArray();
+        $settings['opened'] = array_map('intval', $settings['opened'] ?? []);
         $parent = $settings['parent'] ?? -1;
         $page = $settings['page'] ?? 1;
         $order = $settings['order'] ?? 'menuindex';
         $dir = $settings['dir'] ?? 'asc';
-        $settings['opened'] = array_map('intval', $settings['opened'] ?? []);
 
         if ($parent < 0) {
             $data = [];
@@ -399,10 +419,17 @@ class DocumentController extends Controller
             'publishedon',
         ];
 
+        if (!in_array($order, $fields)) {
+            $order = 'id';
+        }
+
+        if (!in_array($dir, ['asc', 'desc'])) {
+            $dir = 'asc';
+        }
+
         /** @var LengthAwarePaginator|SiteContent $result */
         $result = SiteContent::withTrashed()
             ->with(['documentGroups'])
-            ->select($fields)
             ->where('parent', $parent)
             ->orderBy($order, $dir)
             ->when(
@@ -410,7 +437,7 @@ class DocumentController extends Controller
                 fn($q) => $q
                     ->paginate(Config::get('global.number_of_results'), $fields, 'settings[page]', $page)
                     ->appends($request->all()),
-                fn($q) => $q->get()
+                fn($q) => $q->get($fields)
             );
 
         if ($result->isEmpty()) {
@@ -477,209 +504,6 @@ class DocumentController extends Controller
             ->additional([
                 'meta' => $meta,
             ]);
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/document/tree",
-     *     summary="Получение списка документов с пагинацией для древовидного меню",
-     *     tags={"Document"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="int", default="0")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param DocumentRequest $request
-     *
-     * @return DocumentResource
-     */
-    public function tree2(DocumentRequest $request): DocumentResource
-    {
-        $settings = $request->collect('settings')->toArray();
-        $parent = $settings['parent'] ?? -1;
-        $settings['keyTitle'] = $settings['keyTitle'] ?? 'pagetitle';
-        $order = $settings['order'] ?? 'id';
-        $dir = $settings['dir'] ?? 'asc';
-        $filter = $request->input('filter');
-
-        $fields = [
-            'id',
-            'parent',
-            'pagetitle',
-            'longtitle',
-            'menutitle',
-            'isfolder',
-            'alias',
-            'template',
-            'richtext',
-            'menuindex',
-            'hidemenu',
-            'hide_from_tree',
-            'type',
-            'published',
-            'deleted',
-            'editedon',
-            'createdon',
-            'searchable',
-            'cacheable',
-        ];
-
-        if (!in_array($order, $fields)) {
-            $order = 'id';
-        }
-
-        if (!in_array($dir, ['asc', 'desc'])) {
-            $dir = 'asc';
-        }
-
-        if (!is_null($filter)) {
-            $result = SiteContent::query()
-                ->select($fields)
-                ->with('documentGroups')
-                ->where('pagetitle', 'like', '%' . $filter . '%')
-                ->when(is_numeric($filter), fn(Builder $query) => $query->orWhere('id', $filter))
-                ->orderBy($order, $dir)
-                ->get()
-                ->map(function (SiteContent $item) use ($fields, $settings) {
-                    $title =
-                        in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle'])
-                            : '';
-
-                    if ((string) $title == '') {
-                        $title = $item->getAttribute('pagetitle');
-                    }
-
-                    return $item->setAttribute('title', $title)
-                        ->setAttribute('private', $item->documentGroups->isNotEmpty());
-                });
-
-            return DocumentResource::make($result)
-                ->additional([
-                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-                ]);
-        }
-
-        if ($parent < 0) {
-            $params = $request->all();
-            $params['settings']['parent'] = 0;
-            $result = $this->treeChildren($fields, 0, $order, $dir, $settings, $params);
-
-            $context = [
-                [
-                    'id' => 0,
-                    'title' => 'root',
-                    'folder' => true,
-                    'category' => true,
-                    'contextMenu' => false,
-                    'templates' => [
-                        'title' => false,
-                        'help' => false,
-                    ],
-                    'data' => $result->items(),
-                    'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ],
-                ],
-            ];
-        } else {
-            $result = $this->treeChildren($fields, (int) $parent, $order, $dir, $settings, $request->all());
-
-            $context = [
-                'data' => $result->items(),
-                'meta' => [
-                    'pagination' => $this->pagination($result),
-                ],
-            ];
-        }
-
-        return DocumentResource::make($context);
-    }
-
-    /**
-     * @param array $fields
-     * @param int $parent
-     * @param string $order
-     * @param string $dir
-     * @param array $settings
-     * @param array $params
-     * @param int|null $page
-     *
-     * @return LengthAwarePaginator
-     */
-    protected function treeChildren(
-        array $fields,
-        int $parent,
-        string $order,
-        string $dir,
-        array $settings,
-        array $params,
-        int $page = null): LengthAwarePaginator
-    {
-        /** @var LengthAwarePaginator $result */
-        $result = SiteContent::query()
-            ->select($fields)
-            ->where('parent', $parent)
-            ->with(['documentGroups'])
-            ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'), ['*'], 'page', $page)
-            ->appends($params);
-
-        $result->map(function (SiteContent $item) use ($params, $fields, $order, $dir, $settings) {
-            $opened = array_map('intval', $settings['opened'] ?? []);
-
-            if (in_array($item->getKey(), $opened, true)) {
-                $params['parent'] = $item->getKey();
-                $parent = $item->getKey();
-
-                $result = $this->treeChildren($fields, $parent, $order, $dir, $settings, $params, 1);
-
-                if ($result->isNotEmpty()) {
-                    $item->setAttribute(
-                        'data',
-                        $result->map(function (SiteContent $item) use ($settings, $fields) {
-                            $title =
-                                in_array($settings['keyTitle'], $fields) ? $item->getAttribute(
-                                    $settings['keyTitle']
-                                )
-                                    : '';
-
-                            if ((string) $title == '') {
-                                $title = $item->getAttribute('pagetitle');
-                            }
-
-                            return $item->setAttribute('title', $title)
-                                ->setAttribute('private', $item->documentGroups->isNotEmpty());
-                        })
-                    )
-                        ->setAttribute('meta', [
-                            'pagination' => $this->pagination($result),
-                        ]);
-                }
-            }
-
-            $title = in_array($settings['keyTitle'], $fields) ? $item->getAttribute($settings['keyTitle']) : '';
-
-            if ((string) $title == '') {
-                $title = $item->getAttribute('pagetitle');
-            }
-
-            return $item->setAttribute('title', $title)
-                ->setAttribute('private', $item->documentGroups->isNotEmpty());
-        });
-
-        return $result;
     }
 
     /**
