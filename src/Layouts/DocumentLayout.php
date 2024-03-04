@@ -775,6 +775,7 @@ class DocumentLayout extends Layout
                         'parent' => -1,
                         'dir' => 'asc',
                         'order' => 'menuindex',
+                        'keyTitle' => 'pagetitle',
                     ])
             )
             ->toArray();

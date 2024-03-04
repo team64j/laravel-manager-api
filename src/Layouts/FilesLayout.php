@@ -111,13 +111,13 @@ class FilesLayout extends Layout
                                 'actions' => [
                                     [
                                         'key' => 'show',
-                                        'value' => 'date',
+                                        'value' => '_date',
                                         'title' => 'Показывать дату',
                                         'toggle' => true,
                                     ],
                                     [
                                         'key' => 'show',
-                                        'value' => 'size',
+                                        'value' => '_size',
                                         'title' => 'Показывать размер',
                                         'toggle' => true,
                                     ],
@@ -125,16 +125,16 @@ class FilesLayout extends Layout
                             ],
                         ],
                     ])
-                    ->setAppends(['size', 'date'])
+                    ->setAppends(['_size', '_date'])
                     ->setTemplates([
                         'title' =>
                             '{title}' . PHP_EOL .
-                            Lang::get('global.createdon') . ': {_date}' . PHP_EOL .
-                            Lang::get('global.files_filesize') . ': {_size}' . PHP_EOL,
+                            Lang::get('global.createdon') . ': {date}' . PHP_EOL .
+                            Lang::get('global.files_filesize') . ': {size}' . PHP_EOL,
                     ])
                     ->setSettings([
                         'parent' => 'Lw==',
-                        'show' => ['date'],
+                        'show' => ['_date'],
                     ])
             )
             ->toArray();

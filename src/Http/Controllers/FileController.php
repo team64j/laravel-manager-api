@@ -133,6 +133,7 @@ class FileController extends Controller
         $path = $settings['parent'] ?? '';
         $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
         $after = basename(base64_decode($settings['after'] ?? ''));
+        $show = $settings['show'] ?? [];
 
         $directories = File::directories($parentPath);
         $files = File::files($parentPath, true);
@@ -167,12 +168,19 @@ class FileController extends Controller
                 break;
             }
 
+            $date = $this->getDate(filemtime($directory));
+
             $item = [
                 'id' => $key,
                 'title' => $title,
                 'category' => true,
-                'date' => $this->getDate(filemtime($directory)),
+                'size' => '',
+                'date' => $date,
             ];
+
+            if (in_array('_date', $show)) {
+                $item['_date'] = $date;
+            }
 
             if (in_array($key, ($settings['opened'] ?? []), true)) {
                 $request->query->set(
@@ -231,15 +239,26 @@ class FileController extends Controller
                 $type = preg_replace('/^.*\.([^.]+)\.example$/D', '$1', $title);
             }
 
+            $date = $this->getDate($file->getATime());
+            $size = $this->getSize($file->getSize());
+
             $item = [
                 'id' => $key,
                 'title' => $title,
                 'type' => $type,
                 'unpublished' => !$file->isWritable() || !$file->isReadable(),
                 'class' => 'f-ext-' . $file->getExtension(),
-                'size' => $this->getSize($file->getSize()),
-                'date' => $this->getDate($file->getATime()),
+                'date' => $date,
+                'size' => $size,
             ];
+
+            if (in_array('_date', $show)) {
+                $item['_date'] = $date;
+            }
+
+            if (in_array('_size', $show)) {
+                $item['_size'] = $size;
+            }
 
             $data[] = $item;
 

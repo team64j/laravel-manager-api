@@ -380,6 +380,7 @@ class DocumentController extends Controller
             'id',
             'parent',
             'pagetitle',
+            'longtitle',
             'menutitle',
             'isfolder',
             'alias',
@@ -393,6 +394,9 @@ class DocumentController extends Controller
             'richtext',
             'searchable',
             'cacheable',
+            'createdon',
+            'editedon',
+            'publishedon',
         ];
 
         /** @var LengthAwarePaginator|SiteContent $result */
@@ -414,11 +418,17 @@ class DocumentController extends Controller
             $meta = ['message' => Lang::get('global.no_results')];
         } else {
             $data = $result->map(function (SiteContent $item) use ($request, $settings) {
+                $title = $item->pagetitle;
+
+                if (!empty($settings['keyTitle']) && $item->{$settings['keyTitle']} != null) {
+                    $title = $item->{$settings['keyTitle']};
+                }
+
                 $data = [
                     'id' => $item->getKey(),
                     'alias' => $item->alias,
                     'type' => $item->type,
-                    'title' => $item->pagetitle,
+                    'title' => $title,
                     'template' => $item->template,
                     'menutitle' => $item->menutitle,
                     'searchable' => $item->searchable,
