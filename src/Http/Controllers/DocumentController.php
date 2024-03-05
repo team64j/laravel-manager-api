@@ -475,22 +475,26 @@ class DocumentController extends Controller
                     $data['unpublished'] = true;
                 }
 
-                if ($item->isfolder && !$item->hide_from_tree) {
-                    $data['data'] = [];
+                if ($item->isfolder) {
+                    if ($item->hide_from_tree) {
+                        $data['data'] = null;
+                    } else {
+                        $data['data'] = [];
 
-                    if (in_array($item->getKey(), $settings['opened'], true)) {
-                        $request->query->set(
-                            'settings',
-                            [
-                                'parent' => $item->getKey(),
-                                'page' => null,
-                            ] + $settings
-                        );
+                        if (in_array($item->getKey(), $settings['opened'], true)) {
+                            $request->query->set(
+                                'settings',
+                                [
+                                    'parent' => $item->getKey(),
+                                    'page' => null,
+                                ] + $settings
+                            );
 
-                        $result = $this->tree($request);
+                            $result = $this->tree($request);
 
-                        $data['data'] = $result->resource ?? [];
-                        $data['meta'] = $result->additional['meta'] ?? [];
+                            $data['data'] = $result->resource ?? [];
+                            $data['meta'] = $result->additional['meta'] ?? [];
+                        }
                     }
                 }
 
