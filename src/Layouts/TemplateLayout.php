@@ -29,9 +29,9 @@ class TemplateLayout extends Layout
      */
     public function default(SiteTemplate $model = null): array
     {
-        $bladeFile = Config::get('view.app') . '/' . $model->templatealias . '.blade.php';
+        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
         $isBladeFile = file_exists($bladeFile);
-        $relativeBladeFile = str_replace(dirname(base_path()), '', $bladeFile);
+        $relativeBladeFile = str_replace([dirname(app_path()), DIRECTORY_SEPARATOR], ['', '/'], $bladeFile);
 
         return [
             ActionsButtons::make()
@@ -118,7 +118,7 @@ class TemplateLayout extends Layout
                         ),
 
                         ($isBladeFile
-                            ? '<span class="text-green-600">' . Lang::get('global.template_assigned_blade_file') .
+                            ? '<span class="text-green-600 mb-3">' . Lang::get('global.template_assigned_blade_file') .
                             ': ' .
                             $relativeBladeFile . '</span>'
                             :

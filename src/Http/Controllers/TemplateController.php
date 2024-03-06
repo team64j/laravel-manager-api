@@ -147,18 +147,23 @@ class TemplateController extends Controller
      */
     public function show(TemplateRequest $request, string $id, TemplateLayout $layout): TemplateResource
     {
-        /** @var SiteTemplate $template */
-        $template = SiteTemplate::query()->findOrNew($id);
+        /** @var SiteTemplate $model */
+        $model = SiteTemplate::query()->findOrNew($id);
 
-        $template->setAttribute('createbladefile', 0);
+        $model->setAttribute('createbladefile', 0);
+        $model->setAttribute('tvs', $model->tvs->pluck('id'));
 
-        $template->setAttribute('tvs', $template->tvs->pluck('id'));
+        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
 
-        return TemplateResource::make($template->withoutRelations())
+        if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
+            $model->setAttribute('content', file_get_contents($bladeFile));
+        }
+
+        return TemplateResource::make($model->withoutRelations())
             ->additional([
-                'layout' => $layout->default($template),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $template->templatename ?? Lang::get('global.new_template'),
+                    'title' => $model->templatename ?? Lang::get('global.new_template'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -190,20 +195,26 @@ class TemplateController extends Controller
      */
     public function store(TemplateRequest $request, TemplateLayout $layout): TemplateResource
     {
-        /** @var SiteTemplate $template */
-        $template = SiteTemplate::query()->create($request->validated());
+        /** @var SiteTemplate $model */
+        $model = SiteTemplate::query()->create($request->validated());
 
         $tvsTemplates = $request->input('tvs', []);
         foreach ($tvsTemplates as &$tvsTemplate) {
             $tvsTemplate = [
                 'tmplvarid' => $tvsTemplate,
-                'templateid' => $template->getKey(),
+                'templateid' => $model->getKey(),
             ];
         }
 
         SiteTmplvarTemplate::query()->upsert($tvsTemplates, 'tmplvarid');
 
-        return $this->show($request, (string) $template->getKey(), $layout);
+        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+
+        if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
+            file_put_contents($bladeFile, $model->content);
+        }
+
+        return $this->show($request, (string) $model->getKey(), $layout);
     }
 
     /**
@@ -233,25 +244,31 @@ class TemplateController extends Controller
      */
     public function update(TemplateRequest $request, string $id, TemplateLayout $layout): TemplateResource
     {
-        $template = SiteTemplate::query()->findOrFail($id);
+        $model = SiteTemplate::query()->findOrFail($id);
 
-        $template->update($request->validated());
+        $model->update($request->validated());
 
         SiteTmplvarTemplate::query()
-            ->where('templateid', $template->getKey())
+            ->where('templateid', $model->getKey())
             ->delete();
 
         $tvsTemplates = $request->input('tvs', []);
         foreach ($tvsTemplates as &$tvsTemplate) {
             $tvsTemplate = [
                 'tmplvarid' => $tvsTemplate,
-                'templateid' => $template->getKey(),
+                'templateid' => $model->getKey(),
             ];
         }
 
         SiteTmplvarTemplate::query()->upsert($tvsTemplates, 'tmplvarid');
 
-        return $this->show($request, (string) $template->getKey(), $layout);
+        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+
+        if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
+            file_put_contents($bladeFile, $model->content);
+        }
+
+        return $this->show($request, (string) $model->getKey(), $layout);
     }
 
     /**
@@ -275,7 +292,14 @@ class TemplateController extends Controller
      */
     public function destroy(TemplateRequest $request, string $id): Response
     {
-        SiteTemplate::query()->findOrFail($id)->delete();
+        $model = SiteTemplate::query()->findOrFail($id);
+        $model->delete();
+
+        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+
+        if (file_exists($bladeFile)) {
+            unlink($bladeFile);
+        }
 
         return response()->noContent();
     }
