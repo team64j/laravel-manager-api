@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Team64j\LaravelManagerApi\Http\Middleware\Authenticate;
+use Team64j\LaravelManagerApi\Http\Middleware\Permissions as PermissionsMiddleware;
 use Team64j\LaravelManagerApi\Models\Permissions;
 use Team64j\LaravelManagerApi\Models\User;
 
@@ -51,6 +52,7 @@ class ApiServiceProvider extends ServiceProvider
         $method = method_exists($router, 'aliasMiddleware') ? 'aliasMiddleware' : 'middleware';
 
         $router->$method(Config::get('manager-api.guard.provider') . '.auth', Authenticate::class);
+        //$router->$method('manager-api.permissions', PermissionsMiddleware::class);
     }
 
     /**

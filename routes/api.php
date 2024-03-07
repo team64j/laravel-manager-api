@@ -42,7 +42,7 @@ Route::prefix($apiPath)
 
 Route::prefix($apiPath)
     ->name('manager.api.')
-    ->middleware($authMiddleware)
+    ->middleware([$authMiddleware/*, 'manager-api.permissions'*/])
     ->group(fn() => [
         /** Auth */
         Route::prefix('auth')

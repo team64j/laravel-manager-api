@@ -32,21 +32,20 @@ class TemplateRequest extends FormRequest
      */
     public function rules(): array
     {
-        if ($this->isMethod('get')) {
-            return [];
-        }
-
-        return [
-            'templatename' => 'required|string',
-            'templatealias' => 'string|nullable',
-            'description' => 'string',
-            'editor_type' => 'int',
-            'category' => 'int',
-            'template_type' => 'int',
-            'content' => 'string|nullable',
-            'locked' => 'int',
-            'selectable' => 'int',
-        ];
+        return match ($this->route()->getActionMethod()) {
+            'update', 'store' => [
+                'templatename' => 'required|string',
+                'templatealias' => 'string|nullable',
+                'description' => 'string',
+                'editor_type' => 'int',
+                'category' => 'int',
+                'template_type' => 'int',
+                'content' => 'string|nullable',
+                'locked' => 'int',
+                'selectable' => 'int',
+            ],
+            default => []
+        };
     }
 
     public function attributes(): array

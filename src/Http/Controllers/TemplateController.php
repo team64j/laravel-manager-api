@@ -292,14 +292,14 @@ class TemplateController extends Controller
      */
     public function destroy(TemplateRequest $request, string $id): Response
     {
-        $model = SiteTemplate::query()->findOrFail($id);
-        $model->delete();
-
-        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
-
-        if (file_exists($bladeFile)) {
-            unlink($bladeFile);
-        }
+//        $model = SiteTemplate::query()->findOrFail($id);
+//        $model->delete();
+//
+//        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+//
+//        if (file_exists($bladeFile)) {
+//            unlink($bladeFile);
+//        }
 
         return response()->noContent();
     }
