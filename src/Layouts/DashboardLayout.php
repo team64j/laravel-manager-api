@@ -753,7 +753,7 @@ class DashboardLayout extends Layout
                             Panel::make()
                                 ->setId('widgetUsers')
                                 ->setUrl('/users/active')
-                                ->setClass('p-0 m-0 -mx-4')
+                                ->setClass('!my-0 !-mx-4 !rounded-none')
                                 ->setHistory(false)
                                 ->setRoute('User'),
                         ]
@@ -772,7 +772,7 @@ class DashboardLayout extends Layout
                             Panel::make()
                                 ->setId('widgetDocuments')
                                 ->setHistory(false)
-                                ->setClass('py-0 m-0 -mx-4')
+                                ->setClass('!my-0 !-mx-4 !rounded-none')
                                 ->setUrl(
                                     '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
                                 )
@@ -792,7 +792,7 @@ class DashboardLayout extends Layout
                             'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNews')
-                                ->setClass('h-40')
+                                ->setClass('h-40 !my-0 !-mx-4 !rounded-none')
                                 ->setUrl('/dashboard/news')
                         )
                     )
@@ -809,7 +809,7 @@ class DashboardLayout extends Layout
                             'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNewsSecurity')
-                                ->setClass('h-40')
+                                ->setClass('h-40 !my-0 !-mx-4 !rounded-none')
                                 ->setUrl('/dashboard/news-security')
                         )
                     )
