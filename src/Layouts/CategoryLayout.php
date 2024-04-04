@@ -227,7 +227,7 @@ class CategoryLayout extends Layout
                     ->setUrl('/categories/tree')
                     ->isCategory()
                     ->setAliases([
-                        'title' => 'category',
+                        'title' => 'name',
                     ])
                     ->setAppends(['id'])
                     ->setIcons([

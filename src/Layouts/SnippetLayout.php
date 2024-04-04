@@ -205,8 +205,7 @@ class SnippetLayout extends Layout
                     ->isCategory()
                     ->setAliases([
                         'title' => 'name',
-                        'locked' => 'private',
-                        'disabled' => 'deleted',
+                        'deleted' => 'disabled',
                     ])
                     ->setAppends(['id'])
                     ->setIcons([

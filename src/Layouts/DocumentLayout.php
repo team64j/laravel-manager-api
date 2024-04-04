@@ -511,6 +511,10 @@ class DocumentLayout extends Layout
                         Config::get('global.error_page') => 'fa fa-exclamation-triangle text-rose-600',
                         'reference' => 'fa fa-link',
                     ])
+                    ->setAliases([
+                        'selected' => 'hidemenu:0',
+                        'muted' => 'published:0'
+                    ])
                     ->setTemplates([
                         'title' =>
                             Lang::get('global.pagetitle') . ': {title}' . PHP_EOL .

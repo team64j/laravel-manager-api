@@ -369,7 +369,7 @@ class PluginController extends Controller
         $category = $settings['parent'] ?? -1;
         $filter = $request->input('filter');
 
-        $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
+        $fields = ['id', 'name', 'category', 'locked', 'disabled'];
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
@@ -378,10 +378,7 @@ class PluginController extends Controller
                 ->where('name', 'like', '%' . $filter . '%')
                 ->orderBy('name')
                 ->get()
-                ->map(fn(SitePlugin $item) => [
-                    'id' => $item->getKey(),
-                    'title' => $item->name,
-                ]);
+                ->map(fn(SitePlugin $item) => $item->setHidden(['category']));
 
             return PluginResource::collection($result)
                 ->additional([
@@ -399,10 +396,7 @@ class PluginController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return PluginResource::collection($result->map(fn(SitePlugin $item) => [
-                'id' => $item->getKey(),
-                'title' => $item->name,
-            ]))
+            return PluginResource::collection($result->map(fn(SitePlugin $item) => $item->setHidden(['category'])))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -431,10 +425,7 @@ class PluginController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->map(fn(SitePlugin $item) => [
-                            'id' => $item->getKey(),
-                            'title' => $item->name,
-                        ]),
+                        'data' => $result->map(fn(SitePlugin $item) => $item->setHidden(['category'])),
                         'pagination' => $this->pagination($result),
                     ];
                 }

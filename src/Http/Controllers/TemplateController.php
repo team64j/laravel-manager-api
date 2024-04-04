@@ -527,7 +527,7 @@ class TemplateController extends Controller
         $category = $settings['parent'] ?? -1;
         $filter = $request->input('filter');
 
-        $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked', 'selectable'];
+        $fields = ['id', 'templatename', 'category', 'locked'];
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
@@ -536,10 +536,7 @@ class TemplateController extends Controller
                 ->where('templatename', 'like', '%' . $filter . '%')
                 ->orderBy('templatename')
                 ->get()
-                ->map(fn(SiteTemplate $item) => [
-                    'id' => $item->getKey(),
-                    'title' => $item->templatename,
-                ]);
+                ->map(fn(SiteTemplate $item) => $item->setHidden(['category']));
 
             return TemplateResource::collection($result)
                 ->additional([
@@ -557,10 +554,9 @@ class TemplateController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return TemplateResource::collection($result->map(fn(SiteTemplate $item) => [
-                'id' => $item->getKey(),
-                'title' => $item->templatename,
-            ]))
+            return TemplateResource::collection(
+                $result->map(fn(SiteTemplate $item) => $item->setHidden(['category']))
+            )
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -589,10 +585,9 @@ class TemplateController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->map(fn(SiteTemplate $item) => [
-                            'id' => $item->getKey(),
-                            'title' => $item->templatename,
-                        ]),
+                        'data' => $result->map(
+                            fn(SiteTemplate $item) => $item->setHidden(['category'])
+                        ),
                         'pagination' => $this->pagination($result),
                     ];
                 }

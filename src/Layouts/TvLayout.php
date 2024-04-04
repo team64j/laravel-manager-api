@@ -317,8 +317,6 @@ class TvLayout extends Layout
                     ->isCategory()
                     ->setAliases([
                         'title' => 'name',
-                        'locked' => 'private',
-                        'category' => 'parent',
                     ])
                     ->setAppends(['id'])
                     ->setIcons([

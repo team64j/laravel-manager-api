@@ -334,11 +334,6 @@ class TemplateLayout extends Layout
                     ->isCategory()
                     ->setAliases([
                         'title' => ['name', 'templatename'],
-                        'name' => 'title',
-                        'templatename' => 'title',
-                        'locked' => 'private',
-                        'category' => 'parent',
-                        'selectable' => 'unhidden',
                     ])
                     ->setAppends(['id'])
                     ->setIcons([

@@ -316,7 +316,7 @@ class SnippetController extends Controller
         $category = $settings['parent'] ?? -1;
         $filter = $request->input('filter');
 
-        $fields = ['id', 'name', 'description', 'category', 'locked', 'disabled'];
+        $fields = ['id', 'name', 'category', 'locked', 'disabled'];
         $showFromCategory = $category >= 0;
 
         if (!is_null($filter)) {
@@ -325,10 +325,7 @@ class SnippetController extends Controller
                 ->where('name', 'like', '%' . $filter . '%')
                 ->orderBy('name')
                 ->get()
-                ->map(fn(SiteSnippet $item) => [
-                    'id' => $item->getKey(),
-                    'title' => $item->name,
-                ]);
+                ->map(fn(SiteSnippet $item) => $item->setHidden(['category']));
 
             return SnippetResource::collection($result)
                 ->additional([
@@ -346,10 +343,7 @@ class SnippetController extends Controller
             ->appends($request->all());
 
         if ($showFromCategory) {
-            return SnippetResource::collection($result->map(fn(SiteSnippet $item) => [
-                'id' => $item->getKey(),
-                'title' => $item->name,
-            ]))
+            return SnippetResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -378,10 +372,7 @@ class SnippetController extends Controller
 
                 if ($result->isNotEmpty()) {
                     $data = [
-                        'data' => $result->map(fn(SiteSnippet $item) => [
-                            'id' => $item->getKey(),
-                            'title' => $item->name,
-                        ]),
+                        'data' => $result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])),
                         'pagination' => $this->pagination($result),
                     ];
                 }

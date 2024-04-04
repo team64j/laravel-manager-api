@@ -451,29 +451,15 @@ class DocumentController extends Controller
                     $title = $item->{$settings['keyTitle']};
                 }
 
-                $data = [
-                    'id' => $item->getKey(),
-                    'alias' => $item->alias,
-                    'type' => $item->type,
-                    'title' => $title,
-                    'template' => $item->template,
-                    'menutitle' => $item->menutitle,
-                    'searchable' => $item->searchable,
-                    'menuindex' => $item->menuindex,
-                    'published' => $item->published,
-                    'cacheable' => $item->cacheable,
-                    'isfolder' => $item->isfolder,
-                    'richtext' => $item->richtext,
-                    'deleted' => $item->deleted,
-                ];
+                $data = $item->setAttribute('pagetitle', $title)->toArray();
 
-                if (!$item->hidemenu) {
-                    $data['selected'] = true;
-                }
-
-                if (!$item->published) {
-                    $data['unpublished'] = true;
-                }
+//                if (!$item->hidemenu) {
+//                    $data['selected'] = true;
+//                }
+//
+//                if (!$item->published) {
+//                    $data['unpublished'] = true;
+//                }
 
                 if ($item->isfolder) {
                     if ($item->hide_from_tree) {
