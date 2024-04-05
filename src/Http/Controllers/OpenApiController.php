@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cache;
 use OpenApi\Annotations as OA;
 use OpenApi\Generator;
 
@@ -22,31 +22,26 @@ use OpenApi\Generator;
  */
 class OpenApiController extends Controller
 {
-
     /**
-     * @return JsonResponse
+     * @return string
      */
-    public function index(): JsonResponse
+    public function index()
     {
-        $openapi = Generator::scan(
-            [__DIR__],
-            [
-                'validate' => true,
-            ]
-        );
-
-        $openapi->servers = [
-            [
-                'url' => route('manager.api'),
-            ],
-        ];
-
-        return response()
-            ->json(
-                $openapi,
-                200,
-                [],
-                JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT
+        return Cache::rememberForever(__METHOD__, function () {
+            $openapi = Generator::scan(
+                [__DIR__],
+                [
+                    'validate' => true,
+                ]
             );
+
+            $openapi->servers = [
+                [
+                    'url' => route('manager.api'),
+                ],
+            ];
+
+            return $openapi->toJson(JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
+        });
     }
 }
