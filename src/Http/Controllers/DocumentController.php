@@ -453,14 +453,6 @@ class DocumentController extends Controller
 
                 $data = $item->setAttribute('pagetitle', $title)->toArray();
 
-//                if (!$item->hidemenu) {
-//                    $data['selected'] = true;
-//                }
-//
-//                if (!$item->published) {
-//                    $data['unpublished'] = true;
-//                }
-
                 if ($item->isfolder) {
                     if ($item->hide_from_tree) {
                         $data['data'] = null;
