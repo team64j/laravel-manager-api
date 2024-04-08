@@ -38,7 +38,7 @@ class TemplateRequest extends FormRequest
                 'templatealias' => 'string|nullable',
                 'description' => 'string',
                 'editor_type' => 'int',
-                'category' => 'int',
+                'category' => 'required|int',
                 'template_type' => 'int',
                 'content' => 'string|nullable',
                 'locked' => 'int',
