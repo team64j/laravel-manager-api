@@ -47,12 +47,12 @@ class FilesLayout extends Layout
             ->setIcon('fa fa-folder-open')
             ->setTitle(Lang::get('global.files_files'))
             ->setPermissions(['file_manager'])
-            ->setRoute('File')
+            ->setRoute('/files/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('treeFiles')
-                    ->setRoute('File')
+                    ->setRoute('/files/:id')
                     ->setUrl('/file/tree')
                     ->isCategory()
                     ->setIcons([

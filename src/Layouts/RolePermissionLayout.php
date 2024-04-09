@@ -41,7 +41,7 @@ class RolePermissionLayout extends Layout
                     Panel::make()
                         ->setId('permissions')
                         ->setModel('data')
-                        ->setRoute('RolePermission')
+                        ->setRoute('/roles/permissions/:id')
                         ->setHistory(true)
                         ->addColumn(
                             'id',

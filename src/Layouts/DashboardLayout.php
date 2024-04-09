@@ -95,10 +95,10 @@ class DashboardLayout extends Layout
                             date('H:i:s') . '</b>)</div>',
                             Panel::make()
                                 ->setId('widgetUsers')
-                                ->setUrl('/users/active')
                                 ->setClass('!mt-0 !-mx-4 !-mb-4 !rounded-none')
                                 ->setHistory(false)
-                                ->setRoute('User'),
+                                ->setRoute('/users/:id')
+                                ->setUrl('/users/active'),
                         ]
                     )
                 )
@@ -114,12 +114,12 @@ class DashboardLayout extends Layout
                             'hover:shadow-lg bg-white dark:bg-gray-750 overflow-hidden transition',
                             Panel::make()
                                 ->setId('widgetDocuments')
-                                ->setHistory(false)
                                 ->setClass('!mt-0 !-mx-4 !-mb-4 !rounded-none')
+                                ->setHistory(false)
+                                ->setRoute('/document/:id')
                                 ->setUrl(
                                     '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
                                 )
-                                ->setRoute('Document')
                         )
                     )
                 )

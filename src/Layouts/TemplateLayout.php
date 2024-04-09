@@ -218,7 +218,7 @@ class TemplateLayout extends Layout
                     Panel::make()
                         ->setId('templates')
                         ->setModel('data')
-                        ->setRoute('Template')
+                        ->setRoute('/templates/:id')
                         ->setHistory(true)
                         ->addColumn(
                             '#',
@@ -324,12 +324,12 @@ class TemplateLayout extends Layout
             ->setTitle(Lang::get('global.templates'))
             ->setIcon('fa fa-newspaper')
             ->setPermissions('edit_template')
-            ->setRoute('Template')
+            ->setRoute('/templates/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('templates')
-                    ->setRoute('Template')
+                    ->setRoute('/templates/:id')
                     ->setUrl('/templates/tree')
                     ->isCategory()
                     ->setAliases([

@@ -94,7 +94,7 @@ class ModuleLayout extends Layout
                     Panel::make()
                         ->setId('modules')
                         ->setModel('data')
-                        ->setRoute('Module')
+                        ->setRoute('/modules/:id')
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -187,12 +187,12 @@ class ModuleLayout extends Layout
             ->setTitle(Lang::get('global.modules'))
             ->setIcon('fa fa-cubes')
             ->setPermissions('edit_module')
-            ->setRoute('Module')
+            ->setRoute('/modules/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('modules')
-                    ->setRoute('Module')
+                    ->setRoute('/modules/:id')
                     ->setUrl('/modules/tree')
                     ->isCategory()
                     ->setAliases([

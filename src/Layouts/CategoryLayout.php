@@ -94,7 +94,7 @@ class CategoryLayout extends Layout
                     Panel::make()
                         ->setId('categories')
                         ->setModel('data')
-                        ->setRoute('Category')
+                        ->setRoute('/categories/:id')
                         ->setHistory(true)
                         ->addColumn(
                             '#',
@@ -218,12 +218,12 @@ class CategoryLayout extends Layout
             ->setIcon('fa fa-object-group')
             ->setTitle(Lang::get('global.category_management'))
             ->setPermissions(['category_manager'])
-            ->setRoute(['Category'])
+            ->setRoute('/categories/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('categories')
-                    ->setRoute('Category')
+                    ->setRoute('/categories/:id')
                     ->setUrl('/categories/tree')
                     ->isCategory()
                     ->setAliases([

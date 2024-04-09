@@ -102,26 +102,26 @@ class BootstrapController extends Controller
     protected function getRoutes(): array
     {
         return [
-            [
-                'path' => '/',
-                'redirect' => '/dashboard',
-                'meta' => [
-                    'hidden' => true,
-                ],
-            ],
-            [
-                'path' => '/dashboard',
-                'name' => 'Dashboard',
-                'meta' => [
-                    'fixed' => true,
-                    'title' => null,
-                    'icon' => 'fa fa-home',
-                ],
-            ],
-            [
-                'path' => '/document/:id',
-                'name' => 'Document',
-            ],
+//            [
+//                'path' => '/',
+//                'redirect' => '/dashboard',
+//                'meta' => [
+//                    'hidden' => true,
+//                ],
+//            ],
+//            [
+//                'path' => '/dashboard',
+//                'name' => 'Dashboard',
+//                'meta' => [
+//                    'fixed' => true,
+//                    'title' => null,
+//                    'icon' => 'fa fa-home',
+//                ],
+//            ],
+//            [
+//                'path' => '/document/:id',
+//                'name' => 'Document',
+//            ],
             [
                 'path' => '/documents/:id',
                 'name' => 'Documents',
@@ -353,7 +353,7 @@ class BootstrapController extends Controller
                                 ?: 'https://avatars.githubusercontent.com/u/46722965?s=64&v=4',
                             'class' => 'line-height-1',
                             'to' => [
-                                'name' => 'Dashboard',
+                                'path' => '/',
                             ],
                             'permissions' => ['home'],
                         ],
@@ -367,10 +367,7 @@ class BootstrapController extends Controller
                                     'name' => '[%templates%]',
                                     'icon' => 'fa fa-newspaper',
                                     'to' => [
-                                        'name' => 'Elements',
-                                        'params' => [
-                                            'element' => 'templates',
-                                        ],
+                                        'path' => '/elements/templates',
                                     ],
                                     'url' => '/templates/list',
                                     'permissions' => ['new_template', 'edit_template'],
@@ -380,10 +377,7 @@ class BootstrapController extends Controller
                                     'name' => '[%tmplvars%]',
                                     'icon' => 'fa fa-list-alt',
                                     'to' => [
-                                        'name' => 'Elements',
-                                        'params' => [
-                                            'element' => 'tvs',
-                                        ],
+                                        'path' => '/elements/tvs',
                                     ],
                                     'url' => '/tvs/list',
                                     'permissions' => ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
@@ -393,10 +387,7 @@ class BootstrapController extends Controller
                                     'name' => '[%htmlsnippets%]',
                                     'icon' => 'fa fa-th-large',
                                     'to' => [
-                                        'name' => 'Elements',
-                                        'params' => [
-                                            'element' => 'chunks',
-                                        ],
+                                        'path' => '/elements/chunks',
                                     ],
                                     'url' => '/chunks/list',
                                     'permissions' => ['edit_chunk'],
@@ -406,10 +397,7 @@ class BootstrapController extends Controller
                                     'name' => '[%snippets%]',
                                     'icon' => 'fa fa-code',
                                     'to' => [
-                                        'name' => 'Elements',
-                                        'params' => [
-                                            'element' => 'snippets',
-                                        ],
+                                        'path' => '/elements/snippets',
                                     ],
                                     'url' => '/snippets/list',
                                     'permissions' => ['edit_snippet'],
@@ -419,10 +407,7 @@ class BootstrapController extends Controller
                                     'name' => '[%plugins%]',
                                     'icon' => 'fa fa-plug',
                                     'to' => [
-                                        'name' => 'Elements',
-                                        'params' => [
-                                            'element' => 'plugins',
-                                        ],
+                                        'path' => '/elements/plugins',
                                     ],
                                     'url' => '/plugins/list',
                                     'permissions' => ['edit_plugin'],
@@ -432,10 +417,7 @@ class BootstrapController extends Controller
                                     'name' => '[%modules%]',
                                     'icon' => 'fa fa-cubes',
                                     'to' => [
-                                        'name' => 'Elements',
-                                        'params' => [
-                                            'element' => 'modules',
-                                        ],
+                                        'path' => '/elements/modules',
                                     ],
                                     'url' => '/modules/list',
                                     'permissions' => ['edit_module'],
@@ -445,10 +427,7 @@ class BootstrapController extends Controller
                                     'name' => '[%category_management%]',
                                     'icon' => 'fa fa-object-group',
                                     'to' => [
-                                        'name' => 'Elements',
-                                        'params' => [
-                                            'element' => 'categories',
-                                        ],
+                                        'path' => '/elements/categories',
                                     ],
                                     'url' => '/categories/list',
                                     'permissions' => ['category_manager'],
@@ -458,7 +437,7 @@ class BootstrapController extends Controller
                                     'name' => '[%manage_files%]',
                                     'icon' => 'far fa-folder-open',
                                     'to' => [
-                                        'name' => 'Files',
+                                        'path' => '/files',
                                     ],
                                     'permissions' => ['file_manager'],
                                 ],
@@ -481,7 +460,7 @@ class BootstrapController extends Controller
                                     'name' => '[%users%]',
                                     'icon' => 'fa fa-user-circle',
                                     'to' => [
-                                        'name' => 'User',
+                                        'path' => '/users',
                                     ],
                                     'url' => '/users/list',
                                     'permissions' => ['edit_user'],
@@ -491,10 +470,7 @@ class BootstrapController extends Controller
                                     'name' => '[%role_management_title%]',
                                     'icon' => 'fa fa-legal',
                                     'to' => [
-                                        'name' => 'Roles',
-                                        'params' => [
-                                            'element' => 'users',
-                                        ],
+                                        'path' => '/roles/users',
                                     ],
                                     'permissions' => ['edit_role'],
                                 ],
@@ -503,10 +479,7 @@ class BootstrapController extends Controller
                                     'name' => '[%web_permissions%]',
                                     'icon' => 'fa fa-male',
                                     'to' => [
-                                        'name' => 'Permissions',
-                                        'params' => [
-                                            'element' => 'groups',
-                                        ],
+                                        'path' => '/permissions/groups',
                                     ],
                                     'permissions' => ['access_permissions'],
                                 ],
@@ -522,7 +495,7 @@ class BootstrapController extends Controller
                                     'name' => '[%refresh_site%]',
                                     'icon' => 'fa fa-recycle',
                                     'to' => [
-                                        'name' => 'Cache',
+                                        'path' => '/cache',
                                     ],
                                     'permissions' => ['empty_cache'],
                                 ],
@@ -590,7 +563,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-eye',
                                     'name' => '[%settings_ui%]',
                                     'to' => [
-                                        'name' => 'Workspace',
+                                        'path' => '/workspace',
                                     ],
                                     'permissions' => ['settings'],
                                 ],
@@ -599,7 +572,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-lock',
                                     'name' => '[%change_password%]',
                                     'to' => [
-                                        'name' => 'Password',
+                                        'path' => '/password',
                                     ],
                                     'permissions' => ['change_password'],
                                 ],
@@ -608,7 +581,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-sign-out',
                                     'name' => '[%logout%]',
                                     'to' => [
-                                        'name' => 'Logout',
+                                        'path' => '/logout',
                                     ],
                                 ],
                             ],
@@ -622,7 +595,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-sliders',
                                     'name' => '[%edit_settings%]',
                                     'to' => [
-                                        'name' => 'Configuration',
+                                        'path' => '/configuration',
                                     ],
                                     'permissions' => ['settings'],
                                 ],
@@ -631,7 +604,7 @@ class BootstrapController extends Controller
                                     'icon' => 'far fa-calendar',
                                     'name' => '[%site_schedule%]',
                                     'to' => [
-                                        'name' => 'Schedules',
+                                        'path' => '/schedules',
                                     ],
                                     'permissions' => ['view_eventlog'],
                                 ],
@@ -640,7 +613,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-exclamation-triangle',
                                     'name' => '[%eventlog_viewer%]',
                                     'to' => [
-                                        'name' => 'EventLogs',
+                                        'path' => '/event-log',
                                     ],
                                     'permissions' => ['view_eventlog'],
                                 ],
@@ -649,7 +622,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-user-secret',
                                     'name' => '[%view_logging%]',
                                     'to' => [
-                                        'name' => 'SystemLog',
+                                        'path' => '/system-log',
                                     ],
                                     'permissions' => ['logs'],
                                 ],
@@ -658,7 +631,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-info',
                                     'name' => '[%view_sysinfo%]',
                                     'to' => [
-                                        'name' => 'SystemInfo',
+                                        'path' => '/system-info',
                                     ],
                                 ],
                                 [
@@ -666,7 +639,7 @@ class BootstrapController extends Controller
                                     'icon' => 'far fa-question-circle',
                                     'name' => '[%help%]',
                                     'to' => [
-                                        'name' => 'Help',
+                                        'path' => '/help',
                                     ],
                                     'permissions' => ['help'],
                                 ],

@@ -91,7 +91,7 @@ class ChunkLayout extends Layout
                     Panel::make()
                         ->setId('chunks')
                         ->setModel('data')
-                        ->setRoute('Chunk')
+                        ->setRoute('/chunks/:id')
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -195,12 +195,12 @@ class ChunkLayout extends Layout
             ->setTitle(Lang::get('global.htmlsnippets'))
             ->setIcon('fa fa-th-large')
             ->setPermissions('edit_chunk')
-            ->setRoute('Chunk')
+            ->setRoute('/chunks/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('chunks')
-                    ->setRoute('Chunk')
+                    ->setRoute('/chunks/:id')
                     ->setUrl('/chunks/tree')
                     ->isCategory()
                     ->setAliases([

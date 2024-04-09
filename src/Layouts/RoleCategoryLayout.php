@@ -41,7 +41,7 @@ class RoleCategoryLayout extends Layout
                     Panel::make()
                         ->setId('categories')
                         ->setModel('data')
-                        ->setRoute('RoleCategory')
+                        ->setRoute('/roles/categories/:id')
                         ->setHistory(true)
                         ->addColumn(
                             'id',

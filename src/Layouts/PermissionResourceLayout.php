@@ -42,7 +42,7 @@ class PermissionResourceLayout extends Layout
                         ->setModel('data')
                         ->setId('resources')
                         ->setHistory(true)
-                        ->setRoute('PermissionResource')
+                        ->setRoute('/permissions/resources/:id')
                         ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
                         ->addColumn('documents', Lang::get('global.access_permissions_resources_in_group'))
                         ->addColumn(

@@ -91,7 +91,7 @@ class SnippetLayout extends Layout
                     Panel::make()
                         ->setId('snippets')
                         ->setModel('data')
-                        ->setRoute('Snippet')
+                        ->setRoute('/snippets/:id')
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -195,12 +195,12 @@ class SnippetLayout extends Layout
             ->setTitle(Lang::get('global.snippets'))
             ->setIcon('fa fa-code')
             ->setPermissions('edit_snippet')
-            ->setRoute('Snippet')
+            ->setRoute('/snippets/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('snippets')
-                    ->setRoute('Snippet')
+                    ->setRoute('/snippets/:id')
                     ->setUrl('/snippets/tree')
                     ->isCategory()
                     ->setAliases([

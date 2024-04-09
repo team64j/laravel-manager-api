@@ -62,7 +62,7 @@ class UserLayout extends Layout
             Panel::make()
                 ->setId('users')
                 ->setModel('data')
-                ->setRoute('User')
+                ->setRoute('/users/:id')
                 ->setHistory(true)
                 ->addColumn(
                     'id',

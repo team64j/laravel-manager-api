@@ -42,7 +42,7 @@ class PermissionGroupLayout extends Layout
                         ->setModel('data')
                         ->setId('groups')
                         ->setHistory(true)
-                        ->setRoute('PermissionGroup')
+                        ->setRoute('/permissions/groups/:id')
                         ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
                         ->addColumn('users', Lang::get('global.access_permissions_users_in_group'))
                         ->addColumn(

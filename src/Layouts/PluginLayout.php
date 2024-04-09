@@ -95,7 +95,7 @@ class PluginLayout extends Layout
                     Panel::make()
                         ->setId('plugins')
                         ->setModel('data')
-                        ->setRoute('Plugin')
+                        ->setRoute('/plugins/:id')
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -255,12 +255,12 @@ class PluginLayout extends Layout
             ->setTitle(Lang::get('global.plugins'))
             ->setIcon('fa fa-plug')
             ->setPermissions('edit_plugin')
-            ->setRoute('Plugin')
+            ->setRoute('/plugins/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('plugins')
-                    ->setRoute('Plugin')
+                    ->setRoute('/plugins/:id')
                     ->setUrl('/plugins/tree')
                     ->isCategory()
                     ->setAliases([

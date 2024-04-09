@@ -46,7 +46,7 @@ class PermissionRelationLayout extends Layout
                         ->setModel('data')
                         ->setId('relations')
                         ->setHistory(true)
-                        ->setRoute('PermissionRelation')
+                        ->setRoute('/permissions/relations/:id')
                         ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
                         ->addColumn('document_groups', Lang::get('global.access_permissions_resource_groups'))
                 ),

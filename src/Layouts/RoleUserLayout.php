@@ -42,7 +42,7 @@ class RoleUserLayout extends Layout
                     Panel::make()
                         ->setId('users')
                         ->setModel('data')
-                        ->setRoute('RoleUser')
+                        ->setRoute('/roles/users/:id')
                         ->setHistory(true)
                         ->addColumn(
                             'id',

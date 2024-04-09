@@ -163,7 +163,7 @@ class TvLayout extends Layout
                     Panel::make()
                         ->setId('tvs')
                         ->setModel('data')
-                        ->setRoute('Tv')
+                        ->setRoute('/tvs/:id')
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -307,12 +307,12 @@ class TvLayout extends Layout
             ->setTitle(Lang::get('global.tmplvars'))
             ->setIcon('fa fa-list-alt')
             ->setPermissions(['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'])
-            ->setRoute('Tv')
+            ->setRoute('/tvs/:id')
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('tvs')
-                    ->setRoute('Tv')
+                    ->setRoute('/tvs/:id')
                     ->setUrl('/tvs/tree')
                     ->isCategory()
                     ->setAliases([
