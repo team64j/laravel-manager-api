@@ -131,9 +131,9 @@ class ChunkController extends Controller
      */
     public function store(ChunkRequest $request): ChunkResource
     {
-        $chunk = SiteHtmlSnippet::query()->create($request->validated());
+        $model = SiteHtmlSnippet::query()->create($request->validated());
 
-        return ChunkResource::make($chunk);
+        return ChunkResource::make($model);
     }
 
     /**
@@ -151,20 +151,21 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param string $chunk
+     * @param string $id
      * @param ChunkLayout $layout
      *
      * @return ChunkResource
      */
-    public function show(ChunkRequest $request, string $chunk, ChunkLayout $layout): ChunkResource
+    public function show(ChunkRequest $request, string $id, ChunkLayout $layout): ChunkResource
     {
-        $chunk = SiteHtmlSnippet::query()->findOrNew($chunk);
+        /** @var SiteHtmlSnippet $model */
+        $model = SiteHtmlSnippet::query()->findOrNew($id);
 
-        return ChunkResource::make($chunk)
+        return ChunkResource::make($model)
             ->additional([
-                'layout' => $layout->default($chunk),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $chunk->name ?? Lang::get('global.new_htmlsnippet'),
+                    'title' => $model->name ?? Lang::get('global.new_htmlsnippet'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -190,15 +191,18 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param SiteHtmlSnippet $chunk
+     * @param string $id
      *
      * @return ChunkResource
      */
-    public function update(ChunkRequest $request, SiteHtmlSnippet $chunk): ChunkResource
+    public function update(ChunkRequest $request, string $id): ChunkResource
     {
-        $chunk->update($request->validated());
+        /** @var SiteHtmlSnippet $model */
+        $model = SiteHtmlSnippet::query()->findOrFail($id);
 
-        return ChunkResource::make($chunk);
+        $model->update($request->validated());
+
+        return ChunkResource::make($model);
     }
 
     /**
@@ -216,13 +220,16 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param SiteHtmlSnippet $chunk
+     * @param string $id
      *
      * @return Response
      */
-    public function destroy(ChunkRequest $request, SiteHtmlSnippet $chunk): Response
+    public function destroy(ChunkRequest $request, string $id): Response
     {
-        $chunk->delete();
+        /** @var SiteHtmlSnippet $model */
+        $model = SiteHtmlSnippet::query()->findOrFail($id);
+
+        $model->delete();
 
         return response()->noContent();
     }

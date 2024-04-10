@@ -153,20 +153,21 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param string $module
+     * @param string $id
      * @param ModuleLayout $layout
      *
      * @return ModuleResource
      */
-    public function show(ModuleRequest $request, string $module, ModuleLayout $layout): ModuleResource
+    public function show(ModuleRequest $request, string $id, ModuleLayout $layout): ModuleResource
     {
-        $module = SiteModule::query()->findOrNew($module);
+        /** @var SiteModule $model */
+        $model = SiteModule::query()->findOrNew($id);
 
-        return ModuleResource::make($module)
+        return ModuleResource::make($model)
             ->additional([
-                'layout' => $layout->default($module),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $module->name ?? Lang::get('global.new_module'),
+                    'title' => $model->name ?? Lang::get('global.new_module'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -192,15 +193,18 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param SiteModule $module
+     * @param string $id
      *
      * @return ModuleResource
      */
-    public function update(ModuleRequest $request, SiteModule $module): ModuleResource
+    public function update(ModuleRequest $request, string $id): ModuleResource
     {
-        $module->update($request->validated());
+        /** @var SiteModule $model */
+        $model = SiteModule::query()->findOrFail($id);
 
-        return ModuleResource::make($module);
+        $model->update($request->validated());
+
+        return ModuleResource::make($model);
     }
 
     /**
@@ -218,13 +222,16 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param SiteModule $module
+     * @param string $id
      *
      * @return Response
      */
-    public function destroy(ModuleRequest $request, SiteModule $module): Response
+    public function destroy(ModuleRequest $request, string $id): Response
     {
-        $module->delete();
+        /** @var SiteModule $model */
+        $model = SiteModule::query()->findOrFail($id);
+
+        $model->delete();
 
         return response()->noContent();
     }

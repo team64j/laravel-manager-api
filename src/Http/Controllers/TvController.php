@@ -132,15 +132,15 @@ class TvController extends Controller
      */
     public function store(TvRequest $request, TvLayout $layout): TvResource
     {
-        /** @var SiteTmplvar $tv */
-        $tv = SiteTmplvar::query()->create($request->validated());
+        /** @var SiteTmplvar $model */
+        $model = SiteTmplvar::query()->create($request->validated());
 
-        $data = $tv->withoutRelations();
+        $data = $model->withoutRelations();
 
         return TvResource::make($data)
             ->additional([
                 'meta' => [],
-                'layout' => $layout->default($tv),
+                'layout' => $layout->default($model),
             ]);
     }
 
@@ -159,31 +159,31 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param string $tv
+     * @param string $id
      * @param TvLayout $layout
      *
      * @return TvResource
      */
-    public function show(TvRequest $request, string $tv, TvLayout $layout): TvResource
+    public function show(TvRequest $request, string $id, TvLayout $layout): TvResource
     {
-        /** @var SiteTmplvar $tv */
-        $tv = SiteTmplvar::query()->findOrNew($tv);
+        /** @var SiteTmplvar $model */
+        $model = SiteTmplvar::query()->findOrNew($id);
 
-        if (!$tv->id) {
-            $tv->setRawAttributes([
+        if (!$model->getKey()) {
+            $model->setRawAttributes([
                 'type' => 'text',
                 'category' => 0,
                 'rank' => 0,
             ]);
         }
 
-        $data = $tv->withoutRelations();
+        $data = $model->withoutRelations();
 
         return TvResource::make($data)
             ->additional([
-                'layout' => $layout->default($tv),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $tv->name ?? Lang::get('global.new_tmplvars'),
+                    'title' => $model->name ?? Lang::get('global.new_tmplvars'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -209,24 +209,27 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param SiteTmplvar $tv
+     * @param string $id
      * @param TvLayout $layout
      *
      * @return TvResource
      */
-    public function update(TvRequest $request, SiteTmplvar $tv, TvLayout $layout): TvResource
+    public function update(TvRequest $request, string $id, TvLayout $layout): TvResource
     {
-        $tv->update($request->validated());
+        /** @var SiteTmplvar $model */
+        $model = SiteTmplvar::query()->findOrFail($id);
 
-        $data = $tv->withoutRelations();
+        $model->update($request->validated());
+
+        $data = $model->withoutRelations();
 
         return TvResource::make($data)
             ->additional([
                 'meta' => [
-                    'title' => $tv->name,
+                    'title' => $model->name,
                     'icon' => $layout->getIcon(),
                 ],
-                'layout' => $layout->default($tv),
+                'layout' => $layout->default($model),
             ]);
     }
 
@@ -245,13 +248,15 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param SiteTmplvar $tv
+     * @param string $id
      *
      * @return Response
      */
-    public function destroy(TvRequest $request, SiteTmplvar $tv): Response
+    public function destroy(TvRequest $request, string $id): Response
     {
-        $tv->delete();
+        $model = SiteTmplvar::query()->findOrFail($id);
+
+        $model->delete();
 
         return response()->noContent();
     }

@@ -152,20 +152,21 @@ class SnippetController extends Controller
      *      )
      * )
      * @param SnippetRequest $request
-     * @param string $snippet
+     * @param string $id
      * @param SnippetLayout $layout
      *
      * @return SnippetResource
      */
-    public function show(SnippetRequest $request, string $snippet, SnippetLayout $layout): SnippetResource
+    public function show(SnippetRequest $request, string $id, SnippetLayout $layout): SnippetResource
     {
-        $snippet = SiteSnippet::query()->findOrNew($snippet);
+        /** @var SiteSnippet $model */
+        $model = SiteSnippet::query()->findOrNew($id);
 
-        return SnippetResource::make($snippet)
+        return SnippetResource::make($model)
             ->additional([
-                'layout' => $layout->default($snippet),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $snippet->name ?? Lang::get('global.new_snippet'),
+                    'title' => $model->name ?? Lang::get('global.new_snippet'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -191,15 +192,18 @@ class SnippetController extends Controller
      *      )
      * )
      * @param SnippetRequest $request
-     * @param SiteSnippet $snippet
+     * @param string $id
      *
      * @return SnippetResource
      */
-    public function update(SnippetRequest $request, SiteSnippet $snippet): SnippetResource
+    public function update(SnippetRequest $request, string $id): SnippetResource
     {
-        $snippet->update($request->validated());
+        /** @var SiteSnippet $model */
+        $model = SiteSnippet::query()->findOrFail($id);
 
-        return SnippetResource::make($snippet);
+        $model->update($request->validated());
+
+        return SnippetResource::make($model);
     }
 
     /**
@@ -217,13 +221,16 @@ class SnippetController extends Controller
      *      )
      * )
      * @param SnippetRequest $request
-     * @param SiteSnippet $snippet
+     * @param string $id
      *
      * @return Response
      */
-    public function destroy(SnippetRequest $request, SiteSnippet $snippet): Response
+    public function destroy(SnippetRequest $request, string $id): Response
     {
-        $snippet->delete();
+        /** @var SiteSnippet $model */
+        $model = SiteSnippet::query()->findOrFail($id);
+
+        $model->delete();
 
         return response()->noContent();
     }

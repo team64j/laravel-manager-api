@@ -133,9 +133,9 @@ class PluginController extends Controller
      */
     public function store(PluginRequest $request): PluginResource
     {
-        $plugin = SitePlugin::query()->create($request->validated());
+        $model = SitePlugin::query()->create($request->validated());
 
-        return PluginResource::make($plugin);
+        return PluginResource::make($model);
     }
 
     /**
@@ -153,20 +153,21 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param string $plugin
+     * @param string $id
      * @param PluginLayout $layout
      *
      * @return PluginResource
      */
-    public function show(PluginRequest $request, string $plugin, PluginLayout $layout): PluginResource
+    public function show(PluginRequest $request, string $id, PluginLayout $layout): PluginResource
     {
-        $plugin = SitePlugin::query()->findOrNew($plugin);
+        /** @var SitePlugin $model */
+        $model = SitePlugin::query()->findOrNew($id);
 
-        return PluginResource::make($plugin)
+        return PluginResource::make($model)
             ->additional([
-                'layout' => $layout->default($plugin),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $plugin->name ?? Lang::get('global.new_plugin'),
+                    'title' => $model->name ?? Lang::get('global.new_plugin'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -192,15 +193,18 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param SitePlugin $plugin
+     * @param string $id
      *
      * @return PluginResource
      */
-    public function update(PluginRequest $request, SitePlugin $plugin): PluginResource
+    public function update(PluginRequest $request, string $id): PluginResource
     {
-        $plugin->update($request->validated());
+        /** @var SitePlugin $model */
+        $model = SitePlugin::query()->findOrFail($id);
 
-        return PluginResource::make($plugin);
+        $model->update($request->validated());
+
+        return PluginResource::make($model);
     }
 
     /**
@@ -218,13 +222,16 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param SitePlugin $plugin
+     * @param string $id
      *
      * @return Response
      */
-    public function destroy(PluginRequest $request, SitePlugin $plugin): Response
+    public function destroy(PluginRequest $request, string $id): Response
     {
-        $plugin->delete();
+        /** @var SitePlugin $model */
+        $model = SitePlugin::query()->findOrFail($id);
+
+        $model->delete();
 
         return response()->noContent();
     }

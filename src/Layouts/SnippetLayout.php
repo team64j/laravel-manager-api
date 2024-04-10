@@ -27,10 +27,7 @@ class SnippetLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'Elements',
-                        'params' => [
-                            'element' => 'snippets',
-                        ],
+                        'path' => '/elements/snippets',
                         'close' => true,
                     ]
                 )
@@ -54,7 +51,7 @@ class SnippetLayout extends Layout
             ActionsButtons::make()
                 ->setNew(
                     Lang::get('global.new_snippet'),
-                    'Snippet',
+                    '/snippets/new',
                     'btn-green',
                     'fa fa-plus'
                 ),

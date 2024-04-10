@@ -33,10 +33,7 @@ class TvLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'Elements',
-                        'params' => [
-                            'element' => 'tvs',
-                        ],
+                        'path' => '/elements/tvs',
                         'close' => true,
                     ]
                 )
@@ -248,10 +245,7 @@ class TvLayout extends Layout
         return [
             ActionsButtons::make()
                 ->setCancelTo([
-                    'name' => 'Elements',
-                    'params' => [
-                        'element' => 'tvs',
-                    ],
+                    'path' => '/elements/tvs',
                     'close' => true,
                 ])
                 ->setSave(),

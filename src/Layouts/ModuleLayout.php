@@ -27,10 +27,7 @@ class ModuleLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'Elements',
-                        'params' => [
-                            'element' => 'modules',
-                        ],
+                        'path' => '/elements/modules',
                         'close' => true,
                     ]
                 )
@@ -57,7 +54,7 @@ class ModuleLayout extends Layout
             ActionsButtons::make()
                 ->setNew(
                     Lang::get('global.new_module'),
-                    'Module',
+                    '/modules/new',
                     'btn-green',
                     'fa fa-plus'
                 ),

@@ -27,10 +27,7 @@ class ChunkLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'Elements',
-                        'params' => [
-                            'element' => 'chunks',
-                        ],
+                        'path' => '/elements/chunks',
                         'close' => true,
                     ]
                 )
@@ -54,7 +51,7 @@ class ChunkLayout extends Layout
             ActionsButtons::make()
                 ->setNew(
                     Lang::get('global.new_htmlsnippet'),
-                    'Chunk',
+                    '/chunks/new',
                     'btn-green',
                     'fa fa-plus'
                 ),

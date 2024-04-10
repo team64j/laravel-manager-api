@@ -38,10 +38,7 @@ class TemplateLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'Elements',
-                        'params' => [
-                            'element' => 'templates',
-                        ],
+                        'path' => '/elements/templates',
                         'close' => true,
                     ]
                 )

@@ -107,9 +107,9 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request): CategoryResource
     {
-        $category = Category::query()->create($request->validated());
+        $model = Category::query()->create($request->validated());
 
-        return CategoryResource::make($category);
+        return CategoryResource::make($model);
     }
 
     /**
@@ -127,13 +127,14 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param int $id
+     * @param string $id
      * @param CategoryLayout $layout
      *
      * @return CategoryResource
      */
-    public function show(CategoryRequest $request, int $id, CategoryLayout $layout): CategoryResource
+    public function show(CategoryRequest $request, string $id, CategoryLayout $layout): CategoryResource
     {
+        /** @var Category $model */
         $model = Category::query()->findOrNew($id);
 
         return CategoryResource::make($model)
@@ -166,13 +167,15 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param int $id
+     * @param string $id
      *
      * @return CategoryResource
      */
-    public function update(CategoryRequest $request, int $id): CategoryResource
+    public function update(CategoryRequest $request, string $id): CategoryResource
     {
+        /** @var Category $model */
         $model = Category::query()->findOrFail($id);
+
         $model->update($request->validated());
 
         return CategoryResource::make($model);
@@ -193,13 +196,15 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param int $id
+     * @param string $id
      *
      * @return Response
      */
-    public function destroy(CategoryRequest $request, int $id): Response
+    public function destroy(CategoryRequest $request, string $id): Response
     {
+        /** @var Category $model */
         $model = Category::query()->findOrFail($id);
+
         $model->delete();
 
         return response()->noContent();

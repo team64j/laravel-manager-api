@@ -27,10 +27,7 @@ class CategoryLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'Elements',
-                        'params' => [
-                            'element' => 'categories',
-                        ],
+                        'path' => '/elements/categories',
                         'close' => true,
                     ]
                 )
@@ -55,10 +52,10 @@ class CategoryLayout extends Layout
     {
         return [
             ActionsButtons::make()
-                ->setAction('sort', Lang::get('global.cm_sort_categories'), 'CategorySort', null, 'fa fa-sort')
+                ->setAction('sort', Lang::get('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
                 ->setNew(
                     Lang::get('global.cm_add_new_category'),
-                    'Category',
+                    '/categories/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -159,10 +156,7 @@ class CategoryLayout extends Layout
         return [
             ActionsButtons::make()
                 ->setCancelTo([
-                    'name' => 'Elements',
-                    'params' => [
-                        'element' => 'categories',
-                    ],
+                    'path' => '/elements/categories',
                     'close' => true,
                 ])
                 ->setSave(),

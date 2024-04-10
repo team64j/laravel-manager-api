@@ -27,10 +27,7 @@ class PluginLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'Elements',
-                        'params' => [
-                            'element' => 'plugins',
-                        ],
+                        'path' => '/elements/plugins',
                         'close' => true,
                     ]
                 )
@@ -55,10 +52,10 @@ class PluginLayout extends Layout
     {
         return [
             ActionsButtons::make()
-                ->setAction('sort', Lang::get('global.plugin_priority'), 'PluginSort', null, 'fa fa-sort')
+                ->setAction('sort', Lang::get('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
                 ->setNew(
                     Lang::get('global.new_plugin'),
-                    'Plugin',
+                    '/plugins/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
