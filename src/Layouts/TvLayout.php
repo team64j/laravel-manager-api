@@ -123,10 +123,10 @@ class TvLayout extends Layout
     {
         return [
             ActionsButtons::make()
-                ->setAction('sort', Lang::get('global.template_tv_edit'), 'TvSort', null, 'fa fa-sort')
+                ->setAction('sort', Lang::get('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
                 ->setNew(
                     Lang::get('global.new_tmplvars'),
-                    'Tv',
+                    '/tvs/new',
                     'btn-green',
                     'fa fa-plus'
                 ),

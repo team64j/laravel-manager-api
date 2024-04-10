@@ -127,20 +127,20 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param string $category
+     * @param int $id
      * @param CategoryLayout $layout
      *
      * @return CategoryResource
      */
-    public function show(CategoryRequest $request, string $category, CategoryLayout $layout): CategoryResource
+    public function show(CategoryRequest $request, int $id, CategoryLayout $layout): CategoryResource
     {
-        $category = Category::query()->findOrNew($category);
+        $model = Category::query()->findOrNew($id);
 
-        return CategoryResource::make($category)
+        return CategoryResource::make($model)
             ->additional([
-                'layout' => $layout->default($category),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $category->category ?? Lang::get('global.new_category'),
+                    'title' => $model->category ?? Lang::get('global.new_category'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);
@@ -166,15 +166,16 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param Category $category
+     * @param int $id
      *
      * @return CategoryResource
      */
-    public function update(CategoryRequest $request, Category $category): CategoryResource
+    public function update(CategoryRequest $request, int $id): CategoryResource
     {
-        $category->update($request->validated());
+        $model = Category::query()->findOrFail($id);
+        $model->update($request->validated());
 
-        return CategoryResource::make($category);
+        return CategoryResource::make($model);
     }
 
     /**
@@ -192,13 +193,14 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param Category $category
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(CategoryRequest $request, Category $category): Response
+    public function destroy(CategoryRequest $request, int $id): Response
     {
-        $category->delete();
+        $model = Category::query()->findOrFail($id);
+        $model->delete();
 
         return response()->noContent();
     }

@@ -194,7 +194,7 @@ class ActionsButtons extends Component
                 $this->attributes['attrs']['data'][$action]['to'] = $to;
             } else {
                 $this->attributes['attrs']['data'][$action]['to'] = [
-                    'name' => $to,
+                    'path' => $to,
                 ];
 
                 if ($action == 'new') {

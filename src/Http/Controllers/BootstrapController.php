@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Vite;
-use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
@@ -23,8 +22,6 @@ use Team64j\LaravelManagerApi\Layouts\PluginLayout;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
-
-use function PHPUnit\Framework\returnArgument;
 
 class BootstrapController extends Controller
 {
@@ -104,6 +101,30 @@ class BootstrapController extends Controller
     protected function getRoutes(): array
     {
         return [
+            [
+                'path' => '/',
+                'meta' => [
+                    'fixed' => true,
+                    'title' => null,
+                    'icon' => 'fa fa-home',
+                    'url' => '/dashboard',
+                ],
+            ],
+//            [
+//                'path' => '/',
+//                'redirect' => '/dashboard',
+//                'meta' => [
+//                    'hidden' => true,
+//                ],
+//            ],
+//            [
+//                'path' => '/dashboard',
+//                'meta' => [
+//                    'fixed' => true,
+//                    'title' => null,
+//                    'icon' => 'fa fa-home',
+//                ],
+//            ],
             [
                 'path' => '/elements/:element',
                 'meta' => [

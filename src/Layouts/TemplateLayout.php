@@ -181,7 +181,7 @@ class TemplateLayout extends Layout
             ActionsButtons::make()
                 ->setNew(
                     Lang::get('global.new_template'),
-                    'Template',
+                    '/templates/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
