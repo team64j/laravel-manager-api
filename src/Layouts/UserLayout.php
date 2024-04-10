@@ -24,7 +24,7 @@ class UserLayout extends Layout
                 ->setCancel(
                     Lang::get('global.cancel'),
                     [
-                        'name' => 'User',
+                        'path' => '/users',
                         'close' => true,
                     ]
                 )

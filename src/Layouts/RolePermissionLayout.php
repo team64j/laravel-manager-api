@@ -22,7 +22,7 @@ class RolePermissionLayout extends Layout
             ActionsButtons::make()
                 ->setNew(
                     Lang::get('global.new_permission'),
-                    'RolePermission',
+                    '/roles/permissions/new',
                     'btn-green'
                 ),
 

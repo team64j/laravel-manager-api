@@ -92,7 +92,7 @@ class RoleUserController extends Controller
             ->additional([
                 'layout' => $layout->default($roleUser),
                 'meta' => [
-                    'title' => $roleUser->name ?? Lang::get('global.new_role'),
+                    'title' => $roleUser->name ?: Lang::get('global.new_role'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);

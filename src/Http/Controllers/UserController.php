@@ -216,7 +216,7 @@ class UserController extends Controller
             ->additional([
                 'layout' => $layout->default($user),
                 'meta' => [
-                    'title' => $user->username ?? Lang::get('global.new_user'),
+                    'title' => $user->username ?: Lang::get('global.new_user'),
                     'icon' => $layout->getIcon(),
                 ],
             ]);

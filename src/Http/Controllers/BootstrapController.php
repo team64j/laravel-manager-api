@@ -102,222 +102,219 @@ class BootstrapController extends Controller
     {
         return [
             [
-                'path' => '/',
-                'meta' => [
-                    'fixed' => true,
-                    'title' => null,
-                    'icon' => 'fa fa-home',
-                    'url' => '/dashboard',
-                ],
-            ],
-//            [
-//                'path' => '/',
-//                'redirect' => '/dashboard',
-//                'meta' => [
-//                    'hidden' => true,
-//                ],
-//            ],
-//            [
-//                'path' => '/dashboard',
-//                'meta' => [
-//                    'fixed' => true,
-//                    'title' => null,
-//                    'icon' => 'fa fa-home',
-//                ],
-//            ],
-            [
                 'path' => '/elements/:element',
                 'meta' => [
                     'url' => '/:element?groupBy=category',
                     'group' => true,
                 ],
-            ]
-        ];
-
-        return [
-//            [
-//                'path' => '/',
-//                'redirect' => '/dashboard',
-//                'meta' => [
-//                    'hidden' => true,
-//                ],
-//            ],
-//            [
-//                'path' => '/dashboard',
-//                'name' => 'Dashboard',
-//                'meta' => [
-//                    'fixed' => true,
-//                    'title' => null,
-//                    'icon' => 'fa fa-home',
-//                ],
-//            ],
-//            [
-//                'path' => '/document/:id',
-//                'name' => 'Document',
-//            ],
-            [
-                'path' => '/documents/:id',
-                'name' => 'Documents',
             ],
             [
-                'path' => '/elements/:element',
-                'name' => 'Elements',
+                'path' => '/:path(.*)',
+            ],
+            [
+                'path' => '/:path(.*)/:id(\\d+)',
+            ],
+            [
+                'path' => '/:path(.*)/new',
+            ],
+            [
+                'path' => '/:path(.*)/:element',
                 'meta' => [
-                    'url' => '/:element?groupBy=category',
                     'group' => true,
                 ],
-            ],
-            [
-                'path' => '/templates/:id',
-                'name' => 'Template',
-            ],
-            [
-                'path' => '/tvs/:id',
-                'name' => 'Tv',
-            ],
-            [
-                'path' => '/tvs/sort',
-                'name' => 'TvSort',
-            ],
-            [
-                'path' => '/chunks/:id',
-                'name' => 'Chunk',
-            ],
-            [
-                'path' => '/snippets/:id',
-                'name' => 'Snippet',
-            ],
-            [
-                'path' => '/plugins/:id',
-                'name' => 'Plugin',
-            ],
-            [
-                'path' => '/plugins/sort',
-                'name' => 'PluginSort',
-            ],
-            [
-                'path' => '/modules/:id',
-                'name' => 'Module',
             ],
             [
                 'path' => '/modules/exec/:id',
-                'name' => 'ModuleExec',
                 'meta' => [
                     'icon' => 'fa fa-cube',
                     'isIframe' => true,
                 ],
             ],
-            [
-                'path' => '/categories/:id',
-                'name' => 'Category',
-            ],
-            [
-                'path' => '/categories/sort',
-                'name' => 'CategorySort',
-            ],
-            [
-                'path' => '/users/:id?',
-                'name' => 'User',
-            ],
-            [
-                'path' => '/roles/:element',
-                'name' => 'Roles',
-                'meta' => [
-                    'group' => true,
-                ],
-            ],
-            [
-                'path' => '/roles/users/:id',
-                'name' => 'RoleUser',
-            ],
-            [
-                'path' => '/roles/categories/:id',
-                'name' => 'RoleCategory',
-            ],
-            [
-                'path' => '/roles/permissions/:id',
-                'name' => 'RolePermission',
-            ],
-            [
-                'path' => '/permissions/:element',
-                'name' => 'Permissions',
-                'meta' => [
-                    'group' => true,
-                ],
-            ],
-            [
-                'path' => '/permissions/groups/:id',
-                'name' => 'PermissionGroup',
-            ],
-            [
-                'path' => '/permissions/relations/:id',
-                'name' => 'PermissionRelation',
-            ],
-            [
-                'path' => '/permissions/resources/:id',
-                'name' => 'PermissionResource',
-            ],
-            [
-                'path' => '/cache',
-                'name' => 'Cache',
-            ],
-            [
-                'path' => '/configuration',
-                'name' => 'Configuration',
-            ],
-            [
-                'path' => '/workspace',
-                'name' => 'Workspace',
-            ],
-            [
-                'path' => '/schedule',
-                'name' => 'Schedules',
-            ],
-            [
-                'path' => '/event-log',
-                'name' => 'EventLogs',
-            ],
-            [
-                'path' => '/event-log/:id',
-                'name' => 'EventLog',
-            ],
-            [
-                'path' => '/system-log',
-                'name' => 'SystemLog',
-            ],
-            [
-                'path' => '/system-info',
-                'name' => 'SystemInfo',
-            ],
-            [
-                'path' => '/phpinfo',
-                'name' => 'PhpInfo',
-                'meta' => [
-                    'url' => '/system-info/phpinfo',
-                    'icon' => 'fab fa-php',
-                    'isIframe' => true,
-                ],
-            ],
-            [
-                'path' => '/help',
-                'name' => 'Help',
-            ],
-            [
-                'path' => '/password',
-                'name' => 'Password',
-            ],
-            [
-                'path' => '/files/:id?',
-                'name' => 'Files',
-                'meta' => [
-                    'group' => true,
-                ],
-            ],
-            [
-                'path' => '/file/:id?',
-                'name' => 'File',
-            ],
         ];
+        /*        return [
+                    [
+                        'path' => '/',
+                        'redirect' => '/dashboard',
+                        'meta' => [
+                            'hidden' => true,
+                        ],
+                    ],
+                    [
+                        'path' => '/dashboard',
+                        'name' => 'Dashboard',
+                        'meta' => [
+                            'fixed' => true,
+                            'title' => null,
+                            'icon' => 'fa fa-home',
+                        ],
+                    ],
+                    [
+                        'path' => '/document/:id',
+                        'name' => 'Document',
+                    ],
+                    [
+                        'path' => '/documents/:id',
+                        'name' => 'Documents',
+                    ],
+                    [
+                        'path' => '/elements/:element',
+                        'name' => 'Elements',
+                        'meta' => [
+                            'url' => '/:element?groupBy=category',
+                            'group' => true,
+                        ],
+                    ],
+                    [
+                        'path' => '/templates/:id',
+                        'name' => 'Template',
+                    ],
+                    [
+                        'path' => '/tvs/:id',
+                        'name' => 'Tv',
+                    ],
+                    [
+                        'path' => '/tvs/sort',
+                        'name' => 'TvSort',
+                    ],
+                    [
+                        'path' => '/chunks/:id',
+                        'name' => 'Chunk',
+                    ],
+                    [
+                        'path' => '/snippets/:id',
+                        'name' => 'Snippet',
+                    ],
+                    [
+                        'path' => '/plugins/:id',
+                        'name' => 'Plugin',
+                    ],
+                    [
+                        'path' => '/plugins/sort',
+                        'name' => 'PluginSort',
+                    ],
+                    [
+                        'path' => '/modules/:id',
+                        'name' => 'Module',
+                    ],
+                    [
+                        'path' => '/modules/exec/:id',
+                        'name' => 'ModuleExec',
+                        'meta' => [
+                            'icon' => 'fa fa-cube',
+                            'isIframe' => true,
+                        ],
+                    ],
+                    [
+                        'path' => '/categories/:id',
+                        'name' => 'Category',
+                    ],
+                    [
+                        'path' => '/categories/sort',
+                        'name' => 'CategorySort',
+                    ],
+                    [
+                        'path' => '/users/:id?',
+                        'name' => 'User',
+                    ],
+                    [
+                        'path' => '/roles/:element',
+                        'name' => 'Roles',
+                        'meta' => [
+                            'group' => true,
+                        ],
+                    ],
+                    [
+                        'path' => '/roles/users/:id',
+                        'name' => 'RoleUser',
+                    ],
+                    [
+                        'path' => '/roles/categories/:id',
+                        'name' => 'RoleCategory',
+                    ],
+                    [
+                        'path' => '/roles/permissions/:id',
+                        'name' => 'RolePermission',
+                    ],
+                    [
+                        'path' => '/permissions/:element',
+                        'name' => 'Permissions',
+                        'meta' => [
+                            'group' => true,
+                        ],
+                    ],
+                    [
+                        'path' => '/permissions/groups/:id',
+                        'name' => 'PermissionGroup',
+                    ],
+                    [
+                        'path' => '/permissions/relations/:id',
+                        'name' => 'PermissionRelation',
+                    ],
+                    [
+                        'path' => '/permissions/resources/:id',
+                        'name' => 'PermissionResource',
+                    ],
+                    [
+                        'path' => '/cache',
+                        'name' => 'Cache',
+                    ],
+                    [
+                        'path' => '/configuration',
+                        'name' => 'Configuration',
+                    ],
+                    [
+                        'path' => '/workspace',
+                        'name' => 'Workspace',
+                    ],
+                    [
+                        'path' => '/schedule',
+                        'name' => 'Schedules',
+                    ],
+                    [
+                        'path' => '/event-log',
+                        'name' => 'EventLogs',
+                    ],
+                    [
+                        'path' => '/event-log/:id',
+                        'name' => 'EventLog',
+                    ],
+                    [
+                        'path' => '/system-log',
+                        'name' => 'SystemLog',
+                    ],
+                    [
+                        'path' => '/system-info',
+                        'name' => 'SystemInfo',
+                    ],
+                    [
+                        'path' => '/phpinfo',
+                        'name' => 'PhpInfo',
+                        'meta' => [
+                            'url' => '/system-info/phpinfo',
+                            'icon' => 'fab fa-php',
+                            'isIframe' => true,
+                        ],
+                    ],
+                    [
+                        'path' => '/help',
+                        'name' => 'Help',
+                    ],
+                    [
+                        'path' => '/password',
+                        'name' => 'Password',
+                    ],
+                    [
+                        'path' => '/files/:id?',
+                        'name' => 'Files',
+                        'meta' => [
+                            'group' => true,
+                        ],
+                    ],
+                    [
+                        'path' => '/file/:id?',
+                        'name' => 'File',
+                    ],
+                ];*/
     }
 
     /**

@@ -22,7 +22,7 @@ class RoleUserLayout extends Layout
             ActionsButtons::make()
                 ->setNew(
                     Lang::get('global.new_role'),
-                    'RoleUser',
+                    '/roles/users/new',
                     'btn-green'
                 ),
 

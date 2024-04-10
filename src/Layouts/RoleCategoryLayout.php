@@ -22,7 +22,7 @@ class RoleCategoryLayout extends Layout
             ActionsButtons::make()
                 ->setNew(
                     Lang::get('global.new_category'),
-                    'RoleCategory',
+                    '/roles/categories/new',
                     'btn-green'
                 ),
 
