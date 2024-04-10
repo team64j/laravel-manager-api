@@ -327,7 +327,7 @@ class ModuleController extends Controller
         )
             ->additional([
                 'meta' => [
-                    'name' => 'ModuleExec',
+                    'route' => '/modules/exec/:id',
                 ],
             ]);
     }

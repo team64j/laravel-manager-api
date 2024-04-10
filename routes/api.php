@@ -198,11 +198,11 @@ Route::prefix($apiPath)
             ])
             ->apiResource('snippets', SnippetController::class),
 
+        /** PHP Info */
+        Route::get('phpinfo', [SystemInfoController::class, 'phpinfo'])->name('phpinfo'),
+
         /** System Info */
         Route::prefix('system-info')
-            ->group(fn() => [
-                Route::get('phpinfo', [SystemInfoController::class, 'phpinfo'])->name('system-info.phpinfo'),
-            ])
             ->apiResource('system-info', SystemInfoController::class)->only(['index']),
 
         /** System Logs */

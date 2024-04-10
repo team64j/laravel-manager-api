@@ -109,6 +109,16 @@ class BootstrapController extends Controller
                 ],
             ],
             [
+                'path' => '/modules/exec/:id',
+                'meta' => [
+                    'icon' => 'fa fa-cube',
+                    'isIframe' => true,
+                ],
+            ],
+            [
+                'path' => '/file/:id',
+            ],
+            [
                 'path' => '/:path(.*)',
             ],
             [
@@ -121,13 +131,6 @@ class BootstrapController extends Controller
                 'path' => '/:path(.*)/:element',
                 'meta' => [
                     'group' => true,
-                ],
-            ],
-            [
-                'path' => '/modules/exec/:id',
-                'meta' => [
-                    'icon' => 'fa fa-cube',
-                    'isIframe' => true,
                 ],
             ],
         ];
