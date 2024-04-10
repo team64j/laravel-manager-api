@@ -52,7 +52,7 @@ class FilesLayout extends Layout
             ->setSlot(
                 Tree::make()
                     ->setId('treeFiles')
-                    ->setRoute('/files/:id')
+                    ->setRoute('/file/:id')
                     ->setUrl('/file/tree')
                     ->isCategory()
                     ->setIcons([

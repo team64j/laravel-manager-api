@@ -604,7 +604,7 @@ class BootstrapController extends Controller
                                     'icon' => 'far fa-calendar',
                                     'name' => '[%site_schedule%]',
                                     'to' => [
-                                        'path' => '/schedules',
+                                        'path' => '/schedule',
                                     ],
                                     'permissions' => ['view_eventlog'],
                                 ],
