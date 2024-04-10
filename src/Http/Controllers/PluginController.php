@@ -270,17 +270,14 @@ class PluginController extends Controller
         return PluginResource::collection($result->items())
             ->additional([
                 'meta' => [
-                    'name' => 'Plugin',
+                    'route' => '/plugins/:id',
                     'pagination' => $this->pagination($result),
                     'prepend' => [
                         [
                             'name' => Lang::get('global.new_plugin'),
                             'icon' => 'fa fa-plus-circle',
                             'to' => [
-                                'name' => 'Plugin',
-                                'params' => [
-                                    'id' => 'new',
-                                ],
+                                'path' => '/plugins/new',
                             ],
                         ],
                     ],

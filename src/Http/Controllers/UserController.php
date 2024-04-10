@@ -257,17 +257,14 @@ class UserController extends Controller
         return UserResource::collection([
             'data' => $result->items(),
             'meta' => [
-                'name' => 'User',
+                'route' => '/users/:id',
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
                         'name' => Lang::get('global.new_user'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'name' => 'User',
-                            'params' => [
-                                'id' => 'new',
-                            ],
+                            'path' => '/users/new',
                         ],
                     ],
                 ],

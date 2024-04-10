@@ -269,17 +269,14 @@ class SnippetController extends Controller
         return SnippetResource::collection($result->items())
             ->additional([
                 'meta' => [
-                    'name' => 'Snippet',
+                    'route' => '/snippets/:id',
                     'pagination' => $this->pagination($result),
                     'prepend' => [
                         [
                             'name' => Lang::get('global.new_snippet'),
                             'icon' => 'fa fa-plus-circle',
                             'to' => [
-                                'name' => 'Snippet',
-                                'params' => [
-                                    'id' => 'new',
-                                ],
+                                'path' => '/snippets/new',
                             ],
                         ],
                     ],

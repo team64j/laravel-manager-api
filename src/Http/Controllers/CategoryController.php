@@ -377,17 +377,14 @@ class CategoryController extends Controller
         return CategoryResource::collection($result->items())
             ->additional([
                 'meta' => [
-                    'name' => 'Category',
+                    'route' => '/categories/:id',
                     'pagination' => $this->pagination($result),
                     'prepend' => [
                         [
                             'name' => Lang::get('global.new_category'),
                             'icon' => 'fa fa-plus-circle',
                             'to' => [
-                                'name' => 'Category',
-                                'params' => [
-                                    'id' => 'new',
-                                ],
+                                'path' => '/categories/new',
                             ],
                         ],
                     ],

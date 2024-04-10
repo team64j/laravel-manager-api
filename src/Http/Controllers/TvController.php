@@ -296,17 +296,14 @@ class TvController extends Controller
         return TvResource::collection($result->items())
             ->additional([
                 'meta' => [
-                    'name' => 'Tv',
+                    'route' => '/tvs/:id',
                     'pagination' => $this->pagination($result),
                     'prepend' => [
                         [
                             'name' => Lang::get('global.new_tmplvars'),
                             'icon' => 'fa fa-plus-circle',
                             'to' => [
-                                'name' => 'Tv',
-                                'params' => [
-                                    'id' => 'new',
-                                ],
+                                'path' => '/tvs/new',
                             ],
                         ],
                     ],

@@ -267,17 +267,14 @@ class ChunkController extends Controller
         return ChunkResource::collection($result->items())
             ->additional([
                 'meta' => [
-                    'name' => 'Chunk',
+                    'route' => '/chunks/:id',
                     'pagination' => $this->pagination($result),
                     'prepend' => [
                         [
                             'name' => Lang::get('global.new_htmlsnippet'),
                             'icon' => 'fa fa-plus-circle',
                             'to' => [
-                                'name' => 'Chunk',
-                                'params' => [
-                                    'id' => 'new',
-                                ],
+                                'path' => '/chunks/new',
                             ],
                         ],
                     ],

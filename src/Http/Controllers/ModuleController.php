@@ -268,17 +268,14 @@ class ModuleController extends Controller
         return ModuleResource::collection($result->items())
             ->additional([
                 'meta' => [
-                    'name' => 'Module',
+                    'route' => '/modules/:id',
                     'pagination' => $this->pagination($result),
                     'prepend' => [
                         [
                             'name' => Lang::get('global.new_module'),
                             'icon' => 'fa fa-plus-circle',
                             'to' => [
-                                'name' => 'Module',
-                                'params' => [
-                                    'id' => 'new',
-                                ],
+                                'path' => '/modules/new',
                             ],
                         ],
                     ],

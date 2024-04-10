@@ -24,6 +24,8 @@ use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
 
+use function PHPUnit\Framework\returnArgument;
+
 class BootstrapController extends Controller
 {
     /**
@@ -101,6 +103,16 @@ class BootstrapController extends Controller
      */
     protected function getRoutes(): array
     {
+        return [
+            [
+                'path' => '/elements/:element',
+                'meta' => [
+                    'url' => '/:element?groupBy=category',
+                    'group' => true,
+                ],
+            ]
+        ];
+
         return [
 //            [
 //                'path' => '/',

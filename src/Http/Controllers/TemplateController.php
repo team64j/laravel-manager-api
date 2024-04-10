@@ -345,17 +345,14 @@ class TemplateController extends Controller
         return TemplateResource::collection([
             'data' => $result->items(),
             'meta' => [
-                'name' => 'Template',
+                'route' => '/templates/:id',
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
                         'name' => Lang::get('global.new_template'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'name' => 'Template',
-                            'params' => [
-                                'id' => 'new',
-                            ],
+                            'path' => '/templates/new',
                         ],
                     ],
                 ],
