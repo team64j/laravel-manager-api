@@ -35,12 +35,12 @@ class DocumentsController extends Controller
      *      )
      * )
      * @param DocumentsRequest $request
-     * @param string $documents
+     * @param string $id
      * @param DocumentsLayout $layout
      *
      * @return DocumentsResource
      */
-    public function show(DocumentsRequest $request, string $documents, DocumentsLayout $layout): DocumentsResource
+    public function show(DocumentsRequest $request, string $id, DocumentsLayout $layout): DocumentsResource
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
@@ -74,15 +74,18 @@ class DocumentsController extends Controller
 
         $result = SiteContent::query()
             ->select($fields)
-            ->where('parent', $documents)
+            ->where('parent', $id)
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $document = SiteContent::query()->find($documents, [
+        $document = SiteContent::query()->findOr($id, [
             'id',
             'pagetitle',
-        ]);
+        ], fn() => new SiteContent([
+            'id' => 0,
+            'pagetitle' => 'root',
+        ]));
 
         return DocumentsResource::make($result->items())
             ->additional([

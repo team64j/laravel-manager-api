@@ -26,7 +26,7 @@ class DocumentsLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('documents')
-                ->setRoute('/documents/:id')
+                ->setRoute('/document/:id')
                 ->addColumn('id', Lang::get('global.id'), ['width' => '4rem', 'textAlign' => 'right'], true)
                 ->addColumn('isfolder', Lang::get('global.folder'), ['width' => '4rem', 'textAlign' => 'right'], true, [
                     0 => '<i class="far fa-file"></i>',

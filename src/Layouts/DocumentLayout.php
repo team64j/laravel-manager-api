@@ -55,7 +55,12 @@ class DocumentLayout extends Layout
 
         return [
             ActionsButtons::make()
-                ->setCancel()
+                ->setCancel(
+                    to: [
+                        'path' => '/documents/' . $model->parent,
+                        'close' => true,
+                    ]
+                )
                 ->when(
                     $model->deleted,
                     fn(ActionsButtons $actions) => $actions->setView()->setViewTo(['href' => $url])->setRestore(),
@@ -534,10 +539,7 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.create_resource_here'),
                                 'icon' => 'fa fa-file',
                                 'to' => [
-                                    'name' => 'Document',
-                                    'params' => [
-                                        'id' => 'new',
-                                    ],
+                                    'path' => '/document/new',
                                     'query' => [
                                         'type' => 'document',
                                         'parent' => ':parent',
@@ -548,10 +550,7 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.create_weblink_here'),
                                 'icon' => 'fa fa-link',
                                 'to' => [
-                                    'name' => 'Document',
-                                    'params' => [
-                                        'id' => 'new',
-                                    ],
+                                    'path' => '/document/new',
                                     'query' => [
                                         'type' => 'reference',
                                         'parent' => ':parent',
@@ -562,10 +561,7 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.edit'),
                                 'icon' => 'fa fa-edit',
                                 'to' => [
-                                    'name' => 'Document',
-                                    'params' => [
-                                        'id' => ':id',
-                                    ],
+                                    'path' => '/document/:id',
                                 ],
                             ],
                             [
@@ -620,6 +616,9 @@ class DocumentLayout extends Layout
                             [
                                 'title' => Lang::get('global.resource_overview'),
                                 'icon' => 'fa fa-info',
+                                'to' => [
+                                    'path' => '/documents/:id',
+                                ],
                             ],
                             [
                                 'title' => Lang::get('global.preview'),
