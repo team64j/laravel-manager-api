@@ -542,7 +542,7 @@ class DocumentLayout extends Layout
                                     'path' => '/document/new',
                                     'query' => [
                                         'type' => 'document',
-                                        'parent' => ':parent',
+                                        'id' => ':id',
                                     ],
                                 ],
                             ],
@@ -553,7 +553,7 @@ class DocumentLayout extends Layout
                                     'path' => '/document/new',
                                     'query' => [
                                         'type' => 'reference',
-                                        'parent' => ':parent',
+                                        'id' => ':id',
                                     ],
                                 ],
                             ],
