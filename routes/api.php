@@ -20,6 +20,7 @@ use Team64j\LaravelManagerApi\Http\Controllers\OpenApiController;
 use Team64j\LaravelManagerApi\Http\Controllers\PasswordController;
 use Team64j\LaravelManagerApi\Http\Controllers\PermissionController;
 use Team64j\LaravelManagerApi\Http\Controllers\PluginController;
+use Team64j\LaravelManagerApi\Http\Controllers\PreviewController;
 use Team64j\LaravelManagerApi\Http\Controllers\RoleCategoryController;
 use Team64j\LaravelManagerApi\Http\Controllers\RolePermissionController;
 use Team64j\LaravelManagerApi\Http\Controllers\RoleUserController;
@@ -165,6 +166,9 @@ Route::prefix($apiPath)
                 Route::get('relations/{id}', [PermissionController::class, 'relation'])->name('permissions.relation'),
                 Route::get('select', [PermissionController::class, 'select'])->name('permissions.select'),
             ]),
+
+        /** Preview */
+        Route::get('preview/{id}', [PreviewController::class, 'index'])->name('preview'),
 
         /** Plugins */
         Route::prefix('plugins')

@@ -116,6 +116,13 @@ class BootstrapController extends Controller
                 ],
             ],
             [
+                'path' => '/preview/:id',
+                'meta' => [
+                    'icon' => 'fa fa-desktop',
+                    'isIframe' => true,
+                ],
+            ],
+            [
                 'path' => '/file/:id',
             ],
             [

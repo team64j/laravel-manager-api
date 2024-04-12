@@ -623,6 +623,9 @@ class DocumentLayout extends Layout
                             [
                                 'title' => Lang::get('global.preview'),
                                 'icon' => 'fa fa-eye',
+                                'to' => [
+                                    'path' => '/preview/:id',
+                                ],
                             ],
                         ],
                     ])
