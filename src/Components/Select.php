@@ -19,7 +19,7 @@ class Select extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'AppFieldsSelect',
+            'component' => 'AppSelect',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,

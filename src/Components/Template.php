@@ -17,7 +17,7 @@ class Template extends Component
         string|array|Component $slot = null
     ) {
         $attributes = [
-            'component' => 'AppLayoutTemplate',
+            'component' => 'AppTemplate',
             'attrs' => [
                 'class' => $class,
             ],

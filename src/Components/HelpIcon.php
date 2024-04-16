@@ -15,7 +15,7 @@ class HelpIcon extends Component
         string $class = null
     ) {
         $attributes = [
-            'component' => 'AppLayoutHelpIcon',
+            'component' => 'AppHelpIcon',
             'attrs' => [
                 'icon' => $class,
                 'data' => $data,

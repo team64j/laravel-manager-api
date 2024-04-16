@@ -19,7 +19,7 @@ class Radio extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'AppFieldsRadio',
+            'component' => 'AppRadio',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,

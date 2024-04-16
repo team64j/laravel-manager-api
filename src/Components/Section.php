@@ -21,7 +21,7 @@ class Section extends Component
         string|array|Component $slot = null
     ) {
         $attributes = [
-            'component' => 'AppLayoutSection',
+            'component' => 'AppSection',
             'attrs' => [
                 'icon' => $icon,
                 'label' => $label,

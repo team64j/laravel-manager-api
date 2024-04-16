@@ -19,7 +19,7 @@ class File extends Field
         string $class = null
     ) {
         $attributes = [
-            'component' => 'AppFieldsFile',
+            'component' => 'AppFile',
             'attrs' => [
                 'label' => $label,
                 'help' => $help,
