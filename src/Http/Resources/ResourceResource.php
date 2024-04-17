@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use JsonSerializable;
 
-class DocumentResource extends JsonResource
+class ResourceResource extends JsonResource
 {
     /**
      * @param Request $request

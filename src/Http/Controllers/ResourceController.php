@@ -12,21 +12,21 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelManagerApi\Http\Requests\DocumentRequest;
-use Team64j\LaravelManagerApi\Http\Resources\DocumentResource;
-use Team64j\LaravelManagerApi\Layouts\DocumentLayout;
+use Team64j\LaravelManagerApi\Http\Requests\ResourceRequest;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceResource;
+use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Support\Url;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
-class DocumentController extends Controller
+class ResourceController extends Controller
 {
     use PaginationTrait;
 
     /**
      * @OA\Get(
-     *     path="/document",
-     *     summary="Получение списка документов с пагинацией и фильтрацией по основным полям",
-     *     tags={"Document"},
+     *     path="/resource",
+     *     summary="Получение списка ресурсов с пагинацией и фильтрацией по основным полям",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     parameters={
      *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
@@ -44,12 +44,12 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentRequest $request
+     * @param ResourceRequest $request
      *
      * @return AnonymousResourceCollection
      * @throws ValidationException
      */
-    public function index(DocumentRequest $request): AnonymousResourceCollection
+    public function index(ResourceRequest $request): AnonymousResourceCollection
     {
         $fillable = ['id', ...(new SiteContent())->getFillable()];
 
@@ -132,7 +132,7 @@ class DocumentController extends Controller
             ->paginate($limit, $fields)
             ->appends($request->all());
 
-        return DocumentResource::collection($result->items())
+        return ResourceResource::collection($result->items())
             ->additional([
                 'meta' => [
                     'columns' => $columns,
@@ -143,9 +143,9 @@ class DocumentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/document/{id}",
-     *     summary="Чтение документа",
-     *     tags={"Document"},
+     *     path="/resource/{id}",
+     *     summary="Чтение ресурса",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     parameters={
      *         @OA\Parameter (name="template", in="query", @OA\Schema(type="string")),
@@ -160,44 +160,44 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentRequest $request
-     * @param string $document
-     * @param DocumentLayout $layout
+     * @param ResourceRequest $request
+     * @param string $id
+     * @param ResourceLayout $layout
      *
-     * @return DocumentResource
+     * @return ResourceResource
      */
-    public function show(DocumentRequest $request, string $document, DocumentLayout $layout): DocumentResource
+    public function show(ResourceRequest $request, string $id, ResourceLayout $layout): ResourceResource
     {
-        /** @var SiteContent $document */
-        $document = SiteContent::query()->findOrNew($document);
+        /** @var SiteContent $model */
+        $model = SiteContent::query()->findOrNew($id);
 
         if ($request->has('template')) {
-            $document->template = $request->input('template');
+            $model->template = $request->input('template');
         }
 
         if ($request->has('parent')) {
-            $document->parent = $request->input('parent');
+            $model->parent = $request->input('parent');
         }
 
         if ($request->has('type')) {
-            $document->type = $request->input('type');
+            $model->type = $request->input('type');
         }
 
-        $document->setAttribute(
+        $model->setAttribute(
             'tvs',
-            $document->getTvs()->keyBy('name')->map(fn($tv) => $tv['value'])
+            $model->getTvs()->keyBy('name')->map(fn($tv) => $tv['value'])
         );
 
         if (Config::get('global.use_udperms')) {
             /** @var Collection $groups */
-            $groups = $document->documentGroups;
+            $groups = $model->documentGroups;
 
-            $document->setAttribute(
+            $model->setAttribute(
                 'is_document_group',
                 $groups->isEmpty()
             );
 
-            $document->setAttribute(
+            $model->setAttribute(
                 'document_groups',
                 $groups->map(
                     fn(DocumentgroupName $group) => $group->getKey()
@@ -205,14 +205,14 @@ class DocumentController extends Controller
             );
         }
 
-        $route = Url::getRouteById($document->getKey());
+        $route = Url::getRouteById($model->getKey());
 
-        return DocumentResource::make($document->withoutRelations())
+        return ResourceResource::make($model->withoutRelations())
             ->additional([
-                'layout' => $layout->default($document, $route['url'] ?? ''),
+                'layout' => $layout->default($model, $route['url'] ?? ''),
                 'meta' => [
                     'icon' => $layout->getIcon(),
-                    'title' => $document->pagetitle ?? Lang::get('global.new_resource'),
+                    'title' => $model->pagetitle ?? Lang::get('global.new_resource'),
                     'url' => $route['url'] ?? '',
                 ],
             ]);
@@ -220,9 +220,9 @@ class DocumentController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/document",
-     *     summary="Создание нового документа",
-     *     tags={"Document"},
+     *     path="/resource",
+     *     summary="Создание нового ресурса",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -237,24 +237,24 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentRequest $request
-     * @param DocumentLayout $layout
+     * @param ResourceRequest $request
+     * @param ResourceLayout $layout
      *
-     * @return DocumentResource
+     * @return ResourceResource
      */
-    public function store(DocumentRequest $request, DocumentLayout $layout): DocumentResource
+    public function store(ResourceRequest $request, ResourceLayout $layout): ResourceResource
     {
-        /** @var SiteContent $document */
-        $document = SiteContent::query()->create($request->all());
+        /** @var SiteContent $model */
+        $model = SiteContent::query()->create($request->all());
 
-        return $this->show($request, $document->getKey(), $layout);
+        return $this->show($request, $model->getKey(), $layout);
     }
 
     /**
      * @OA\Patch(
-     *     path="/document/{id}",
-     *     summary="Обновление документа",
-     *     tags={"Document"},
+     *     path="/resource/{id}",
+     *     summary="Обновление ресурса",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     @OA\RequestBody(
      *         @OA\JsonContent(
@@ -269,19 +269,19 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentRequest $request
+     * @param ResourceRequest $request
      * @param string $id
-     * @param DocumentLayout $layout
+     * @param ResourceLayout $layout
      *
-     * @return DocumentResource
+     * @return ResourceResource
      */
-    public function update(DocumentRequest $request, string $id, DocumentLayout $layout): DocumentResource
+    public function update(ResourceRequest $request, string $id, ResourceLayout $layout): ResourceResource
     {
-        /** @var SiteContent $document */
-        $document = SiteContent::query()->findOrFail($id);
-        $document->update($request->all());
+        /** @var SiteContent $model */
+        $model = SiteContent::query()->findOrFail($id);
+        $model->update($request->all());
 
-        $tvs = $document->getTvs()->keyBy('name');
+        $tvs = $model->getTvs()->keyBy('name');
         foreach ($request->input('tvs', []) as $key => $value) {
             if ($tvs->has($key)) {
                 $tv = $tvs->get($key);
@@ -316,9 +316,9 @@ class DocumentController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/document/{id}",
-     *     summary="Удаление документа",
-     *     tags={"Document"},
+     *     path="/resource/{id}",
+     *     summary="Удаление ресурса",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     @OA\Response(
      *          response="200",
@@ -328,12 +328,12 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentRequest $request
+     * @param ResourceRequest $request
      * @param string $id
      *
      * @return Response
      */
-    public function destroy(DocumentRequest $request, string $id): Response
+    public function destroy(ResourceRequest $request, string $id): Response
     {
         SiteContent::query()->findOrFail($id)->delete();
 
@@ -342,9 +342,9 @@ class DocumentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/document/tree",
-     *     summary="Получение списка документов с пагинацией для древовидного меню",
-     *     tags={"Document"},
+     *     path="/resource/tree",
+     *     summary="Получение списка ресурсов с пагинацией для древовидного меню",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     parameters={
      *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="int", default="0")),
@@ -363,11 +363,11 @@ class DocumentController extends Controller
      *      )
      * )
      *
-     * @param DocumentRequest $request
+     * @param ResourceRequest $request
      *
-     * @return DocumentResource
+     * @return ResourceResource
      */
-    public function tree(DocumentRequest $request)
+    public function tree(ResourceRequest $request)
     {
         $settings = $request->collect('settings')->toArray();
         $settings['opened'] = array_map('intval', $settings['opened'] ?? []);
@@ -393,7 +393,7 @@ class DocumentController extends Controller
                 ];
             }
 
-            return DocumentResource::make($data);
+            return ResourceResource::make($data);
         }
 
         $fields = [
@@ -482,7 +482,7 @@ class DocumentController extends Controller
             $meta = $parent ? ['pagination' => $this->pagination($result)] : [];
         }
 
-        return DocumentResource::make($data)
+        return ResourceResource::make($data)
             ->additional([
                 'meta' => $meta,
             ]);
@@ -490,9 +490,9 @@ class DocumentController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/document/parents/{id}",
-     *     summary="Получение списка родителей для документа",
-     *     tags={"Document"},
+     *     path="/resource/parents/{id}",
+     *     summary="Получение списка родителей для ресурса",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     @OA\Response(
      *          response="200",
@@ -502,21 +502,21 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentRequest $request
+     * @param ResourceRequest $request
      * @param int $id
      *
-     * @return DocumentResource
+     * @return ResourceResource
      */
-    public function parents(DocumentRequest $request, int $id): DocumentResource
+    public function parents(ResourceRequest $request, int $id): ResourceResource
     {
-        return DocumentResource::make(Url::getParentsById($id));
+        return ResourceResource::make(Url::getParentsById($id));
     }
 
     /**
      * @OA\Get(
-     *     path="/document/parents/{parent}/{id}",
+     *     path="/resource/parents/{parent}/{id}",
      *     summary="Получение данных при смене родителя",
-     *     tags={"Document"},
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     @OA\Response(
      *          response="200",
@@ -526,13 +526,13 @@ class DocumentController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentRequest $request
+     * @param ResourceRequest $request
      * @param int $parent
      * @param int $id
      *
-     * @return DocumentResource
+     * @return ResourceResource
      */
-    public function setParent(DocumentRequest $request, int $parent, int $id): DocumentResource
+    public function setParent(ResourceRequest $request, int $parent, int $id): ResourceResource
     {
         if ($parent == $id) {
             abort(422, Lang::get('global.illegal_parent_self'));
@@ -561,6 +561,6 @@ class DocumentController extends Controller
             ];
         }
 
-        return DocumentResource::make($data);
+        return ResourceResource::make($data);
     }
 }

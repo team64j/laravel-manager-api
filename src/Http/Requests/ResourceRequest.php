@@ -7,7 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class DocumentRequest extends FormRequest
+class ResourceRequest extends FormRequest
 {
     /**
      * @return bool

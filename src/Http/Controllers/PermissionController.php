@@ -142,7 +142,7 @@ class PermissionController extends Controller
                     $documents = $group
                         ->documents
                         ->map(fn(SiteContent $i) => '
-                            <a href="document/' . $i->getKey() . '" class="mr-1 link">' . $i->pagetitle . ' (' .
+                            <a href="/resource/' . $i->getKey() . '" class="mr-1 link">' . $i->pagetitle . ' (' .
                             $i->id . ')</a> '
                         )
                         ->join(' ');

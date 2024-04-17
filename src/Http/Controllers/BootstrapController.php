@@ -15,7 +15,7 @@ use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
-use Team64j\LaravelManagerApi\Layouts\DocumentLayout;
+use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Layouts\FilesLayout;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
@@ -159,12 +159,12 @@ class BootstrapController extends Controller
                         ],
                     ],
                     [
-                        'path' => '/document/:id',
-                        'name' => 'Document',
+                        'path' => '/resource/:id',
+                        'name' => 'Resource',
                     ],
                     [
-                        'path' => '/documents/:id',
-                        'name' => 'Documents',
+                        'path' => '/resources/:id',
+                        'name' => 'Resources',
                     ],
                     [
                         'path' => '/elements/:element',
@@ -942,7 +942,7 @@ class BootstrapController extends Controller
             $data = [
                 [
                     'lang' => 'manage_documents',
-                    'class' => DocumentLayout::class . '@tree',
+                    'class' => ResourceLayout::class . '@tree',
                     'enabled' => true,
                     'custom' => false,
                 ],

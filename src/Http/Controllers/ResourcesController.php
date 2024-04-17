@@ -7,20 +7,20 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelManagerApi\Http\Requests\DocumentsRequest;
-use Team64j\LaravelManagerApi\Http\Resources\DocumentsResource;
-use Team64j\LaravelManagerApi\Layouts\DocumentsLayout;
+use Team64j\LaravelManagerApi\Http\Requests\ResourcesRequest;
+use Team64j\LaravelManagerApi\Http\Resources\ResourcesResource;
+use Team64j\LaravelManagerApi\Layouts\ResourcesLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
-class DocumentsController extends Controller
+class ResourcesController extends Controller
 {
     use PaginationTrait;
 
     /**
      * @OA\Get(
-     *     path="/documents/{id}",
-     *     summary="Получение списка документов с пагинацией",
-     *     tags={"Document"},
+     *     path="/resources/{id}",
+     *     summary="Получение списка ресурсов с пагинацией",
+     *     tags={"Resource"},
      *     security={{"Api":{}}},
      *     parameters={
      *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
@@ -34,13 +34,13 @@ class DocumentsController extends Controller
      *          )
      *      )
      * )
-     * @param DocumentsRequest $request
+     * @param ResourcesRequest $request
      * @param string $id
-     * @param DocumentsLayout $layout
+     * @param ResourcesLayout $layout
      *
-     * @return DocumentsResource
+     * @return ResourcesResource
      */
-    public function show(DocumentsRequest $request, string $id, DocumentsLayout $layout): DocumentsResource
+    public function show(ResourcesRequest $request, string $id, ResourcesLayout $layout): ResourcesResource
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
@@ -79,7 +79,7 @@ class DocumentsController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $document = SiteContent::query()->findOr($id, [
+        $model = SiteContent::query()->findOr($id, [
             'id',
             'pagetitle',
         ], fn() => new SiteContent([
@@ -87,11 +87,11 @@ class DocumentsController extends Controller
             'pagetitle' => 'root',
         ]));
 
-        return DocumentsResource::make($result->items())
+        return ResourcesResource::make($result->items())
             ->additional([
-                'layout' => $layout->default($document),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $document->pagetitle,
+                    'title' => $model->pagetitle,
                     'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
                     'sorting' => [

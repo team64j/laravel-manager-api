@@ -113,12 +113,12 @@ class DashboardLayout extends Layout
                             Lang::get('global.activity_title'),
                             'hover:shadow-lg bg-white dark:bg-gray-750 overflow-hidden transition',
                             Panel::make()
-                                ->setId('widgetDocuments')
+                                ->setId('widgetResources')
                                 ->setClass('!mt-0 !-mx-4 !-mb-4 !rounded-none')
                                 ->setHistory(false)
-                                ->setRoute('/document/:id')
+                                ->setRoute('/resource/:id')
                                 ->setUrl(
-                                    '/document?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
+                                    '/resource?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
                                 )
                         )
                     )

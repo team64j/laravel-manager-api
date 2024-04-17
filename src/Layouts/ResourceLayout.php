@@ -27,7 +27,7 @@ use Team64j\LaravelManagerApi\Components\Textarea;
 use Team64j\LaravelManagerApi\Components\Title;
 use Team64j\LaravelManagerApi\Components\Tree;
 
-class DocumentLayout extends Layout
+class ResourceLayout extends Layout
 {
     /**
      * @param SiteContent|null $model
@@ -57,7 +57,7 @@ class DocumentLayout extends Layout
             ActionsButtons::make()
                 ->setCancel(
                     to: [
-                        'path' => '/documents/' . $model->parent,
+                        'path' => '/resources/' . $model->parent,
                         'close' => true,
                     ]
                 )
@@ -79,7 +79,7 @@ class DocumentLayout extends Layout
                 ->setId($model->getKey()),
 
             Tabs::make()
-                ->setId('document')
+                ->setId('resource')
                 ->addTab('general', Lang::get('global.settings_general'))
                 ->addSlot(
                     'general',
@@ -137,7 +137,7 @@ class DocumentLayout extends Layout
 //                                    Lang::get('global.import_parent_resource'),
 //                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
 //                                )
-//                                    ->setUrl('/document/select')
+//                                    ->setUrl('/resource/select')
 //                                    ->setData([
 //                                        [
 //                                            'key' => $model->parent,
@@ -496,17 +496,17 @@ class DocumentLayout extends Layout
     public function tree(): array
     {
         return Tab::make()
-            ->setId('documents')
+            ->setId('resources')
             ->setTitle(Lang::get('global.manage_documents'))
             ->setIcon('fa fa-sitemap')
             ->setPermissions('edit_document,view_document')
-            ->setRoute('/document/:id')
+            ->setRoute('/resource/:id')
             ->setSlot(
                 Tree::make()
-                    ->setId('documents')
-                    ->setRoute('/document/:id')
-                    ->setRouteList('Documents')
-                    ->setUrl('/document/tree')
+                    ->setId('resources')
+                    ->setRoute('/resource/:id')
+                    ->setRouteList('Resources')
+                    ->setUrl('/resource/tree')
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => 'far fa-file',
@@ -539,9 +539,9 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.create_resource_here'),
                                 'icon' => 'fa fa-file',
                                 'to' => [
-                                    'path' => '/document/new',
+                                    'path' => '/resource/new',
                                     'query' => [
-                                        'type' => 'document',
+                                        'type' => 'resource',
                                         'id' => ':id',
                                     ],
                                 ],
@@ -550,7 +550,7 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.create_weblink_here'),
                                 'icon' => 'fa fa-link',
                                 'to' => [
-                                    'path' => '/document/new',
+                                    'path' => '/resource/new',
                                     'query' => [
                                         'type' => 'reference',
                                         'id' => ':id',
@@ -561,7 +561,7 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.edit'),
                                 'icon' => 'fa fa-edit',
                                 'to' => [
-                                    'path' => '/document/:id',
+                                    'path' => '/resource/:id',
                                 ],
                             ],
                             [
@@ -591,7 +591,7 @@ class DocumentLayout extends Layout
                             ],
                             [
                                 'title' => Lang::get('global.publish_resource'),
-                                'icon' => 'fa fa-close',
+                                'icon' => 'fa fa-rotate-left',
                                 'hidden' => [
                                     'published' => 1,
                                 ],
@@ -617,7 +617,7 @@ class DocumentLayout extends Layout
                                 'title' => Lang::get('global.resource_overview'),
                                 'icon' => 'fa fa-info',
                                 'to' => [
-                                    'path' => '/documents/:id',
+                                    'path' => '/resources/:id',
                                 ],
                             ],
                             [
@@ -635,6 +635,24 @@ class DocumentLayout extends Layout
                                 'icon' => 'fa fa-refresh',
                                 'click' => 'update',
                                 'loader' => true,
+                            ],
+                            [
+                                'icon' => 'fa fa-file-circle-plus',
+                                'to' => [
+                                    'path' => '/resource/new',
+                                    'query' => [
+                                        'type' => 'document',
+                                    ],
+                                ],
+                            ],
+                            [
+                                'icon' => 'fa fa-link',
+                                'to' => [
+                                    'path' => '/resource/new',
+                                    'query' => [
+                                        'type' => 'reference',
+                                    ],
+                                ],
                             ],
                             [
                                 'icon' => 'fa fa-sort',

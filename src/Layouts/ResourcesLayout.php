@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Title;
 
-class DocumentsLayout extends Layout
+class ResourcesLayout extends Layout
 {
     /**
      * @param SiteContent|null $model
@@ -25,8 +25,8 @@ class DocumentsLayout extends Layout
 
             Panel::make()
                 ->setModel('data')
-                ->setId('documents')
-                ->setRoute('/document/:id')
+                ->setId('resources')
+                ->setRoute('/resource/:id')
                 ->setHistory(true)
                 ->addColumn('id', Lang::get('global.id'), ['width' => '4rem', 'textAlign' => 'right'], true)
                 ->addColumn('isfolder', Lang::get('global.folder'), ['width' => '4rem', 'textAlign' => 'right'], true, [

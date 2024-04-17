@@ -9,8 +9,8 @@ use Team64j\LaravelManagerApi\Http\Controllers\CategoryController;
 use Team64j\LaravelManagerApi\Http\Controllers\ChunkController;
 use Team64j\LaravelManagerApi\Http\Controllers\ConfigurationController;
 use Team64j\LaravelManagerApi\Http\Controllers\DashboardController;
-use Team64j\LaravelManagerApi\Http\Controllers\DocumentController;
-use Team64j\LaravelManagerApi\Http\Controllers\DocumentsController;
+use Team64j\LaravelManagerApi\Http\Controllers\ResourceController;
+use Team64j\LaravelManagerApi\Http\Controllers\ResourcesController;
 use Team64j\LaravelManagerApi\Http\Controllers\EventLogController;
 use Team64j\LaravelManagerApi\Http\Controllers\FileController;
 use Team64j\LaravelManagerApi\Http\Controllers\FilesController;
@@ -104,17 +104,6 @@ Route::prefix($apiPath)
             ])
             ->apiResource('dashboard', DashboardController::class)->only(['index']),
 
-        /** Documents */
-        Route::prefix('document')
-            ->group(fn() => [
-                Route::get('tree', [DocumentController::class, 'tree'])->name('document.tree'),
-                Route::get('parents/{id}', [DocumentController::class, 'parents'])->name('document.parents'),
-                Route::get('parents/{parent}/{id}', [DocumentController::class, 'setParent'])->name('document.set-parent'),
-            ])
-            ->apiResource('document', DocumentController::class),
-
-        Route::get('documents/{id}', [DocumentsController::class, 'show'])->name('documents'),
-
         /** Event Logs */
         Route::prefix('event-log')
             ->group(fn() => [
@@ -178,6 +167,17 @@ Route::prefix($apiPath)
                 Route::get('list', [PluginController::class, 'list'])->name('plugins.list'),
             ])
             ->apiResource('plugins', PluginController::class),
+
+        /** Resources */
+        Route::prefix('resource')
+            ->group(fn() => [
+                Route::get('tree', [ResourceController::class, 'tree'])->name('resource.tree'),
+                Route::get('parents/{id}', [ResourceController::class, 'parents'])->name('resource.parents'),
+                Route::get('parents/{parent}/{id}', [ResourceController::class, 'setParent'])->name('resource.set-parent'),
+            ])
+            ->apiResource('resource', ResourceController::class),
+
+        Route::get('resources/{id}', [ResourcesController::class, 'show'])->name('resources'),
 
         /** Roles */
         Route::prefix('roles')
