@@ -625,6 +625,7 @@ class ResourceLayout extends Layout
                                 'icon' => 'fa fa-eye',
                                 'to' => [
                                     'path' => '/preview/:id',
+                                    'target' => '_blank',
                                 ],
                             ],
                         ],
