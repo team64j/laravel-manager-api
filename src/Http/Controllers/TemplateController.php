@@ -80,7 +80,7 @@ class TemplateController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $viewPath = Config::get('view.app');
+        $viewPath = Config::get('view.app', resource_path('views'));
         $viewRelativePath = str_replace([base_path(), DIRECTORY_SEPARATOR], ['', '/'], resource_path('views'));
 
         $callbackItem = function (SiteTemplate $item) use ($viewPath, $viewRelativePath) {
