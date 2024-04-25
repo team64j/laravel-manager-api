@@ -169,7 +169,7 @@ class ResourceController extends Controller
     public function show(ResourceRequest $request, string $id, ResourceLayout $layout): ResourceResource
     {
         /** @var SiteContent $model */
-        $model = SiteContent::query()->findOrNew($id);
+        $model = SiteContent::withTrashed()->findOrNew($id);
 
         if ($request->has('template')) {
             $model->template = $request->input('template');
