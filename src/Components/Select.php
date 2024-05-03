@@ -30,4 +30,14 @@ class Select extends Field
 
         parent::__construct($attributes);
     }
+
+    /**
+     * @return $this
+     */
+    public function setMultiple(): static
+    {
+        $this->attributes['attrs']['multiple'] = true;
+
+        return $this;
+    }
 }
