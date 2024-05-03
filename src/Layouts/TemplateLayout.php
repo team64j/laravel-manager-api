@@ -70,9 +70,8 @@ class TemplateLayout extends Layout
                                 )
                                     ->isRequired()
                                     ->setRequired(
-                                        Config::get('global.default_template') == $model->id ? trim(
-                                            Lang::get('global.defaulttemplate_title'),
-                                            ':'
+                                        Config::get('global.default_template') == $model->id ? Lang::get(
+                                            'global.defaulttemplate_title'
                                         ) : ''
                                     ),
 
@@ -226,12 +225,13 @@ class TemplateLayout extends Layout
                                 'id' => [
                                     Config::get(
                                         'global.default_template'
-                                    ) => '<i class="fa fa-home fa-fw text-blue-500"/>',
+                                    ) => '<i class="fa fa-home fa-fw text-blue-500" data-tooltip="' .
+                                        Lang::get('global.defaulttemplate_title') . '"></i>',
                                 ],
                                 'locked' => [
-                                    '<i class="fa fa-newspaper fa-fw"/>',
-                                    '<i class="fa fa-newspaper fa-fw" title="' . Lang::get('global.locked') .
-                                    '"><i class="fa fa-lock"/></i>',
+                                    '<i class="fa fa-newspaper fa-fw"></i>',
+                                    '<i class="fa fa-newspaper fa-fw" data-tooltip="' . Lang::get('global.locked') .
+                                    '"><i class="fa fa-lock"></i></i>',
                                 ],
                             ]
                         )

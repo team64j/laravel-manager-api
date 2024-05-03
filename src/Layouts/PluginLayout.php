@@ -101,7 +101,7 @@ class PluginLayout extends Layout
                             false,
                             [
                                 '<i class="fa fa-plug fa-fw"/>',
-                                '<i class="fa fa-plug fa-fw" title="' .
+                                '<i class="fa fa-plug fa-fw" data-tooltip="' .
                                 Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
                             ]
                         )
@@ -194,10 +194,7 @@ class PluginLayout extends Layout
         return [
             ActionsButtons::make()
                 ->setCancelTo([
-                    'name' => 'Elements',
-                    'params' => [
-                        'element' => 'plugins',
-                    ],
+                    'path' => '/elements/plugins',
                     'close' => true,
                 ])
                 ->setSave(),
@@ -214,18 +211,18 @@ class PluginLayout extends Layout
                     '#',
                     '#',
                     ['width' => '5rem', 'textAlign' => 'center'],
-                    false,
-                    [],
-                    [],
-                    false,
-                    'fa fa-bars fa-fw'
+                    icon: 'fa fa-bars fa-fw'
                 )
                 ->addColumn(
                     'id',
                     Lang::get('global.id'),
                     ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                 )
-                ->addColumn('name', Lang::get('global.plugin_name'), ['fontWeight' => 500])
+                ->addColumn(
+                    'name',
+                    Lang::get('global.plugin_name'),
+                    ['fontWeight' => 500]
+                )
                 ->addColumn(
                     'priority',
                     Lang::get('global.tmplvars_rank'),
