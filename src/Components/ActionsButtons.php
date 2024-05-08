@@ -138,12 +138,18 @@ class ActionsButtons extends Component
      */
     public function setAction($action, $lang = null, $to = null, $class = null, $icon = null): static
     {
+        $params = $action;
+
+        if (!empty($action['action'])) {
+            $action = $action['action'];
+        }
+
         if (isset($this->attributes['attrs']['data'][$action])) {
             return $this;
         }
 
         $this->attributes['attrs']['data'][$action] = [
-            'action' => $action,
+            'action' => $params,
         ];
 
         return $this->setActionTo($action, $to)
