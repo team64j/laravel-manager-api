@@ -20,7 +20,7 @@ class ModuleRequest extends FormRequest
             'update' => Gate::check('save_module'),
             'destroy' => Gate::check('delete_module'),
             'exec' => Gate::check('list_module'),
-            'execRun' => Gate::check('exec_module'),
+            'run' => Gate::check('exec_module'),
             default => Gate::any(['edit_module', 'new_module', 'save_module', 'delete_module']),
         };
     }

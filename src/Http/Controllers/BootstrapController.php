@@ -113,6 +113,7 @@ class BootstrapController extends Controller
                 'meta' => [
                     'icon' => 'fa fa-cube',
                     'isIframe' => true,
+                    'title' => Lang::get('global.run_module'),
                 ],
             ],
             [
@@ -138,6 +139,14 @@ class BootstrapController extends Controller
                 'path' => '/:path(.*)/:element',
                 'meta' => [
                     'group' => true,
+                ],
+            ],
+            [
+                'path' => '/phpinfo',
+                'meta' => [
+                    'icon' => 'fab fa-php',
+                    'title' => 'PHP Info',
+                    'isIframe' => true,
                 ],
             ],
         ];

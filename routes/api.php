@@ -136,7 +136,7 @@ Route::prefix($apiPath)
                 Route::addRoute(
                     ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
                     'exec/{id}',
-                    [ModuleController::class, 'execRun']
+                    [ModuleController::class, 'run']
                 )->name('modules.run'),
             ])
             ->apiResource('modules', ModuleController::class),

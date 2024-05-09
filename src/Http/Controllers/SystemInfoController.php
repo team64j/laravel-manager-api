@@ -51,7 +51,7 @@ class SystemInfoController extends Controller
             ],
             [
                 'name' => 'PHP Version',
-                'value' => '<a href="/phpinfo" style="text-decoration: underline">' . phpversion() . '</a>',
+                'value.html' => '<a href="/phpinfo" style="text-decoration: underline">' . phpversion() . '</a>',
             ],
             [
                 'name' => Lang::get('global.access_permissions'),

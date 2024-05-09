@@ -22,7 +22,9 @@ class SystemInfoLayout extends Layout
 
             Panel::make()
                 ->setId('system-info')
-                ->setModel('data'),
+                ->setModel('data')
+                ->addColumn('name')
+                ->addColumn('value'),
         ];
     }
 

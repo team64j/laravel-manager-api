@@ -348,7 +348,7 @@ class ModuleController extends Controller
      *
      * @return mixed|string
      */
-    public function execRun(ModuleRequest $request, string $module): mixed
+    public function run(ModuleRequest $request, string $module): mixed
     {
         /** @var SiteModule $module */
         $module = SiteModule::query()->findOrFail($module);
