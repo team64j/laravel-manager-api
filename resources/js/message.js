@@ -5,7 +5,7 @@ window.addEventListener('message', function (event) {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-  parent.postMessage({
+  parent?.postMessage({
     data: {
       title: document.title,
       h1: document.body.querySelector('h1').innerText
