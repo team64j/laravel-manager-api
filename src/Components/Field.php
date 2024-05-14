@@ -316,4 +316,14 @@ class Field extends Component
 
         return $this;
     }
+
+    /**
+     * @return $this
+     */
+    public function isDisabled(): static
+    {
+        $this->attributes['attrs']['disabled'] = true;
+
+        return $this;
+    }
 }
