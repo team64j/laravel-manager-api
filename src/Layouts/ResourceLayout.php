@@ -63,10 +63,39 @@ class ResourceLayout extends Layout
                 )
                 ->when(
                     $model->deleted,
-                    fn(ActionsButtons $actions) => $actions->setView()->setViewTo(['href' => $url])->setRestore(),
+                    fn(ActionsButtons $actions) => $actions->setView()->setViewTo(['href' => $url])
+                        ->setAction(
+                            [
+                                'action' => 'custom:update',
+                                'method' => 'patch',
+                                'url' => '/resource/:id',
+                                'params' => [
+                                    'deleted' => 0,
+                                ],
+                            ],
+                            Lang::get('global.undelete_resource'),
+                            null,
+                            'btn-blue',
+                            'fa fa-undo'
+                        ),
                     fn(ActionsButtons $actions) => $actions->when(
                         $model->getKey(),
-                        fn(ActionsButtons $actions) => $actions->setView()->setViewTo(['href' => $url])->setDelete()
+                        fn(ActionsButtons $actions) => $actions->setView()
+                            ->setViewTo(['href' => $url])
+                            ->setAction(
+                                [
+                                    'action' => 'custom:update',
+                                    'method' => 'patch',
+                                    'url' => '/resource/:id',
+                                    'params' => [
+                                        'deleted' => 1,
+                                    ],
+                                ],
+                                Lang::get('global.delete'),
+                                null,
+                                'btn-red',
+                                'fa fa-trash-alt'
+                            )
                             ->setCopy()
                     )
                 )

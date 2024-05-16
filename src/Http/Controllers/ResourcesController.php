@@ -72,14 +72,14 @@ class ResourcesController extends Controller
             $dir = 'asc';
         }
 
-        $result = SiteContent::query()
+        $result = SiteContent::withTrashed()
             ->select($fields)
             ->where('parent', $id)
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        $model = SiteContent::query()->findOr($id, [
+        $model = SiteContent::withTrashed()->findOr($id, [
             'id',
             'pagetitle',
         ], fn() => new SiteContent([

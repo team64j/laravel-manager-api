@@ -126,7 +126,7 @@ class ResourceController extends Controller
 
         $columns = $columns->values();
 
-        $result = SiteContent::query()
+        $result = SiteContent::withTrashed()
             ->orderBy($order, $dir)
             ->where($request->only($fields))
             ->paginate($limit, $fields)
@@ -278,7 +278,7 @@ class ResourceController extends Controller
     public function update(ResourceRequest $request, string $id, ResourceLayout $layout): ResourceResource
     {
         /** @var SiteContent $model */
-        $model = SiteContent::query()->findOrFail($id);
+        $model = SiteContent::withTrashed()->findOrFail((int) $id);
         $model->update($request->all());
 
         $tvs = $model->getTvs()->keyBy('name');
@@ -330,14 +330,19 @@ class ResourceController extends Controller
      * )
      * @param ResourceRequest $request
      * @param string $id
+     * @param ResourceLayout $layout
      *
-     * @return Response
+     * @return ResourceResource
      */
-    public function destroy(ResourceRequest $request, string $id): Response
+    public function destroy(ResourceRequest $request, string $id, ResourceLayout $layout)
     {
-        SiteContent::query()->findOrFail($id)->delete();
+        $model = SiteContent::withTrashed()->findOrFail($id);
 
-        return response()->noContent();
+        $model->update([
+            'deleted' => 1
+        ]);
+
+        return $this->show($request, $model->getKey(), $layout);
     }
 
     /**
@@ -546,7 +551,7 @@ class ResourceController extends Controller
 
         if ($id > 0) {
             /** @var SiteContent $result */
-            $result = SiteContent::query()->find($id);
+            $result = SiteContent::withTrashed()->find($id);
 
             $data = [
                 'id' => $result->getKey(),
