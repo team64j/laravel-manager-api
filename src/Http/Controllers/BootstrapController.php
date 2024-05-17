@@ -81,6 +81,7 @@ class BootstrapController extends Controller
                 'site_name' => Config::get('global.site_name'),
                 'site_status' => (bool) Config::get('global.site_status'),
                 'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
+                'datetime_format' => Config::get('global.datetime_format'),
             ],
             'lang' => [
                 'warning_not_saved' => Lang::get('global.warning_not_saved'),
