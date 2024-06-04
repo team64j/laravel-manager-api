@@ -202,7 +202,7 @@ class Panel extends Component
     public function setColumns(array $value = null): static
     {
         $this->attributes['attrs']['columns'] = array_is_list($value) ?
-            array_map(fn($name) => ['name' => $name], $value) : $value;
+            array_map(fn($name) => is_array($name) ? $name : ['name' => $name], $value) : $value;
 
         return $this;
     }

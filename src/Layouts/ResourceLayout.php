@@ -240,19 +240,19 @@ class ResourceLayout extends Layout
                                 DateTime::make(
                                     'publishedon',
                                     Lang::get('global.page_data_published')
-                                ),
+                                )->setAttribute('clear', true),
 
                                 DateTime::make(
                                     'pub_date',
                                     Lang::get('global.page_data_publishdate'),
                                     '<b>[*pub_date*]</b><br>' . Lang::get('global.page_data_publishdate_help')
-                                ),
+                                )->setAttribute('clear', true),
 
                                 DateTime::make(
                                     'unpub_date',
                                     Lang::get('global.page_data_unpublishdate'),
                                     '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
-                                ),
+                                )->setAttribute('clear', true),
                             ]),
                     ]
                 )

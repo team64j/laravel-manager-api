@@ -68,7 +68,7 @@ class ResourceRequest extends FormRequest
                 'parent' => 'int|required',
                 'privatemgr' => 'int',
                 'privateweb' => 'int',
-                'pub_date' => 'int',
+                'pub_date' => 'string|nullable',
                 'published' => 'int',
                 'publishedby' => 'int',
                 'publishedon' => 'string|nullable',
@@ -76,7 +76,7 @@ class ResourceRequest extends FormRequest
                 'searchable' => 'int',
                 'template' => 'int',
                 'type' => 'string',
-                'unpub_date' => 'int',
+                'unpub_date' => 'string|nullable',
             ],
             default => []
         };
