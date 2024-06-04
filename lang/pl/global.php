@@ -1348,8 +1348,8 @@ $_lang["login_processor_remote_ip"] = "Nie masz zezwolenia na logowanie z tej lo
 $_lang["login_processor_date"] = "Nie masz zezwolenia na logowanie w tej chwili. Proszę spróbować później.";
 $_lang["login_processor_captcha_config"] = "Captcha jest źle skonfigurowana.";
 
-$_lang["dp_dayNames"] = "['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota']";
-$_lang["dp_monthNames"] = "['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']";
+$_lang["dp_dayNames"] = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+$_lang["dp_monthNames"] = ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'];
 $_lang["dp_startDay"] = "1";
 
 $_lang["check_all"] = "Wybierz wszystko";

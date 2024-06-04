@@ -15,10 +15,10 @@ use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
-use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Layouts\FilesLayout;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
+use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
@@ -85,6 +85,9 @@ class BootstrapController extends Controller
             ],
             'lang' => [
                 'warning_not_saved' => Lang::get('global.warning_not_saved'),
+                'dp_dayNames' => Lang::get('global.dp_dayNames'),
+                'dp_monthNames' => Lang::get('global.dp_monthNames'),
+                'dp_startDay' => Lang::get('global.dp_startDay'),
             ],
         ])
             ->additional([
