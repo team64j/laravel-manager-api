@@ -102,7 +102,7 @@ class Url
         $paths = explode('/', $path);
         $fields = ['id', 'parent', 'alias', 'isfolder', 'alias_visible'];
 
-        $parents = SiteContent::query()
+        $parents = SiteContent::withTrashed()
             ->select($fields)
             ->with('parents', fn($query) => $query->select($fields))
             ->where('alias', end($paths))
@@ -160,7 +160,7 @@ class Url
         $fields = ['id', 'parent', 'alias', 'isfolder', 'alias_visible'];
 
         /** @var SiteContent $item */
-        $item = SiteContent::query()
+        $item = SiteContent::withTrashed()
             ->select($fields)
             ->with('parents', fn($query) => $query->select($fields))
             ->firstWhere('id', $id);
