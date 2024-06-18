@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Vite;
+use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Components\Tabs;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
