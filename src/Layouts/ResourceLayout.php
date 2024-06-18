@@ -289,7 +289,7 @@ class ResourceLayout extends Layout
                                         array_map(fn($k) => [
                                             'key' => $k,
                                             'value' => $k,
-                                        ], explode(',', Config::get('global.custom_contenttype')))
+                                        ], explode(',', Config::get('global.custom_contenttype', 'text/html')))
                                     ),
 
                                 Select::make(

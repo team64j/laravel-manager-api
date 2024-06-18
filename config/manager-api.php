@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'uri' => 'manager/api',
+    'uri' => env('MANAGER_API', 'manager/api'),
 
     'guard' => [
         'driver' => 'jwt',
