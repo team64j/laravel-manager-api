@@ -43,6 +43,8 @@ class ResourceLayout extends Layout
                 Lang::get('global.weblink'),
                 '<b>[*content*]</b><br>' . Lang::get('global.resource_weblink_help')
             );
+
+            $title = Lang::get('global.untitled_weblink');
         } else {
             $filedContent = CodeEditor::make(
                 'content',
@@ -51,6 +53,8 @@ class ResourceLayout extends Layout
             )
                 ->setRows(20)
                 ->setLanguage('html');
+
+            $title = Lang::get('global.new_resource');
         }
 
         return [
@@ -101,7 +105,7 @@ class ResourceLayout extends Layout
 
             Title::make()
                 ->setModel('pagetitle')
-                ->setTitle(Lang::get('global.new_resource'))
+                ->setTitle($title)
                 ->setIcon('fa fa-edit')
                 ->setId($model->getKey()),
 
@@ -159,98 +163,99 @@ class ResourceLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12')
                             ->setSlot([
-//                                Select::make(
-//                                    'parent',
-//                                    Lang::get('global.import_parent_resource'),
-//                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
-//                                )
-//                                    ->setUrl('/resource/select')
-//                                    ->setData([
-//                                        [
-//                                            'key' => $model->parent,
-//                                            'value' => $model->parent ? $model->parent . ' - ' .
-//                                                $model->parents->pagetitle : '0 - root',
-//                                            'selected' => true,
-//                                        ],
-//                                    ])
-//                                    ->setEmitInput('inputChangeQuery'),
+                                /*Select::make(
+                                    'parent',
+                                    Lang::get('global.import_parent_resource'),
+                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
+                                )
+                                    ->setUrl('/resource/select')
+                                    ->setData([
+                                        [
+                                            'key' => $model->parent,
+                                            'value' => $model->parent ? $model->parent . ' - ' .
+                                                $model->parents->pagetitle : '0 - root',
+                                            'selected' => true,
+                                        ],
+                                    ])
+                                    ->setEmitInput('inputChangeQuery'),*/
 
-Input::make(
-    'parent',
-    Lang::get('global.import_parent_resource'),
-    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
-)
-    ->setInputClass('cursor-pointer')
-    ->setValue(
-        $model->parent ? $model->parent . ' - ' . $model->parents->pagetitle : '0 - root'
-    )
-    ->setEmitClick('inputTreeSelect')
-    ->isRequired()
-    ->isReadonly(),
+                                Input::make(
+                                    'parent',
+                                    Lang::get('global.import_parent_resource'),
+                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
+                                )
+                                    ->setInputClass('cursor-pointer')
+                                    ->setValue(
+                                        $model->parent ? $model->parent . ' - ' . $model->parents->pagetitle
+                                            : '0 - root'
+                                    )
+                                    ->setEmitClick('inputTreeSelect')
+                                    ->isRequired()
+                                    ->isReadonly(),
 
-Select::make(
-    'template',
-    Lang::get('global.page_data_template'),
-    '<b>[*template*]</b><br>' . Lang::get('global.page_data_template_help')
-)
-    ->setUrl('/templates/select')
-    ->setData([
-        [
-            'key' => $model->template,
-            'value' => $model->tpl->templatename ?? $model->template,
-            'selected' => true,
-        ],
-    ])
-    ->setEmitInput('inputChangeQuery'),
+                                Select::make(
+                                    'template',
+                                    Lang::get('global.page_data_template'),
+                                    '<b>[*template*]</b><br>' . Lang::get('global.page_data_template_help')
+                                )
+                                    ->setUrl('/templates/select')
+                                    ->setData([
+                                        [
+                                            'key' => $model->template,
+                                            'value' => $model->tpl->templatename ?? $model->template,
+                                            'selected' => true,
+                                        ],
+                                    ])
+                                    ->setEmitInput('inputChangeQuery'),
 
-Checkbox::make(
-    'hidemenu',
-    Lang::get('global.resource_opt_show_menu'),
-    '<b>[*hidemenu*]</b><br>' . Lang::get('global.resource_opt_show_menu_help')
-)
-    ->setCheckedValue(0, 1),
+                                Checkbox::make(
+                                    'hidemenu',
+                                    Lang::get('global.resource_opt_show_menu'),
+                                    '<b>[*hidemenu*]</b><br>' . Lang::get('global.resource_opt_show_menu_help')
+                                )
+                                    ->setCheckedValue(0, 1),
 
-Number::make(
-    'menuindex',
-    Lang::get('global.resource_opt_menu_index'),
-    '<b>[*menuindex*]</b><br>' . Lang::get('global.resource_opt_menu_index_help')
-),
+                                Number::make(
+                                    'menuindex',
+                                    Lang::get('global.resource_opt_menu_index'),
+                                    '<b>[*menuindex*]</b><br>' . Lang::get('global.resource_opt_menu_index_help')
+                                ),
 
-Input::make(
-    'menutitle',
-    Lang::get('global.resource_opt_menu_title'),
-    '<b>[*menutitle*]</b><br>' . Lang::get('global.resource_opt_menu_title_help')
-),
+                                Input::make(
+                                    'menutitle',
+                                    Lang::get('global.resource_opt_menu_title'),
+                                    '<b>[*menutitle*]</b><br>' . Lang::get('global.resource_opt_menu_title_help')
+                                ),
 
-Input::make(
-    'link_attributes',
-    Lang::get('global.link_attributes'),
-    '<b>[*link_attributes*]</b><br>' . Lang::get('global.link_attributes_help')
-),
+                                Input::make(
+                                    'link_attributes',
+                                    Lang::get('global.link_attributes'),
+                                    '<b>[*link_attributes*]</b><br>' . Lang::get('global.link_attributes_help')
+                                ),
 
-Checkbox::make(
-    'published',
-    Lang::get('global.resource_opt_published'),
-    '<b>[*published*]</b><br>' . Lang::get('global.resource_opt_published_help')
-)
-    ->setCheckedValue(1, 0),
+                                Checkbox::make(
+                                    'published',
+                                    Lang::get('global.resource_opt_published'),
+                                    '<b>[*published*]</b><br>' . Lang::get('global.resource_opt_published_help')
+                                )
+                                    ->setCheckedValue(1, 0),
 
-DateTime::make(
-    'publishedon',
-    Lang::get('global.page_data_published')
-)->setAttribute('clear', true),
+                                DateTime::make(
+                                    'publishedon',
+                                    Lang::get('global.page_data_published')
+                                )->setAttribute('clear', true),
 
-DateTime::make(
-    'pub_date',
-    Lang::get('global.page_data_publishdate'),
-    '<b>[*pub_date*]</b><br>' . Lang::get('global.page_data_publishdate_help')
-)->setAttribute('clear', true),
+                                DateTime::make(
+                                    'pub_date',
+                                    Lang::get('global.page_data_publishdate'),
+                                    '<b>[*pub_date*]</b><br>' . Lang::get('global.page_data_publishdate_help')
+                                )->setAttribute('clear', true),
 
-DateTime::make(
-    'unpub_date',
-    Lang::get('global.page_data_unpublishdate'),
-    '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
-)->setAttribute('clear', true),
+                                DateTime::make(
+                                    'unpub_date',
+                                    Lang::get('global.page_data_unpublishdate'),
+                                    '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
+                                )->setAttribute('clear', true),
                             ]),
                     ]
                 )
