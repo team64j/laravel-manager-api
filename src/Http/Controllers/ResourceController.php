@@ -370,7 +370,7 @@ class ResourceController extends Controller
      *
      * @param ResourceRequest $request
      *
-     * @return ResourceResource
+     * @return AnonymousResourceCollection
      */
     public function tree(ResourceRequest $request)
     {
@@ -398,7 +398,7 @@ class ResourceController extends Controller
                 ];
             }
 
-            return ResourceResource::make($data);
+            return ResourceResource::collection($data);
         }
 
         $fields = [
@@ -487,7 +487,7 @@ class ResourceController extends Controller
             $meta = $parent ? ['pagination' => $this->pagination($result)] : [];
         }
 
-        return ResourceResource::make($data)
+        return ResourceResource::collection($data)
             ->additional([
                 'meta' => $meta,
             ]);

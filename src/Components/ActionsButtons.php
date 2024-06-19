@@ -262,7 +262,7 @@ class ActionsButtons extends Component
             'action' => 'save',
             'icon' => $icon ?? 'fa fa-save',
             'title' => $lang ?? Lang::get('global.save'),
-            'class' => $class,
+            'class' => $class ?? 'btn-green',
             'data' => [
                 [
                     'stay' => 0,

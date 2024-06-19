@@ -337,16 +337,15 @@ class SnippetController extends Controller
                 ]);
         }
 
-        /** @var LengthAwarePaginator $result */
-        $result = SiteSnippet::withoutLocked()
-            ->with('category')
-            ->select($fields)
-            ->when($showFromCategory, fn($query) => $query->where('category', $category)->orderBy('name'))
-            ->when(!$showFromCategory, fn($query) => $query->groupBy('category'))
-            ->paginate(Config::get('global.number_of_results'))
-            ->appends($request->all());
-
         if ($showFromCategory) {
+            /** @var LengthAwarePaginator $result */
+            $result = SiteSnippet::withoutLocked()
+                ->with('category')
+                ->select($fields)
+                ->where('category', $category)->orderBy('name')
+                ->paginate(Config::get('global.number_of_results'))
+                ->appends($request->all());
+
             return SnippetResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
                 ->additional([
                     'meta' => [
@@ -355,38 +354,33 @@ class SnippetController extends Controller
                 ]);
         }
 
-        $result = $result->map(function (SiteSnippet $template) use ($request, $settings, $fields) {
-            /** @var Category $category */
-            $category = $template->getRelation('category') ?? new Category();
-            $category->id = $template->category;
-            $data = [];
+        $result = Category::query()
+            ->whereHas('snippets')
+            ->get();
 
-            if (in_array((string) $category->getKey(), ($settings['opened'] ?? []), true)) {
+        if (SiteSnippet::withoutLocked()->where('category', 0)->exists()) {
+            $result->add(new Category());
+        }
+
+        $result = $result->map(function ($category) use ($request, $settings) {
+            $data = [
+                'id' => $category->getKey() ?? 0,
+                'name' => $category->category ?? Lang::get('global.no_category'),
+                'category' => true,
+            ];
+
+            if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
                 $request->query->replace([
-                    'parent' => $category->getKey(),
+                    'settings' => ['parent' => $data['id']] + $request->query('settings'),
                 ]);
 
-                /* @var LengthAwarePaginator $result */
-                $result = $category->snippets()
-                    ->select($fields)
-                    ->withoutLocked()
-                    ->orderBy('name')
-                    ->paginate(Config::get('global.number_of_results'), ['*'], 'page', 1)
-                    ->appends($request->all());
-
-                if ($result->isNotEmpty()) {
-                    $data = [
-                        'data' => $result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])),
-                        'pagination' => $this->pagination($result),
-                    ];
-                }
+                $data += [
+                    'data' => $result = $this->tree($request),
+                    'pagination' => $result->additional['meta'],
+                ];
             }
 
-            return [
-                    'id' => $category->getKey(),
-                    'name' => $category->category ?? Lang::get('global.no_category'),
-                    'category' => true,
-                ] + $data;
+            return $data;
         })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
