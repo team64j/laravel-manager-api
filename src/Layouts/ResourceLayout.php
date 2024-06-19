@@ -40,8 +40,8 @@ class ResourceLayout extends Layout
         if (request()->input('type') == 'reference') {
             $filedContent = Input::make(
                 'content',
-                Lang::get('global.resource_content'),
-                '<b>[*content*]</b>'
+                Lang::get('global.weblink'),
+                '<b>[*content*]</b><br>' . Lang::get('global.resource_weblink_help')
             );
         } else {
             $filedContent = CodeEditor::make(
