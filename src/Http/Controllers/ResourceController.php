@@ -446,7 +446,7 @@ class ResourceController extends Controller
             );
 
         if ($result->isEmpty()) {
-            $data = [null];
+            $data = [];
             $meta = ['message' => Lang::get('global.no_results')];
         } else {
             $data = $result->map(function (SiteContent $item) use ($request, $settings) {

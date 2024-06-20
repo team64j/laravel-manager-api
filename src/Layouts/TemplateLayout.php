@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
+use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTemplate;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
+use Team64j\LaravelManagerApi\Components\Breadcrumbs;
 use Team64j\LaravelManagerApi\Components\Checkbox;
 use Team64j\LaravelManagerApi\Components\CodeEditor;
 use Team64j\LaravelManagerApi\Components\Input;
+use Team64j\LaravelManagerApi\Components\Main;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Select;
 use Team64j\LaravelManagerApi\Components\Tab;
@@ -28,6 +31,170 @@ class TemplateLayout extends Layout
      * @return array
      */
     public function default(SiteTemplate $model = null): array
+    {
+        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+        $isBladeFile = file_exists($bladeFile);
+        $relativeBladeFile = str_replace([dirname(app_path()), DIRECTORY_SEPARATOR], ['', '/'], $bladeFile);
+
+        $category = $model->category()->firstOr(fn() => new Category());
+
+        $breadcrumbs = [
+            [
+                'id' => $category->getKey() ?? 0,
+                'title' => Lang::get('global.templates') . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'to' => '/elements/templates?groupBy=none&category=' . ($category->getKey() ?? 0),
+            ],
+        ];
+
+        return Main::make()
+            ->setActions(
+                fn(ActionsButtons $component) => $component
+                    ->setCancel(
+                        Lang::get('global.cancel'),
+                        [
+                            'path' => '/elements/templates',
+                            'close' => true,
+                        ]
+                    )
+                    ->when(
+                        $model->getKey(),
+                        fn(ActionsButtons $component) => $component->setDelete()->setCopy()
+                    )
+                    ->setSaveAnd()
+            )
+            ->setTitle(
+                fn(Title $component) => $component
+                    ->setModel('templatename')
+                    ->setHelp(Lang::get('global.template_msg'))
+                    ->setId($model->getKey())
+                    ->setIcon('fa fa-newspaper')
+                    ->setTitle(Lang::get('global.new_template'))
+            )
+            ->setTabs(
+                fn(Tabs $component) => $component
+                    ->setId('template')
+                    ->addTab('default', Lang::get('global.settings_general'))
+                    ->addSlot(
+                        'default',
+                        [
+                            Template::make(
+                                'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 md:pr-3',
+                                [
+                                    Input::make(
+                                        'templatename',
+                                        Lang::get('global.template_name')
+                                    )
+                                        ->isRequired()
+                                        ->setRequired(
+                                            Config::get('global.default_template') == $model->id ? Lang::get(
+                                                'global.defaulttemplate_title'
+                                            ) : ''
+                                        ),
+
+                                    Input::make(
+                                        'templatealias',
+                                        Lang::get('global.alias')
+                                    ),
+
+                                    Textarea::make(
+                                        'description',
+                                        Lang::get('global.template_desc')
+                                    ),
+                                ]
+                            ),
+
+                            Template::make(
+                                'flex flex-wrap grow md:basis-1/3 xl:basis-3/12 md:pl-3',
+                                [
+                                    Select::make(
+                                        'category',
+                                        Lang::get('global.existing_category')
+                                    )
+                                        ->setUrl('/categories/select')
+                                        ->addOption(
+                                            $model->category,
+                                            $model->categories
+                                                ? $model->categories->category
+                                                : Lang::get(
+                                                'global.no_category'
+                                            )
+                                        )
+                                        ->setNew(''),
+
+                                    Checkbox::make('selectable', Lang::get('global.template_selectable'))
+                                        ->setCheckedValue(1, 0),
+
+                                    Checkbox::make('locked', Lang::get('global.lock_template_msg'))
+                                        ->setCheckedValue(1, 0),
+                                ]
+                            ),
+
+                            ($isBladeFile
+                                ? '<span class="text-green-600 mb-3">' .
+                                Lang::get('global.template_assigned_blade_file') .
+                                ': ' .
+                                $relativeBladeFile . '</span>'
+                                :
+                                Checkbox::make('createbladefile', Lang::get('global.template_create_blade_file'))
+                                    ->setCheckedValue(1, 0)),
+
+                            CodeEditor::make('content', Lang::get('global.template_code'))
+                                ->setLanguage('html')
+                                ->setRows(20),
+                        ]
+                    )
+                    ->addTab('tvs', Lang::get('global.template_assignedtv_tab'))
+                    ->addSlot(
+                        'tvs',
+                        Panel::make()
+                            ->setId('tvs')
+                            ->setHistory(true)
+                            ->isFilter()
+                            ->setSlotTop('<div class="font-bold">' . Lang::get('global.template_tv_msg') . '</div>')
+                            ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs')
+                            ->setModel('tvs')
+                            ->addColumn(
+                                'attach',
+                                Lang::get('global.role_udperms'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
+                                true
+                            )
+                            ->addColumn(
+                                'id',
+                                'ID',
+                                ['width' => '4rem', 'textAlign' => 'right'],
+                                true
+                            )
+                            ->addColumn(
+                                'name',
+                                Lang::get('global.tmplvars_name'),
+                                ['fontWeight' => '500'],
+                                true
+                            )
+                            ->addColumn(
+                                'caption',
+                                Lang::get('global.tmplvars_caption'),
+                                ['width' => '50%'],
+                            )
+                            ->addColumn(
+                                'rank',
+                                Lang::get('global.tmplvars_rank'),
+                                ['width' => '12rem', 'textAlign' => 'center']
+                            )
+                    )
+            )
+            ->setBreadcrumbs(
+                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+            )
+            ->toArray();
+    }
+
+    /**
+     * @param SiteTemplate|null $model
+     *
+     * @return array
+     */
+    public function default1(SiteTemplate $model = null): array
     {
         $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
         $isBladeFile = file_exists($bladeFile);

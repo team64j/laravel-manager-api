@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
+use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteModule;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
+use Team64j\LaravelManagerApi\Components\Breadcrumbs;
+use Team64j\LaravelManagerApi\Components\Main;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
@@ -21,6 +24,55 @@ class ModuleLayout extends Layout
      * @return array
      */
     public function default(SiteModule $model = null): array
+    {
+        $category = $model->category()->firstOr(fn() => new Category());
+
+        $breadcrumbs = [
+            [
+                'id' => $category->getKey() ?? 0,
+                'title' => Lang::get('global.modules') . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'to' => '/elements/modules?groupBy=none&category=' . ($category->getKey() ?? 0),
+            ],
+        ];
+
+        return Main::make()
+            ->setActions(
+                fn(ActionsButtons $component) => $component
+                    ->setCancel(
+                        Lang::get('global.cancel'),
+                        [
+                            'path' => '/elements/modules',
+                            'close' => true,
+                        ]
+                    )
+                    ->when(
+                        $model->getKey(),
+                        fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                    )
+                    ->setSaveAnd()
+            )
+            ->setTitle(
+                fn(Title $component) => $component
+                    ->setModel('name')
+                    ->setTitle(Lang::get('global.new_module'))
+                    ->setIcon('fa fa-cube')
+                    ->setId($model->getKey())
+            )
+            ->setTabs(
+                fn(Tabs $component) => $component
+            )
+            ->setBreadcrumbs(
+                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+            )
+            ->toArray();
+    }
+
+    /**
+     * @param SiteModule|null $model
+     *
+     * @return array
+     */
+    public function default1(SiteModule $model = null): array
     {
         return [
             ActionsButtons::make()

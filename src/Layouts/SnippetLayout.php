@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
+use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteSnippet;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
+use Team64j\LaravelManagerApi\Components\Breadcrumbs;
+use Team64j\LaravelManagerApi\Components\Main;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Tab;
 use Team64j\LaravelManagerApi\Components\Tabs;
@@ -21,6 +24,55 @@ class SnippetLayout extends Layout
      * @return array
      */
     public function default(SiteSnippet $model = null): array
+    {
+        $category = $model->category()->firstOr(fn() => new Category());
+
+        $breadcrumbs = [
+            [
+                'id' => $category->getKey() ?? 0,
+                'title' => Lang::get('global.snippets') . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'to' => '/elements/snippets?groupBy=none&category=' . ($category->getKey() ?? 0),
+            ],
+        ];
+
+        return Main::make()
+            ->setActions(
+                fn(ActionsButtons $component) => $component
+                    ->setCancel(
+                        Lang::get('global.cancel'),
+                        [
+                            'path' => '/elements/snippets',
+                            'close' => true,
+                        ]
+                    )
+                    ->when(
+                        $model->getKey(),
+                        fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                    )
+                    ->setSaveAnd()
+            )
+            ->setTitle(
+                fn(Title $component) => $component
+                    ->setModel('name')
+                    ->setTitle(Lang::get('global.new_snippet'))
+                    ->setIcon('fa fa-code')
+                    ->setId($model->getKey())
+            )
+            ->setTabs(
+                fn(Tabs $component) => $component
+            )
+            ->setBreadcrumbs(
+                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+            )
+            ->toArray();
+    }
+
+    /**
+     * @param SiteSnippet|null $model
+     *
+     * @return array
+     */
+    public function default1(SiteSnippet $model = null): array
     {
         return [
             ActionsButtons::make()

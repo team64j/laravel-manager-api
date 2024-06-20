@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Components;
 
+use Closure;
+
 class Main extends Component
 {
     public function __construct($attributes = [])
@@ -11,56 +13,76 @@ class Main extends Component
         $attributes = [
             'component' => 'AppMain',
             'attrs' => [
-                'actions' => $attributes['actions'] ?? [],
-                'title' => $attributes['title'] ?? [],
-                'tabs' => $attributes['tabs'] ?? [],
+//                'actions' => $attributes['actions'] ?? [],
+//                'title' => $attributes['title'] ?? [],
+//                'tabs' => $attributes['tabs'] ?? [],
             ],
+            'slots' => $attributes['slots'] ?? [],
         ];
 
         parent::__construct($attributes);
     }
 
     /**
-     * @param array $actions
+     * @param $value
      *
      * @return $this
      */
-    public function setActions(array $actions): static
+    public function setActions($value): static
     {
-        $this->attributes['attrs']['actions'] = $actions;
+        if ($value instanceof Closure) {
+            $value = $value(ActionsButtons::make());
+        }
+
+        $this->attributes['slots']['actions'] = $value;
 
         return $this;
     }
 
     /**
-     * @param string $model
-     * @param string|null $title
-     * @param string|null $icon
-     * @param int|null $id
-     * @param string|null $help
+     * @param $value
      *
      * @return $this
      */
-    public function setTitle(
-        string $model,
-        string $title = null,
-        string $icon = null,
-        int $id = null,
-        string $help = null): static
+    public function setTitle($value): static
     {
-        $this->attributes['attrs']['title'] = Title::make()
-            ->setModel($model)
-            ->setTitle($title)
-            ->setIcon($icon)
-            ->setId($id)
-            ->setHelp($help);
+        if ($value instanceof Closure) {
+            $value = $value(Title::make());
+        }
+
+        $this->attributes['slots']['title'] = $value;
 
         return $this;
     }
 
-    public function setTabs(array $tabs): static
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setTabs($value): static
     {
-        $this->attributes['attrs']['tabs'] = $tabs;
+        if ($value instanceof Closure) {
+            $value = $value(Tabs::make());
+        }
+
+        $this->attributes['slots']['tabs'] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setBreadcrumbs($value): static
+    {
+        if ($value instanceof Closure) {
+            $value = $value(Breadcrumbs::make());
+        }
+
+        $this->attributes['slots']['breadcrumbs'] = $value;
 
         return $this;
     }

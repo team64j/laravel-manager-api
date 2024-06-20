@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
+use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerApi\Components\ActionsButtons;
+use Team64j\LaravelManagerApi\Components\Breadcrumbs;
 use Team64j\LaravelManagerApi\Components\Checkbox;
 use Team64j\LaravelManagerApi\Components\CodeEditor;
 use Team64j\LaravelManagerApi\Components\Input;
+use Team64j\LaravelManagerApi\Components\Main;
 use Team64j\LaravelManagerApi\Components\Panel;
 use Team64j\LaravelManagerApi\Components\Select;
 use Team64j\LaravelManagerApi\Components\Tab;
@@ -27,6 +30,115 @@ class TvLayout extends Layout
      * @return array
      */
     public function default(SiteTmplvar $model = null): array
+    {
+        $category = $model->category()->firstOr(fn() => new Category());
+
+        $breadcrumbs = [
+            [
+                'id' => $category->getKey() ?? 0,
+                'title' => Lang::get('global.tmplvars') . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'to' => '/elements/tvs?groupBy=none&category=' . ($category->getKey() ?? 0),
+            ],
+        ];
+
+        return Main::make()
+            ->setActions(
+                fn(ActionsButtons $component) => $component
+                    ->setCancel(
+                        Lang::get('global.cancel'),
+                        [
+                            'path' => '/elements/tvs',
+                            'close' => true,
+                        ]
+                    )
+                    ->when(
+                        $model->getKey(),
+                        fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                    )
+                    ->setSaveAnd()
+            )
+            ->setTitle(
+                fn(Title $component) => $component
+                    ->setModel('name')
+                    ->setTitle(Lang::get('global.new_tmplvars'))
+                    ->setIcon('fa fa-list-alt')
+                    ->setId($model->getKey())
+            )
+            ->setTabs(
+                fn(Tabs $component) => $component
+                    ->setId('tv')
+                    ->addTab('default', Lang::get('global.page_data_general'))
+                    ->addSlot('default', [
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 md:pr-4 pb-0')
+                            ->setSlot([
+                                Input::make('name', Lang::get('global.tmplvars_name'))
+                                    ->isRequired(),
+                                Input::make('caption', Lang::get('global.tmplvars_caption')),
+                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                    ->setRows(2),
+                                CodeEditor::make(
+                                    'elements',
+                                    Lang::get('global.tmplvars_elements'),
+                                    Lang::get('global.tmplvars_binding_msg')
+                                )
+                                    ->setRows(2),
+                                CodeEditor::make(
+                                    'default_text',
+                                    Lang::get('global.tmplvars_default'),
+                                    Lang::get('global.tmplvars_binding_msg')
+                                )
+                                    ->setRows(2),
+                                Select::make('display', Lang::get('global.tmplvars_widget')),
+                            ]),
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full md:pl-4 pb-0')
+                            ->setSlot([
+                                Select::make('category', Lang::get('global.existing_category'))
+                                    ->setUrl('/categories/select')
+                                    ->setNew('')
+                                    ->setData([
+                                        [
+                                            'key' => $model->category,
+                                            'value' => $model->categories
+                                                ? $model->categories->category
+                                                : Lang::get(
+                                                    'global.no_category'
+                                                ),
+                                            'selected' => true,
+                                        ],
+                                    ]),
+                                Select::make('type', Lang::get('global.tmplvars_type'))
+                                    ->setUrl('/tvs/types')
+                                    ->setData([
+                                        [
+                                            'key' => $model->type,
+                                            'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
+                                        ],
+                                    ]),
+                                Input::make('rank', Lang::get('global.tmplvars_rank')),
+                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                    ->setCheckedValue(1, 0),
+                            ]),
+                    ])
+                    ->addTab('settings', Lang::get('global.settings_properties'))
+                    ->addTab('props', Lang::get('global.page_data_general'))
+                    ->addTab('templates', Lang::get('global.templates'))
+                    ->addTab('roles', Lang::get('global.role_management_title'))
+                    ->addTab('permissions', Lang::get('global.access_permissions'))
+            )
+            ->setBreadcrumbs(
+                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+            )
+            ->toArray();
+    }
+
+    /**
+     * @param SiteTmplvar|null $model
+     *
+     * @return array
+     */
+    public function default1(SiteTmplvar $model = null): array
     {
         return [
             ActionsButtons::make()

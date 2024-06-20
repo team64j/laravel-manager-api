@@ -52,11 +52,12 @@ class TvController extends Controller
     public function index(TvRequest $request, TvLayout $layout): AnonymousResourceCollection
     {
         $filter = $request->input('filter');
+        $category = $request->input('category', -1);
         $filterName = $request->input('name');
         $order = $request->input('order', 'category');
         $dir = $request->input('dir', 'asc');
         $fields = ['id', 'name', 'type', 'caption', 'locked', 'category', 'rank'];
-        $groupBy = $request->has('groupBy');
+        $groupBy = $request->input('groupBy');
 
         if (!in_array($order, $fields)) {
             $order = 'id';
@@ -72,11 +73,12 @@ class TvController extends Controller
             ->with('category')
             ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
+            ->when($category >= 0, fn($query) => $query->where('category', $category))
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        if ($groupBy) {
+        if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
                     'id' => $group->first()->category,

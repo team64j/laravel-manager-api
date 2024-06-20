@@ -56,11 +56,12 @@ class TemplateController extends Controller
     public function index(TemplateRequest $request, TemplateLayout $layout): AnonymousResourceCollection
     {
         $filter = $request->input('filter');
+        $category = $request->input('category', -1);
         $filterName = $request->input('templatename');
         $dir = $request->input('dir', 'asc');
         $order = $request->input('order', 'category');
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked'];
-        $groupBy = $request->has('groupBy');
+        $groupBy = $request->input('groupBy');
 
         if (!in_array($order, $fields)) {
             $order = 'id';
@@ -76,6 +77,7 @@ class TemplateController extends Controller
             ->with('category')
             ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('templatename', 'like', '%' . $filterName . '%'))
+            ->when($category >= 0, fn($query) => $query->where('category', $category))
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
@@ -95,7 +97,7 @@ class TemplateController extends Controller
             return $item->withoutRelations();
         };
 
-        if ($groupBy) {
+        if ($groupBy == 'category') {
             $callbackGroup = function ($group) use ($callbackItem) {
                 return [
                     'id' => $group->first()->category,
