@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\Panel;
-use Team64j\LaravelManagerApi\Components\Section;
-use Team64j\LaravelManagerApi\Components\Template;
+use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Section;
+use Team64j\LaravelManagerComponents\Template;
 
 class DashboardLayout extends Layout
 {

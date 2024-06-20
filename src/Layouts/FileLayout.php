@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\ActionsButtons;
-use Team64j\LaravelManagerApi\Components\CodeEditor;
-use Team64j\LaravelManagerApi\Components\Media;
-use Team64j\LaravelManagerApi\Components\Template;
-use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\CodeEditor;
+use Team64j\LaravelManagerComponents\Media;
+use Team64j\LaravelManagerComponents\Template;
+use Team64j\LaravelManagerComponents\Title;
 
 class FileLayout extends Layout
 {

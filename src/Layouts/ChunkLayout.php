@@ -7,14 +7,14 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteHtmlSnippet;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\ActionsButtons;
-use Team64j\LaravelManagerApi\Components\Breadcrumbs;
-use Team64j\LaravelManagerApi\Components\Main;
-use Team64j\LaravelManagerApi\Components\Panel;
-use Team64j\LaravelManagerApi\Components\Tab;
-use Team64j\LaravelManagerApi\Components\Tabs;
-use Team64j\LaravelManagerApi\Components\Title;
-use Team64j\LaravelManagerApi\Components\Tree;
+use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Breadcrumbs;
+use Team64j\LaravelManagerComponents\Main;
+use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Tab;
+use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Title;
+use Team64j\LaravelManagerComponents\Tree;
 
 class ChunkLayout extends Layout
 {

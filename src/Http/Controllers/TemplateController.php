@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelManagerApi\Components\Checkbox;
+use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;

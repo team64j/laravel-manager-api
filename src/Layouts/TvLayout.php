@@ -7,20 +7,20 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\ActionsButtons;
-use Team64j\LaravelManagerApi\Components\Breadcrumbs;
-use Team64j\LaravelManagerApi\Components\Checkbox;
-use Team64j\LaravelManagerApi\Components\CodeEditor;
-use Team64j\LaravelManagerApi\Components\Input;
-use Team64j\LaravelManagerApi\Components\Main;
-use Team64j\LaravelManagerApi\Components\Panel;
-use Team64j\LaravelManagerApi\Components\Select;
-use Team64j\LaravelManagerApi\Components\Tab;
-use Team64j\LaravelManagerApi\Components\Tabs;
-use Team64j\LaravelManagerApi\Components\Template;
-use Team64j\LaravelManagerApi\Components\Textarea;
-use Team64j\LaravelManagerApi\Components\Title;
-use Team64j\LaravelManagerApi\Components\Tree;
+use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Breadcrumbs;
+use Team64j\LaravelManagerComponents\Checkbox;
+use Team64j\LaravelManagerComponents\CodeEditor;
+use Team64j\LaravelManagerComponents\Input;
+use Team64j\LaravelManagerComponents\Main;
+use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
+use Team64j\LaravelManagerComponents\Tab;
+use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Template;
+use Team64j\LaravelManagerComponents\Textarea;
+use Team64j\LaravelManagerComponents\Title;
+use Team64j\LaravelManagerComponents\Tree;
 
 class TvLayout extends Layout
 {

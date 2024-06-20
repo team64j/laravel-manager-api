@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Team64j\LaravelManagerApi\Components\ActionsButtons;
-use Team64j\LaravelManagerApi\Components\Input;
-use Team64j\LaravelManagerApi\Components\Number;
-use Team64j\LaravelManagerApi\Components\Panel;
-use Team64j\LaravelManagerApi\Components\Select;
-use Team64j\LaravelManagerApi\Components\Tabs;
-use Team64j\LaravelManagerApi\Components\Textarea;
-use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Input;
+use Team64j\LaravelManagerComponents\Number;
+use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
+use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Textarea;
+use Team64j\LaravelManagerComponents\Title;
 
 class ConfigurationLayout extends Layout
 {
@@ -500,13 +500,13 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.login_logo_title'),
                         'name.help' => Lang::get('global.login_logo_message'),
                         'key' => 'login_logo',
-                        'value' => \Team64j\LaravelManagerApi\Components\File::make('login_logo'),
+                        'value' => \Team64j\LaravelManagerComponents\File::make('login_logo'),
                     ],
                     [
                         'name' => Lang::get('global.login_bg_title'),
                         'name.help' => Lang::get('global.login_bg_message'),
                         'key' => 'login_bg',
-                        'value' => \Team64j\LaravelManagerApi\Components\File::make('login_bg'),
+                        'value' => \Team64j\LaravelManagerComponents\File::make('login_bg'),
                     ],
                     [
                         'name' => Lang::get('global.login_form_position_title'),

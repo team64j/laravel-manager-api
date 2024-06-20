@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\ActionsButtons;
-use Team64j\LaravelManagerApi\Components\Checkbox;
-use Team64j\LaravelManagerApi\Components\Tabs;
-use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Checkbox;
+use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Title;
 
 class WorkspaceLayout extends Layout
 {

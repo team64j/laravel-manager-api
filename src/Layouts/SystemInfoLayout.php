@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\Panel;
-use Team64j\LaravelManagerApi\Components\Title;
+use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Title;
 
 class SystemInfoLayout extends Layout
 {

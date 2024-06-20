@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\Button;
-use Team64j\LaravelManagerApi\Components\Checkbox;
-use Team64j\LaravelManagerApi\Components\Input;
-use Team64j\LaravelManagerApi\Components\Template;
+use Team64j\LaravelManagerComponents\Button;
+use Team64j\LaravelManagerComponents\Checkbox;
+use Team64j\LaravelManagerComponents\Input;
+use Team64j\LaravelManagerComponents\Template;
 
 class LoginLayout extends Layout
 {

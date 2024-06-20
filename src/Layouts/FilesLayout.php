@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Components\Panel;
-use Team64j\LaravelManagerApi\Components\Tab;
-use Team64j\LaravelManagerApi\Components\Title;
-use Team64j\LaravelManagerApi\Components\Tree;
+use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Tab;
+use Team64j\LaravelManagerComponents\Title;
+use Team64j\LaravelManagerComponents\Tree;
 
 class FilesLayout extends Layout
 {
