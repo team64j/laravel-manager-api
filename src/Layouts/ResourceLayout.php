@@ -7,6 +7,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteContent;
 use Generator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
@@ -22,6 +23,7 @@ use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Radio;
+use Team64j\LaravelManagerComponents\Section;
 use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -103,7 +105,7 @@ class ResourceLayout extends Layout
                         'parent' => $item->parent,
                         'name' => $item->pagetitle,
                         'to' => '/resource/' . $item->getKey(),
-                        'tooltip' => 'ID: ' . $item->getKey() . '<br>' . $item->pagetitle
+                        'tooltip' => 'ID: ' . $item->getKey() . '<br>' . $item->pagetitle,
                     ],
                     $model->parents ? iterator_to_array(flatten([$model->parents])) : []
                 ),
@@ -138,6 +140,9 @@ class ResourceLayout extends Layout
 
             $title = Lang::get('global.new_resource');
         }
+
+        $tvs = $model->getTvs();
+        $tabTvs = $this->tabTvs($tvs);
 
         return Main::make()
             ->setActions(
@@ -199,7 +204,7 @@ class ResourceLayout extends Layout
                     ->addTab('general', Lang::get('global.settings_general'))
                     ->addSlot(
                         'general',
-                        [
+                        array_merge([
                             Template::make()
                                 ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 lg:pr-6')
                                 ->setSlot([
@@ -342,7 +347,44 @@ class ResourceLayout extends Layout
                                         '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
                                     )->setAttribute('clear', true),
                                 ]),
-                        ]
+
+                            //                            $tvs->count() && Config::get('global.group_tvs') == 0 ? Arr::flatten($tabTvs['slots'])
+                            //                                : null,
+                            //
+                            //                            $tvs->count() && Config::get('global.group_tvs') == 1 ? array_map(
+                            //                                fn($slot) => Section::make()
+                            //                                    ->setLabel($slot['name'])
+                            //                                    ->setSlot($tabTvs['slots'][$slot['id']])
+                            //                                    ->setAttribute('expanded', true),
+                            //                                $tabTvs['attrs']['data']
+                            //                            ) : null,
+                            //
+                            //                            $tvs->count() && Config::get('global.group_tvs') == 2 ? $tabTvs->setAttribute(
+                            //                                'vertical',
+                            //                                false
+                            //                            ) : null,
+                        ],
+                            $tvs->count() && Config::get('global.group_tvs') == 0 ? Arr::flatten($tabTvs['slots'])
+                                : [],
+
+                            $tvs->count() && Config::get('global.group_tvs') == 1 ? array_map(
+                                fn($slot) => Section::make()
+                                    ->setClass('!p-0')
+                                    ->setLabel($slot['name'])
+                                    ->setSlot($tabTvs['slots'][$slot['id']])
+                                    ->isExpanded(),
+                                $tabTvs['attrs']['data']
+                            ) : [],
+
+                            $tvs->count() && Config::get('global.group_tvs') == 2 ? [
+                                $tabTvs
+                                    ->setAttribute(
+                                        'vertical',
+                                        false
+                                    )
+                                    ->toArray(),
+                            ] : [],
+                        )
                     )
                     ->addTab('settings', Lang::get('global.settings_page_settings'))
                     ->addSlot(
@@ -456,11 +498,53 @@ class ResourceLayout extends Layout
                         ]
                     )
                     ->when(
-                        $model->getTvs()->count(),
-                        fn(Tabs $tabs) => $this->tabTvs(
-                            $tabs,
-                            $model->getTvs()
-                        )
+                        $tvs->count() && Config::get('global.group_tvs') == 3,
+                        fn(Tabs $tabs) => $tabs
+                            ->addTab(
+                                'tvs',
+                                Lang::get('global.settings_templvars'),
+                                null,
+                                'flex flex-wrap'
+                            )
+                            ->addSlot(
+                                'tvs',
+                                array_map(
+                                    fn($slot) => Section::make()
+                                        ->setClass('!p-0')
+                                        ->setLabel($slot['name'])
+                                        ->setSlot($tabTvs['slots'][$slot['id']])
+                                        ->isExpanded(),
+                                    $tabTvs['attrs']['data']
+                                )
+                            )
+                    )
+                    ->when(
+                        $tvs->count() && Config::get('global.group_tvs') == 4,
+                        fn(Tabs $tabs) => $tabs
+                            ->addTab(
+                                'tvs',
+                                Lang::get('global.settings_templvars'),
+                                null,
+                                'flex flex-wrap'
+                            )
+                            ->addSlot(
+                                'tvs',
+                                $tabTvs
+                            )
+                    )
+                    ->when(
+                        $tvs->count() && Config::get('global.group_tvs') == 5,
+                        function (Tabs $tabs) use ($tabTvs) {
+                            foreach ($tabTvs['attrs']['data'] as $tab) {
+                                $tabs->addTab(
+                                    $tab['id'],
+                                    $tab['name'],
+                                    slot: $tabTvs['slots'][$tab['id']],
+                                );
+                            }
+
+                            return $tabs;
+                        }
                     )
                     ->when(
                         Config::get('global.use_udperms'),
@@ -474,358 +558,6 @@ class ResourceLayout extends Layout
     }
 
     /**
-     * @param SiteContent|null $model
-     * @param string $url
-     *
-     * @return array
-     */
-    public function default1(SiteContent $model = null, string $url = ''): array
-    {
-        if (request()->input('type') == 'reference') {
-            $filedContent = Input::make(
-                'content',
-                Lang::get('global.weblink'),
-                '<b>[*content*]</b><br>' . Lang::get('global.resource_weblink_help')
-            );
-
-            $title = Lang::get('global.untitled_weblink');
-        } else {
-            $filedContent = CodeEditor::make(
-                'content',
-                Lang::get('global.resource_content'),
-                '<b>[*content*]</b>'
-            )
-                ->setRows(20)
-                ->setLanguage('html');
-
-            $title = Lang::get('global.new_resource');
-        }
-
-        return [
-            ActionsButtons::make()
-                ->setCancelTo([
-                    'path' => '/resources/' . $model->parent,
-                    'close' => true,
-                ])
-                ->setViewTo(['href' => $url])
-                ->when(
-                    $model->deleted,
-                    fn(ActionsButtons $actions) => $actions
-                        ->setAction(
-                            [
-                                'action' => 'custom:update',
-                                'method' => 'patch',
-                                'url' => '/resource/:id',
-                                'params' => [
-                                    'deleted' => 0,
-                                ],
-                            ],
-                            Lang::get('global.undelete_resource'),
-                            null,
-                            'btn-blue',
-                            'fa fa-undo'
-                        ),
-                    fn(ActionsButtons $actions) => $actions->when(
-                        $model->getKey(),
-                        fn(ActionsButtons $actions) => $actions
-                            ->setAction(
-                                [
-                                    'action' => 'custom:update',
-                                    'method' => 'patch',
-                                    'url' => '/resource/:id',
-                                    'params' => [
-                                        'deleted' => 1,
-                                    ],
-                                ],
-                                Lang::get('global.delete'),
-                                null,
-                                'btn-red',
-                                'fa fa-trash-alt'
-                            )
-                            ->setCopy()
-                    )
-                )
-                ->setSaveAnd(),
-
-            Title::make()
-                ->setModel('pagetitle')
-                ->setTitle($title)
-                ->setIcon('fa fa-edit')
-                ->setId($model->getKey()),
-
-            Tabs::make()
-                ->setId('resource')
-                ->addTab('general', Lang::get('global.settings_general'))
-                ->addSlot(
-                    'general',
-                    [
-                        Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 lg:pr-6')
-                            ->setSlot([
-                                Input::make(
-                                    'pagetitle',
-                                    Lang::get('global.resource_title'),
-                                    '<b>[*pagetitle*]</b><br>' . Lang::get('global.resource_title_help'),
-                                    'lg:pr-2 lg:basis-2/3'
-                                )
-                                    ->isRequired(),
-
-                                Input::make(
-                                    'alias',
-                                    Lang::get('global.resource_alias'),
-                                    '<b>[*alias*]</b><br>' . Lang::get('global.resource_alias_help'),
-                                    'lg:pl-2 lg:basis-1/3'
-                                )
-                                    ->isRequired(),
-
-                                Input::make(
-                                    'longtitle',
-                                    Lang::get('global.long_title'),
-                                    '<b>[*longtitle*]</b><br>' . Lang::get('global.resource_long_title_help')
-                                ),
-
-                                Textarea::make(
-                                    'description',
-                                    Lang::get('global.resource_description'),
-                                    '<b>[*description*]</b><br>' . Lang::get('global.resource_description_help'),
-                                    'lg:pr-2 lg:basis-1/2'
-                                )
-                                    ->setRows(3),
-
-                                CodeEditor::make(
-                                    'introtext',
-                                    Lang::get('global.resource_summary'),
-                                    '<b>[*introtext*]</b><br>' . Lang::get('global.resource_summary_help'),
-                                    'lg:pl-2 lg:basis-1/2'
-                                )
-                                    ->setRows(3)
-                                    ->setLanguage('html'),
-
-                                $filedContent,
-                            ]),
-
-                        Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12')
-                            ->setSlot([
-                                /*Select::make(
-                                    'parent',
-                                    Lang::get('global.import_parent_resource'),
-                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
-                                )
-                                    ->setUrl('/resource/select')
-                                    ->setData([
-                                        [
-                                            'key' => $model->parent,
-                                            'value' => $model->parent ? $model->parent . ' - ' .
-                                                $model->parents->pagetitle : '0 - root',
-                                            'selected' => true,
-                                        ],
-                                    ])
-                                    ->setEmitInput('inputChangeQuery'),*/
-
-                                Input::make(
-                                    'parent',
-                                    Lang::get('global.import_parent_resource'),
-                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
-                                )
-                                    ->setInputClass('cursor-pointer')
-                                    ->setValue(
-                                        $model->parent ? $model->parent . ' - ' . $model->parents->pagetitle
-                                            : '0 - root'
-                                    )
-                                    ->setEmitClick('inputTreeSelect')
-                                    ->isRequired()
-                                    ->isReadonly(),
-
-                                Select::make(
-                                    'template',
-                                    Lang::get('global.page_data_template'),
-                                    '<b>[*template*]</b><br>' . Lang::get('global.page_data_template_help')
-                                )
-                                    ->setUrl('/templates/select')
-                                    ->setData([
-                                        [
-                                            'key' => $model->template,
-                                            'value' => $model->tpl->templatename ?? $model->template,
-                                            'selected' => true,
-                                        ],
-                                    ])
-                                    ->setEmitInput('inputChangeQuery'),
-
-                                Checkbox::make(
-                                    'hidemenu',
-                                    Lang::get('global.resource_opt_show_menu'),
-                                    '<b>[*hidemenu*]</b><br>' . Lang::get('global.resource_opt_show_menu_help')
-                                )
-                                    ->setCheckedValue(0, 1),
-
-                                Number::make(
-                                    'menuindex',
-                                    Lang::get('global.resource_opt_menu_index'),
-                                    '<b>[*menuindex*]</b><br>' . Lang::get('global.resource_opt_menu_index_help')
-                                ),
-
-                                Input::make(
-                                    'menutitle',
-                                    Lang::get('global.resource_opt_menu_title'),
-                                    '<b>[*menutitle*]</b><br>' . Lang::get('global.resource_opt_menu_title_help')
-                                ),
-
-                                Input::make(
-                                    'link_attributes',
-                                    Lang::get('global.link_attributes'),
-                                    '<b>[*link_attributes*]</b><br>' . Lang::get('global.link_attributes_help')
-                                ),
-
-                                Checkbox::make(
-                                    'published',
-                                    Lang::get('global.resource_opt_published'),
-                                    '<b>[*published*]</b><br>' . Lang::get('global.resource_opt_published_help')
-                                )
-                                    ->setCheckedValue(1, 0),
-
-                                DateTime::make(
-                                    'publishedon',
-                                    Lang::get('global.page_data_published')
-                                )->setAttribute('clear', true),
-
-                                DateTime::make(
-                                    'pub_date',
-                                    Lang::get('global.page_data_publishdate'),
-                                    '<b>[*pub_date*]</b><br>' . Lang::get('global.page_data_publishdate_help')
-                                )->setAttribute('clear', true),
-
-                                DateTime::make(
-                                    'unpub_date',
-                                    Lang::get('global.page_data_unpublishdate'),
-                                    '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
-                                )->setAttribute('clear', true),
-                            ]),
-                    ]
-                )
-                ->addTab('settings', Lang::get('global.settings_page_settings'))
-                ->addSlot(
-                    'settings',
-                    [
-                        Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 lg:pr-3')
-                            ->setSlot([
-                                Select::make(
-                                    'type',
-                                    Lang::get('global.resource_type'),
-                                    '<b>[*type*]</b><br>' . Lang::get('global.resource_type_message')
-                                )
-                                    ->setData([
-                                        [
-                                            'key' => 'document',
-                                            'value' => Lang::get('global.resource_type_webpage'),
-                                        ],
-                                        [
-                                            'key' => 'reference',
-                                            'value' => Lang::get('global.resource_type_weblink'),
-                                        ],
-                                    ])
-                                    ->setEmitInput('inputChangeQuery'),
-
-                                Select::make(
-                                    'contentType',
-                                    Lang::get('global.page_data_contentType'),
-                                    '<b>[*contentType*]</b><br>' . Lang::get('global.page_data_contentType_help')
-                                )
-                                    ->setData(
-                                        array_map(fn($k) => [
-                                            'key' => $k,
-                                            'value' => $k,
-                                        ], explode(',', Config::get('global.custom_contenttype', 'text/html')))
-                                    ),
-
-                                Select::make(
-                                    'content_dispo',
-                                    Lang::get('global.resource_opt_contentdispo'),
-                                    '<b>[*content_dispo*]</b><br>' . Lang::get('global.resource_opt_contentdispo_help')
-                                )
-                                    ->setData([
-                                        [
-                                            'key' => 0,
-                                            'value' => Lang::get('global.inline'),
-                                        ],
-                                        [
-                                            'key' => 1,
-                                            'value' => Lang::get('global.attachment'),
-                                        ],
-                                    ]),
-                            ]),
-
-                        Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 lg:pl-3')
-                            ->setSlot([
-                                Checkbox::make(
-                                    'isfolder',
-                                    Lang::get('global.resource_opt_folder'),
-                                    '<b>[*isfolder*]</b><br>' . Lang::get('global.resource_opt_folder_help')
-                                )
-                                    ->setCheckedValue(1, 0),
-
-                                Checkbox::make(
-                                    'hide_from_tree',
-                                    Lang::get('global.track_visitors_title'),
-                                    '<b>[*hide_from_tree*]</b><br>' . Lang::get('global.resource_opt_trackvisit_help')
-                                )
-                                    ->setCheckedValue(0, 1),
-
-                                Checkbox::make(
-                                    'alias_visible',
-                                    Lang::get('global.resource_opt_alvisibled'),
-                                    '<b>[*alias_visible*]</b><br>' . Lang::get('global.resource_opt_alvisibled_help')
-                                )
-                                    ->setCheckedValue(1, 0),
-
-                                Checkbox::make(
-                                    'richtext',
-                                    Lang::get('global.resource_opt_richtext'),
-                                    '<b>[*richtext*]</b><br>' . Lang::get('global.resource_opt_richtext_help')
-                                )
-                                    ->setCheckedValue(1, 0),
-
-                                Checkbox::make(
-                                    'searchable',
-                                    Lang::get('global.page_data_searchable'),
-                                    '<b>[*searchable*]</b><br>' . Lang::get('global.page_data_searchable_help')
-                                )
-                                    ->setCheckedValue(1, 0),
-
-                                Checkbox::make(
-                                    'cacheable',
-                                    Lang::get('global.page_data_cacheable'),
-                                    '<b>[*cacheable*]</b><br>' . Lang::get('global.page_data_cacheable_help')
-                                )
-                                    ->setCheckedValue(1, 0),
-
-                                Checkbox::make(
-                                    'empty_cache',
-                                    Lang::get('global.resource_opt_emptycache'),
-                                    Lang::get('global.resource_opt_emptycache_help')
-                                )
-                                    ->setCheckedValue(1, 0)
-                                    ->setValue(1),
-                            ]),
-                    ]
-                )
-                ->when(
-                    $model->getTvs()->count(),
-                    fn(Tabs $tabs) => $this->tabTvs(
-                        $tabs,
-                        $model->getTvs()
-                    )
-                )
-                ->when(
-                    Config::get('global.use_udperms'),
-                    fn(Tabs $tabs) => $this->tabPermissions($tabs)
-                ),
-        ];
-    }
-
-    /**
      * @return string
      */
     public function getIcon(): string
@@ -834,20 +566,12 @@ class ResourceLayout extends Layout
     }
 
     /**
-     * @param Tabs $tabs
      * @param Collection $tvs
      *
      * @return Tabs
      */
-    protected function tabTvs(Tabs $tabs, Collection $tvs): Tabs
+    protected function tabTvs(Collection $tvs): Tabs
     {
-        $tabs->addTab(
-            'tvs',
-            Lang::get('global.settings_templvars'),
-            null,
-            'flex flex-wrap'
-        );
-
         $tvTabs = Tabs::make()
             ->setId('tvs')
             ->setData([])
@@ -924,10 +648,7 @@ class ResourceLayout extends Layout
             }
         }
 
-        return $tabs->addSlot(
-            'tvs',
-            $tvTabs
-        );
+        return $tvTabs;
     }
 
     /**
