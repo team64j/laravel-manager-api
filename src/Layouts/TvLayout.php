@@ -134,211 +134,123 @@ class TvLayout extends Layout
     }
 
     /**
-     * @param SiteTmplvar|null $model
-     *
-     * @return array
-     */
-    public function default1(SiteTmplvar $model = null): array
-    {
-        return [
-            ActionsButtons::make()
-                ->setCancel(
-                    Lang::get('global.cancel'),
-                    [
-                        'path' => '/elements/tvs',
-                        'close' => true,
-                    ]
-                )
-                ->when(
-                    $model->getKey(),
-                    fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
-                )
-                ->setSaveAnd(),
-
-            Title::make()
-                ->setModel('name')
-                ->setTitle(Lang::get('global.new_tmplvars'))
-                ->setIcon('fa fa-list-alt')
-                ->setId($model->getKey()),
-
-            Tabs::make()
-                ->setId('tv')
-                ->addTab('default', Lang::get('global.page_data_general'))
-                ->addSlot('default', [
-                    Template::make()
-                        ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 md:pr-4 pb-0')
-                        ->setSlot([
-                            Input::make('name', Lang::get('global.tmplvars_name'))
-                                ->isRequired(),
-                            Input::make('caption', Lang::get('global.tmplvars_caption')),
-                            Textarea::make('description', Lang::get('global.tmplvars_description'))
-                                ->setRows(2),
-                            CodeEditor::make(
-                                'elements',
-                                Lang::get('global.tmplvars_elements'),
-                                Lang::get('global.tmplvars_binding_msg')
-                            )
-                                ->setRows(2),
-                            CodeEditor::make(
-                                'default_text',
-                                Lang::get('global.tmplvars_default'),
-                                Lang::get('global.tmplvars_binding_msg')
-                            )
-                                ->setRows(2),
-                            Select::make('display', Lang::get('global.tmplvars_widget')),
-                        ]),
-                    Template::make()
-                        ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full md:pl-4 pb-0')
-                        ->setSlot([
-                            Select::make('category', Lang::get('global.existing_category'))
-                                ->setUrl('/categories/select')
-                                ->setNew('')
-                                ->setData([
-                                    [
-                                        'key' => $model->category,
-                                        'value' => $model->categories
-                                            ? $model->categories->category
-                                            : Lang::get(
-                                                'global.no_category'
-                                            ),
-                                        'selected' => true,
-                                    ],
-                                ]),
-                            Select::make('type', Lang::get('global.tmplvars_type'))
-                                ->setUrl('/tvs/types')
-                                ->setData([
-                                    [
-                                        'key' => $model->type,
-                                        'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
-                                    ],
-                                ]),
-                            Input::make('rank', Lang::get('global.tmplvars_rank')),
-                            Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
-                                ->setCheckedValue(1, 0),
-                        ]),
-                ])
-                ->addTab('settings', Lang::get('global.settings_properties'))
-                ->addTab('props', Lang::get('global.page_data_general'))
-                ->addTab('templates', Lang::get('global.templates'))
-                ->addTab('roles', Lang::get('global.role_management_title'))
-                ->addTab('permissions', Lang::get('global.access_permissions')),
-        ];
-    }
-
-    /**
      * @return array
      */
     public function list(): array
     {
-        return [
-            ActionsButtons::make()
-                ->setAction('sort', Lang::get('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
-                ->setNew(
-                    Lang::get('global.new_tmplvars'),
-                    '/tvs/new',
-                    'btn-green',
-                    'fa fa-plus'
-                ),
-
-            Title::make()
-                ->setTitle(Lang::get('global.tmplvars'))
-                ->setIcon('fa fa-list-alt')
-                ->setHelp(Lang::get('global.tmplvars_management_msg')),
-
-            Tabs::make()
-                ->setId('elements')
-                ->setHistory('element')
-                ->addTab('templates', Lang::get('global.templates'), 'fa fa-newspaper', 'py-4', ['edit_template'])
-                ->addTab(
-                    'tvs',
-                    Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
-                    'py-4',
-                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
-                )
-                ->addTab('chunks', Lang::get('global.htmlsnippets'), 'fa fa-th-large', 'py-4', ['edit_chunk'])
-                ->addTab('snippets', Lang::get('global.snippets'), 'fa fa-code', 'py-4', ['edit_snippet'])
-                ->addTab('plugins', Lang::get('global.plugins'), 'fa fa-plug', 'py-4', ['edit_plugin'])
-                ->addTab('modules', Lang::get('global.modules'), 'fa fa-cubes', 'py-4', ['edit_module'])
-                ->addTab(
-                    'categories',
-                    Lang::get('global.category_management'),
-                    'fa fa-object-group',
-                    'py-4',
-                    ['category_manager']
-                )
-                ->addSlot(
-                    'tvs',
-                    Panel::make()
-                        ->setId('tvs')
-                        ->setModel('data')
-                        ->setRoute('/tvs/:id')
-                        ->setHistory(true)
-                        ->addColumn(
-                            ['#', 'locked'],
-                            null,
-                            ['width' => '3rem'],
-                            false,
-                            [
-                                '<i class="fa fa-list-alt fa-fw"/>',
-                                '<i class="fa fa-list-alt fa-fw" title="' .
-                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
-                            ]
-                        )
-                        ->addColumn(
-                            'id',
-                            Lang::get('global.id'),
-                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
-                            true
-                        )
-                        ->addColumn(
-                            'name',
-                            Lang::get('global.tmplvars_name'),
-                            ['width' => '20rem', 'fontWeight' => 500],
-                            true
-                        )
-                        ->addColumn('caption', Lang::get('global.tmplvars_caption'), [], true)
-                        ->addColumn('type', Lang::get('global.tmplvars_type'), ['width' => '10rem'])
-                        ->addColumn(
-                            'locked',
-                            Lang::get('global.locked'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
-                            true,
-                            [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                            ]
-                        )
-                        ->addColumn(
-                            'rank',
-                            Lang::get('global.tmplvars_rank'),
-                            ['width' => '15rem', 'textAlign' => 'center'],
-                            true
-                        )
-                        ->addColumn(
-                            'actions',
-                            Lang::get('global.onlineusers_action'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
-                            false,
-                            [],
-                            [
-                                'copy' => [
-                                    'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => Lang::get('global.duplicate'),
-                                    'helpFit' => true,
-                                    'noOpacity' => true,
-                                ],
-                                'delete' => [
-                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => Lang::get('global.delete'),
-                                    'helpFit' => true,
-                                    'noOpacity' => true,
-                                ],
-                            ]
-                        ),
-                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
-                ),
-        ];
+        return Main::make()
+            ->setActions(
+                fn(ActionsButtons $component) => $component
+                    ->setAction('sort', Lang::get('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
+                    ->setNew(
+                        Lang::get('global.new_tmplvars'),
+                        '/tvs/new',
+                        'btn-green',
+                        'fa fa-plus'
+                    )
+            )
+            ->setTitle(
+                fn(Title $component) => $component
+                    ->setTitle(Lang::get('global.tmplvars'))
+                    ->setIcon('fa fa-list-alt')
+                    ->setHelp(Lang::get('global.tmplvars_management_msg'))
+            )
+            ->setTabs(
+                fn(Tabs $component) => $component
+                    ->setId('elements')
+                    ->setHistory('element')
+                    ->addTab('templates', Lang::get('global.templates'), 'fa fa-newspaper', 'py-4', ['edit_template'])
+                    ->addTab(
+                        'tvs',
+                        Lang::get('global.tmplvars'),
+                        'fa fa-th-large',
+                        'py-4',
+                        ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
+                    )
+                    ->addTab('chunks', Lang::get('global.htmlsnippets'), 'fa fa-th-large', 'py-4', ['edit_chunk'])
+                    ->addTab('snippets', Lang::get('global.snippets'), 'fa fa-code', 'py-4', ['edit_snippet'])
+                    ->addTab('plugins', Lang::get('global.plugins'), 'fa fa-plug', 'py-4', ['edit_plugin'])
+                    ->addTab('modules', Lang::get('global.modules'), 'fa fa-cubes', 'py-4', ['edit_module'])
+                    ->addTab(
+                        'categories',
+                        Lang::get('global.category_management'),
+                        'fa fa-object-group',
+                        'py-4',
+                        ['category_manager']
+                    )
+                    ->addSlot(
+                        'tvs',
+                        Panel::make()
+                            ->setId('tvs')
+                            ->setModel('data')
+                            ->setRoute('/tvs/:id')
+                            ->setHistory(true)
+                            ->addColumn(
+                                ['#', 'locked'],
+                                null,
+                                ['width' => '3rem'],
+                                false,
+                                [
+                                    '<i class="fa fa-list-alt fa-fw"/>',
+                                    '<i class="fa fa-list-alt fa-fw" title="' .
+                                    Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                                ]
+                            )
+                            ->addColumn(
+                                'id',
+                                Lang::get('global.id'),
+                                ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
+                                true
+                            )
+                            ->addColumn(
+                                'name',
+                                Lang::get('global.tmplvars_name'),
+                                ['width' => '20rem', 'fontWeight' => 500],
+                                true
+                            )
+                            ->addColumn('caption', Lang::get('global.tmplvars_caption'), [], true)
+                            ->addColumn('type', Lang::get('global.tmplvars_type'), ['width' => '10rem'])
+                            ->addColumn(
+                                'locked',
+                                Lang::get('global.locked'),
+                                ['width' => '10rem', 'textAlign' => 'center'],
+                                true,
+                                [
+                                    0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                                    1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                ]
+                            )
+                            ->addColumn(
+                                'rank',
+                                Lang::get('global.tmplvars_rank'),
+                                ['width' => '15rem', 'textAlign' => 'center'],
+                                true
+                            )
+                            ->addColumn(
+                                'actions',
+                                Lang::get('global.onlineusers_action'),
+                                ['width' => '10rem', 'textAlign' => 'center'],
+                                false,
+                                [],
+                                [
+                                    'copy' => [
+                                        'icon' => 'far fa-clone fa-fw hover:text-blue-500',
+                                        'help' => Lang::get('global.duplicate'),
+                                        'helpFit' => true,
+                                        'noOpacity' => true,
+                                    ],
+                                    'delete' => [
+                                        'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
+                                        'help' => Lang::get('global.delete'),
+                                        'helpFit' => true,
+                                        'noOpacity' => true,
+                                    ],
+                                ]
+                            ),
+                        ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
+                    )
+            )
+            ->toArray();
     }
 
     /**

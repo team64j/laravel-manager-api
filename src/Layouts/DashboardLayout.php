@@ -60,7 +60,7 @@ class DashboardLayout extends Layout
     protected function getWidgets(): array
     {
         return Template::make(
-            'flex flex-wrap items-baseline pt-6 px-4'
+            'flex flex-wrap items-baseline pt-6 px-4 dark:bg-gray-800'
         )
             ->putSlot(
                 Template::make(
