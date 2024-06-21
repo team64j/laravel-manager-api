@@ -355,17 +355,25 @@ class ModuleController extends Controller
         /** @var SiteModule $module */
         $module = SiteModule::query()->findOrFail($module);
 
-        try {
+//        try {
             $code = str_starts_with($module->modulecode, '<?php') ? '//' : '';
 
             chdir(app()->path());
 
             $modx = evo();
 
+            if (!defined('IN_MANAGER_MODE')) {
+                define('IN_MANAGER_MODE', true);
+            }
+
+            if (!session()->token()) {
+                session()->put('_token', $request->input('token', ''));
+            }
+
             $result = eval($code . $module->modulecode);
-        } catch (Throwable $exception) {
-            $result = $exception->getMessage();
-        }
+//        } catch (Throwable $exception) {
+//            $result = $exception->getMessage();
+//        }
 
         return $result;
     }
