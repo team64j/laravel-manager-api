@@ -358,6 +358,10 @@ class ModuleController extends Controller
         try {
             $code = str_starts_with($module->modulecode, '<?php') ? '//' : '';
 
+            chdir(app()->path());
+
+            $modx = evo();
+
             $result = eval($code . $module->modulecode);
         } catch (Throwable $exception) {
             $result = $exception->getMessage();
