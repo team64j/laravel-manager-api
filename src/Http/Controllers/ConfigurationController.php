@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use EvolutionCMS\Models\SystemSetting;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
@@ -119,10 +118,8 @@ class ConfigurationController extends Controller
 
         $configuration->upsert($data, 'setting_name');
 
-        Cache::clear();
-
         Artisan::call('optimize:clear');
-        Artisan::call('config:cache');
+        Artisan::call('optimize');
 
         return ConfigurationResource::make([])
             ->additional([
