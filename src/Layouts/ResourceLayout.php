@@ -377,12 +377,7 @@ class ResourceLayout extends Layout
                             ) : [],
 
                             $tvs->count() && Config::get('global.group_tvs') == 2 ? [
-                                $tabTvs
-                                    ->setAttribute(
-                                        'vertical',
-                                        false
-                                    )
-                                    ->toArray(),
+                                $tabTvs->toArray(),
                             ] : [],
                         )
                     )

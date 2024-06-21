@@ -28,6 +28,7 @@ class EventLogLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setRoute('/event-log/:id')
+                ->setHistory(true)
                 ->addColumn(
                     'type',
                     Lang::get('global.type'),

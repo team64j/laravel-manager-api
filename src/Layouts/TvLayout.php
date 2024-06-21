@@ -70,7 +70,7 @@ class TvLayout extends Layout
                     ->addTab('default', Lang::get('global.page_data_general'))
                     ->addSlot('default', [
                         Template::make()
-                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 md:pr-4 pb-0')
+                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 md:pr-5 pb-0')
                             ->setSlot([
                                 Input::make('name', Lang::get('global.tmplvars_name'))
                                     ->isRequired(),
@@ -92,7 +92,7 @@ class TvLayout extends Layout
                                 Select::make('display', Lang::get('global.tmplvars_widget')),
                             ]),
                         Template::make()
-                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full md:pl-4 pb-0')
+                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full pb-0')
                             ->setSlot([
                                 Select::make('category', Lang::get('global.existing_category'))
                                     ->setUrl('/categories/select')
