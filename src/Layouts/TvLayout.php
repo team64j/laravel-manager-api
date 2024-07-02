@@ -221,7 +221,7 @@ class TvLayout extends Layout
                                         Lang::get('global.role_udperms'),
                                         ['width' => '4rem', 'textAlign' => 'center'],
                                         true,
-                                        component: Checkbox::make('roles')->setKeyValue('id')
+                                        component: Checkbox::make('permissions')->setKeyValue('id')
                                     )
                                     ->addColumn(
                                         'id',

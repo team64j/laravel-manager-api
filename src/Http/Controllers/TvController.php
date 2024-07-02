@@ -139,11 +139,14 @@ class TvController extends Controller
 
         $model->setAttribute(
             'properties',
-            json_encode($model->properties, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+            $model->properties ? json_encode(
+                $model->properties,
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+            ) : '[]'
         );
+        $model->setAttribute('permissions', $model->tmplvarAccess()->pluck('documentgroup'));
         $model->setAttribute('templates', $model->templates->pluck('id'));
         $model->setAttribute('roles', $model->roles->pluck('id'));
-        $model->setAttribute('permissions', $model->tmplvarAccess->pluck('documentgroup'));
 
         if ($request->has('display')) {
             $model->display = $request->string('display')->toString();
@@ -187,8 +190,16 @@ class TvController extends Controller
      */
     public function store(TvRequest $request, TvLayout $layout): TvResource
     {
+        $data = $request->all();
+
+        $data['properties'] = json_decode($data['properties'] ?? '[]') ?: null;
+
         /** @var SiteTmplvar $model */
-        $model = SiteTmplvar::query()->create($request->all());
+        $model = SiteTmplvar::query()->create($data);
+
+        $model->permissions()->sync($data['permissions'] ?? []);
+        $model->templates()->sync($data['templates'] ?? []);
+        $model->roles()->sync($data['roles'] ?? []);
 
         return $this->show($request, (string) $model->getKey(), $layout);
     }
@@ -220,7 +231,16 @@ class TvController extends Controller
      */
     public function update(TvRequest $request, string $id, TvLayout $layout): TvResource
     {
-        SiteTmplvar::query()->findOrFail($id)->update($request->all());
+        $data = $request->all();
+
+        $data['properties'] = json_decode($data['properties'] ?? '[]') ?: null;
+
+        $model = SiteTmplvar::query()->findOrFail($id);
+        $model->update($data);
+
+        $model->permissions()->sync($data['permissions'] ?? []);
+        $model->templates()->sync($data['templates'] ?? []);
+        $model->roles()->sync($data['roles'] ?? []);
 
         return $this->show($request, $id, $layout);
     }
