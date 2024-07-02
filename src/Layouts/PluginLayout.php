@@ -140,7 +140,8 @@ class PluginLayout extends Layout
                                 'name',
                                 Lang::get('global.plugin_name'),
                                 ['width' => '20rem', 'fontWeight' => 500],
-                                true
+                                true,
+                                filter: true
                             )
                             ->addColumn(
                                 'description',

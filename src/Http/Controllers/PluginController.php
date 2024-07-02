@@ -103,9 +103,6 @@ class PluginController extends Controller
                         'title' => Lang::get('global.plugins'),
                         'icon' => $layout->getIcon(),
                         'pagination' => $this->pagination($result),
-                        'filters' => [
-                            'name',
-                        ],
                     ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }

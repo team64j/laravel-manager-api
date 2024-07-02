@@ -247,7 +247,7 @@ class ResourceController extends Controller
         /** @var SiteContent $model */
         $model = SiteContent::query()->create($request->all());
 
-        return $this->show($request, $model->getKey(), $layout);
+        return $this->show($request, (string) $model->getKey(), $layout);
     }
 
     /**
@@ -342,7 +342,7 @@ class ResourceController extends Controller
             'deleted' => 1
         ]);
 
-        return $this->show($request, $model->getKey(), $layout);
+        return $this->show($request, $id, $layout);
     }
 
     /**

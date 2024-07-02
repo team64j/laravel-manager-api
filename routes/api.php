@@ -229,6 +229,7 @@ Route::prefix($apiPath)
                 Route::get('list', [TvController::class, 'list'])->name('tvs.list'),
                 Route::get('sort', [TvController::class, 'sort'])->name('tvs.sort'),
                 Route::get('types', [TvController::class, 'types'])->name('tvs.types'),
+                Route::get('display', [TvController::class, 'display'])->name('tvs.display'),
             ])
             ->apiResource('tvs', TvController::class),
 

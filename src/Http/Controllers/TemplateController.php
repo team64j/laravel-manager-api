@@ -56,9 +56,8 @@ class TemplateController extends Controller
      */
     public function index(TemplateRequest $request, TemplateLayout $layout): AnonymousResourceCollection
     {
-        $filter = $request->input('filter');
         $category = $request->input('category', -1);
-        $filterName = $request->input('templatename');
+        $name = $request->input('templatename');
         $dir = $request->input('dir', 'asc');
         $order = $request->input('order', 'category');
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked'];
@@ -76,8 +75,7 @@ class TemplateController extends Controller
         $result = SiteTemplate::withoutLocked()
             ->select($fields)
             ->with('category')
-            ->when($filter, fn($query) => $query->where('templatename', 'like', '%' . $filter . '%'))
-            ->when($filterName, fn($query) => $query->where('templatename', 'like', '%' . $filterName . '%'))
+            ->when($name, fn($query) => $query->where('templatename', 'like', '%' . $name . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
             ->orderBy($order, $dir)
             ->paginate(Config::get('global.number_of_results'))
@@ -121,9 +119,6 @@ class TemplateController extends Controller
                     'title' => Lang::get('global.templates'),
                     'icon' => $layout->getIcon(),
                     'pagination' => $this->pagination($result),
-                    'filters' => [
-                        'templatename',
-                    ],
                 ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }

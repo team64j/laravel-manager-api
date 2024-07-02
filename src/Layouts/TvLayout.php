@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\ActionsButtons;
 use Team64j\LaravelManagerComponents\Breadcrumbs;
@@ -36,7 +37,8 @@ class TvLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.tmplvars') . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'title' => Lang::get('global.tmplvars') . ': ' .
+                    ($category->category ?? Lang::get('global.no_category')),
                 'to' => '/elements/tvs?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -89,7 +91,15 @@ class TvLayout extends Layout
                                     Lang::get('global.tmplvars_binding_msg')
                                 )
                                     ->setRows(2),
-                                Select::make('display', Lang::get('global.tmplvars_widget')),
+                                Select::make('display', Lang::get('global.tmplvars_widget'))
+                                    ->setUrl('/tvs/display')
+                                    ->setData([
+                                        [
+                                            'key' => $model->display,
+                                            'value' => $model->getDisplay($model->display),
+                                        ],
+                                    ])
+                                    ->setEmitInput('inputChangeQuery'),
                             ]),
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full pb-0')
@@ -122,10 +132,117 @@ class TvLayout extends Layout
                             ]),
                     ])
                     ->addTab('settings', Lang::get('global.settings_properties'))
-                    ->addTab('props', Lang::get('global.page_data_general'))
+                    ->addSlot('settings', [
+                        CodeEditor::make('properties')
+                            ->setLanguage('json')
+                            ->isFullSize(),
+                    ])
                     ->addTab('templates', Lang::get('global.templates'))
+                    ->addSlot(
+                        'templates',
+                        Panel::make()
+                            ->setId('templates')
+                            ->setModel('templates')
+                            ->setUrl('/templates?groupBy=category')
+                            ->setSlotTop(Lang::get('global.tmplvar_tmpl_access_msg'))
+                            ->addColumn(
+                                'attach',
+                                Lang::get('global.role_udperms'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
+                                true,
+                                component: Checkbox::make('templates')->setKeyValue('id')
+                            )
+                            ->addColumn(
+                                'id',
+                                Lang::get('global.id'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
+                                true
+                            )
+                            ->addColumn(
+                                'templatename',
+                                Lang::get('global.template_name'),
+                                ['fontWeight' => '500'],
+                                true,
+                                filter: true
+                            )
+                            ->addColumn(
+                                'description',
+                                Lang::get('global.description'),
+                                ['width' => '50%'],
+                            )
+                    )
                     ->addTab('roles', Lang::get('global.role_management_title'))
-                    ->addTab('permissions', Lang::get('global.access_permissions'))
+                    ->addSlot(
+                        'roles',
+                        Panel::make()
+                            ->setId('roles')
+                            ->setModel('roles')
+                            ->setUrl('/roles/users')
+                            ->setSlotTop(Lang::get('global.tmplvar_roles_access_msg'))
+                            ->addColumn(
+                                'attach',
+                                Lang::get('global.role_udperms'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
+                                true,
+                                component: Checkbox::make('roles')->setKeyValue('id')
+                            )
+                            ->addColumn(
+                                'id',
+                                Lang::get('global.id'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
+                                true
+                            )
+                            ->addColumn(
+                                'name',
+                                Lang::get('global.role'),
+                                ['fontWeight' => '500'],
+                                true,
+                                filter: true
+                            )
+                            ->addColumn(
+                                'description',
+                                Lang::get('global.description'),
+                                ['width' => '50%'],
+                            )
+                    )
+                    ->when(
+                        Auth::user()->can(['manage_groups', 'manage_tv_permissions']),
+                        fn(Tabs $tabs) => $tabs
+                            ->addTab('permissions', Lang::get('global.access_permissions'))
+                            ->addSlot(
+                                'permissions',
+                                Panel::make()
+                                    ->setId('permissions')
+                                    ->setModel('permissions')
+                                    ->setUrl('/permissions/resources')
+                                    ->setSlotTop(Lang::get('global.tmplvar_access_msg'))
+                                    ->addColumn(
+                                        'attach',
+                                        Lang::get('global.role_udperms'),
+                                        ['width' => '4rem', 'textAlign' => 'center'],
+                                        true,
+                                        component: Checkbox::make('roles')->setKeyValue('id')
+                                    )
+                                    ->addColumn(
+                                        'id',
+                                        Lang::get('global.id'),
+                                        ['width' => '4rem', 'textAlign' => 'center'],
+                                        true
+                                    )
+                                    ->addColumn(
+                                        'name',
+                                        Lang::get('global.role'),
+                                        ['fontWeight' => '500'],
+                                        true,
+                                        filter: true
+                                    )
+                                    ->addColumn(
+                                        'description',
+                                        Lang::get('global.description'),
+                                        ['width' => '50%'],
+                                    )
+                            )
+                    )
             )
             ->setBreadcrumbs(
                 fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
@@ -206,7 +323,8 @@ class TvLayout extends Layout
                                 'name',
                                 Lang::get('global.tmplvars_name'),
                                 ['width' => '20rem', 'fontWeight' => 500],
-                                true
+                                true,
+                                filter: true
                             )
                             ->addColumn('caption', Lang::get('global.tmplvars_caption'), [], true)
                             ->addColumn('type', Lang::get('global.tmplvars_type'), ['width' => '10rem'])

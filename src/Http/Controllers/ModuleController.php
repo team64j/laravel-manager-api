@@ -103,9 +103,6 @@ class ModuleController extends Controller
                         'title' => Lang::get('global.modules'),
                         'icon' => $layout->getIcon(),
                         'pagination' => $this->pagination($result),
-                        'filters' => [
-                            'name',
-                        ],
                     ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }

@@ -126,7 +126,8 @@ class CategoryLayout extends Layout
                                 'category',
                                 Lang::get('global.cm_category_name'),
                                 ['fontWeight' => 500],
-                                true
+                                true,
+                                filter: true
                             )
                             ->addColumn(
                                 'rank',

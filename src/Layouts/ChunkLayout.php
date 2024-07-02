@@ -136,7 +136,8 @@ class ChunkLayout extends Layout
                                 'name',
                                 Lang::get('global.htmlsnippet_name'),
                                 ['width' => '20rem', 'fontWeight' => 500],
-                                true
+                                true,
+                                filter: true
                             )
                             ->addColumn(
                                 'description',

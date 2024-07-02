@@ -41,7 +41,8 @@ class TemplateLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.templates') . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'title' => Lang::get('global.templates') . ': ' .
+                    ($category->category ?? Lang::get('global.no_category')),
                 'to' => '/elements/templates?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -148,7 +149,6 @@ class TemplateLayout extends Layout
                         'tvs',
                         Panel::make()
                             ->setId('tvs')
-                            ->setSlotTop('<div class="font-bold">' . Lang::get('global.template_tv_msg') . '</div>')
                             ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=true')
                             ->setModel('tvs')
                             ->addColumn(
@@ -304,7 +304,8 @@ class TemplateLayout extends Layout
                                 'templatename',
                                 Lang::get('global.template_name'),
                                 ['width' => '20rem', 'fontWeight' => 500],
-                                true
+                                true,
+                                filter: true
                             )
                             ->addColumn(
                                 'file',

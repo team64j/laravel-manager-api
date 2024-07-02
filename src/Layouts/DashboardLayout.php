@@ -95,8 +95,7 @@ class DashboardLayout extends Layout
                             date('H:i:s') . '</b>)</div>',
                             Panel::make()
                                 ->setId('widgetUsers')
-                                ->setClass('!mt-0 !-mx-4 !-mb-4 !rounded-none')
-                                ->setHistory(false)
+                                ->setClass('!mt-0 !-mx-4 !-mb-4')
                                 ->setRoute('/users/:id')
                                 ->setUrl('/users/active'),
                         ]
@@ -114,8 +113,7 @@ class DashboardLayout extends Layout
                             'hover:shadow-lg bg-white dark:bg-gray-750 overflow-hidden transition',
                             Panel::make()
                                 ->setId('widgetResources')
-                                ->setClass('!mt-0 !-mx-4 !-mb-4 !rounded-none')
-                                ->setHistory(false)
+                                ->setClass('!mt-0 !-mx-4 !-mb-4')
                                 ->setRoute('/resource/:id')
                                 ->setUrl(
                                     '/resource?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
@@ -135,7 +133,7 @@ class DashboardLayout extends Layout
                             'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNews')
-                                ->setClass('h-40 !mt-0 !-mx-4 !-mb-4 !rounded-none')
+                                ->setClass('h-40 !mt-0 !-mx-4 !-mb-4')
                                 ->setUrl('/dashboard/news')
                         )
                     )

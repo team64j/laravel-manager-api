@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
@@ -98,51 +97,10 @@ class TvController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.tmplvars'),
-                    'icon' => $layout->getIcon(),
-                    'pagination' => $this->pagination($result),
-                    'filters' => [
-                        'name',
-                    ],
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
-    }
-
-    /**
-     * @OA\Post(
-     *     path="/tvs",
-     *     summary="Создание нового TV параметра",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     * @param TvLayout $layout
-     *
-     * @return TvResource
-     */
-    public function store(TvRequest $request, TvLayout $layout): TvResource
-    {
-        /** @var SiteTmplvar $model */
-        $model = SiteTmplvar::query()->create($request->validated());
-
-        $data = $model->withoutRelations();
-
-        return TvResource::make($data)
-            ->additional([
-                'meta' => [],
-                'layout' => $layout->default($model),
+                        'title' => Lang::get('global.tmplvars'),
+                        'icon' => $layout->getIcon(),
+                        'pagination' => $this->pagination($result),
+                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 
@@ -179,6 +137,11 @@ class TvController extends Controller
             ]);
         }
 
+        $model->setAttribute('properties', json_encode($model->properties));
+        $model->setAttribute('templates', $model->templates->pluck('id'));
+        $model->setAttribute('roles', $model->roles->pluck('id'));
+        $model->setAttribute('permissions', $model->tmplvarAccess->pluck('documentgroup'));
+
         $data = $model->withoutRelations();
 
         return TvResource::make($data)
@@ -189,6 +152,38 @@ class TvController extends Controller
                     'icon' => $layout->getIcon(),
                 ],
             ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/tvs",
+     *     summary="Создание нового TV параметра",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     @OA\RequestBody(
+     *         @OA\JsonContent(
+     *             type="object",
+     *         )
+     *     ),
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     * @param TvRequest $request
+     * @param TvLayout $layout
+     *
+     * @return TvResource
+     */
+    public function store(TvRequest $request, TvLayout $layout): TvResource
+    {
+        /** @var SiteTmplvar $model */
+        $model = SiteTmplvar::query()->create($request->all());
+
+        return $this->show($request, (string) $model->getKey(), $layout);
     }
 
     /**
@@ -218,21 +213,9 @@ class TvController extends Controller
      */
     public function update(TvRequest $request, string $id, TvLayout $layout): TvResource
     {
-        /** @var SiteTmplvar $model */
-        $model = SiteTmplvar::query()->findOrFail($id);
+        SiteTmplvar::query()->findOrFail($id)->update($request->all());
 
-        $model->update($request->validated());
-
-        $data = $model->withoutRelations();
-
-        return TvResource::make($data)
-            ->additional([
-                'meta' => [
-                    'title' => $model->name,
-                    'icon' => $layout->getIcon(),
-                ],
-                'layout' => $layout->default($model),
-            ]);
+        return $this->show($request, $id, $layout);
     }
 
     /**
@@ -251,16 +234,15 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      * @param string $id
+     * @param TvLayout $layout
      *
-     * @return Response
+     * @return TvResource
      */
-    public function destroy(TvRequest $request, string $id): Response
+    public function destroy(TvRequest $request, string $id, TvLayout $layout): TvResource
     {
-        $model = SiteTmplvar::query()->findOrFail($id);
+        SiteTmplvar::query()->findOrFail($id)->delete();
 
-        $model->delete();
-
-        return response()->noContent();
+        return $this->show($request, $id, $layout);
     }
 
     /**
@@ -397,6 +379,32 @@ class TvController extends Controller
 
     /**
      * @OA\Get(
+     *     path="/tvs/display",
+     *     summary="Получение списка виджетов для TV",
+     *     tags={"Tvs"},
+     *     security={{"Api":{}}},
+     *     parameters={
+     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="string")),
+     *     },
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     * @param TvRequest $request
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function display(TvRequest $request): AnonymousResourceCollection
+    {
+        return TvResource::collection((new SiteTmplvar())->getDisplay());
+    }
+
+    /**
+     * @OA\Get(
      *     path="/tvs/tree",
      *     summary="Получение списка TV параметров с пагинацией для древовидного меню",
      *     tags={"Tvs"},
@@ -455,7 +463,7 @@ class TvController extends Controller
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
-                    ]
+                    ],
                 ]);
         }
 

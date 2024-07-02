@@ -101,9 +101,6 @@ class ChunkController extends Controller
                         'title' => Lang::get('global.htmlsnippets'),
                         'icon' => $layout->getIcon(),
                         'pagination' => $this->pagination($result),
-                        'filters' => [
-                            'name',
-                        ],
                     ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }

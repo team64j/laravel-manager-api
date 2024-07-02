@@ -139,7 +139,8 @@ class ModuleLayout extends Layout
                                 'name',
                                 Lang::get('global.module_name'),
                                 ['width' => '20rem', 'fontWeight' => 500],
-                                true
+                                true,
+                                filter: true
                             )
                             ->addColumn(
                                 'description',
