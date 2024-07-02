@@ -137,10 +137,17 @@ class TvController extends Controller
             ]);
         }
 
-        $model->setAttribute('properties', json_encode($model->properties));
+        $model->setAttribute(
+            'properties',
+            json_encode($model->properties, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+        );
         $model->setAttribute('templates', $model->templates->pluck('id'));
         $model->setAttribute('roles', $model->roles->pluck('id'));
         $model->setAttribute('permissions', $model->tmplvarAccess->pluck('documentgroup'));
+
+        if ($request->has('display')) {
+            $model->display = $request->string('display')->toString();
+        }
 
         $data = $model->withoutRelations();
 
@@ -398,9 +405,19 @@ class TvController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function display(TvRequest $request): AnonymousResourceCollection
+    public function display(TvRequest $request)
     {
-        return TvResource::collection((new SiteTmplvar())->getDisplay());
+        return TvResource::make(
+            array_merge(
+                [
+                    [
+                        'key' => '',
+                        'value' => '',
+                    ],
+                ],
+                (new SiteTmplvar())->getDisplay()
+            )
+        );
     }
 
     /**
