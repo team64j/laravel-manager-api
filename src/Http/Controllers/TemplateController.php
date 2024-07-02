@@ -8,6 +8,7 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -16,12 +17,12 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
+use Team64j\LaravelManagerComponents\Checkbox;
 
 class TemplateController extends Controller
 {
@@ -389,20 +390,13 @@ class TemplateController extends Controller
      */
     public function tvs(TemplateRequest $request, string $template, TemplateLayout $layout): AnonymousResourceCollection
     {
-        $tvs = SiteTemplate::query()
-            ->findOrNew($template)
-            ->tvs
-            ->pluck('id')
-            ->toArray();
-
         $filter = $request->input('filter');
-        $order = $request->input('order', 'attach');
+        $order = $request->input('order', 'category');
         $dir = $request->input('dir', 'asc');
         $fields = ['id', 'name', 'caption', 'description', 'category', 'rank'];
-        $orders = ['attach', 'id', 'name'];
 
-        if (!in_array($order, $orders)) {
-            $order = $orders[0];
+        if (!in_array($order, $fields)) {
+            $order = $fields[0];
         }
 
         if (!in_array($dir, ['asc', 'desc'])) {
@@ -414,13 +408,20 @@ class TemplateController extends Controller
             ->select($fields)
             ->with('category')
             ->when($filter, fn($q) => $q->where('name', 'like', '%' . $filter . '%'))
-            ->when(
-                $order == 'attach',
-                fn($q) => $q->orderByRaw(
-                    'FIELD(id, "' . implode('", "', $tvs) . '") ' . ($dir == 'asc' ? 'desc' : 'asc')
-                )
-            )
+            ->when($request->has('name'), fn($q) => $q->where('name', 'like', '%' . $request->input('name') . '%'))
             ->when($order != 'attach', fn($q) => $q->orderBy($order, $dir))
+            ->when(
+                $request->has('attach'),
+                fn($q) => $q
+                    ->when(
+                        $request->boolean('attach'),
+                        fn(Builder $q) => $q->whereHas('tmplvarTemplate', fn($q) => $q->where('templateid', $template)),
+                        fn(Builder $q) => $q->whereNotIn(
+                            'id',
+                            SiteTmplvarTemplate::query()->select('tmplvarid')->where('templateid', $template)
+                        )
+                    )
+            )
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
@@ -443,7 +444,7 @@ class TemplateController extends Controller
             ->additional([
                 'meta' => [
                     'pagination' => $this->pagination($result),
-                ],
+                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.tmplvars_novars')] : []),
             ]);
     }
 

@@ -148,10 +148,8 @@ class TemplateLayout extends Layout
                         'tvs',
                         Panel::make()
                             ->setId('tvs')
-                            ->setHistory(true)
-                            ->isFilter()
                             ->setSlotTop('<div class="font-bold">' . Lang::get('global.template_tv_msg') . '</div>')
-                            ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs')
+                            ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=true')
                             ->setModel('tvs')
                             ->addColumn(
                                 'attach',
@@ -169,7 +167,45 @@ class TemplateLayout extends Layout
                                 'name',
                                 Lang::get('global.tmplvars_name'),
                                 ['fontWeight' => '500'],
+                                true,
+                                filter: true
+                            )
+                            ->addColumn(
+                                'caption',
+                                Lang::get('global.tmplvars_caption'),
+                                ['width' => '50%'],
+                            )
+                            ->addColumn(
+                                'rank',
+                                Lang::get('global.tmplvars_rank'),
+                                ['width' => '12rem', 'textAlign' => 'center']
+                            )
+                    )
+                    ->addTab('available', Lang::get('global.template_notassigned_tv'))
+                    ->addSlot(
+                        'available',
+                        Panel::make()
+                            ->setId('available')
+                            ->setModel('tvs')
+                            ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=false')
+                            ->addColumn(
+                                'attach',
+                                Lang::get('global.role_udperms'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
                                 true
+                            )
+                            ->addColumn(
+                                'id',
+                                'ID',
+                                ['width' => '4rem', 'textAlign' => 'right'],
+                                true
+                            )
+                            ->addColumn(
+                                'name',
+                                Lang::get('global.tmplvars_name'),
+                                ['fontWeight' => '500'],
+                                true,
+                                filter: true
                             )
                             ->addColumn(
                                 'caption',
