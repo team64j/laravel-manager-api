@@ -9,8 +9,6 @@ use Team64j\LaravelManagerApi\Http\Controllers\CategoryController;
 use Team64j\LaravelManagerApi\Http\Controllers\ChunkController;
 use Team64j\LaravelManagerApi\Http\Controllers\ConfigurationController;
 use Team64j\LaravelManagerApi\Http\Controllers\DashboardController;
-use Team64j\LaravelManagerApi\Http\Controllers\ResourceController;
-use Team64j\LaravelManagerApi\Http\Controllers\ResourcesController;
 use Team64j\LaravelManagerApi\Http\Controllers\EventLogController;
 use Team64j\LaravelManagerApi\Http\Controllers\FileController;
 use Team64j\LaravelManagerApi\Http\Controllers\FilesController;
@@ -21,6 +19,8 @@ use Team64j\LaravelManagerApi\Http\Controllers\PasswordController;
 use Team64j\LaravelManagerApi\Http\Controllers\PermissionController;
 use Team64j\LaravelManagerApi\Http\Controllers\PluginController;
 use Team64j\LaravelManagerApi\Http\Controllers\PreviewController;
+use Team64j\LaravelManagerApi\Http\Controllers\ResourceController;
+use Team64j\LaravelManagerApi\Http\Controllers\ResourcesController;
 use Team64j\LaravelManagerApi\Http\Controllers\RoleCategoryController;
 use Team64j\LaravelManagerApi\Http\Controllers\RolePermissionController;
 use Team64j\LaravelManagerApi\Http\Controllers\RoleUserController;
@@ -72,6 +72,18 @@ Route::prefix($apiPath)
         Route::prefix('cache')
             ->group(fn() => [
                 Route::get('/', [CacheController::class, 'index'])->name('cache.index'),
+            ]),
+
+        /** Elements */
+        Route::prefix('elements')
+            ->group(fn() => [
+                Route::get('templates', [TemplateController::class, 'index'])->name('elements.templates'),
+                Route::get('tvs', [TvController::class, 'index'])->name('elements.tvs'),
+                Route::get('chunks', [ChunkController::class, 'index'])->name('elements.chunks'),
+                Route::get('snippets', [SnippetController::class, 'index'])->name('elements.snippets'),
+                Route::get('modules', [ModuleController::class, 'index'])->name('elements.modules'),
+                Route::get('plugins', [PluginController::class, 'index'])->name('elements.plugins'),
+                Route::get('categories', [CategoryController::class, 'index'])->name('elements.categories'),
             ]),
 
         /** Categories */

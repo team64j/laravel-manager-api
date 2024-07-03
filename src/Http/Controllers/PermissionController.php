@@ -9,6 +9,7 @@ use EvolutionCMS\Models\MembergroupName;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\User;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\PermissionRequest;
@@ -18,9 +19,12 @@ use Team64j\LaravelManagerApi\Layouts\PermissionRelationLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionResourceLayout;
 use Team64j\LaravelManagerApi\Models\Permissions;
 use Team64j\LaravelManagerApi\Models\PermissionsGroups;
+use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class PermissionController extends Controller
 {
+    use PaginationTrait;
+
     /**
      * @OA\Get(
      *     path="/permissions/groups",
@@ -42,33 +46,41 @@ class PermissionController extends Controller
      */
     public function groups(PermissionRequest $request, PermissionGroupLayout $layout): AnonymousResourceCollection
     {
-        $groups = MembergroupName::query()
+        $result = MembergroupName::query()
             ->with('users')
             ->orderBy('name')
-            ->get()
-            ->map(function (MembergroupName $group) {
-                if ($group->users->count()) {
-                    $users = $group
-                        ->users
-                        ->map(fn(User $i) => '
-                            <a href="users/' . $i->getKey() . '" class="mr-1 link">' . $i->username . '</a>'
-                        )
-                        ->join(' ');
-                } else {
-                    $users = '<span class="opacity-50">' . Lang::get('global.access_permissions_no_users_in_group') .
-                        '</span>';
-                }
+            ->paginate(Config::get('global.number_of_results'));
 
-                return $group->withoutRelations()
-                    ->setAttribute('users.html', $users);
-            });
+        return PermissionResource::collection(
+            $result
+                ->map(function (MembergroupName $group) {
+                    if ($group->users->count()) {
+                        $users = $group
+                            ->users
+                            ->map(fn(User $i) => '
+                            <button type="button" href="users/' . $i->getKey() .
+                                '" class="mr-1 link btn-sm max-w-20" title="' .
+                                $i->username . '">
+                                <span class="truncate">' . $i->username . '</span>
+                            </button>'
+                            )
+                            ->join(' ');
+                    } else {
+                        $users =
+                            '<span class="opacity-50">' . Lang::get('global.access_permissions_no_users_in_group') .
+                            '</span>';
+                    }
 
-        return PermissionResource::collection($groups)
+                    return $group->withoutRelations()
+                        ->setAttribute('users.html', $users);
+                })
+        )
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'title' => Lang::get('global.manage_permission'),
                     'icon' => $layout->getIcon(),
+                    'pagination' => $this->pagination($result),
                 ],
             ]);
     }
@@ -133,35 +145,42 @@ class PermissionController extends Controller
         PermissionRequest $request,
         PermissionResourceLayout $layout): AnonymousResourceCollection
     {
-        $resources = DocumentgroupName::query()
+        $result = DocumentgroupName::query()
             ->with('documents')
+            ->when($request->has('name'), fn($q) => $q->where('name', 'like', '%' . $request->input('name') . '%'))
             ->orderBy('name')
-            ->get()
-            ->map(function (DocumentgroupName $group) {
-                if ($group->documents->count()) {
-                    $documents = $group
-                        ->documents
-                        ->map(fn(SiteContent $i) => '
-                            <a href="/resource/' . $i->getKey() . '" class="mr-1 link">' . $i->pagetitle . ' (' .
-                            $i->id . ')</a> '
-                        )
-                        ->join(' ');
-                } else {
-                    $documents =
-                        '<span class="opacity-50">' . Lang::get('global.access_permissions_no_resources_in_group') .
-                        '</span>';
-                }
+            ->paginate(Config::get('global.number_of_results'));
 
-                return $group->withoutRelations()
-                    ->setAttribute('documents.html', $documents);
-            });
+        return PermissionResource::collection(
+            $result
+                ->map(function (DocumentgroupName $group) {
+                    if ($group->documents->count()) {
+                        $documents = $group
+                            ->documents
+                            ->map(fn(SiteContent $i) => '
+                            <button type="button" href="/resource/' . $i->getKey() .
+                                '" class="mr-1 link btn-sm w-20" title="' .
+                                e($i->pagetitle) . '">
+                                <span class="truncate">' . e($i->pagetitle) . '(' . $i->getKey() . ')</span>
+                            </button>'
+                            )
+                            ->join(' ');
+                    } else {
+                        $documents =
+                            '<span class="opacity-50">' . Lang::get('global.access_permissions_no_resources_in_group') .
+                            '</span>';
+                    }
 
-        return PermissionResource::collection($resources)
+                    return $group->withoutRelations()
+                        ->setAttribute('documents.html', $documents);
+                })
+        )
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
                     'title' => Lang::get('global.manage_permission'),
                     'icon' => $layout->getIcon(),
+                    'pagination' => $this->pagination($result),
                 ],
             ]);
     }
@@ -226,41 +245,44 @@ class PermissionController extends Controller
         PermissionRequest $request,
         PermissionRelationLayout $layout): AnonymousResourceCollection
     {
-        $groups = MembergroupName::query()
+        $result = MembergroupName::query()
             ->with('documentGroups')
             ->orderBy('name')
-            ->get()
-            ->map(function (MembergroupName $group) {
-                if ($group->documentGroups->count()) {
-                    $documentGroups = $group
-                        ->documentGroups
-                        ->map(fn(DocumentgroupName $i) => '
-                            <div class="pb-1">
-                                <span class="font-medium">' . $i->name . '</span> (' .
-                            ($i->pivot->context ? 'web' : 'mgr') . ')
-                                <i class="fa fa-close text-rose-500"/>
-                            </div>'
-                        )
-                        ->join(' ');
-                } else {
-                    $documentGroups = '<span class="opacity-50">' . Lang::get('global.no_groups_found') . '</span>';
-                }
-
-                return $group->withoutRelations()
-                    ->setAttribute('document_groups.html', $documentGroups);
-            });
+            ->paginate(Config::get('global.number_of_results'));
 
         $documents = DocumentgroupName::query()
             ->with('documents')
             ->orderBy('name')
             ->get();
 
-        return PermissionResource::collection($groups)
+        return PermissionResource::collection(
+            $result
+                ->map(function (MembergroupName $group) {
+                    if ($group->documentGroups->count()) {
+                        $documentGroups = $group
+                            ->documentGroups
+                            ->map(fn(DocumentgroupName $i) => '
+                            <div class="pb-1">
+                                <span class="font-medium">' . $i->name . '</span> (' .
+                                ($i->pivot->context ? 'web' : 'mgr') . ')
+                                <i class="fa fa-close text-rose-500"/>
+                            </div>'
+                            )
+                            ->join(' ');
+                    } else {
+                        $documentGroups = '<span class="opacity-50">' . Lang::get('global.no_groups_found') . '</span>';
+                    }
+
+                    return $group->withoutRelations()
+                        ->setAttribute('document_groups.html', $documentGroups);
+                })
+        )
             ->additional([
-                'layout' => $layout->list($groups, $documents),
+                'layout' => $layout->list(),
                 'meta' => [
                     'title' => Lang::get('global.manage_permission'),
                     'icon' => $layout->getIcon(),
+                    'pagination' => $this->pagination($result),
                 ],
             ]);
     }

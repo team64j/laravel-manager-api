@@ -32,10 +32,22 @@ class PermissionGroupLayout extends Layout
 
             Tabs::make()
                 ->setId('permissions')
-                ->setHistory('element')
-                ->addTab('groups', Lang::get('global.web_access_permissions_user_groups'))
-                ->addTab('resources', Lang::get('global.access_permissions_resource_groups'))
-                ->addTab('relations', Lang::get('global.access_permissions_links'))
+                ->setHistory(true)
+                ->addTab(
+                    'groups',
+                    Lang::get('global.web_access_permissions_user_groups'),
+                    route: route('manager.api.permissions.groups')
+                )
+                ->addTab(
+                    'resources',
+                    Lang::get('global.access_permissions_resource_groups'),
+                    route: route('manager.api.permissions.resources')
+                )
+                ->addTab(
+                    'relations',
+                    Lang::get('global.access_permissions_links'),
+                    route: route('manager.api.permissions.relations')
+                )
                 ->addSlot(
                     'groups',
                     Panel::make()
@@ -82,7 +94,7 @@ class PermissionGroupLayout extends Layout
         return [
             Title::make()
                 ->setTitle($model->name ?: Lang::get('global.manage_permission'))
-                ->setIcon($this->getIcon())
+                ->setIcon($this->getIcon()),
         ];
     }
 }

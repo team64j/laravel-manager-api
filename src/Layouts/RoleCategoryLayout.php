@@ -32,10 +32,25 @@ class RoleCategoryLayout extends Layout
 
             Tabs::make()
                 ->setId('userManagement')
-                ->setHistory('element')
-                ->addTab('users', Lang::get('global.role_role_management'), 'fa fa-legal')
-                ->addTab('categories', Lang::get('global.category_heading'), 'fa fa-object-group')
-                ->addTab('permissions', Lang::get('global.manage_permission'), 'fa fa-user-tag')
+                ->setHistory(true)
+                ->addTab(
+                    'users',
+                    Lang::get('global.role_role_management'),
+                    'fa fa-legal',
+                    route: route('manager.api.roles.users.index')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_heading'),
+                    'fa fa-object-group',
+                    route: route('manager.api.roles.categories.index')
+                )
+                ->addTab(
+                    'permissions',
+                    Lang::get('global.manage_permission'),
+                    'fa fa-user-tag',
+                    route: route('manager.api.roles.permissions.index')
+                )
                 ->addSlot(
                     'categories',
                     Panel::make()

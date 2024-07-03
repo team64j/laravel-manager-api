@@ -32,10 +32,22 @@ class PermissionResourceLayout extends Layout
 
             Tabs::make()
                 ->setId('permissions')
-                ->setHistory('element')
-                ->addTab('groups', Lang::get('global.web_access_permissions_user_groups'))
-                ->addTab('resources', Lang::get('global.access_permissions_resource_groups'))
-                ->addTab('relations', Lang::get('global.access_permissions_links'))
+                ->setHistory(true)
+                ->addTab(
+                    'groups',
+                    Lang::get('global.web_access_permissions_user_groups'),
+                    route: route('manager.api.permissions.groups')
+                )
+                ->addTab(
+                    'resources',
+                    Lang::get('global.access_permissions_resource_groups'),
+                    route: route('manager.api.permissions.resources')
+                )
+                ->addTab(
+                    'relations',
+                    Lang::get('global.access_permissions_links'),
+                    route: route('manager.api.permissions.relations')
+                )
                 ->addSlot(
                     'resources',
                     Panel::make()

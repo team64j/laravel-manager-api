@@ -107,9 +107,21 @@ class BootstrapController extends Controller
     {
         return [
             [
-                'path' => '/elements/:element',
+                'path' => '/elements/:path',
                 'meta' => [
-                    'url' => '/:element?groupBy=category',
+                    'url' => '/:path?groupBy=category',
+                    'group' => true,
+                ],
+            ],
+            [
+                'path' => '/permissions/:path',
+                'meta' => [
+                    'group' => true,
+                ],
+            ],
+            [
+                'path' => '/roles/:path',
+                'meta' => [
                     'group' => true,
                 ],
             ],
@@ -140,12 +152,12 @@ class BootstrapController extends Controller
             [
                 'path' => '/:path(.*)/new',
             ],
-            [
-                'path' => '/:path(.*)/:element',
-                'meta' => [
-                    'group' => true,
-                ],
-            ],
+//            [
+//                'path' => '/:path(.*)/:element',
+//                'meta' => [
+//                    'group' => true,
+//                ],
+//            ],
             [
                 'path' => '/phpinfo',
                 'meta' => [

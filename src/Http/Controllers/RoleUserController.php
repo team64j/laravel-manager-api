@@ -39,10 +39,11 @@ class RoleUserController extends Controller
      */
     public function index(RoleUserRequest $request, RoleUserLayout $layout): AnonymousResourceCollection
     {
-        $filter = $request->get('filter');
-
         $result = UserRole::query()
-            ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
+            ->when(
+                $request->has('name'),
+                fn($query) => $query->where('name', 'like', '%' . $request->input('name') . '%')
+            )
             ->orderBy('id')
             ->paginate(Config::get('global.number_of_results'));
 

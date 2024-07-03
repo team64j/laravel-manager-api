@@ -248,25 +248,63 @@ class TemplateLayout extends Layout
             ->setTabs(
                 fn(Tabs $component) => $component
                     ->setId('elements')
-                    ->setHistory('element')
-                    ->addTab('templates', Lang::get('global.templates'), 'fa fa-newspaper', 'py-4', ['edit_template'])
+                    ->setHistory(true)
+                    ->isWatch()
+                    ->addTab(
+                        'templates',
+                        Lang::get('global.templates'),
+                        'fa fa-newspaper',
+                        'py-4',
+                        ['edit_template'],
+                        route: route('manager.api.elements.templates')
+                    )
                     ->addTab(
                         'tvs',
                         Lang::get('global.tmplvars'),
                         'fa fa-th-large',
                         'py-4',
-                        ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']
+                        ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
+                        route: route('manager.api.elements.tvs')
                     )
-                    ->addTab('chunks', Lang::get('global.htmlsnippets'), 'fa fa-th-large', 'py-4', ['edit_chunk'])
-                    ->addTab('snippets', Lang::get('global.snippets'), 'fa fa-code', 'py-4', ['edit_snippet'])
-                    ->addTab('plugins', Lang::get('global.plugins'), 'fa fa-plug', 'py-4', ['edit_plugin'])
-                    ->addTab('modules', Lang::get('global.modules'), 'fa fa-cubes', 'py-4', ['edit_module'])
+                    ->addTab(
+                        'chunks',
+                        Lang::get('global.htmlsnippets'),
+                        'fa fa-th-large',
+                        'py-4',
+                        ['edit_chunk'],
+                        route: route('manager.api.elements.chunks')
+                    )
+                    ->addTab(
+                        'snippets',
+                        Lang::get('global.snippets'),
+                        'fa fa-code',
+                        'py-4',
+                        ['edit_snippet'],
+                        route: route('manager.api.elements.snippets')
+                    )
+                    ->addTab(
+                        'plugins',
+                        Lang::get('global.plugins'),
+                        'fa fa-plug',
+                        'py-4',
+                        ['edit_plugin'],
+                        route: route('manager.api.elements.plugins')
+                    )
+                    ->addTab(
+                        'modules',
+                        Lang::get('global.modules'),
+                        'fa fa-cubes',
+                        'py-4',
+                        ['edit_module'],
+                        route: route('manager.api.elements.modules')
+                    )
                     ->addTab(
                         'categories',
                         Lang::get('global.category_management'),
                         'fa fa-object-group',
                         'py-4',
-                        ['category_manager']
+                        ['category_manager'],
+                        route: route('manager.api.elements.categories')
                     )
                     ->addSlot(
                         'templates',
