@@ -7,6 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
@@ -137,24 +138,20 @@ class TvController extends Controller
             ]);
         }
 
-        $model->setAttribute(
-            'properties',
-            $model->properties ? json_encode(
-                $model->properties,
-                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
-            ) : '[]'
-        );
-        $model->setAttribute('permissions', $model->tmplvarAccess()->pluck('documentgroup'));
-        $model->setAttribute('templates', $model->templates->pluck('id'));
-        $model->setAttribute('roles', $model->roles->pluck('id'));
-
         if ($request->has('display')) {
             $model->display = $request->string('display')->toString();
         }
 
-        $data = $model->withoutRelations();
+        $model->properties = $model->properties ? json_encode(
+            $model->properties,
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+        ) : '[]';
 
-        return TvResource::make($data)
+        $model->setAttribute('permissions', $model->permissions->pluck('id'));
+        $model->setAttribute('templates', $model->templates->pluck('id'));
+        $model->setAttribute('roles', $model->roles->pluck('id'));
+
+        return TvResource::make($model->withoutRelations())
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
@@ -261,15 +258,14 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      * @param string $id
-     * @param TvLayout $layout
      *
-     * @return TvResource
+     * @return Response
      */
-    public function destroy(TvRequest $request, string $id, TvLayout $layout): TvResource
+    public function destroy(TvRequest $request, string $id)
     {
         SiteTmplvar::query()->findOrFail($id)->delete();
 
-        return $this->show($request, $id, $layout);
+        return response()->noContent();
     }
 
     /**
