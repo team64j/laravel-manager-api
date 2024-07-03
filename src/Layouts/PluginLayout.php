@@ -7,8 +7,8 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SitePlugin;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
-use Team64j\LaravelManagerComponents\Breadcrumbs;
+use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
@@ -37,7 +37,7 @@ class PluginLayout extends Layout
 
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setCancel(
                         Lang::get('global.cancel'),
                         [
@@ -47,7 +47,7 @@ class PluginLayout extends Layout
                     )
                     ->when(
                         $model->getKey(),
-                        fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                        fn(Actions $actions) => $actions->setDelete()->setCopy()
                     )
                     ->setSaveAnd()
             )
@@ -62,7 +62,7 @@ class PluginLayout extends Layout
                 fn(Tabs $component) => $component
             )
             ->setBreadcrumbs(
-                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+                fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();
     }
@@ -74,7 +74,7 @@ class PluginLayout extends Layout
     {
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setAction('sort', Lang::get('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
                     ->setNew(
                         Lang::get('global.new_plugin'),
@@ -257,7 +257,7 @@ class PluginLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setCancelTo([
                     'path' => '/elements/plugins',
                     'close' => true,

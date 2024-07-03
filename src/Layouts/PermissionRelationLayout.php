@@ -6,7 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -22,7 +22,7 @@ class PermissionRelationLayout extends Layout
     public function list(Collection $groups = null, Collection $documents = null): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setNew(
                     Lang::get('global.create_new'),
                     '/permissions/relations/new',

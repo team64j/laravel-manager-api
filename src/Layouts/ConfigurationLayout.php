@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Panel;
@@ -28,7 +28,7 @@ class ConfigurationLayout extends Layout
     public function default(): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setCancel()
                 ->setSave(),
 

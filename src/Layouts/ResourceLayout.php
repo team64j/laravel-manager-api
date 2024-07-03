@@ -11,8 +11,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
-use Team64j\LaravelManagerComponents\Breadcrumbs;
+use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\DateTime;
@@ -146,7 +146,7 @@ class ResourceLayout extends Layout
 
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setCancelTo([
                         'path' => '/resources/' . $model->parent,
                         'close' => true,
@@ -154,7 +154,7 @@ class ResourceLayout extends Layout
                     ->setViewTo(['href' => $url])
                     ->when(
                         $model->deleted,
-                        fn(ActionsButtons $component) => $component
+                        fn(Actions $component) => $component
                             ->setAction(
                                 [
                                     'action' => 'custom:update',
@@ -169,9 +169,9 @@ class ResourceLayout extends Layout
                                 'btn-blue',
                                 'fa fa-undo'
                             ),
-                        fn(ActionsButtons $component) => $component->when(
+                        fn(Actions $component) => $component->when(
                             $model->getKey(),
-                            fn(ActionsButtons $component) => $component
+                            fn(Actions $component) => $component
                                 ->setAction(
                                     [
                                         'action' => 'custom:update',
@@ -547,7 +547,7 @@ class ResourceLayout extends Layout
                     ),
             )
             ->setBreadcrumbs(
-                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+                fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();
     }

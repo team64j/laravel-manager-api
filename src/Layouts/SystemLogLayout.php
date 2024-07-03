@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Title;
 
@@ -17,7 +17,7 @@ class SystemLogLayout extends Layout
     public function list(): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setClear(Lang::get('global.clear_log'), '', 'btn-red', 'fa fa-trash'),
 
             Title::make()

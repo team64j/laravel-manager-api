@@ -6,7 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
@@ -25,7 +25,7 @@ class CategoryLayout extends Layout
     {
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setCancel(
                         Lang::get('global.cancel'),
                         [
@@ -35,7 +35,7 @@ class CategoryLayout extends Layout
                     )
                     ->when(
                         $model->getKey(),
-                        fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                        fn(Actions $actions) => $actions->setDelete()->setCopy()
                     )
                     ->setSaveAnd()
             )
@@ -59,7 +59,7 @@ class CategoryLayout extends Layout
     {
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setAction('sort', Lang::get('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
                     ->setNew(
                         Lang::get('global.cm_add_new_category'),
@@ -204,7 +204,7 @@ class CategoryLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setCancelTo([
                     'path' => '/elements/categories',
                     'close' => true,

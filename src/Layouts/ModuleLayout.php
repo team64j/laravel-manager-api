@@ -7,8 +7,8 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteModule;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
-use Team64j\LaravelManagerComponents\Breadcrumbs;
+use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
@@ -37,7 +37,7 @@ class ModuleLayout extends Layout
 
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setCancel(
                         Lang::get('global.cancel'),
                         [
@@ -47,7 +47,7 @@ class ModuleLayout extends Layout
                     )
                     ->when(
                         $model->getKey(),
-                        fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                        fn(Actions $actions) => $actions->setDelete()->setCopy()
                     )
                     ->setSaveAnd()
             )
@@ -62,7 +62,7 @@ class ModuleLayout extends Layout
                 fn(Tabs $component) => $component
             )
             ->setBreadcrumbs(
-                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+                fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();
     }
@@ -74,7 +74,7 @@ class ModuleLayout extends Layout
     {
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setNew(
                         Lang::get('global.new_module'),
                         '/modules/new',

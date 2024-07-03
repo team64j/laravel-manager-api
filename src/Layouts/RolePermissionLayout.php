@@ -6,7 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Permissions;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -19,7 +19,7 @@ class RolePermissionLayout extends Layout
     public function list(): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setNew(
                     Lang::get('global.new_permission'),
                     '/roles/permissions/new',

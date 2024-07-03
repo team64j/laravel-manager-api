@@ -8,8 +8,8 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
-use Team64j\LaravelManagerComponents\Breadcrumbs;
+use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Input;
@@ -45,7 +45,7 @@ class TvLayout extends Layout
 
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setCancel(
                         Lang::get('global.cancel'),
                         [
@@ -55,7 +55,7 @@ class TvLayout extends Layout
                     )
                     ->when(
                         $model->getKey(),
-                        fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                        fn(Actions $actions) => $actions->setDelete()->setCopy()
                     )
                     ->setSaveAnd()
             )
@@ -245,7 +245,7 @@ class TvLayout extends Layout
                     )
             )
             ->setBreadcrumbs(
-                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+                fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();
     }
@@ -257,7 +257,7 @@ class TvLayout extends Layout
     {
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setAction('sort', Lang::get('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
                     ->setNew(
                         Lang::get('global.new_tmplvars'),
@@ -423,7 +423,7 @@ class TvLayout extends Layout
     public function sort(): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setCancelTo([
                     'path' => '/elements/tvs',
                     'close' => true,

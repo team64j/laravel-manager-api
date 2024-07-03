@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -18,7 +18,7 @@ class WorkspaceLayout extends Layout
     public function default(): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setCancel()
                 ->setSave(),
 

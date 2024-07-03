@@ -8,8 +8,8 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTemplate;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
-use Team64j\LaravelManagerComponents\Breadcrumbs;
+use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Input;
@@ -49,7 +49,7 @@ class TemplateLayout extends Layout
 
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component
+                fn(Actions $component) => $component
                     ->setCancel(
                         Lang::get('global.cancel'),
                         [
@@ -59,7 +59,7 @@ class TemplateLayout extends Layout
                     )
                     ->when(
                         $model->getKey(),
-                        fn(ActionsButtons $component) => $component->setDelete()->setCopy()
+                        fn(Actions $component) => $component->setDelete()->setCopy()
                     )
                     ->setSaveAnd()
             )
@@ -220,7 +220,7 @@ class TemplateLayout extends Layout
                     )
             )
             ->setBreadcrumbs(
-                fn(Breadcrumbs $component) => $component->setData($breadcrumbs)
+                fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();
     }
@@ -232,7 +232,7 @@ class TemplateLayout extends Layout
     {
         return Main::make()
             ->setActions(
-                fn(ActionsButtons $component) => $component->setNew(
+                fn(Actions $component) => $component->setNew(
                     Lang::get('global.new_template'),
                     '/templates/new',
                     'btn-green',

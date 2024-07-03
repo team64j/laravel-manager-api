@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerComponents\ActionsButtons;
+use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Media;
 use Team64j\LaravelManagerComponents\Template;
@@ -16,11 +16,11 @@ class FileLayout extends Layout
     public function default(array $data = []): array
     {
         return [
-            ActionsButtons::make()
+            Actions::make()
                 ->setCancel()
                 ->when(
                     $data['basename'] ?? false,
-                    fn(ActionsButtons $actions) => $actions->setDelete()->setCopy()
+                    fn(Actions $actions) => $actions->setDelete()->setCopy()
                 )
                 ->setSaveAnd(),
 
