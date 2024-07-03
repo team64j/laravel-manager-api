@@ -61,7 +61,7 @@ class PluginLayout extends Layout
             ->setTabs(
                 fn(Tabs $component) => $component
             )
-            ->setBreadcrumbs(
+            ->setCrumbs(
                 fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();

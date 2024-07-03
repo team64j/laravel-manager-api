@@ -151,6 +151,16 @@ class TvController extends Controller
         $model->setAttribute('templates', $model->templates->pluck('id'));
         $model->setAttribute('roles', $model->roles->pluck('id'));
 
+        $params = array_filter(explode('&', $model->display_params ?? ''));
+        $data = [];
+
+        foreach ($params as $param) {
+            [$key, $value] = explode('=', $param);
+            $data[$key] = $value;
+        }
+
+        $model->setAttribute('display_params_data', $data);
+
         return TvResource::make($model->withoutRelations())
             ->additional([
                 'layout' => $layout->default($model),

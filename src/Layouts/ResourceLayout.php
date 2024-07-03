@@ -546,7 +546,7 @@ class ResourceLayout extends Layout
                         fn(Tabs $tabs) => $this->tabPermissions($tabs)
                     ),
             )
-            ->setBreadcrumbs(
+            ->setCrumbs(
                 fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();

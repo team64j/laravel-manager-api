@@ -219,7 +219,7 @@ class TemplateLayout extends Layout
                             )
                     )
             )
-            ->setBreadcrumbs(
+            ->setCrumbs(
                 fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();

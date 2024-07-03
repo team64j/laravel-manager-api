@@ -8,12 +8,14 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Team64j\LaravelManagerComponents\Actions;
-use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
+use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Main;
+use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
@@ -66,185 +68,191 @@ class TvLayout extends Layout
                     ->setIcon('fa fa-list-alt')
                     ->setId($model->getKey())
             )
-            ->setTabs(
-                fn(Tabs $component) => $component
-                    ->setId('tv')
-                    ->addTab('default', Lang::get('global.page_data_general'))
-                    ->addSlot('default', [
-                        Template::make()
-                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 md:pr-5 pb-0')
-                            ->setSlot([
-                                Input::make('name', Lang::get('global.tmplvars_name'))
-                                    ->isRequired(),
-                                Input::make('caption', Lang::get('global.tmplvars_caption')),
-                                Textarea::make('description', Lang::get('global.tmplvars_description'))
-                                    ->setRows(2),
-                                CodeEditor::make(
-                                    'elements',
-                                    Lang::get('global.tmplvars_elements'),
-                                    Lang::get('global.tmplvars_binding_msg')
+            ->setTabs(fn(Tabs $component) => $component
+                ->setId('tv')
+                ->addTab('default', Lang::get('global.page_data_general'))
+                ->addSlot('default', [
+                    Template::make()
+                        ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 md:pr-5 pb-0')
+                        ->setSlot([
+                            Input::make('name', Lang::get('global.tmplvars_name'))
+                                ->isRequired(),
+                            Input::make('caption', Lang::get('global.tmplvars_caption')),
+                            Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                ->setRows(2),
+                            CodeEditor::make(
+                                'elements',
+                                Lang::get('global.tmplvars_elements'),
+                                Lang::get('global.tmplvars_binding_msg')
+                            )
+                                ->setRows(2),
+                            CodeEditor::make(
+                                'default_text',
+                                Lang::get('global.tmplvars_default'),
+                                Lang::get('global.tmplvars_binding_msg')
+                            )
+                                ->setRows(2),
+                        ]),
+                    Template::make()
+                        ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full pb-0')
+                        ->setSlot([
+                            Select::make('category', Lang::get('global.existing_category'))
+                                ->setUrl('/categories/select')
+                                ->setNew('')
+                                ->setData([
+                                    [
+                                        'key' => $model->category,
+                                        'value' => $model->categories
+                                            ? $model->categories->category
+                                            : Lang::get(
+                                                'global.no_category'
+                                            ),
+                                        'selected' => true,
+                                    ],
+                                ]),
+                            Select::make('type', Lang::get('global.tmplvars_type'))
+                                ->setUrl('/tvs/types')
+                                ->setData([
+                                    [
+                                        'key' => $model->type,
+                                        'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
+                                    ],
+                                ]),
+                            Input::make('rank', Lang::get('global.tmplvars_rank')),
+                            Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                ->setCheckedValue(1, 0),
+                            Select::make('display', Lang::get('global.tmplvars_widget'))
+                                ->setUrl('/tvs/display')
+                                ->setData([
+                                    [
+                                        'key' => $model->display,
+                                        'value' => $model->getDisplay($model->display),
+                                    ],
+                                ])
+                                ->setEmitInput('inputChangeQuery'),
+                        ]),
+                ])
+                ->when(
+                    $model->display,
+                    fn(Tabs $component) => $component->putSlot(
+                        'default',
+                        $this->display($model->display)
+                    )
+                )
+                ->addTab('settings', Lang::get('global.settings_properties'))
+                ->addSlot('settings', [
+                    CodeEditor::make('properties')
+                        ->setLanguage('json')
+                        ->isFullSize(),
+                ])
+                ->addTab('templates', Lang::get('global.templates'))
+                ->addSlot(
+                    'templates',
+                    Panel::make()
+                        ->setId('templates')
+                        ->setModel('templates')
+                        ->setUrl('/templates?groupBy=category')
+                        ->setSlotTop(Lang::get('global.tmplvar_tmpl_access_msg'))
+                        ->addColumn(
+                            'attach',
+                            Lang::get('global.role_udperms'),
+                            ['width' => '4rem', 'textAlign' => 'center'],
+                            true,
+                            component: Checkbox::make('templates')->setKeyValue('id')
+                        )
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '4rem', 'textAlign' => 'center'],
+                            true
+                        )
+                        ->addColumn(
+                            'templatename',
+                            Lang::get('global.template_name'),
+                            ['fontWeight' => '500'],
+                            true,
+                            filter: true
+                        )
+                        ->addColumn(
+                            'description',
+                            Lang::get('global.description'),
+                            ['width' => '50%'],
+                        )
+                )
+                ->addTab('roles', Lang::get('global.role_management_title'))
+                ->addSlot(
+                    'roles',
+                    Panel::make()
+                        ->setId('roles')
+                        ->setModel('roles')
+                        ->setUrl('/roles/users')
+                        ->setSlotTop(Lang::get('global.tmplvar_roles_access_msg'))
+                        ->addColumn(
+                            'attach',
+                            Lang::get('global.role_udperms'),
+                            ['width' => '4rem', 'textAlign' => 'center'],
+                            true,
+                            component: Checkbox::make('roles')->setKeyValue('id')
+                        )
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '4rem', 'textAlign' => 'center'],
+                            true
+                        )
+                        ->addColumn(
+                            'name',
+                            Lang::get('global.role'),
+                            ['fontWeight' => '500'],
+                            true,
+                            filter: true
+                        )
+                        ->addColumn(
+                            'description',
+                            Lang::get('global.description'),
+                            ['width' => '50%'],
+                        )
+                )
+                ->when(
+                    Auth::user()->can(['manage_groups', 'manage_tv_permissions']),
+                    fn(Tabs $tabs) => $tabs
+                        ->addTab('permissions', Lang::get('global.access_permissions'))
+                        ->addSlot(
+                            'permissions',
+                            Panel::make()
+                                ->setId('permissions')
+                                ->setModel('permissions')
+                                ->setUrl('/permissions/resources')
+                                ->setSlotTop(Lang::get('global.tmplvar_access_msg'))
+                                ->addColumn(
+                                    'attach',
+                                    Lang::get('global.role_udperms'),
+                                    ['width' => '4rem', 'textAlign' => 'center'],
+                                    true,
+                                    component: Checkbox::make('permissions')->setKeyValue('id')
                                 )
-                                    ->setRows(2),
-                                CodeEditor::make(
-                                    'default_text',
-                                    Lang::get('global.tmplvars_default'),
-                                    Lang::get('global.tmplvars_binding_msg')
+                                ->addColumn(
+                                    'id',
+                                    Lang::get('global.id'),
+                                    ['width' => '4rem', 'textAlign' => 'center'],
+                                    true
                                 )
-                                    ->setRows(2),
-                                Select::make('display', Lang::get('global.tmplvars_widget'))
-                                    ->setUrl('/tvs/display')
-                                    ->setData([
-                                        [
-                                            'key' => $model->display,
-                                            'value' => $model->getDisplay($model->display),
-                                        ],
-                                    ])
-                                    ->setEmitInput('inputChangeQuery'),
-                            ]),
-                        Template::make()
-                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full pb-0')
-                            ->setSlot([
-                                Select::make('category', Lang::get('global.existing_category'))
-                                    ->setUrl('/categories/select')
-                                    ->setNew('')
-                                    ->setData([
-                                        [
-                                            'key' => $model->category,
-                                            'value' => $model->categories
-                                                ? $model->categories->category
-                                                : Lang::get(
-                                                    'global.no_category'
-                                                ),
-                                            'selected' => true,
-                                        ],
-                                    ]),
-                                Select::make('type', Lang::get('global.tmplvars_type'))
-                                    ->setUrl('/tvs/types')
-                                    ->setData([
-                                        [
-                                            'key' => $model->type,
-                                            'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
-                                        ],
-                                    ]),
-                                Input::make('rank', Lang::get('global.tmplvars_rank')),
-                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
-                                    ->setCheckedValue(1, 0),
-                            ]),
-                    ])
-                    ->addTab('settings', Lang::get('global.settings_properties'))
-                    ->addSlot('settings', [
-                        CodeEditor::make('properties')
-                            ->setLanguage('json')
-                            ->isFullSize(),
-                    ])
-                    ->addTab('templates', Lang::get('global.templates'))
-                    ->addSlot(
-                        'templates',
-                        Panel::make()
-                            ->setId('templates')
-                            ->setModel('templates')
-                            ->setUrl('/templates?groupBy=category')
-                            ->setSlotTop(Lang::get('global.tmplvar_tmpl_access_msg'))
-                            ->addColumn(
-                                'attach',
-                                Lang::get('global.role_udperms'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true,
-                                component: Checkbox::make('templates')->setKeyValue('id')
-                            )
-                            ->addColumn(
-                                'id',
-                                Lang::get('global.id'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true
-                            )
-                            ->addColumn(
-                                'templatename',
-                                Lang::get('global.template_name'),
-                                ['fontWeight' => '500'],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'description',
-                                Lang::get('global.description'),
-                                ['width' => '50%'],
-                            )
-                    )
-                    ->addTab('roles', Lang::get('global.role_management_title'))
-                    ->addSlot(
-                        'roles',
-                        Panel::make()
-                            ->setId('roles')
-                            ->setModel('roles')
-                            ->setUrl('/roles/users')
-                            ->setSlotTop(Lang::get('global.tmplvar_roles_access_msg'))
-                            ->addColumn(
-                                'attach',
-                                Lang::get('global.role_udperms'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true,
-                                component: Checkbox::make('roles')->setKeyValue('id')
-                            )
-                            ->addColumn(
-                                'id',
-                                Lang::get('global.id'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true
-                            )
-                            ->addColumn(
-                                'name',
-                                Lang::get('global.role'),
-                                ['fontWeight' => '500'],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'description',
-                                Lang::get('global.description'),
-                                ['width' => '50%'],
-                            )
-                    )
-                    ->when(
-                        Auth::user()->can(['manage_groups', 'manage_tv_permissions']),
-                        fn(Tabs $tabs) => $tabs
-                            ->addTab('permissions', Lang::get('global.access_permissions'))
-                            ->addSlot(
-                                'permissions',
-                                Panel::make()
-                                    ->setId('permissions')
-                                    ->setModel('permissions')
-                                    ->setUrl('/permissions/resources')
-                                    ->setSlotTop(Lang::get('global.tmplvar_access_msg'))
-                                    ->addColumn(
-                                        'attach',
-                                        Lang::get('global.role_udperms'),
-                                        ['width' => '4rem', 'textAlign' => 'center'],
-                                        true,
-                                        component: Checkbox::make('permissions')->setKeyValue('id')
-                                    )
-                                    ->addColumn(
-                                        'id',
-                                        Lang::get('global.id'),
-                                        ['width' => '4rem', 'textAlign' => 'center'],
-                                        true
-                                    )
-                                    ->addColumn(
-                                        'name',
-                                        Lang::get('global.role'),
-                                        ['fontWeight' => '500'],
-                                        true,
-                                        filter: true
-                                    )
-                                    ->addColumn(
-                                        'description',
-                                        Lang::get('global.description'),
-                                        ['width' => '50%'],
-                                    )
-                            )
-                    )
+                                ->addColumn(
+                                    'name',
+                                    Lang::get('global.role'),
+                                    ['fontWeight' => '500'],
+                                    true,
+                                    filter: true
+                                )
+                                ->addColumn(
+                                    'description',
+                                    Lang::get('global.description'),
+                                    ['width' => '50%'],
+                                )
+                        )
+                )
             )
-            ->setBreadcrumbs(
+            ->setCrumbs(
                 fn(Crumbs $component) => $component->setData($breadcrumbs)
             )
             ->toArray();
@@ -513,5 +521,96 @@ class TvLayout extends Layout
                     ])
             )
             ->toArray();
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array
+     */
+    public function display(string $name): array
+    {
+        $name = Str::lower($name);
+        $data = [];
+
+        $widgetParams['date'] =
+            '&format=Date Format;string;%A %d, %B %Y &default=If no value, use current date;list;Yes,No;No';
+        $widgetParams['string'] = '&format=String Format;list;Upper Case,Lower Case,Sentence Case,Capitalize';
+        $widgetParams['delim'] = '&format=Delimiter;string;,';
+        $widgetParams['hyperlink'] =
+            '&text=Display Text;string; &title=Title;string; &class=Class;string &style=Style;string &target=Target;string &attrib=Attributes;string';
+        $widgetParams['htmltag'] =
+            '&tagname=Tag Name;string;div &tagid=Tag ID;string &class=Class;string &style=Style;string &attrib=Attributes;string';
+        $widgetParams['viewport'] =
+            '&vpid=ID/Name;string &width=Width;string;100 &height=Height;string;100 &borsize=Border Size;int;1 &sbar=Scrollbars;list;,Auto,Yes,No &asize=Auto Size;list;,Yes,No &aheight=Auto Height;list;,Yes,No &awidth=Auto Width;list;,Yes,No &stretch=Stretch To Fit;list;,Yes,No &class=Class;string &style=Style;string &attrib=Attributes;string';
+        $widgetParams['datagrid'] =
+            '&cols=Column Names;string &flds=Field Names;string &cwidth=Column Widths;string &calign=Column Alignments;string &ccolor=Column Colors;string &ctype=Column Types;string &cpad=Cell Padding;int;1 &cspace=Cell Spacing;int;1 &rowid=Row ID Field;string &rgf=Row Group Field;string &rgstyle = Row Group Style;string &rgclass = Row Group Class;string &rowsel=Row Select;string &rhigh=Row Hightlight;string; &psize=Page Size;int;100 &ploc=Pager Location;list;top-right,top-left,bottom-left,bottom-right,both-right,both-left; &pclass=Pager Class;string &pstyle=Pager Style;string &head=Header Text;string &foot=Footer Text;string &tblc=Grid Class;string &tbls=Grid Style;string &itmc=Item Class;string &itms=Item Style;string &aitmc=Alt Item Class;string &aitms=Alt Item Style;string &chdrc=Column Header Class;string &chdrs=Column Header Style;string;&egmsg=Empty message;string;No records found;';
+        $widgetParams['richtext'] = '&w=Width;string;100% &h=Height;string;300px &edt=Editor;list;';
+        $widgetParams['image'] =
+            '&alttext=Alternate Text;string &hspace=H Space;int &vspace=V Space;int &borsize=Border Size;int &align=Align;list;none,baseline,top,middle,bottom,texttop,absmiddle,absbottom,left,right &name=Name;string &class=Class;string &id=ID;string &style=Style;string &attrib=Attributes;string';
+        $widgetParams['custom_widget'] = '&output=Output;textarea;[+value+]';
+
+        if (!empty($widgetParams[$name])) {
+            $data[] = Panel::make()
+                ->setClass('!h-auto')
+                ->setModel('data')
+                ->setColumns([
+                    [
+                        'name' => 'title',
+                        'label' => Lang::get('global.name'),
+                    ],
+                    [
+                        'name' => 'value',
+                        'label' => Lang::get('global.value'),
+                    ],
+                ])
+                ->setData($this->parseParams($widgetParams[$name]));
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string $params
+     *
+     * @return array
+     */
+    protected function parseParams(string $params): array
+    {
+        $params = array_filter(explode('&', $params));
+        $data = [];
+
+        foreach ($params as $v) {
+            [$key, $values] = explode('=', $v, 2);
+            $values = explode(';', trim($values));
+
+            $values[0] ??= '';
+            $values[1] ??= '';
+            $values[2] ??= '';
+
+            $model = 'display_params_data.' . $key;
+
+            $component = match ($values[1]) {
+                'int' => Number::make($model)->setValue($values[2]),
+                'list' => Select::make($model)->setData(
+                    array_map(
+                        fn($i) => [
+                            'key' => $i,
+                            'value' => $i,
+                        ],
+                        explode(',', $values[2])
+                    )
+                ),
+                'textarea' => Textarea::make($model)->setValue($values[2]),
+                default => Input::make($model)->setValue($values[2]),
+            };
+
+            $data[] = [
+                'title' => $values[0],
+                'value' => $component,
+            ];
+        }
+
+        return $data;
     }
 }
