@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Vite;
 use OpenApi\Annotations as OA;
-use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
@@ -23,6 +22,7 @@ use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
+use Team64j\LaravelManagerComponents\Tabs;
 
 class BootstrapController extends Controller
 {
@@ -93,9 +93,21 @@ class BootstrapController extends Controller
         ])
             ->additional([
                 'layout' => [
-                    'menu' => $this->getMenu(),
-                    'sidebar' => $this->getSidebar(),
-                    'main' => [],
+                    [
+                        'component' => 'AppGlobalMenu',
+                        'attrs' => [
+                            'data' => $this->getMenu(),
+                        ],
+                        'slot' => 'top',
+                    ],
+                    [
+                        ...$this->getSidebar(),
+                        'slot' => 'sidebar',
+                    ],
+                    [
+                        'component' => 'AppGlobalTabs',
+                        'slot' => 'main',
+                    ],
                 ]
             ]);
     }
