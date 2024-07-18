@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
+use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -45,30 +46,31 @@ class TvLayout extends Layout
             ],
         ];
 
-        return Main::make()
-            ->setActions(
-                fn(Actions $component) => $component
-                    ->setCancel(
-                        Lang::get('global.cancel'),
-                        [
-                            'path' => '/elements/tvs',
-                            'close' => true,
-                        ]
-                    )
-                    ->when(
-                        $model->getKey(),
-                        fn(Actions $actions) => $actions->setDelete()->setCopy()
-                    )
-                    ->setSaveAnd()
-            )
-            ->setTitle(
-                fn(Title $component) => $component
-                    ->setModel('name')
-                    ->setTitle(Lang::get('global.new_tmplvars'))
-                    ->setIcon('fa fa-list-alt')
-                    ->setId($model->getKey())
-            )
-            ->setTabs(fn(Tabs $component) => $component
+        return Main::make([
+            Actions::make()
+                ->toSlot('actions')
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'path' => '/elements/tvs',
+                        'close' => true,
+                    ]
+                )
+                ->when(
+                    $model->getKey(),
+                    fn(Actions $actions) => $actions->setDelete()->setCopy()
+                )
+                ->setSaveAnd(),
+
+            Title::make()
+                ->toSlot('title')
+                ->setModel('name')
+                ->setTitle(Lang::get('global.new_tmplvars'))
+                ->setIcon('fa fa-list-alt')
+                ->setId($model->getKey()),
+
+            Tabs::make()
+                ->toSlot('tabs')
                 ->setId('tv')
                 ->addTab('default', Lang::get('global.page_data_general'))
                 ->addSlot('default', [
@@ -152,7 +154,7 @@ class TvLayout extends Layout
                         ->setId('templates')
                         ->setModel('templates')
                         ->setUrl('/templates?groupBy=category')
-                        ->setSlotTop(Lang::get('global.tmplvar_tmpl_access_msg'))
+                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_tmpl_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),
@@ -186,7 +188,7 @@ class TvLayout extends Layout
                         ->setId('roles')
                         ->setModel('roles')
                         ->setUrl('/roles/users')
-                        ->setSlotTop(Lang::get('global.tmplvar_roles_access_msg'))
+                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),
@@ -219,43 +221,65 @@ class TvLayout extends Layout
                         ->addTab('permissions', Lang::get('global.access_permissions'))
                         ->addSlot(
                             'permissions',
-                            Panel::make()
-                                ->setId('permissions')
-                                ->setModel('permissions')
-                                ->setUrl('/permissions/resources')
-                                ->setSlotTop(Lang::get('global.tmplvar_access_msg'))
-                                ->addColumn(
-                                    'attach',
-                                    Lang::get('global.role_udperms'),
-                                    ['width' => '4rem', 'textAlign' => 'center'],
-                                    true,
-                                    component: Checkbox::make('permissions')->setKeyValue('id')
-                                )
-                                ->addColumn(
-                                    'id',
-                                    Lang::get('global.id'),
-                                    ['width' => '4rem', 'textAlign' => 'center'],
-                                    true
-                                )
-                                ->addColumn(
-                                    'name',
-                                    Lang::get('global.role'),
-                                    ['fontWeight' => '500'],
-                                    true,
-                                    filter: true
-                                )
-                                ->addColumn(
-                                    'description',
-                                    Lang::get('global.description'),
-                                    ['width' => '50%'],
-                                )
+                            [
+                                Lang::get('global.access_permissions_docs_message') . '<br/><br/>',
+
+                                Checkbox::make()
+                                    ->setModel('data.is_document_group')
+                                    ->setLabel(Lang::get('global.all_doc_groups'))
+                                    ->setCheckedValue(true, false)
+                                    ->setRelation('data.document_groups', [], [], true),
+
+                                Checkbox::make()
+                                    ->setModel('data.document_groups')
+                                    ->setLabel(Lang::get('global.access_permissions_resource_groups'))
+                                    ->setData(
+                                        DocumentgroupName::all()
+                                            ->map(fn(DocumentgroupName $group) => [
+                                                'key' => $group->getKey(),
+                                                'value' => $group->name,
+                                            ])
+                                            ->toArray()
+                                    )
+                                    ->setRelation('data.is_document_group', false, true),
+                            ]
+                        /*Panel::make()
+                            ->setId('permissions')
+                            ->setModel('permissions')
+                            ->setUrl('/permissions/resources')
+                            ->setSlotTop('<p class="p-4">' . Lang::get('global.tmplvar_access_msg') . '</p>')
+                            ->addColumn(
+                                'attach',
+                                Lang::get('global.role_udperms'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
+                                true,
+                                component: Checkbox::make('permissions')->setKeyValue('id')
+                            )
+                            ->addColumn(
+                                'id',
+                                Lang::get('global.id'),
+                                ['width' => '4rem', 'textAlign' => 'center'],
+                                true
+                            )
+                            ->addColumn(
+                                'name',
+                                Lang::get('global.role'),
+                                ['fontWeight' => '500'],
+                                true,
+                                filter: true
+                            )
+                            ->addColumn(
+                                'description',
+                                Lang::get('global.description'),
+                                ['width' => '50%'],
+                            )*/
                         )
-                )
-            )
-            ->setCrumbs(
-                fn(Crumbs $component) => $component->setData($breadcrumbs)
-            )
-            ->toArray();
+                ),
+
+            Crumbs::make()
+                ->toSlot('crumbs')
+                ->setData($breadcrumbs),
+        ])->toArray();
     }
 
     /**
@@ -552,7 +576,7 @@ class TvLayout extends Layout
 
         if (!empty($widgetParams[$name])) {
             $data[] = Panel::make()
-                ->setClass('!h-auto')
+                ->setClass('!h-auto !m-0')
                 ->setModel('data')
                 ->setColumns([
                     [

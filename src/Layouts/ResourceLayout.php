@@ -653,19 +653,12 @@ class ResourceLayout extends Layout
      */
     protected function tabPermissions(Tabs $tabs): Tabs
     {
-        $groups = DocumentgroupName::all()
-            ->map(fn(DocumentgroupName $group) => [
-                'key' => $group->getKey(),
-                'value' => $group->name,
-            ])
-            ->toArray();
-
         return $tabs
             ->addTab('permissions', Lang::get('global.access_permissions'), null, 'flex-col')
             ->addSlot(
                 'permissions',
                 [
-                    '<div class="pb-4 w-full">' . Lang::get('global.access_permissions_docs_message') . '</div>',
+                    Lang::get('global.access_permissions_docs_message') . '<br/><br/>',
 
                     Checkbox::make()
                         ->setModel('data.is_document_group')
@@ -676,7 +669,14 @@ class ResourceLayout extends Layout
                     Checkbox::make()
                         ->setModel('data.document_groups')
                         ->setLabel(Lang::get('global.access_permissions_resource_groups'))
-                        ->setData($groups)
+                        ->setData(
+                            DocumentgroupName::all()
+                                ->map(fn(DocumentgroupName $group) => [
+                                    'key' => $group->getKey(),
+                                    'value' => $group->name,
+                                ])
+                                ->toArray()
+                        )
                         ->setRelation('data.is_document_group', false, true),
                 ]
             );
