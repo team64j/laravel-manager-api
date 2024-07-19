@@ -291,8 +291,9 @@ class ResourceLayout extends Layout
                                         ->setUrl('/templates/select')
                                         ->setData([
                                             [
-                                                'key' => $model->template,
-                                                'value' => $model->tpl->templatename ?? $model->template,
+                                                'key' => $model->template ?? 0,
+                                                'value' => ($model->tpl->templatename ?? 'blank') . ' (' .
+                                                    ($model->template ?? 0) . ')',
                                                 'selected' => true,
                                             ],
                                         ])
