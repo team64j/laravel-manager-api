@@ -210,10 +210,10 @@ class FilesController extends Controller
     public function tree(FilesRequest $request): AnonymousResourceCollection
     {
         $data = [];
-        $root = Config::get('global.rb_base_dir', App::basePath());
         $settings = $request->collect('settings');
-        $parent = trim(base64_decode($settings['parent'] ?? ''), './');
-        $parentPath = $root . DIRECTORY_SEPARATOR . $parent;
+        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
+        $path = $settings['parent'] ?? '';
+        $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
         $opened = $request->has('opened') ? $request->string('opened')
             ->explode(',')
             ->map(fn($i) => $i)
@@ -236,10 +236,11 @@ class FilesController extends Controller
                 );
 
                 $item = [
-                    'key' => $key,
+                    'id' => $key,
                     'title' => $title,
-                    'folder' => true,
-                    'category' => true,
+                    //'folder' => true,
+                    //'category' => true,
+                    'data' => File::directories($directory) ? [] : null,
                 ];
 
                 if (in_array($key, $opened, true)) {
@@ -248,8 +249,6 @@ class FilesController extends Controller
                     $newRequest->query->set('parent', $key);
                     $item['data'] = $this->tree($newRequest)->resource->toArray();
                 }
-
-                $item['hideChildren'] = !File::directories($directory);
 
                 $data[] = $item;
             }

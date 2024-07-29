@@ -28,7 +28,10 @@ class FilesLayout extends Layout
                     ->setId('filesTree')
                     ->setRoute('/file/:id')
                     ->setUrl('/files/tree')
-                    ->isCategory()
+                    ->setIcons([
+                        'default-folder' => 'fa fa-folder',
+                        'default-folder-open' => 'fa fa-folder-open',
+                    ]),
             ],
 
             'main' => [
