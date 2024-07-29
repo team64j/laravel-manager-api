@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
-use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -23,33 +22,27 @@ class CategoryLayout extends Layout
      */
     public function default(Category $model = null): array
     {
-        return Main::make()
-            ->setActions(
-                fn(Actions $component) => $component
-                    ->setCancel(
-                        Lang::get('global.cancel'),
-                        [
-                            'path' => '/elements/categories',
-                            'close' => true,
-                        ]
-                    )
-                    ->when(
-                        $model->getKey(),
-                        fn(Actions $actions) => $actions->setDelete()->setCopy()
-                    )
-                    ->setSaveAnd()
-            )
-            ->setTitle(
-                fn(Title $component) => $component
-                    ->setModel('category')
-                    ->setTitle(Lang::get('global.new_category'))
-                    ->setIcon('fa fa-object-group')
-                    ->setId($model->getKey())
-            )
-            ->setTabs(
-                fn(Tabs $compoentn) => $compoentn
-            )
-            ->toArray();
+        return [
+            Actions::make()
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'path' => '/elements/categories',
+                        'close' => true,
+                    ]
+                )
+                ->when(
+                    $model->getKey(),
+                    fn(Actions $actions) => $actions->setDelete()->setCopy()
+                )
+                ->setSaveAnd(),
+
+            Title::make()
+                ->setModel('category')
+                ->setTitle(Lang::get('global.new_category'))
+                ->setIcon('fa fa-object-group')
+                ->setId($model->getKey()),
+        ];
     }
 
     /**
@@ -57,126 +50,122 @@ class CategoryLayout extends Layout
      */
     public function list(): array
     {
-        return Main::make()
-            ->setActions(
-                fn(Actions $component) => $component
-                    ->setAction('sort', Lang::get('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
-                    ->setNew(
-                        Lang::get('global.cm_add_new_category'),
-                        '/categories/new',
-                        'btn-green',
-                        'fa fa-plus'
-                    )
-            )
-            ->setTitle(
-                fn(Title $component) => $component
-                    ->setTitle(Lang::get('global.category_management'))
-                    ->setIcon('fa fa-object-group')
-            )
-            ->setTabs(
-                fn(Tabs $component) => $component
-                    ->setId('elements')
-                    ->setHistory(true)
-                    ->isWatch()
-                    ->addTab(
-                        'templates',
-                        Lang::get('global.templates'),
-                        'fa fa-newspaper',
-                        'py-4',
-                        ['edit_template'],
-                        route: route('manager.api.elements.templates')
-                    )
-                    ->addTab(
-                        'tvs',
-                        Lang::get('global.tmplvars'),
-                        'fa fa-th-large',
-                        'py-4',
-                        ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                        route: route('manager.api.elements.tvs')
-                    )
-                    ->addTab(
-                        'chunks',
-                        Lang::get('global.htmlsnippets'),
-                        'fa fa-th-large',
-                        'py-4',
-                        ['edit_chunk'],
-                        route: route('manager.api.elements.chunks')
-                    )
-                    ->addTab(
-                        'snippets',
-                        Lang::get('global.snippets'),
-                        'fa fa-code',
-                        'py-4',
-                        ['edit_snippet'],
-                        route: route('manager.api.elements.snippets')
-                    )
-                    ->addTab(
-                        'plugins',
-                        Lang::get('global.plugins'),
-                        'fa fa-plug',
-                        'py-4',
-                        ['edit_plugin'],
-                        route: route('manager.api.elements.plugins')
-                    )
-                    ->addTab(
-                        'modules',
-                        Lang::get('global.modules'),
-                        'fa fa-cubes',
-                        'py-4',
-                        ['edit_module'],
-                        route: route('manager.api.elements.modules')
-                    )
-                    ->addTab(
-                        'categories',
-                        Lang::get('global.category_management'),
-                        'fa fa-object-group',
-                        'py-4',
-                        ['category_manager'],
-                        route: route('manager.api.elements.categories')
-                    )
-                    ->addSlot(
-                        'categories',
-                        Panel::make()
-                            ->setId('categories')
-                            ->setModel('data')
-                            ->setRoute('/categories/:id')
-                            ->setHistory(true)
-                            ->addColumn(
-                                '#',
-                                null,
-                                ['width' => '3rem'],
-                                false,
-                                [],
+        return [
+            Actions::make()
+                ->setAction('sort', Lang::get('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
+                ->setNew(
+                    Lang::get('global.cm_add_new_category'),
+                    '/categories/new',
+                    'btn-green',
+                    'fa fa-plus'
+                ),
+
+            Title::make()
+                ->setTitle(Lang::get('global.category_management'))
+                ->setIcon('fa fa-object-group'),
+
+            Tabs::make()
+                ->setId('elements')
+                ->setHistory(true)
+                ->isWatch()
+                ->addTab(
+                    'templates',
+                    Lang::get('global.templates'),
+                    'fa fa-newspaper',
+                    'py-4',
+                    ['edit_template'],
+                    route: route('manager.api.elements.templates')
+                )
+                ->addTab(
+                    'tvs',
+                    Lang::get('global.tmplvars'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
+                    route: route('manager.api.elements.tvs')
+                )
+                ->addTab(
+                    'chunks',
+                    Lang::get('global.htmlsnippets'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_chunk'],
+                    route: route('manager.api.elements.chunks')
+                )
+                ->addTab(
+                    'snippets',
+                    Lang::get('global.snippets'),
+                    'fa fa-code',
+                    'py-4',
+                    ['edit_snippet'],
+                    route: route('manager.api.elements.snippets')
+                )
+                ->addTab(
+                    'plugins',
+                    Lang::get('global.plugins'),
+                    'fa fa-plug',
+                    'py-4',
+                    ['edit_plugin'],
+                    route: route('manager.api.elements.plugins')
+                )
+                ->addTab(
+                    'modules',
+                    Lang::get('global.modules'),
+                    'fa fa-cubes',
+                    'py-4',
+                    ['edit_module'],
+                    route: route('manager.api.elements.modules')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    'py-4',
+                    ['category_manager'],
+                    route: route('manager.api.elements.categories')
+                )
+                ->addSlot(
+                    'categories',
+                    Panel::make()
+                        ->setId('categories')
+                        ->setModel('data')
+                        ->setRoute('/categories/:id')
+                        ->setHistory(true)
+                        ->addColumn(
+                            '#',
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [],
+                            [
                                 [
-                                    [
-                                        'icon' => 'fa fa-object-group fa-fw pointer-events-none',
-                                        'noOpacity' => true,
-                                    ],
-                                ]
-                            )
-                            ->addColumn(
-                                'id',
-                                Lang::get('global.id'),
-                                ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
-                                true
-                            )
-                            ->addColumn(
-                                'category',
-                                Lang::get('global.cm_category_name'),
-                                ['fontWeight' => 500],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'rank',
-                                Lang::get('global.cm_category_position'),
-                                ['width' => '15rem', 'textAlign' => 'center'],
-                                true
-                            ),
-                        ['category_manager']
-                    )
-            )
-            ->toArray();
+                                    'icon' => 'fa fa-object-group fa-fw pointer-events-none',
+                                    'noOpacity' => true,
+                                ],
+                            ]
+                        )
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
+                            true
+                        )
+                        ->addColumn(
+                            'category',
+                            Lang::get('global.cm_category_name'),
+                            ['fontWeight' => 500],
+                            true,
+                            filter: true
+                        )
+                        ->addColumn(
+                            'rank',
+                            Lang::get('global.cm_category_position'),
+                            ['width' => '15rem', 'textAlign' => 'center'],
+                            true
+                        ),
+                    ['category_manager']
+                ),
+        ];
     }
 
     /**

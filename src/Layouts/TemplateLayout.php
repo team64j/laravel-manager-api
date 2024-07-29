@@ -9,11 +9,10 @@ use EvolutionCMS\Models\SiteTemplate;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
-use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
+use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\Input;
-use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
@@ -47,182 +46,177 @@ class TemplateLayout extends Layout
             ],
         ];
 
-        return Main::make()
-            ->setActions(
-                fn(Actions $component) => $component
-                    ->setCancel(
-                        Lang::get('global.cancel'),
-                        [
-                            'path' => '/elements/templates',
-                            'close' => true,
-                        ]
-                    )
-                    ->when(
-                        $model->getKey(),
-                        fn(Actions $component) => $component->setDelete()->setCopy()
-                    )
-                    ->setSaveAnd()
-            )
-            ->setTitle(
-                fn(Title $component) => $component
-                    ->setModel('templatename')
-                    ->setHelp(Lang::get('global.template_msg'))
-                    ->setId($model->getKey())
-                    ->setIcon('fa fa-newspaper')
-                    ->setTitle(Lang::get('global.new_template'))
-            )
-            ->setTabs(
-                fn(Tabs $component) => $component
-                    ->setId('template')
-                    ->addTab('default', Lang::get('global.settings_general'))
-                    ->addSlot(
-                        'default',
-                        [
-                            Template::make(
-                                'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 md:pr-3',
-                                [
-                                    Input::make(
-                                        'templatename',
-                                        Lang::get('global.template_name')
-                                    )
-                                        ->isRequired()
-                                        ->setRequired(
-                                            Config::get('global.default_template') == $model->id ? Lang::get(
-                                                'global.defaulttemplate_title'
-                                            ) : ''
-                                        ),
+        return [
+            Actions::make()
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'path' => '/elements/templates',
+                        'close' => true,
+                    ]
+                )
+                ->when(
+                    $model->getKey(),
+                    fn(Actions $component) => $component->setDelete()->setCopy()
+                )
+                ->setSaveAnd(),
 
-                                    Input::make(
-                                        'templatealias',
-                                        Lang::get('global.alias')
+            Title::make()
+                ->setModel('templatename')
+                ->setHelp(Lang::get('global.template_msg'))
+                ->setId($model->getKey())
+                ->setIcon('fa fa-newspaper')
+                ->setTitle(Lang::get('global.new_template')),
+
+            Tabs::make()
+                ->setId('template')
+                ->addTab('default', Lang::get('global.settings_general'))
+                ->addSlot(
+                    'default',
+                    [
+                        Template::make(
+                            'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 md:pr-3',
+                            [
+                                Input::make(
+                                    'templatename',
+                                    Lang::get('global.template_name')
+                                )
+                                    ->isRequired()
+                                    ->setRequired(
+                                        Config::get('global.default_template') == $model->id ? Lang::get(
+                                            'global.defaulttemplate_title'
+                                        ) : ''
                                     ),
 
-                                    Textarea::make(
-                                        'description',
-                                        Lang::get('global.template_desc')
-                                    ),
-                                ]
-                            ),
+                                Input::make(
+                                    'templatealias',
+                                    Lang::get('global.alias')
+                                ),
 
-                            Template::make(
-                                'flex flex-wrap grow md:basis-1/3 xl:basis-3/12 md:pl-3',
-                                [
-                                    Select::make(
-                                        'category',
-                                        Lang::get('global.existing_category')
-                                    )
-                                        ->setUrl('/categories/select')
-                                        ->addOption(
-                                            $model->category,
-                                            $model->categories
-                                                ? $model->categories->category
-                                                : Lang::get(
-                                                'global.no_category'
-                                            )
+                                Textarea::make(
+                                    'description',
+                                    Lang::get('global.template_desc')
+                                ),
+                            ]
+                        ),
+
+                        Template::make(
+                            'flex flex-wrap grow md:basis-1/3 xl:basis-3/12 md:pl-3',
+                            [
+                                Select::make(
+                                    'category',
+                                    Lang::get('global.existing_category')
+                                )
+                                    ->setUrl('/categories/select')
+                                    ->addOption(
+                                        $model->category,
+                                        $model->categories
+                                            ? $model->categories->category
+                                            : Lang::get(
+                                            'global.no_category'
                                         )
-                                        ->setNew(''),
+                                    )
+                                    ->setNew(''),
 
-                                    Checkbox::make('selectable', Lang::get('global.template_selectable'))
-                                        ->setCheckedValue(1, 0),
+                                Checkbox::make('selectable', Lang::get('global.template_selectable'))
+                                    ->setCheckedValue(1, 0),
 
-                                    Checkbox::make('locked', Lang::get('global.lock_template_msg'))
-                                        ->setCheckedValue(1, 0),
-                                ]
-                            ),
+                                Checkbox::make('locked', Lang::get('global.lock_template_msg'))
+                                    ->setCheckedValue(1, 0),
+                            ]
+                        ),
 
-                            ($isBladeFile
-                                ? '<span class="text-green-600 mb-3">' .
-                                Lang::get('global.template_assigned_blade_file') .
-                                ': ' .
-                                $relativeBladeFile . '</span>'
-                                :
-                                Checkbox::make('createbladefile', Lang::get('global.template_create_blade_file'))
-                                    ->setCheckedValue(1, 0)),
+                        ($isBladeFile
+                            ? '<span class="text-green-600 mb-3">' .
+                            Lang::get('global.template_assigned_blade_file') .
+                            ': ' .
+                            $relativeBladeFile . '</span>'
+                            :
+                            Checkbox::make('createbladefile', Lang::get('global.template_create_blade_file'))
+                                ->setCheckedValue(1, 0)),
 
-                            CodeEditor::make('content', Lang::get('global.template_code'))
-                                ->setLanguage('html')
-                                ->setRows(20),
-                        ]
-                    )
-                    ->addTab('tvs', Lang::get('global.template_assignedtv_tab'))
-                    ->addSlot(
-                        'tvs',
-                        Panel::make()
-                            ->setId('tvs')
-                            ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=true')
-                            ->setModel('tvs')
-                            ->addColumn(
-                                'attach',
-                                Lang::get('global.role_udperms'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true
-                            )
-                            ->addColumn(
-                                'id',
-                                'ID',
-                                ['width' => '4rem', 'textAlign' => 'right'],
-                                true
-                            )
-                            ->addColumn(
-                                'name',
-                                Lang::get('global.tmplvars_name'),
-                                ['fontWeight' => '500'],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'caption',
-                                Lang::get('global.tmplvars_caption'),
-                                ['width' => '50%'],
-                            )
-                            ->addColumn(
-                                'rank',
-                                Lang::get('global.tmplvars_rank'),
-                                ['width' => '12rem', 'textAlign' => 'center']
-                            )
-                    )
-                    ->addTab('available', Lang::get('global.template_notassigned_tv'))
-                    ->addSlot(
-                        'available',
-                        Panel::make()
-                            ->setId('available')
-                            ->setModel('tvs')
-                            ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=false')
-                            ->addColumn(
-                                'attach',
-                                Lang::get('global.role_udperms'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true
-                            )
-                            ->addColumn(
-                                'id',
-                                'ID',
-                                ['width' => '4rem', 'textAlign' => 'right'],
-                                true
-                            )
-                            ->addColumn(
-                                'name',
-                                Lang::get('global.tmplvars_name'),
-                                ['fontWeight' => '500'],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'caption',
-                                Lang::get('global.tmplvars_caption'),
-                                ['width' => '50%'],
-                            )
-                            ->addColumn(
-                                'rank',
-                                Lang::get('global.tmplvars_rank'),
-                                ['width' => '12rem', 'textAlign' => 'center']
-                            )
-                    )
-            )
-            ->setCrumbs(
-                fn(Crumbs $component) => $component->setData($breadcrumbs)
-            )
-            ->toArray();
+                        CodeEditor::make('content', Lang::get('global.template_code'))
+                            ->setLanguage('html')
+                            ->setRows(20),
+                    ]
+                )
+                ->addTab('tvs', Lang::get('global.template_assignedtv_tab'))
+                ->addSlot(
+                    'tvs',
+                    Panel::make()
+                        ->setId('tvs')
+                        ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=true')
+                        ->setModel('tvs')
+                        ->addColumn(
+                            'attach',
+                            Lang::get('global.role_udperms'),
+                            ['width' => '4rem', 'textAlign' => 'center'],
+                            true
+                        )
+                        ->addColumn(
+                            'id',
+                            'ID',
+                            ['width' => '4rem', 'textAlign' => 'right'],
+                            true
+                        )
+                        ->addColumn(
+                            'name',
+                            Lang::get('global.tmplvars_name'),
+                            ['fontWeight' => '500'],
+                            true,
+                            filter: true
+                        )
+                        ->addColumn(
+                            'caption',
+                            Lang::get('global.tmplvars_caption'),
+                            ['width' => '50%'],
+                        )
+                        ->addColumn(
+                            'rank',
+                            Lang::get('global.tmplvars_rank'),
+                            ['width' => '12rem', 'textAlign' => 'center']
+                        )
+                )
+                ->addTab('available', Lang::get('global.template_notassigned_tv'))
+                ->addSlot(
+                    'available',
+                    Panel::make()
+                        ->setId('available')
+                        ->setModel('tvs')
+                        ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=false')
+                        ->addColumn(
+                            'attach',
+                            Lang::get('global.role_udperms'),
+                            ['width' => '4rem', 'textAlign' => 'center'],
+                            true
+                        )
+                        ->addColumn(
+                            'id',
+                            'ID',
+                            ['width' => '4rem', 'textAlign' => 'right'],
+                            true
+                        )
+                        ->addColumn(
+                            'name',
+                            Lang::get('global.tmplvars_name'),
+                            ['fontWeight' => '500'],
+                            true,
+                            filter: true
+                        )
+                        ->addColumn(
+                            'caption',
+                            Lang::get('global.tmplvars_caption'),
+                            ['width' => '50%'],
+                        )
+                        ->addColumn(
+                            'rank',
+                            Lang::get('global.tmplvars_rank'),
+                            ['width' => '12rem', 'textAlign' => 'center']
+                        )
+                ),
+
+            Crumbs::make()->setData($breadcrumbs),
+        ];
     }
 
     /**
@@ -230,165 +224,162 @@ class TemplateLayout extends Layout
      */
     public function list(): array
     {
-        return Main::make()
-            ->setActions(
-                fn(Actions $component) => $component->setNew(
+        return [
+            Actions::make()
+                ->setNew(
                     Lang::get('global.new_template'),
                     '/templates/new',
                     'btn-green',
                     'fa fa-plus'
+                ),
+
+            Title::make()
+                ->setTitle(Lang::get('global.templates'))
+                ->setIcon('fa fa-newspaper')
+                ->setHelp(Lang::get('global.template_management_msg')),
+
+            Tabs::make()
+                ->setId('elements')
+                ->setHistory(true)
+                ->isWatch()
+                ->addTab(
+                    'templates',
+                    Lang::get('global.templates'),
+                    'fa fa-newspaper',
+                    'py-4',
+                    ['edit_template'],
+                    route: route('manager.api.elements.templates')
                 )
-            )
-            ->setTitle(
-                fn(Title $component) => $component
-                    ->setTitle(Lang::get('global.templates'))
-                    ->setIcon('fa fa-newspaper')
-                    ->setHelp(Lang::get('global.template_management_msg'))
-            )
-            ->setTabs(
-                fn(Tabs $component) => $component
-                    ->setId('elements')
-                    ->setHistory(true)
-                    ->isWatch()
-                    ->addTab(
-                        'templates',
-                        Lang::get('global.templates'),
-                        'fa fa-newspaper',
-                        'py-4',
-                        ['edit_template'],
-                        route: route('manager.api.elements.templates')
-                    )
-                    ->addTab(
-                        'tvs',
-                        Lang::get('global.tmplvars'),
-                        'fa fa-th-large',
-                        'py-4',
-                        ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                        route: route('manager.api.elements.tvs')
-                    )
-                    ->addTab(
-                        'chunks',
-                        Lang::get('global.htmlsnippets'),
-                        'fa fa-th-large',
-                        'py-4',
-                        ['edit_chunk'],
-                        route: route('manager.api.elements.chunks')
-                    )
-                    ->addTab(
-                        'snippets',
-                        Lang::get('global.snippets'),
-                        'fa fa-code',
-                        'py-4',
-                        ['edit_snippet'],
-                        route: route('manager.api.elements.snippets')
-                    )
-                    ->addTab(
-                        'plugins',
-                        Lang::get('global.plugins'),
-                        'fa fa-plug',
-                        'py-4',
-                        ['edit_plugin'],
-                        route: route('manager.api.elements.plugins')
-                    )
-                    ->addTab(
-                        'modules',
-                        Lang::get('global.modules'),
-                        'fa fa-cubes',
-                        'py-4',
-                        ['edit_module'],
-                        route: route('manager.api.elements.modules')
-                    )
-                    ->addTab(
-                        'categories',
-                        Lang::get('global.category_management'),
-                        'fa fa-object-group',
-                        'py-4',
-                        ['category_manager'],
-                        route: route('manager.api.elements.categories')
-                    )
-                    ->addSlot(
-                        'templates',
-                        Panel::make()
-                            ->setId('templates')
-                            ->setModel('data')
-                            ->setRoute('/templates/:id')
-                            ->setHistory(true)
-                            ->addColumn(
-                                '#',
-                                null,
-                                ['width' => '3rem'],
-                                false,
-                                [
-                                    'id' => [
-                                        Config::get(
-                                            'global.default_template'
-                                        ) => '<i class="fa fa-home fa-fw text-blue-500" data-tooltip="' .
-                                            Lang::get('global.defaulttemplate_title') . '"></i>',
-                                    ],
-                                    'locked' => [
-                                        '<i class="fa fa-newspaper fa-fw"></i>',
-                                        '<i class="fa fa-newspaper fa-fw" data-tooltip="' . Lang::get('global.locked') .
-                                        '"><i class="fa fa-lock"></i></i>',
-                                    ],
-                                ]
-                            )
-                            ->addColumn(
-                                'id',
-                                Lang::get('global.id'),
-                                ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
-                                true
-                            )
-                            ->addColumn(
-                                'templatename',
-                                Lang::get('global.template_name'),
-                                ['width' => '20rem', 'fontWeight' => 500],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'file',
-                                Lang::get('global.files_management'),
-                                ['width' => '5rem', 'textAlign' => 'center']
-                            )
-                            ->addColumn(
-                                'description',
-                                Lang::get('global.template_desc')
-                            )
-                            ->addColumn(
-                                'locked',
-                                Lang::get('global.locked'),
-                                ['width' => '10rem', 'textAlign' => 'center'],
-                                true,
-                                [
-                                    0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                    1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                                ]
-                            )
-                            ->addColumn(
-                                'actions',
-                                Lang::get('global.onlineusers_action'),
-                                ['width' => '10rem', 'textAlign' => 'center'],
-                                false,
-                                [],
-                                [
-                                    'copy' => [
-                                        'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                        'help' => Lang::get('global.duplicate'),
-                                        'helpFit' => true,
-                                        'noOpacity' => true,
-                                    ],
-                                    'delete' => [
-                                        'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                        'help' => Lang::get('global.delete'),
-                                        'helpFit' => true,
-                                        'noOpacity' => true,
-                                    ],
-                                ]
-                            ),
-                        ['edit_template']
-                    )
-            )
-            ->toArray();
+                ->addTab(
+                    'tvs',
+                    Lang::get('global.tmplvars'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
+                    route: route('manager.api.elements.tvs')
+                )
+                ->addTab(
+                    'chunks',
+                    Lang::get('global.htmlsnippets'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_chunk'],
+                    route: route('manager.api.elements.chunks')
+                )
+                ->addTab(
+                    'snippets',
+                    Lang::get('global.snippets'),
+                    'fa fa-code',
+                    'py-4',
+                    ['edit_snippet'],
+                    route: route('manager.api.elements.snippets')
+                )
+                ->addTab(
+                    'plugins',
+                    Lang::get('global.plugins'),
+                    'fa fa-plug',
+                    'py-4',
+                    ['edit_plugin'],
+                    route: route('manager.api.elements.plugins')
+                )
+                ->addTab(
+                    'modules',
+                    Lang::get('global.modules'),
+                    'fa fa-cubes',
+                    'py-4',
+                    ['edit_module'],
+                    route: route('manager.api.elements.modules')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    'py-4',
+                    ['category_manager'],
+                    route: route('manager.api.elements.categories')
+                )
+                ->addSlot(
+                    'templates',
+                    Panel::make()
+                        ->setId('templates')
+                        ->setModel('data')
+                        ->setRoute('/templates/:id')
+                        ->setHistory(true)
+                        ->addColumn(
+                            '#',
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [
+                                'id' => [
+                                    Config::get(
+                                        'global.default_template'
+                                    ) => '<i class="fa fa-home fa-fw text-blue-500" data-tooltip="' .
+                                        Lang::get('global.defaulttemplate_title') . '"></i>',
+                                ],
+                                'locked' => [
+                                    '<i class="fa fa-newspaper fa-fw"></i>',
+                                    '<i class="fa fa-newspaper fa-fw" data-tooltip="' . Lang::get('global.locked') .
+                                    '"><i class="fa fa-lock"></i></i>',
+                                ],
+                            ]
+                        )
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
+                            true
+                        )
+                        ->addColumn(
+                            'templatename',
+                            Lang::get('global.template_name'),
+                            ['width' => '20rem', 'fontWeight' => 500],
+                            true,
+                            filter: true
+                        )
+                        ->addColumn(
+                            'file',
+                            Lang::get('global.files_management'),
+                            ['width' => '5rem', 'textAlign' => 'center']
+                        )
+                        ->addColumn(
+                            'description',
+                            Lang::get('global.template_desc')
+                        )
+                        ->addColumn(
+                            'locked',
+                            Lang::get('global.locked'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            true,
+                            [
+                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                            ]
+                        )
+                        ->addColumn(
+                            'actions',
+                            Lang::get('global.onlineusers_action'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            false,
+                            [],
+                            [
+                                'copy' => [
+                                    'icon' => 'far fa-clone fa-fw hover:text-blue-500',
+                                    'help' => Lang::get('global.duplicate'),
+                                    'helpFit' => true,
+                                    'noOpacity' => true,
+                                ],
+                                'delete' => [
+                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
+                                    'help' => Lang::get('global.delete'),
+                                    'helpFit' => true,
+                                    'noOpacity' => true,
+                                ],
+                            ]
+                        ),
+                    ['edit_template']
+                ),
+        ];
     }
 
     /**

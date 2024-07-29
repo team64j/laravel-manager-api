@@ -180,45 +180,7 @@ class FilesController extends Controller
                 'layout' => $layout->default(),
                 'meta' => [
                     'title' => Lang::get('global.files_management'),
-                    'icon' => $layout->getIcon(),
-                    'category' => true,
-                    'columns' => [
-                        [
-                            'name' => 'icon',
-                            'label' => Lang::get('global.icon'),
-                            'width' => '2rem',
-                            'style' => [
-                                'textAlign' => 'center',
-                            ],
-                            'values' => [
-                                'folder' => [
-                                    'false' => '<i class="far fa-file fa-fw"></i>',
-                                    'true' => '<i class="far fa-folder fa-fw"></i>',
-                                ]
-                            ]
-                        ],
-                        [
-                            'name' => 'title',
-                            'label' => Lang::get('global.files_filename'),
-                        ],
-                        [
-                            'name' => 'size',
-                            'label' => Lang::get('global.files_filesize'),
-                            'width' => '12rem',
-                            'style' => [
-                                'textAlign' => 'right',
-                            ],
-                        ],
-                        [
-                            'name' => 'date',
-                            'label' => Lang::get('global.datechanged'),
-                            'width' => '12rem',
-                            'style' => [
-                                'textAlign' => 'right',
-                                'whiteSpace' => 'nowrap',
-                            ],
-                        ],
-                    ],
+                    'icon' => $layout->getIcon()
                 ],
             ]);
     }

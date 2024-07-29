@@ -9,7 +9,6 @@ use EvolutionCMS\Models\SiteSnippet;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Crumbs;
-use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -35,197 +34,188 @@ class SnippetLayout extends Layout
             ],
         ];
 
-        return Main::make()
-            ->setActions(
-                fn(Actions $component) => $component
-                    ->setCancel(
-                        Lang::get('global.cancel'),
-                        [
-                            'path' => '/elements/snippets',
-                            'close' => true,
-                        ]
-                    )
-                    ->when(
-                        $model->getKey(),
-                        fn(Actions $actions) => $actions->setDelete()->setCopy()
-                    )
-                    ->setSaveAnd()
-            )
-            ->setTitle(
-                fn(Title $component) => $component
-                    ->setModel('name')
-                    ->setTitle(Lang::get('global.new_snippet'))
-                    ->setIcon('fa fa-code')
-                    ->setId($model->getKey())
-            )
-            ->setTabs(
-                fn(Tabs $component) => $component
-            )
-            ->setCrumbs(
-                fn(Crumbs $component) => $component->setData($breadcrumbs)
-            )
-            ->toArray();
+        return [
+            Actions::make()
+                ->setCancel(
+                    Lang::get('global.cancel'),
+                    [
+                        'path' => '/elements/snippets',
+                        'close' => true,
+                    ]
+                )
+                ->when(
+                    $model->getKey(),
+                    fn(Actions $actions) => $actions->setDelete()->setCopy()
+                )
+                ->setSaveAnd(),
+
+            Title::make()
+                ->setModel('name')
+                ->setTitle(Lang::get('global.new_snippet'))
+                ->setIcon('fa fa-code')
+                ->setId($model->getKey()),
+
+            Tabs::make(),
+
+            Crumbs::make()->setData($breadcrumbs),
+        ];
     }
 
     public function list(): array
     {
-        return Main::make()
-            ->setActions(
-                fn(Actions $component) => $component
-                    ->setNew(
-                        Lang::get('global.new_snippet'),
-                        '/snippets/new',
-                        'btn-green',
-                        'fa fa-plus'
-                    )
-            )
-            ->setTitle(
-                fn(Title $component) => $component
-                    ->setTitle(Lang::get('global.snippets'))
-                    ->setIcon('fa fa-code')
-                    ->setHelp(Lang::get('global.snippet_management_msg'))
-            )
-            ->setTabs(
-                fn(Tabs $component) => $component
-                    ->setId('elements')
-                    ->setHistory(true)
-                    ->isWatch()
-                    ->addTab(
-                        'templates',
-                        Lang::get('global.templates'),
-                        'fa fa-newspaper',
-                        'py-4',
-                        ['edit_template'],
-                        route: route('manager.api.elements.templates')
-                    )
-                    ->addTab(
-                        'tvs',
-                        Lang::get('global.tmplvars'),
-                        'fa fa-th-large',
-                        'py-4',
-                        ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                        route: route('manager.api.elements.tvs')
-                    )
-                    ->addTab(
-                        'chunks',
-                        Lang::get('global.htmlsnippets'),
-                        'fa fa-th-large',
-                        'py-4',
-                        ['edit_chunk'],
-                        route: route('manager.api.elements.chunks')
-                    )
-                    ->addTab(
-                        'snippets',
-                        Lang::get('global.snippets'),
-                        'fa fa-code',
-                        'py-4',
-                        ['edit_snippet'],
-                        route: route('manager.api.elements.snippets')
-                    )
-                    ->addTab(
-                        'plugins',
-                        Lang::get('global.plugins'),
-                        'fa fa-plug',
-                        'py-4',
-                        ['edit_plugin'],
-                        route: route('manager.api.elements.plugins')
-                    )
-                    ->addTab(
-                        'modules',
-                        Lang::get('global.modules'),
-                        'fa fa-cubes',
-                        'py-4',
-                        ['edit_module'],
-                        route: route('manager.api.elements.modules')
-                    )
-                    ->addTab(
-                        'categories',
-                        Lang::get('global.category_management'),
-                        'fa fa-object-group',
-                        'py-4',
-                        ['category_manager'],
-                        route: route('manager.api.elements.categories')
-                    )
-                    ->addSlot(
-                        'snippets',
-                        Panel::make()
-                            ->setId('snippets')
-                            ->setModel('data')
-                            ->setRoute('/snippets/:id')
-                            ->setHistory(true)
-                            ->addColumn(
-                                ['#', 'locked'],
-                                null,
-                                ['width' => '3rem'],
-                                false,
-                                [
-                                    '<i class="fa fa-code fa-fw"/>',
-                                    '<i class="fa fa-code fa-fw" title="' .
-                                    Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
-                                ]
-                            )
-                            ->addColumn(
-                                'id',
-                                Lang::get('global.id'),
-                                ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
-                                true
-                            )
-                            ->addColumn(
-                                'name',
-                                Lang::get('global.snippet_name'),
-                                ['width' => '20rem', 'fontWeight' => 500],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'description',
-                                Lang::get('global.snippet_desc')
-                            )
-                            ->addColumn(
-                                'locked',
-                                Lang::get('global.locked'),
-                                ['width' => '10rem', 'textAlign' => 'center'],
-                                true,
-                                [
-                                    0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                    1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                                ]
-                            )
-                            ->addColumn(
-                                'disabled',
-                                Lang::get('global.disabled'),
-                                ['width' => '10rem', 'textAlign' => 'center'],
-                                true,
-                                [
-                                    0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                    1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
-                                ]
-                            )
-                            ->addColumn(
-                                'actions',
-                                Lang::get('global.onlineusers_action'),
-                                ['width' => '10rem', 'textAlign' => 'center'],
-                                false,
-                                [],
-                                [
-                                    'copy' => [
-                                        'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                        'help' => Lang::get('global.duplicate'),
-                                        'helpFit' => true,
-                                        'noOpacity' => true,
-                                    ],
-                                    'delete' => [
-                                        'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                        'help' => Lang::get('global.delete'),
-                                        'helpFit' => true,
-                                        'noOpacity' => true,
-                                    ],
-                                ]
-                            ),
-                        ['edit_snippet']
-                    )
-            )
-            ->toArray();
+        return [
+            Actions::make()
+                ->setNew(
+                    Lang::get('global.new_snippet'),
+                    '/snippets/new',
+                    'btn-green',
+                    'fa fa-plus'
+                ),
+
+            Title::make()
+                ->setTitle(Lang::get('global.snippets'))
+                ->setIcon('fa fa-code')
+                ->setHelp(Lang::get('global.snippet_management_msg')),
+
+            Tabs::make()
+                ->setId('elements')
+                ->setHistory(true)
+                ->isWatch()
+                ->addTab(
+                    'templates',
+                    Lang::get('global.templates'),
+                    'fa fa-newspaper',
+                    'py-4',
+                    ['edit_template'],
+                    route: route('manager.api.elements.templates')
+                )
+                ->addTab(
+                    'tvs',
+                    Lang::get('global.tmplvars'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
+                    route: route('manager.api.elements.tvs')
+                )
+                ->addTab(
+                    'chunks',
+                    Lang::get('global.htmlsnippets'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_chunk'],
+                    route: route('manager.api.elements.chunks')
+                )
+                ->addTab(
+                    'snippets',
+                    Lang::get('global.snippets'),
+                    'fa fa-code',
+                    'py-4',
+                    ['edit_snippet'],
+                    route: route('manager.api.elements.snippets')
+                )
+                ->addTab(
+                    'plugins',
+                    Lang::get('global.plugins'),
+                    'fa fa-plug',
+                    'py-4',
+                    ['edit_plugin'],
+                    route: route('manager.api.elements.plugins')
+                )
+                ->addTab(
+                    'modules',
+                    Lang::get('global.modules'),
+                    'fa fa-cubes',
+                    'py-4',
+                    ['edit_module'],
+                    route: route('manager.api.elements.modules')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    'py-4',
+                    ['category_manager'],
+                    route: route('manager.api.elements.categories')
+                )
+                ->addSlot(
+                    'snippets',
+                    Panel::make()
+                        ->setId('snippets')
+                        ->setModel('data')
+                        ->setRoute('/snippets/:id')
+                        ->setHistory(true)
+                        ->addColumn(
+                            ['#', 'locked'],
+                            null,
+                            ['width' => '3rem'],
+                            false,
+                            [
+                                '<i class="fa fa-code fa-fw"/>',
+                                '<i class="fa fa-code fa-fw" title="' .
+                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                            ]
+                        )
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
+                            true
+                        )
+                        ->addColumn(
+                            'name',
+                            Lang::get('global.snippet_name'),
+                            ['width' => '20rem', 'fontWeight' => 500],
+                            true,
+                            filter: true
+                        )
+                        ->addColumn(
+                            'description',
+                            Lang::get('global.snippet_desc')
+                        )
+                        ->addColumn(
+                            'locked',
+                            Lang::get('global.locked'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            true,
+                            [
+                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                            ]
+                        )
+                        ->addColumn(
+                            'disabled',
+                            Lang::get('global.disabled'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            true,
+                            [
+                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                            ]
+                        )
+                        ->addColumn(
+                            'actions',
+                            Lang::get('global.onlineusers_action'),
+                            ['width' => '10rem', 'textAlign' => 'center'],
+                            false,
+                            [],
+                            [
+                                'copy' => [
+                                    'icon' => 'far fa-clone fa-fw hover:text-blue-500',
+                                    'help' => Lang::get('global.duplicate'),
+                                    'helpFit' => true,
+                                    'noOpacity' => true,
+                                ],
+                                'delete' => [
+                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
+                                    'help' => Lang::get('global.delete'),
+                                    'helpFit' => true,
+                                    'noOpacity' => true,
+                                ],
+                            ]
+                        ),
+                    ['edit_snippet']
+                ),
+        ];
     }
 
     /**

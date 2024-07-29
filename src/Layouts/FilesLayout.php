@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
+use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Title;
@@ -17,16 +18,61 @@ class FilesLayout extends Layout
      */
     public function default(): array
     {
-        return [
-            Title::make()
+        return Main::make([
+            'title' => Title::make()
                 ->setTitle(Lang::get('global.files_management'))
                 ->setIcon($this->getIcon()),
 
-            Panel::make()
-                ->setId('FilesPanel')
-                ->setModel('data')
-                ->isRerender(),
-        ];
+            'sidebar' => [
+                Tree::make()
+                    ->setId('filesTree')
+                    ->setRoute('/file/:id')
+                    ->setUrl('/files/tree')
+                    ->isCategory()
+            ],
+
+            'main' => [
+                Panel::make()
+                    ->setModel('data')
+                    ->setColumns([
+                        [
+                            'name' => 'icon',
+                            'label' => Lang::get('global.icon'),
+                            'width' => '2rem',
+                            'style' => [
+                                'textAlign' => 'center',
+                            ],
+                            'values' => [
+                                'folder' => [
+                                    'false' => '<i class="far fa-file fa-fw"></i>',
+                                    'true' => '<i class="far fa-folder fa-fw"></i>',
+                                ],
+                            ],
+                        ],
+                        [
+                            'name' => 'title',
+                            'label' => Lang::get('global.files_filename'),
+                        ],
+                        [
+                            'name' => 'size',
+                            'label' => Lang::get('global.files_filesize'),
+                            'width' => '12rem',
+                            'style' => [
+                                'textAlign' => 'right',
+                            ],
+                        ],
+                        [
+                            'name' => 'date',
+                            'label' => Lang::get('global.datechanged'),
+                            'width' => '12rem',
+                            'style' => [
+                                'textAlign' => 'right',
+                                'whiteSpace' => 'nowrap',
+                            ],
+                        ],
+                    ]),
+            ],
+        ])->toArray();
     }
 
     /**
