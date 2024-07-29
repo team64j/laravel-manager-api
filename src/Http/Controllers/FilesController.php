@@ -192,8 +192,7 @@ class FilesController extends Controller
      *     tags={"File"},
      *     security={{"Api":{}}},
      *     parameters={
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
+     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="object")),
      *     },
      *     @OA\Response(
      *          response="200",
@@ -210,14 +209,10 @@ class FilesController extends Controller
     public function tree(FilesRequest $request): AnonymousResourceCollection
     {
         $data = [];
-        $settings = $request->collect('settings');
+        $settings = $request->collect('settings')->toArray();
         $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
         $path = $settings['parent'] ?? '';
         $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
-        $opened = $request->has('opened') ? $request->string('opened')
-            ->explode(',')
-            ->map(fn($i) => $i)
-            ->toArray() : [];
 
         if (file_exists($parentPath)) {
             $directories = File::directories($parentPath);
@@ -238,28 +233,29 @@ class FilesController extends Controller
                 $item = [
                     'id' => $key,
                     'title' => $title,
-                    //'folder' => true,
-                    //'category' => true,
+                    'path' => '',
                     'data' => File::directories($directory) ? [] : null,
                 ];
 
-                if (in_array($key, $opened, true)) {
-                    $newRequest = clone $request;
-                    $newRequest->query->set('after', null);
-                    $newRequest->query->set('parent', $key);
-                    $item['data'] = $this->tree($newRequest)->resource->toArray();
+                if (in_array($key, ($settings['opened'] ?? []), true)) {
+                    $request->query->set(
+                        'settings',
+                        [
+                            'parent' => $key,
+                            'after' => null,
+                        ] + $settings
+                    );
+
+                    $result = $this->tree($request);
+
+                    $item['data'] = $result->resource ?? [];
                 }
 
                 $data[] = $item;
             }
         }
 
-        return FilesResource::collection($data)
-            ->additional([
-                'meta' => [
-                    'category' => false,
-                ],
-            ]);
+        return FilesResource::collection($data);
     }
 
     /**

@@ -156,6 +156,12 @@ class BootstrapController extends Controller
                 'path' => '/file/:id',
             ],
             [
+                'path' => '/files/:id?',
+                'meta' => [
+                    'group' => true,
+                ],
+            ],
+            [
                 'path' => '/:path(.*)',
             ],
             [
@@ -164,12 +170,6 @@ class BootstrapController extends Controller
             [
                 'path' => '/:path(.*)/new',
             ],
-//            [
-//                'path' => '/:path(.*)/:element',
-//                'meta' => [
-//                    'group' => true,
-//                ],
-//            ],
             [
                 'path' => '/phpinfo',
                 'meta' => [

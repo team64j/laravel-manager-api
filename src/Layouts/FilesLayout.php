@@ -26,8 +26,10 @@ class FilesLayout extends Layout
             'sidebar' => [
                 Tree::make()
                     ->setId('filesTree')
-                    ->setRoute('/file/:id')
                     ->setUrl('/files/tree')
+                    ->setRoute([
+                        'path' => '/files/:id'
+                    ])
                     ->setIcons([
                         'default-folder' => 'fa fa-folder',
                         'default-folder-open' => 'fa fa-folder-open',
