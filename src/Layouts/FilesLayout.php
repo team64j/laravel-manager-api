@@ -38,7 +38,8 @@ class FilesLayout extends Layout
 
             'main' => [
                 Panel::make()
-                    ->setModel('data')
+                    ->setUrl('/files/:id')
+                    ->setHistory('id')
                     ->setColumns([
                         [
                             'name' => 'icon',

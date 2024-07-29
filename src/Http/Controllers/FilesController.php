@@ -80,15 +80,6 @@ class FilesController extends Controller
             $directories = File::directories($parentPath);
             $files = File::files($parentPath, true);
 
-            //if ($root != $parentPath) {
-                $data[] = [
-                    'key' => 'back',
-                    'title' => '...',
-                    'icon' => '<i class="fa fa-arrow-left fa-fw"></i>',
-                    'folder' => false,
-                ];
-            //}
-
             foreach ($directories as $directory) {
                 $title = basename($directory);
                 $key = base64_encode(
