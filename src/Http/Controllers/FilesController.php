@@ -222,7 +222,7 @@ class FilesController extends Controller
                 );
 
                 $item = [
-                    'id' => $key,
+                    'key' => $key,
                     'title' => $title,
                     'path' => '',
                     'data' => File::directories($directory) ? [] : null,

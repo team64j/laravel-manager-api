@@ -156,7 +156,7 @@ class BootstrapController extends Controller
                 'path' => '/file/:id',
             ],
             [
-                'path' => '/files/:id?',
+                'path' => '/files/:key?',
                 'meta' => [
                     'group' => true,
                 ],

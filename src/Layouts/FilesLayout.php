@@ -28,7 +28,7 @@ class FilesLayout extends Layout
                     ->setId('filesTree')
                     ->setUrl('/files/tree')
                     ->setRoute([
-                        'path' => '/files/:id'
+                        'path' => '/files/:key'
                     ])
                     ->setIcons([
                         'default-folder' => 'fa fa-folder',
@@ -38,8 +38,11 @@ class FilesLayout extends Layout
 
             'main' => [
                 Panel::make()
-                    ->setUrl('/files/:id')
-                    ->setHistory('id')
+                    ->setUrl('/files/:key')
+                    ->setHistory('key')
+                    ->setRoute([
+                        'path' => '/files/:key'
+                    ])
                     ->setColumns([
                         [
                             'name' => 'icon',
