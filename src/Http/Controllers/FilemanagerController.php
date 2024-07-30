@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
 use Team64j\LaravelManagerApi\Http\Resources\FilesResource;
-use Team64j\LaravelManagerApi\Layouts\FilesLayout;
+use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
 
-class FilesController extends Controller
+class FilemanagerController extends Controller
 {
     /**
      * @OA\Get(
@@ -33,11 +33,11 @@ class FilesController extends Controller
      *      )
      * )
      * @param FilesRequest $request
-     * @param FilesLayout $layout
+     * @param FilemanagerLayout $layout
      *
      * @return AnonymousResourceCollection
      */
-    public function index(FilesRequest $request, FilesLayout $layout): AnonymousResourceCollection
+    public function index(FilesRequest $request, FilemanagerLayout $layout): AnonymousResourceCollection
     {
         return $this->show($request, '', $layout);
     }
@@ -61,16 +61,22 @@ class FilesController extends Controller
      * )
      * @param FilesRequest $request
      * @param string $files
-     * @param FilesLayout $layout
+     * @param FilemanagerLayout $layout
      *
      * @return AnonymousResourceCollection
      */
-    public function show(FilesRequest $request, string $files, FilesLayout $layout): AnonymousResourceCollection
+    public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): AnonymousResourceCollection
     {
         $data = [];
         $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
         $parent = trim(base64_decode($files), './');
         $parentPath = realpath($root . ($parent ? DIRECTORY_SEPARATOR . $parent : ''));
+        $extensions = array_merge(
+            explode(',', Config::get('global.upload_files', '')),
+            explode(',', Config::get('global.upload_flash', '')),
+            explode(',', Config::get('global.upload_images', '')),
+            explode(',', Config::get('global.upload_media', '')),
+        );
 
         if (file_exists((string) $parentPath)) {
             $directories = File::directories($parentPath);
@@ -85,7 +91,7 @@ class FilesController extends Controller
                     'size' => ''/*$this->getSize(File::size($parentPath))*/,
                     'date' => $this->getDate(filemtime($parentPath)),
                     'route' => [
-                        'path' => '/files/:key',
+                        'path' => '/filemanager/:key',
                     ],
                 ];
             }
@@ -111,7 +117,7 @@ class FilesController extends Controller
                     'size' => ''/*$this->getSize(File::size($directory))*/,
                     'date' => $this->getDate(filemtime($directory)),
                     'route' => [
-                        'path' => '/files/:key',
+                        'path' => '/filemanager/:key',
                     ],
                 ];
 
@@ -119,6 +125,12 @@ class FilesController extends Controller
             }
 
             foreach ($files as $file) {
+                $type = $file->getExtension();
+
+                if (!in_array(strtolower($type), $extensions)) {
+                    continue;
+                }
+
                 $title = $file->getFilename();
                 $key = base64_encode(
                     str_replace(
@@ -127,8 +139,6 @@ class FilesController extends Controller
                         trim(str_replace($root, '', $file->getPathname()), DIRECTORY_SEPARATOR)
                     )
                 );
-
-                $type = $file->getExtension();
 
                 if (!$type) {
                     $mimeType = File::mimeType($file->getPathname());
@@ -177,7 +187,7 @@ class FilesController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'title' => Lang::get('global.files_management'),
+                    'title' => Lang::get('global.settings_misc'),
                     'icon' => $layout->getIcon()
                 ],
             ]);

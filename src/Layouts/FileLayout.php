@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Media;
@@ -30,20 +29,20 @@ class FileLayout extends Layout
                 ->setId($data['size'] ?? null),
 
             Template::make()
-                ->setClass('px-6 pb-4 grow overflow-hidden')
-                ->setSlot(
+                ->setClass('px-4 pb-4 grow overflow-hidden')
+                ->setSlot([
                     match (true) {
                         (stripos($data['type'], 'text/') !== false ||
                             stripos($data['type'], 'application/json') !== false ||
-                            in_array($data['ext'], ['html'])) => CodeEditor::make('content')
+                            $data['ext'] == 'html') => CodeEditor::make('content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
-                            ->setClass('!m-0 h-full flex'),
+                            ->setClass('!m-0 !p-0 h-full flex'),
                         stripos($data['type'], 'image/') !== false => Media::make('path')
                             ->setData($data),
                         default => [],
                     }
-                ),
+                ]),
         ];
     }
 

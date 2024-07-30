@@ -11,7 +11,7 @@ use Team64j\LaravelManagerApi\Http\Controllers\ConfigurationController;
 use Team64j\LaravelManagerApi\Http\Controllers\DashboardController;
 use Team64j\LaravelManagerApi\Http\Controllers\EventLogController;
 use Team64j\LaravelManagerApi\Http\Controllers\FileController;
-use Team64j\LaravelManagerApi\Http\Controllers\FilesController;
+use Team64j\LaravelManagerApi\Http\Controllers\FilemanagerController;
 use Team64j\LaravelManagerApi\Http\Controllers\HelpController;
 use Team64j\LaravelManagerApi\Http\Controllers\ModuleController;
 use Team64j\LaravelManagerApi\Http\Controllers\OpenApiController;
@@ -130,11 +130,11 @@ Route::prefix($apiPath)
             ])
             ->apiResource('file', FileController::class)->only(['show']),
 
-        Route::prefix('files')
+        Route::prefix('filemanager')
             ->group(fn() => [
-                Route::get('tree', [FilesController::class, 'tree'])->name('files.tree'),
+                Route::get('tree', [FilemanagerController::class, 'tree'])->name('filemanager.tree'),
             ])
-            ->apiResource('files', FilesController::class)->only(['index', 'show']),
+            ->apiResource('filemanager', FilemanagerController::class)->only(['index', 'show']),
 
         /** Help */
         Route::get('help', [HelpController::class, 'index'])->name('help'),

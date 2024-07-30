@@ -15,7 +15,7 @@ use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
-use Team64j\LaravelManagerApi\Layouts\FilesLayout;
+use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
 use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
@@ -156,7 +156,7 @@ class BootstrapController extends Controller
                 'path' => '/file/:id',
             ],
             [
-                'path' => '/files/:key?',
+                'path' => '/filemanager/:key?',
                 'meta' => [
                     'group' => true,
                 ],
@@ -511,11 +511,11 @@ class BootstrapController extends Controller
                                     'permissions' => ['category_manager'],
                                 ],
                                 [
-                                    'key' => 'files',
-                                    'name' => '[%manage_files%]',
+                                    'key' => 'filemanager',
+                                    'name' => '[%settings_misc%]',
                                     'icon' => 'far fa-folder-open',
                                     'to' => [
-                                        'path' => '/files',
+                                        'path' => '/filemanager',
                                     ],
                                     'permissions' => ['file_manager'],
                                 ],
@@ -1028,7 +1028,7 @@ class BootstrapController extends Controller
                 ],
                 [
                     'lang' => 'files_files',
-                    'class' => FilesLayout::class . '@tree',
+                    'class' => FilemanagerLayout::class . '@tree',
                     'enabled' => true,
                     'custom' => false,
                 ],

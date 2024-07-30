@@ -11,7 +11,7 @@ use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
 
-class FilesLayout extends Layout
+class FilemanagerLayout extends Layout
 {
     /**
      * @return array
@@ -20,15 +20,15 @@ class FilesLayout extends Layout
     {
         return Main::make([
             'title' => Title::make()
-                ->setTitle(Lang::get('global.files_management'))
+                ->setTitle(Lang::get('global.settings_misc'))
                 ->setIcon($this->getIcon()),
 
             'sidebar' => [
                 Tree::make()
-                    ->setId('filesTree')
-                    ->setUrl('/files/tree')
+                    ->setId('filemanagerTree')
+                    ->setUrl('/filemanager/tree')
                     ->setRoute([
-                        'path' => '/files/:key',
+                        'path' => '/filemanager/:key',
                     ])
                     ->setIcons([
                         'default-folder' => 'fa fa-folder',
@@ -41,8 +41,8 @@ class FilesLayout extends Layout
 
             'main' => [
                 Panel::make()
-                    ->setId('filesPanel')
-                    ->setUrl('/files/:key')
+                    ->setId('filemanagerPanel')
+                    ->setUrl('/filemanager/:key')
                     ->setHistory('key')
                     ->setView('icons')
                     ->setColumns([
@@ -52,6 +52,9 @@ class FilesLayout extends Layout
                             'width' => '2rem',
                             'style' => [
                                 'textAlign' => 'center',
+                                'flexGrow' => '1',
+                                'alignItems' => 'center',
+                                'justifyContent' => 'center',
                             ],
                             'values' => [
                                 'folder' => [
@@ -63,6 +66,8 @@ class FilesLayout extends Layout
                         [
                             'name' => 'title',
                             'label' => Lang::get('global.files_filename'),
+                            'style' => [
+                            ]
                         ],
                         [
                             'name' => 'size',
