@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
+use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Media;
@@ -16,7 +17,7 @@ class FileLayout extends Layout
     {
         return [
             Actions::make()
-                ->setCancel()
+                ->setCancel(Lang::get('global.close'))
                 ->when(
                     $data['basename'] ?? false,
                     fn(Actions $actions) => $actions->setDelete()->setCopy()
