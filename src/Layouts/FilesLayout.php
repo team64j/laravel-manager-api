@@ -28,21 +28,23 @@ class FilesLayout extends Layout
                     ->setId('filesTree')
                     ->setUrl('/files/tree')
                     ->setRoute([
-                        'path' => '/files/:key'
+                        'path' => '/files/:key',
                     ])
                     ->setIcons([
                         'default-folder' => 'fa fa-folder',
                         'default-folder-open' => 'fa fa-folder-open',
+                    ])
+                    ->setSettings([
+                        'keyId' => 'key',
                     ]),
             ],
 
             'main' => [
                 Panel::make()
+                    ->setId('filesPanel')
                     ->setUrl('/files/:key')
                     ->setHistory('key')
-                    ->setRoute([
-                        'path' => '/files/:key'
-                    ])
+                    ->setView('icons')
                     ->setColumns([
                         [
                             'name' => 'icon',
@@ -54,7 +56,7 @@ class FilesLayout extends Layout
                             'values' => [
                                 'folder' => [
                                     'false' => '<i class="far fa-file fa-fw"></i>',
-                                    'true' => '<i class="far fa-folder fa-fw"></i>',
+                                    'true' => '<i class="fa fa-folder fa-fw"></i>',
                                 ],
                             ],
                         ],

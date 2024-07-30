@@ -68,20 +68,31 @@ class FilesController extends Controller
     public function show(FilesRequest $request, string $files, FilesLayout $layout): AnonymousResourceCollection
     {
         $data = [];
-        $root = Config::get('global.rb_base_dir', App::basePath());
+        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
         $parent = trim(base64_decode($files), './');
-        $parentPath = $root . ($parent ? DIRECTORY_SEPARATOR . $parent : '');
-        $opened = $request->has('opened') ? $request->string('opened')
-            ->explode(',')
-            ->map(fn($i) => $i)
-            ->toArray() : [];
+        $parentPath = realpath($root . ($parent ? DIRECTORY_SEPARATOR . $parent : ''));
 
-        if (file_exists($parentPath)) {
+        if (file_exists((string) $parentPath)) {
             $directories = File::directories($parentPath);
             $files = File::files($parentPath, true);
+            $path = str_replace($root, '', $parentPath);
+
+            if ($path) {
+                $data[] = [
+                    'key' => base64_encode(trim(dirname($path), DIRECTORY_SEPARATOR)),
+                    'title' => '...',
+                    'folder' => true,
+                    'size' => ''/*$this->getSize(File::size($parentPath))*/,
+                    'date' => $this->getDate(filemtime($parentPath)),
+                    'route' => [
+                        'path' => '/files/:key',
+                    ],
+                ];
+            }
 
             foreach ($directories as $directory) {
                 $title = basename($directory);
+
                 $key = base64_encode(
                     trim(
                         str_replace(
@@ -97,16 +108,12 @@ class FilesController extends Controller
                     'key' => $key,
                     'title' => $title,
                     'folder' => true,
-                    'size' => $this->getSize(File::size($directory)),
+                    'size' => ''/*$this->getSize(File::size($directory))*/,
                     'date' => $this->getDate(filemtime($directory)),
+                    'route' => [
+                        'path' => '/files/:key',
+                    ],
                 ];
-
-                if (in_array($key, $opened)) {
-                    $newRequest = clone $request;
-                    $newRequest->query->set('after', null);
-                    $newRequest->query->set('parent', $key);
-                    $item['data'] = $this->show($newRequest, '')['data'] ?? [];
-                }
 
                 $data[] = $item;
             }
@@ -203,9 +210,9 @@ class FilesController extends Controller
         $settings = $request->collect('settings')->toArray();
         $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
         $path = $settings['parent'] ?? '';
-        $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
+        $parentPath = realpath($root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './'));
 
-        if (file_exists($parentPath)) {
+        if (file_exists((string) $parentPath)) {
             $directories = File::directories($parentPath);
 
             foreach ($directories as $directory) {
