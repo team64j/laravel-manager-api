@@ -6,12 +6,27 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
-use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
 
 class WorkspaceLayout extends Layout
 {
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-eye';
+    }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return Lang::get('global.settings_ui');
+    }
+
     /**
      * @return array
      */
@@ -23,8 +38,8 @@ class WorkspaceLayout extends Layout
                 ->setSave(),
 
             Title::make()
-                ->setTitle(Lang::get('global.settings_ui'))
-                ->setIcon('fa fa-eye'),
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
 
             Tabs::make()
                 ->setId('workspace')
@@ -44,13 +59,5 @@ class WorkspaceLayout extends Layout
                 ])
                 ->addTab('dashboard', 'Dashboard', null, 'p-6'),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-eye';
     }
 }

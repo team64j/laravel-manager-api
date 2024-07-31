@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-class Layout
+abstract class Layout
 {
     /**
      * @return array
      */
-    public function default(): array
-    {
-        return [];
-    }
+    abstract public function default(): array;
 
     /**
      * @return array
@@ -23,18 +20,34 @@ class Layout
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleDefault(): array
+    public function title(): string
     {
-        return [];
+        return '';
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function titleList(): array
+    public function titleList(): string
     {
-        return [];
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return '';
     }
 }

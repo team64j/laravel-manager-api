@@ -13,6 +13,24 @@ use Team64j\LaravelManagerComponents\Title;
 class PermissionResourceLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-male';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.manage_permission');
+    }
+
+    /**
      * @return array
      */
     public function list(): array
@@ -26,8 +44,8 @@ class PermissionResourceLayout extends Layout
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.manage_permission'))
-                ->setIcon('fa fa-male')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setHelp(Lang::get('global.access_permissions_resources_tab')),
 
             Tabs::make()
@@ -77,14 +95,6 @@ class PermissionResourceLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-male';
-    }
-
-    /**
      * @param $model
      *
      * @return array
@@ -93,8 +103,8 @@ class PermissionResourceLayout extends Layout
     {
         return [
             Title::make()
-                ->setTitle($model->name ?? Lang::get('global.manage_permission'))
-                ->setIcon($this->getIcon())
+                ->setTitle($this->title($model->name))
+                ->setIcon($this->icon())
         ];
     }
 }

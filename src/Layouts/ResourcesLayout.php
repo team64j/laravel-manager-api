@@ -12,6 +12,14 @@ use Team64j\LaravelManagerComponents\Title;
 class ResourcesLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-edit';
+    }
+
+    /**
      * @param SiteContent|null $model
      *
      * @return array
@@ -21,7 +29,7 @@ class ResourcesLayout extends Layout
         return [
             Title::make()
                 ->setTitle($model->pagetitle)
-                ->setIcon('fa fa-edit'),
+                ->setIcon($this->icon()),
 
             Panel::make()
                 ->setModel('data')
@@ -57,13 +65,5 @@ class ResourcesLayout extends Layout
                     ]
                 ),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-edit';
     }
 }

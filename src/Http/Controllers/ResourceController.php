@@ -6,7 +6,6 @@ use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteContent;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
@@ -211,8 +210,8 @@ class ResourceController extends Controller
             ->additional([
                 'layout' => $layout->default($model, $route['url'] ?? ''),
                 'meta' => [
-                    'icon' => $layout->getIcon(),
-                    'title' => $model->pagetitle ?? Lang::get('global.new_resource'),
+                    'icon' => $layout->icon(),
+                    'title' => $layout->title($model->pagetitle),
                     'url' => $route['url'] ?? '',
                 ],
             ]);

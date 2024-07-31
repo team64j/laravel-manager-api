@@ -14,6 +14,40 @@ use Team64j\LaravelManagerComponents\Title;
 class RoleCategoryLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-object-group';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-legal';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_category');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.role_management_title');
+    }
+
+    /**
      * @return array
      */
     public function list(): array
@@ -21,14 +55,14 @@ class RoleCategoryLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_category'),
+                    $this->title(),
                     '/roles/categories/new',
                     'btn-green'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.role_management_title'))
-                ->setIcon('fa fa-legal'),
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
 
             Tabs::make()
                 ->setId('userManagement')
@@ -36,13 +70,13 @@ class RoleCategoryLayout extends Layout
                 ->addTab(
                     'users',
                     Lang::get('global.role_role_management'),
-                    'fa fa-legal',
+                    $this->iconList(),
                     route: route('manager.api.roles.users.index')
                 )
                 ->addTab(
                     'categories',
                     Lang::get('global.category_heading'),
-                    'fa fa-object-group',
+                    $this->icon(),
                     route: route('manager.api.roles.categories.index')
                 )
                 ->addTab(
@@ -69,14 +103,6 @@ class RoleCategoryLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIconList(): string
-    {
-        return 'fa fa-legal';
-    }
-
-    /**
      * @param PermissionsGroups|null $model
      *
      * @return array
@@ -86,18 +112,11 @@ class RoleCategoryLayout extends Layout
         return [
             Title::make()
                 ->setTitle(
-                    Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key)
-                        : Lang::get('global.new_category')
+                    $this->title(
+                        Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                    )
                 )
-                ->setIcon('fa fa-object-group'),
+                ->setIcon($this->icon()),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-object-group';
     }
 }

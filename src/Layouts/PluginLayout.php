@@ -18,6 +18,56 @@ use Team64j\LaravelManagerComponents\Tree;
 class PluginLayout extends Layout
 {
     /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_plugin');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.plugins');
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-plug';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-plug';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconSort(): string
+    {
+        return 'fa fa-sort-numeric-asc';
+    }
+
+    /**
+     * @return string
+     */
+    public function titleSort(): string
+    {
+        return Lang::get('global.plugin_priority_title');
+    }
+
+    /**
      * @param SitePlugin|null $model
      *
      * @return array
@@ -29,8 +79,7 @@ class PluginLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.plugins') . ': ' .
-                    ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
                 'to' => '/elements/plugins?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -52,8 +101,8 @@ class PluginLayout extends Layout
 
             Title::make()
                 ->setModel('name')
-                ->setTitle(Lang::get('global.new_plugin'))
-                ->setIcon('fa fa-plug')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make(),
@@ -71,15 +120,15 @@ class PluginLayout extends Layout
             Actions::make()
                 ->setAction('sort', Lang::get('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
                 ->setNew(
-                    Lang::get('global.new_plugin'),
+                    $this->title(),
                     '/plugins/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.plugins'))
-                ->setIcon('fa fa-plug')
+                ->setTitle($this->titleList())
+                ->setIcon($this->icon())
                 ->setHelp(Lang::get('global.plugin_management_msg')),
 
             Tabs::make()
@@ -97,7 +146,7 @@ class PluginLayout extends Layout
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
+                    'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route: route('manager.api.elements.tvs')
@@ -226,25 +275,6 @@ class PluginLayout extends Layout
     /**
      * @return array
      */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.plugins'),
-            'icon' => $this->getIcon(),
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-plug';
-    }
-
-    /**
-     * @return array
-     */
     public function sort(): array
     {
         return [
@@ -256,8 +286,8 @@ class PluginLayout extends Layout
                 ->setSave(),
 
             Title::make()
-                ->setTitle(Lang::get('global.plugin_priority_title'))
-                ->setIcon('fa fa-sort-numeric-asc'),
+                ->setTitle($this->titleSort())
+                ->setIcon($this->iconSort()),
 
             Panel::make()
                 ->setModel('data')
@@ -288,22 +318,14 @@ class PluginLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIconSort(): string
-    {
-        return 'fa fa-sort-numeric-asc';
-    }
-
-    /**
      * @return array
      */
     public function tree(): array
     {
         return Tab::make()
             ->setId('plugins')
-            ->setTitle(Lang::get('global.plugins'))
-            ->setIcon('fa fa-plug')
+            ->setTitle($this->titleList())
+            ->setIcon($this->iconList())
             ->setPermissions('edit_plugin')
             ->setRoute('/plugins/:id')
             ->isNeedUpdate()
@@ -319,7 +341,7 @@ class PluginLayout extends Layout
                     ])
                     ->setAppends(['id'])
                     ->setIcons([
-                        'default' => 'fa fa-plug',
+                        'default' => $this->icon(),
                     ])
                     ->setMenu([
                         'actions' => [

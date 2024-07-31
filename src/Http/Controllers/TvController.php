@@ -98,8 +98,8 @@ class TvController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                        'title' => Lang::get('global.tmplvars'),
-                        'icon' => $layout->getIcon(),
+                        'title' => $layout->titleList(),
+                        'icon' => $layout->iconList(),
                         'pagination' => $this->pagination($result),
                     ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
@@ -165,8 +165,8 @@ class TvController extends Controller
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $model->name ?? Lang::get('global.new_tmplvars'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($model->name),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }
@@ -366,8 +366,8 @@ class TvController extends Controller
             ->additional([
                 'layout' => $layout->sort(),
                 'meta' => [
-                    'title' => Lang::get('global.template_tv_edit_title'),
-                    'icon' => $layout->getIconSort(),
+                    'title' => $layout->titleSort(),
+                    'icon' => $layout->iconSort(),
                 ],
                 'pagination' => $this->pagination($result),
             ]);

@@ -23,6 +23,22 @@ use Team64j\LaravelManagerComponents\Title;
 class ConfigurationLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-sliders';
+    }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return Lang::get('global.settings_title');
+    }
+
+    /**
      * @return array
      */
     public function default(): array
@@ -33,8 +49,8 @@ class ConfigurationLayout extends Layout
                 ->setSave(),
 
             Title::make()
-                ->setTitle(Lang::get('global.settings_title'))
-                ->setIcon('fa fa-sliders'),
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
 
             Tabs::make()
                 ->setId('configuration')
@@ -1221,14 +1237,6 @@ class ConfigurationLayout extends Layout
                     ],
                 ]),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-sliders';
     }
 
     /**

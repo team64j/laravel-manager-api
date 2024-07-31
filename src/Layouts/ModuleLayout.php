@@ -9,7 +9,6 @@ use EvolutionCMS\Models\SiteModule;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Crumbs;
-use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -18,6 +17,40 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class ModuleLayout extends Layout
 {
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-cube';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-cubes';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_module');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.modules');
+    }
+
     /**
      * @param SiteModule|null $model
      *
@@ -52,8 +85,8 @@ class ModuleLayout extends Layout
 
             Title::make()
                 ->setModel('name')
-                ->setTitle(Lang::get('global.new_module'))
-                ->setIcon('fa fa-cube')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make(),
@@ -70,15 +103,15 @@ class ModuleLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_module'),
+                    $this->title(),
                     '/modules/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.modules'))
-                ->setIcon('fa fa-cubes')
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList())
                 ->setHelp(Lang::get('global.module_management_msg')),
 
             Tabs::make()
@@ -96,7 +129,7 @@ class ModuleLayout extends Layout
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
+                    'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route: route('manager.api.elements.tvs')
@@ -223,14 +256,6 @@ class ModuleLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-cubes';
-    }
-
-    /**
      * @return array
      */
     public function tree(): array
@@ -238,7 +263,7 @@ class ModuleLayout extends Layout
         return Tab::make()
             ->setId('modules')
             ->setTitle(Lang::get('global.modules'))
-            ->setIcon('fa fa-cubes')
+            ->setIcon($this->iconList())
             ->setPermissions('edit_module')
             ->setRoute('/modules/:id')
             ->isNeedUpdate()
@@ -254,7 +279,7 @@ class ModuleLayout extends Layout
                     ])
                     ->setAppends(['id'])
                     ->setIcons([
-                        'default' => 'fa fa-cubes',
+                        'default' => $this->icon(),
                     ])
                     ->setMenu([
                         'actions' => [

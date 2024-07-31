@@ -14,6 +14,32 @@ use Team64j\LaravelManagerComponents\Title;
 class PermissionRelationLayout extends Layout
 {
     /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.manage_permission');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.manage_permission');
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-male';
+    }
+
+    /**
      * @param Collection|null $groups
      * @param Collection|null $documents
      *
@@ -30,8 +56,8 @@ class PermissionRelationLayout extends Layout
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.manage_permission'))
-                ->setIcon('fa fa-male')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setHelp(Lang::get('global.access_permissions_links_tab')),
 
             Tabs::make()
@@ -66,17 +92,6 @@ class PermissionRelationLayout extends Layout
     }
 
     /**
-     * @return array
-     */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.manage_permission'),
-            'icon' => 'fa fa-male',
-        ];
-    }
-
-    /**
      * @param $model
      *
      * @return array
@@ -85,16 +100,8 @@ class PermissionRelationLayout extends Layout
     {
         return [
             Title::make()
-                ->setTitle($model->name ?? Lang::get('global.manage_permission'))
-                ->setIcon($this->getIcon())
+                ->setTitle($this->title($model->name))
+                ->setIcon($this->icon())
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-male';
     }
 }

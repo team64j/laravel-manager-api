@@ -98,8 +98,8 @@ class ChunkController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                        'title' => Lang::get('global.htmlsnippets'),
-                        'icon' => $layout->getIcon(),
+                        'title' => $layout->titleList(),
+                        'icon' => $layout->icon(),
                         'pagination' => $this->pagination($result),
                     ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
@@ -164,8 +164,8 @@ class ChunkController extends Controller
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $model->name ?? Lang::get('global.new_htmlsnippet'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $model->name ?? $layout->title(),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

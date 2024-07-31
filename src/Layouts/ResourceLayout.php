@@ -34,6 +34,24 @@ use Team64j\LaravelManagerComponents\Tree;
 class ResourceLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-edit';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_resource');
+    }
+
+    /**
      * @param $items
      * @param array $parents
      *
@@ -137,7 +155,7 @@ class ResourceLayout extends Layout
                 ->setRows(20)
                 ->setLanguage('html');
 
-            $title = Lang::get('global.new_resource');
+            $title = $this->title();
         }
 
         $tvs = $model->getTvs();
@@ -192,7 +210,7 @@ class ResourceLayout extends Layout
             Title::make()
                 ->setModel('pagetitle')
                 ->setTitle($title)
-                ->setIcon('fa fa-edit')
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make()
@@ -545,14 +563,6 @@ class ResourceLayout extends Layout
 
             Crumbs::make()->setData($breadcrumbs),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-edit';
     }
 
     /**

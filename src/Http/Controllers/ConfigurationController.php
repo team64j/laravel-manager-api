@@ -64,8 +64,8 @@ class ConfigurationController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'title' => Lang::get('global.settings_title'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

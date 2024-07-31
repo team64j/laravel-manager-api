@@ -71,8 +71,8 @@ class WorkspaceController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'title' => Lang::get('global.settings_ui'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
                     'lang' => [
                         'save' => Lang::get('global.save'),
                         'stay_new' => Lang::get('global.stay_new'),

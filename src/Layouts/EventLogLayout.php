@@ -13,6 +13,30 @@ use Team64j\LaravelManagerComponents\Title;
 class EventLogLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-exclamation-triangle';
+    }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return Lang::get('global.eventlog');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.eventlog_viewer');
+    }
+
+    /**
      * @return array
      */
     public function list(): array
@@ -22,8 +46,8 @@ class EventLogLayout extends Layout
                 ->setClear(Lang::get('global.clear_log'), '', 'btn-red', 'fa fa-trash'),
 
             Title::make()
-                ->setTitle(Lang::get('global.eventlog_viewer'))
-                ->setIcon('fa fa-exclamation-triangle'),
+                ->setTitle($this->titleList())
+                ->setIcon($this->icon()),
 
             Panel::make()
                 ->setModel('data')
@@ -68,15 +92,15 @@ class EventLogLayout extends Layout
                 ->setDeleteClass('btn-red'),
 
             Title::make()
-                ->setTitle(Lang::get('global.eventlog'))
-                ->setIcon('fa fa-exclamation-triangle'),
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
 
             '<div class="mx-4 mb-4 rounded border p-6 bg-white dark:bg-gray-700 overflow-auto">
               <div class="data data-event-log mb-4">
                 <table class="w-full">
                   <thead>
                   <tr>
-                    <th colspan="4" class="text-lg pb-4">' . e($model->source . ' - ' . Lang::get('global.eventlog_viewer')) . '</th>
+                    <th colspan="4" class="text-lg pb-4">' . e($model->source . ' - ' . $this->titleList()) . '</th>
                   </tr>
                   <tr>
                     <th>' . Lang::get('global.event_id') . '</th>
@@ -100,13 +124,5 @@ class EventLogLayout extends Layout
         
             </div>',
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-exclamation-triangle';
     }
 }

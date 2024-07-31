@@ -18,6 +18,40 @@ use Team64j\LaravelManagerComponents\Tree;
 class SnippetLayout extends Layout
 {
     /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_snippet');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.snippets');
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-code';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-code';
+    }
+
+    /**
      * @param SiteSnippet|null $model
      *
      * @return array
@@ -29,7 +63,7 @@ class SnippetLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.snippets') . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
                 'to' => '/elements/snippets?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -51,8 +85,8 @@ class SnippetLayout extends Layout
 
             Title::make()
                 ->setModel('name')
-                ->setTitle(Lang::get('global.new_snippet'))
-                ->setIcon('fa fa-code')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make(),
@@ -61,20 +95,23 @@ class SnippetLayout extends Layout
         ];
     }
 
+    /**
+     * @return array
+     */
     public function list(): array
     {
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_snippet'),
+                    $this->title(),
                     '/snippets/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.snippets'))
-                ->setIcon('fa fa-code')
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList())
                 ->setHelp(Lang::get('global.snippet_management_msg')),
 
             Tabs::make()
@@ -92,7 +129,7 @@ class SnippetLayout extends Layout
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
+                    'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route: route('manager.api.elements.tvs')
@@ -107,8 +144,8 @@ class SnippetLayout extends Layout
                 )
                 ->addTab(
                     'snippets',
-                    Lang::get('global.snippets'),
-                    'fa fa-code',
+                    $this->titleList(),
+                    $this->icon(),
                     'py-4',
                     ['edit_snippet'],
                     route: route('manager.api.elements.snippets')
@@ -221,31 +258,12 @@ class SnippetLayout extends Layout
     /**
      * @return array
      */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.snippets'),
-            'icon' => $this->getIcon(),
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-code';
-    }
-
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()
             ->setId('snippets')
-            ->setTitle(Lang::get('global.snippets'))
-            ->setIcon('fa fa-code')
+            ->setTitle($this->titleList())
+            ->setIcon($this->icon())
             ->setPermissions('edit_snippet')
             ->setRoute('/snippets/:id')
             ->isNeedUpdate()
@@ -261,7 +279,7 @@ class SnippetLayout extends Layout
                     ])
                     ->setAppends(['id'])
                     ->setIcons([
-                        'default' => 'fa fa-code',
+                        'default' => $this->icon(),
                     ])
                     ->setMenu([
                         'actions' => [

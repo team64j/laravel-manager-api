@@ -16,6 +16,46 @@ use Team64j\LaravelManagerComponents\Tree;
 class CategoryLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-object-group';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-object-group';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconSort(): string
+    {
+        return 'fa fa-sort-numeric-asc';
+    }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return Lang::get('global.new_category');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.category_management');
+    }
+
+    /**
      * @param Category|null $model
      *
      * @return array
@@ -40,7 +80,7 @@ class CategoryLayout extends Layout
             Title::make()
                 ->setModel('category')
                 ->setTitle(Lang::get('global.new_category'))
-                ->setIcon('fa fa-object-group')
+                ->setIcon(self::icon())
                 ->setId($model->getKey()),
         ];
     }
@@ -61,8 +101,8 @@ class CategoryLayout extends Layout
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.category_management'))
-                ->setIcon('fa fa-object-group'),
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
 
             Tabs::make()
                 ->setId('elements')
@@ -79,7 +119,7 @@ class CategoryLayout extends Layout
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
+                    'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route: route('manager.api.elements.tvs')
@@ -171,25 +211,6 @@ class CategoryLayout extends Layout
     /**
      * @return array
      */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.category_management'),
-            'icon' => $this->getIcon(),
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-object-group';
-    }
-
-    /**
-     * @return array
-     */
     public function sort(): array
     {
         return [
@@ -234,22 +255,14 @@ class CategoryLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIconSort(): string
-    {
-        return 'fa fa-sort-numeric-asc';
-    }
-
-    /**
      * @return array
      */
     public function tree(): array
     {
         return Tab::make()
             ->setId('categories')
-            ->setIcon('fa fa-object-group')
-            ->setTitle(Lang::get('global.category_management'))
+            ->setIcon($this->iconList())
+            ->setTitle($this->titleList())
             ->setPermissions(['category_manager'])
             ->setRoute('/categories/:id')
             ->isNeedUpdate()
@@ -264,7 +277,7 @@ class CategoryLayout extends Layout
                     ])
                     ->setAppends(['id'])
                     ->setIcons([
-                        'default' => 'fa fa-object-group',
+                        'default' => $this->icon(),
                     ])
                     ->setMenu([
                         'actions' => [

@@ -185,10 +185,10 @@ class SystemLogController extends Controller
 
         return SystemLogResource::collection($result->items())
             ->additional([
-                'layout' => $layout->list(),
+                'layout' => $layout->default(),
                 'meta' => [
-                    'title' => Lang::get('global.mgrlog_view'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
                     'sorting' => [
                         'order' => $order,
                         'dir' => $dir,

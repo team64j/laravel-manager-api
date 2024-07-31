@@ -9,7 +9,6 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
@@ -187,8 +186,8 @@ class FilemanagerController extends Controller
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
-                    'title' => Lang::get('global.settings_misc'),
-                    'icon' => $layout->getIcon()
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

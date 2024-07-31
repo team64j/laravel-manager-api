@@ -51,8 +51,8 @@ class RoleUserController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.role_management_title'),
-                    'icon' => $layout->getIconList(),
+                    'title' => $layout->titleList(),
+                    'icon' => $layout->iconList(),
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -73,28 +73,28 @@ class RoleUserController extends Controller
      *      )
      * )
      * @param RoleUserRequest $request
-     * @param string $roleUser
+     * @param string $id
      * @param RoleUserLayout $layout
      *
      * @return RoleUserResource
      */
-    public function show(RoleUserRequest $request, string $roleUser, RoleUserLayout $layout): RoleUserResource
+    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): RoleUserResource
     {
-        /** @var UserRole $roleUser */
-        $roleUser = UserRole::query()->findOrNew($roleUser);
+        /** @var UserRole $model */
+        $model = UserRole::query()->findOrNew($id);
 
-        if (!$roleUser->getKey()) {
-            $roleUser->setRawAttributes([
+        if (!$model->getKey()) {
+            $model->setRawAttributes([
                 'name' => '',
             ]);
         }
 
         return RoleUserResource::make([])
             ->additional([
-                'layout' => $layout->default($roleUser),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $roleUser->name ?: Lang::get('global.new_role'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($model->name),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

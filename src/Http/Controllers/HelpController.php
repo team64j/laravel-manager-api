@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\HelpRequest;
 use Team64j\LaravelManagerApi\Http\Resources\HelpResource;
+use Team64j\LaravelManagerApi\Layouts\HelpLayout;
 
 class HelpController extends Controller
 {
@@ -25,11 +27,19 @@ class HelpController extends Controller
      *      )
      * )
      * @param HelpRequest $request
+     * @param HelpLayout $layout
      *
      * @return HelpResource
      */
-    public function index(HelpRequest $request): HelpResource
+    public function index(HelpRequest $request, HelpLayout $layout): HelpResource
     {
-        return HelpResource::make([]);
+        return HelpResource::make([])
+            ->additional([
+                'layout' => $layout->default(),
+                'meta' => [
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
+                ],
+            ]);
     }
 }

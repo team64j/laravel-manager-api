@@ -100,8 +100,8 @@ class PluginController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                        'title' => Lang::get('global.plugins'),
-                        'icon' => $layout->getIcon(),
+                        'title' => $layout->titleList(),
+                        'icon' => $layout->iconList(),
                         'pagination' => $this->pagination($result),
                     ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
@@ -166,8 +166,8 @@ class PluginController extends Controller
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $model->name ?? Lang::get('global.new_plugin'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($model->name),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }
@@ -337,8 +337,8 @@ class PluginController extends Controller
             ->additional([
                 'layout' => $layout->sort(),
                 'meta' => [
-                    'title' => Lang::get('global.plugin_priority_title'),
-                    'icon' => $layout->getIconSort(),
+                    'title' => $layout->titleSort(),
+                    'icon' => $layout->iconSort(),
                 ],
             ]);
     }

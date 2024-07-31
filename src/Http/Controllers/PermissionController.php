@@ -78,8 +78,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.manage_permission'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -110,14 +110,14 @@ class PermissionController extends Controller
         string $id,
         PermissionGroupLayout $layout): PermissionResource
     {
-        $data = MembergroupName::query()->findOrNew($id);
+        $model = MembergroupName::query()->findOrNew($id);
 
-        return PermissionResource::make($data)
+        return PermissionResource::make($model)
             ->additional([
-                'layout' => $layout->default($data),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $data->name ?? Lang::get('global.manage_permission'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($model->name),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }
@@ -178,8 +178,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.manage_permission'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -210,14 +210,14 @@ class PermissionController extends Controller
         string $id,
         PermissionResourceLayout $layout): PermissionResource
     {
-        $data = DocumentgroupName::query()->findOrNew($id);
+        $model = DocumentgroupName::query()->findOrNew($id);
 
-        return PermissionResource::make($data)
+        return PermissionResource::make($model)
             ->additional([
-                'layout' => $layout->default($data),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $data->name ?? Lang::get('global.manage_permission'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($model->name),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }
@@ -280,8 +280,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.manage_permission'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title(),
+                    'icon' => $layout->icon(),
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -318,8 +318,8 @@ class PermissionController extends Controller
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
-                    'title' => $data->name ?? Lang::get('global.manage_permission'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($data->name),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

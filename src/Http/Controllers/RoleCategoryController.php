@@ -61,8 +61,8 @@ class RoleCategoryController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.role_management_title'),
-                    'icon' => 'fa fa-legal',
+                    'title' => $layout->titleList(),
+                    'icon' => $layout->iconList(),
                     'pagination' => $this->pagination($result),
                 ],
             ]);
@@ -83,32 +83,33 @@ class RoleCategoryController extends Controller
      *      )
      * )
      * @param RoleCategoryRequest $request
-     * @param string $roleCategory
+     * @param string $id
      * @param RoleCategoryLayout $layout
      *
      * @return RoleCategoryResource
      */
     public function show(
         RoleCategoryRequest $request,
-        string $roleCategory,
+        string $id,
         RoleCategoryLayout $layout): RoleCategoryResource
     {
-        /** @var PermissionsGroups $roleCategory */
-        $roleCategory = PermissionsGroups::query()->findOrNew($roleCategory);
+        /** @var PermissionsGroups $model */
+        $model = PermissionsGroups::query()->findOrNew($id);
 
-        if (!$roleCategory->getKey()) {
-            $roleCategory->setRawAttributes([
+        if (!$model->getKey()) {
+            $model->setRawAttributes([
                 'name' => ''
             ]);
         }
 
         return RoleCategoryResource::make([])
             ->additional([
-                'layout' => $layout->default($roleCategory),
+                'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => Lang::has('global.' . $roleCategory->lang_key) ? Lang::get('global.' . $roleCategory->lang_key)
-                        : Lang::get('global.new_category'),
-                    'icon' => 'fa fa-object-group',
+                    'title' => $layout->title(
+                        Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                    ),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

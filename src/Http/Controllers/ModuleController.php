@@ -100,8 +100,8 @@ class ModuleController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                        'title' => Lang::get('global.modules'),
-                        'icon' => $layout->getIcon(),
+                        'title' => $layout->titleList(),
+                        'icon' => $layout->iconList(),
                         'pagination' => $this->pagination($result),
                     ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
@@ -166,8 +166,8 @@ class ModuleController extends Controller
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $model->name ?? Lang::get('global.new_module'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($model->name),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

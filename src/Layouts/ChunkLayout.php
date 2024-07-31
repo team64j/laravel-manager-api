@@ -18,6 +18,38 @@ use Team64j\LaravelManagerComponents\Tree;
 class ChunkLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return Lang::get('global.new_htmlsnippet');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.htmlsnippets');
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-th-large';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-th-large';
+    }
+
+    /**
      * @param SiteHtmlSnippet|null $model
      *
      * @return array
@@ -29,8 +61,7 @@ class ChunkLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.htmlsnippets') . ': ' .
-                    ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
                 'to' => '/elements/chunks?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -52,8 +83,8 @@ class ChunkLayout extends Layout
 
             Title::make()
                 ->setModel('name')
-                ->setTitle(Lang::get('global.new_htmlsnippet'))
-                ->setIcon('fa fa-th-large')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make(),
@@ -70,15 +101,15 @@ class ChunkLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_htmlsnippet'),
+                    $this->title(),
                     '/chunks/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.htmlsnippets'))
-                ->setIcon('fa fa-th-large')
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList())
                 ->setHelp(Lang::get('global.htmlsnippet_management_msg')),
 
             Tabs::make()
@@ -96,14 +127,14 @@ class ChunkLayout extends Layout
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
+                    'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route: route('manager.api.elements.tvs')
                 )
                 ->addTab(
                     'chunks',
-                    Lang::get('global.htmlsnippets'),
+                    $this->titleList(),
                     'fa fa-th-large',
                     'py-4',
                     ['edit_chunk'],
@@ -225,31 +256,12 @@ class ChunkLayout extends Layout
     /**
      * @return array
      */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.htmlsnippets'),
-            'icon' => $this->getIcon(),
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-th-large';
-    }
-
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()
             ->setId('chunks')
-            ->setTitle(Lang::get('global.htmlsnippets'))
-            ->setIcon('fa fa-th-large')
+            ->setTitle($this->titleList())
+            ->setIcon($this->iconList())
             ->setPermissions('edit_chunk')
             ->setRoute('/chunks/:id')
             ->isNeedUpdate()
@@ -265,7 +277,7 @@ class ChunkLayout extends Layout
                     ])
                     ->setAppends(['id'])
                     ->setIcons([
-                        'default' => 'fa fa-th-large',
+                        'default' => $this->icon(),
                     ])
                     ->setMenu([
                         'actions' => [

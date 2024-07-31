@@ -92,7 +92,7 @@ class ResourcesController extends Controller
                 'layout' => $layout->default($model),
                 'meta' => [
                     'title' => $model->pagetitle,
-                    'icon' => $layout->getIcon(),
+                    'icon' => $layout->icon(),
                     'pagination' => $this->pagination($result),
                     'sorting' => [
                         'order' => $order,

@@ -73,7 +73,7 @@ class CategoryController extends Controller
                 'layout' => $layout->list(),
                 'meta' => [
                     'title' => Lang::get('global.category_management'),
-                    'icon' => $layout->getIcon(),
+                    'icon' => $layout->icon(),
                     'pagination' => $this->pagination($result),
                 ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
@@ -138,8 +138,8 @@ class CategoryController extends Controller
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
-                    'title' => $model->category ?? Lang::get('global.new_category'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $model->category ?? $layout->title(),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }
@@ -233,7 +233,7 @@ class CategoryController extends Controller
                 'layout' => $layout->sort(),
                 'meta' => [
                     'title' => Lang::get('global.cm_sort_categories'),
-                    'icon' => $layout->getIconSort(),
+                    'icon' => $layout->iconSort(),
                 ],
             ]);
     }

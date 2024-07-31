@@ -28,6 +28,55 @@ use Team64j\LaravelManagerComponents\Tree;
 class TvLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-list-alt';
+    }
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-list-alt';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconSort(): string
+    {
+        return 'fa fa-sort-numeric-asc';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_tmplvars');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.tmplvars');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleSort(): string
+    {
+        return Lang::get('global.template_tv_edit_title');
+    }
+
+    /**
      * @param SiteTmplvar|null $model
      *
      * @return array
@@ -39,8 +88,7 @@ class TvLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.tmplvars') . ': ' .
-                    ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
                 'to' => '/elements/tvs?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -62,8 +110,8 @@ class TvLayout extends Layout
 
             Title::make()
                 ->setModel('name')
-                ->setTitle(Lang::get('global.new_tmplvars'))
-                ->setIcon('fa fa-list-alt')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make()
@@ -292,8 +340,8 @@ class TvLayout extends Layout
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.tmplvars'))
-                ->setIcon('fa fa-list-alt')
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList())
                 ->setHelp(Lang::get('global.tmplvars_management_msg')),
 
             Tabs::make()
@@ -311,7 +359,7 @@ class TvLayout extends Layout
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
+                    'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route: route('manager.api.elements.tvs')
@@ -432,14 +480,6 @@ class TvLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-list-alt';
-    }
-
-    /**
      * @return array
      */
     public function sort(): array
@@ -453,8 +493,8 @@ class TvLayout extends Layout
                 ->setSave(),
 
             Title::make()
-                ->setTitle(Lang::get('global.template_tv_edit_title'))
-                ->setIcon('fa fa-sort-numeric-asc'),
+                ->setTitle($this->titleSort())
+                ->setIcon($this->iconSort()),
 
             Panel::make()
                 ->setModel('data')
@@ -486,22 +526,14 @@ class TvLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIconSort(): string
-    {
-        return 'fa fa-sort-numeric-asc';
-    }
-
-    /**
      * @return array
      */
     public function tree(): array
     {
         return Tab::make()
             ->setId('tvs')
-            ->setTitle(Lang::get('global.tmplvars'))
-            ->setIcon('fa fa-list-alt')
+            ->setTitle($this->titleList())
+            ->setIcon($this->iconList())
             ->setPermissions(['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'])
             ->setRoute('/tvs/:id')
             ->isNeedUpdate()
@@ -516,7 +548,7 @@ class TvLayout extends Layout
                     ])
                     ->setAppends(['id'])
                     ->setIcons([
-                        'default' => 'fa fa-list-alt',
+                        'default' => $this->icon(),
                     ])
                     ->setMenu([
                         'actions' => [

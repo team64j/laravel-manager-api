@@ -14,6 +14,32 @@ use Team64j\LaravelManagerComponents\Title;
 class RoleUserLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-legal';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-legal';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.role_management_title');
+    }
+
+    /**
      * @return array
      */
     public function list(): array
@@ -27,8 +53,8 @@ class RoleUserLayout extends Layout
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.role_management_title'))
-                ->setIcon('fa fa-legal')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setHelp(Lang::get('global.role_management_msg')),
 
             Tabs::make()
@@ -37,7 +63,7 @@ class RoleUserLayout extends Layout
                 ->addTab(
                     'users',
                     Lang::get('global.role_role_management'),
-                    'fa fa-legal',
+                    $this->iconList(),
                     route: route('manager.api.roles.users.index')
                 )
                 ->addTab(
@@ -71,14 +97,6 @@ class RoleUserLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIconList(): string
-    {
-        return 'fa fa-legal';
-    }
-
-    /**
      * @param UserRole|null $model
      *
      * @return array
@@ -87,16 +105,8 @@ class RoleUserLayout extends Layout
     {
         return [
             Title::make()
-                ->setTitle($model->name ?: Lang::get('global.new_role'))
-                ->setIcon('fa fa-legal')
+                ->setTitle($this->title($model->name))
+                ->setIcon($this->icon())
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-legal';
     }
 }

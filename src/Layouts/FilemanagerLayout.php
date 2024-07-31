@@ -14,14 +14,30 @@ use Team64j\LaravelManagerComponents\Tree;
 class FilemanagerLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return Lang::get('global.settings_misc');
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'far fa-folder-open';
+    }
+
+    /**
      * @return array
      */
     public function default(): array
     {
         return Main::make([
             'title' => Title::make()
-                ->setTitle(Lang::get('global.settings_misc'))
-                ->setIcon($this->getIcon()),
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
 
             'sidebar' => [
                 Tree::make()
@@ -32,7 +48,7 @@ class FilemanagerLayout extends Layout
                     ])
                     ->setIcons([
                         'default-folder' => 'fa fa-folder',
-                        'default-folder-open' => 'fa fa-folder-open',
+                        'default-folder-open' => $this->icon(),
                     ])
                     ->setSettings([
                         'keyId' => 'key',
@@ -91,21 +107,13 @@ class FilemanagerLayout extends Layout
     }
 
     /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'far fa-folder-open';
-    }
-
-    /**
      * @return array
      */
     public function tree(): array
     {
         return Tab::make()
             ->setId('files')
-            ->setIcon('fa fa-folder-open')
+            ->setIcon($this->icon())
             ->setTitle(Lang::get('global.files_files'))
             ->setPermissions(['file_manager'])
             ->setRoute('/files/:id')

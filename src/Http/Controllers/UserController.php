@@ -175,8 +175,8 @@ class UserController extends Controller
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => Lang::get('global.users'),
-                    'icon' => $layout->getIconList(),
+                    'title' => $layout->titleList(),
+                    'icon' => $layout->iconList(),
                     'pagination' => $this->pagination($result),
                     'sorting' => [
                         'order' => $order,
@@ -216,8 +216,8 @@ class UserController extends Controller
             ->additional([
                 'layout' => $layout->default($user),
                 'meta' => [
-                    'title' => $user->username ?: Lang::get('global.new_user'),
-                    'icon' => $layout->getIcon(),
+                    'title' => $layout->title($user->username),
+                    'icon' => $layout->icon(),
                 ],
             ]);
     }

@@ -25,6 +25,40 @@ use Team64j\LaravelManagerComponents\Tree;
 class TemplateLayout extends Layout
 {
     /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_template');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.templates');
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-newspaper';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-newspaper';
+    }
+
+    /**
      * @param SiteTemplate|null $model
      *
      * @return array
@@ -40,8 +74,7 @@ class TemplateLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.templates') . ': ' .
-                    ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
                 'to' => '/elements/templates?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -65,8 +98,8 @@ class TemplateLayout extends Layout
                 ->setModel('templatename')
                 ->setHelp(Lang::get('global.template_msg'))
                 ->setId($model->getKey())
-                ->setIcon('fa fa-newspaper')
-                ->setTitle(Lang::get('global.new_template')),
+                ->setIcon($this->icon())
+                ->setTitle($this->title()),
 
             Tabs::make()
                 ->setId('template')
@@ -227,15 +260,15 @@ class TemplateLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_template'),
+                    $this->title(),
                     '/templates/new',
                     'btn-green',
                     'fa fa-plus'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.templates'))
-                ->setIcon('fa fa-newspaper')
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList())
                 ->setHelp(Lang::get('global.template_management_msg')),
 
             Tabs::make()
@@ -253,7 +286,7 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
-                    'fa fa-th-large',
+                    'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route: route('manager.api.elements.tvs')
@@ -385,31 +418,12 @@ class TemplateLayout extends Layout
     /**
      * @return array
      */
-    public function titleList(): array
-    {
-        return [
-            'title' => Lang::get('global.templates'),
-            'icon' => $this->getIcon(),
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-newspaper';
-    }
-
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()
             ->setId('templates')
-            ->setTitle(Lang::get('global.templates'))
-            ->setIcon('fa fa-newspaper')
+            ->setTitle($this->titleList())
+            ->setIcon($this->iconList())
             ->setPermissions('edit_template')
             ->setRoute('/templates/:id')
             ->isNeedUpdate()
@@ -424,7 +438,7 @@ class TemplateLayout extends Layout
                     ])
                     ->setAppends(['id'])
                     ->setIcons([
-                        'default' => 'fa fa-newspaper',
+                        'default' => $this->icon(),
                         Config::get('global.default_template') => 'fa fa-home fa-fw text-blue-500',
                     ])
                     ->setMenu([

@@ -14,6 +14,37 @@ use Team64j\LaravelManagerComponents\Title;
 class RolePermissionLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-user-tag';
+    }
+
+    public function iconList(): string
+    {
+        return 'fa fa-legal';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_permission');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.role_management_title');
+    }
+
+    /**
      * @return array
      */
     public function list(): array
@@ -21,14 +52,14 @@ class RolePermissionLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_permission'),
+                    $this->title(),
                     '/roles/permissions/new',
                     'btn-green'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.role_management_title'))
-                ->setIcon('fa fa-legal'),
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
 
             Tabs::make()
                 ->setId('userManagement')
@@ -36,7 +67,7 @@ class RolePermissionLayout extends Layout
                 ->addTab(
                     'users',
                     Lang::get('global.role_role_management'),
-                    'fa fa-legal',
+                    $this->iconList(),
                     route: route('manager.api.roles.users.index')
                 )
                 ->addTab(
@@ -48,7 +79,7 @@ class RolePermissionLayout extends Layout
                 ->addTab(
                     'permissions',
                     Lang::get('global.manage_permission'),
-                    'fa fa-user-tag',
+                    $this->icon(),
                     route: route('manager.api.roles.permissions.index')
                 )
                 ->addSlot(
@@ -79,11 +110,6 @@ class RolePermissionLayout extends Layout
         ];
     }
 
-    public function getIconList(): string
-    {
-        return 'fa fa-legal';
-    }
-
     /**
      * @param Permissions|null $model
      *
@@ -94,18 +120,11 @@ class RolePermissionLayout extends Layout
         return [
             Title::make()
                 ->setTitle(
-                    Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key)
-                        : Lang::get('global.new_permission')
+                    $this->title(
+                        Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                    )
                 )
-                ->setIcon('fa fa-user-tag')
+                ->setIcon($this->icon())
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-user-tag';
     }
 }

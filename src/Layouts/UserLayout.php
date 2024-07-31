@@ -14,6 +14,40 @@ use Team64j\LaravelManagerComponents\Title;
 class UserLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-user-circle';
+    }
+
+    /**
+     * @return string
+     */
+    public function iconList(): string
+    {
+        return 'fa fa-users';
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public function title(string $value = null): string
+    {
+        return $value ?? Lang::get('global.new_user');
+    }
+
+    /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.users');
+    }
+
+    /**
      * @param User|null $model
      *
      * @return array
@@ -37,8 +71,8 @@ class UserLayout extends Layout
 
             Title::make()
                 ->setModel('username')
-                ->setTitle(Lang::get('global.new_user'))
-                ->setIcon('fa fa-user-circle')
+                ->setTitle($this->title())
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
         ];
     }
@@ -51,14 +85,14 @@ class UserLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_user'),
+                    $this->title(),
                     'User',
                     'btn-green'
                 ),
 
             Title::make()
-                ->setTitle(Lang::get('global.users'))
-                ->setIcon('fa fa-users'),
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
 
             Tabs::make()
                 ->addTab('users', slot: [
@@ -101,21 +135,5 @@ class UserLayout extends Layout
                         ),
                 ]),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getIcon(): string
-    {
-        return 'fa fa-user-circle';
-    }
-
-    /**
-     * @return string
-     */
-    public function getIconList(): string
-    {
-        return 'fa fa-users';
     }
 }
