@@ -42,7 +42,8 @@ class FilemanagerLayout extends Layout
             'main' => [
                 Panel::make()
                     ->setId('filemanagerPanel')
-                    ->setUrl('/filemanager/:key')
+                    ->setModel('data')
+                    //->setUrl('/filemanager/:key')
                     ->setHistory('key')
                     ->setView('icons')
                     ->setColumns([
@@ -66,8 +67,6 @@ class FilemanagerLayout extends Layout
                         [
                             'name' => 'title',
                             'label' => Lang::get('global.files_filename'),
-                            'style' => [
-                            ]
                         ],
                         [
                             'name' => 'size',

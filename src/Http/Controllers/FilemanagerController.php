@@ -72,10 +72,10 @@ class FilemanagerController extends Controller
         $parent = trim(base64_decode($files), './');
         $parentPath = realpath($root . ($parent ? DIRECTORY_SEPARATOR . $parent : ''));
         $extensions = array_merge(
-            explode(',', Config::get('global.upload_files', '')),
-            explode(',', Config::get('global.upload_flash', '')),
-            explode(',', Config::get('global.upload_images', '')),
-            explode(',', Config::get('global.upload_media', '')),
+//            explode(',', Config::get('global.upload_files', '')),
+//            explode(',', Config::get('global.upload_flash', '')),
+//            explode(',', Config::get('global.upload_images', '')),
+//            explode(',', Config::get('global.upload_media', '')),
         );
 
         if (file_exists((string) $parentPath)) {
@@ -127,7 +127,7 @@ class FilemanagerController extends Controller
             foreach ($files as $file) {
                 $type = $file->getExtension();
 
-                if (!in_array(strtolower($type), $extensions)) {
+                if ($extensions && !in_array(strtolower($type), $extensions)) {
                     continue;
                 }
 
@@ -243,6 +243,8 @@ class FilemanagerController extends Controller
                     'title' => $title,
                     'path' => '',
                     'data' => File::directories($directory) ? [] : null,
+                    'folder' => true,
+                    'category' => true,
                 ];
 
                 if (in_array($key, ($settings['opened'] ?? []), true)) {
