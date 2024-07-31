@@ -54,20 +54,13 @@ class ConfigurationLayout extends Layout
 
             Tabs::make()
                 ->setId('configuration')
-                ->addTab('tab1', Lang::get('global.settings_site'))
-                ->addTab('tab2', Lang::get('global.settings_furls'))
-                ->addTab('tab3', Lang::get('global.settings_ui'))
-                ->addTab('tab4', Lang::get('global.settings_security'))
-                ->addTab('tab5', Lang::get('global.settings_misc'))
-                ->addTab('tab6', Lang::get('global.settings_KC'))
-                ->addTab('tab7', Lang::get('global.settings_email_templates'))
-                ->addSlot('tab1', $this->tab1())
-                ->addSlot('tab2', $this->tab2())
-                ->addSlot('tab3', $this->tab3())
-                ->addSlot('tab4', $this->tab4())
-                ->addSlot('tab5', $this->tab5())
-                ->addSlot('tab6', $this->tab6())
-                ->addSlot('tab7', $this->tab7()),
+                ->addTab('tab1', Lang::get('global.settings_site'), slot: $this->tab1())
+                ->addTab('tab2', Lang::get('global.settings_furls'), slot: $this->tab2())
+                ->addTab('tab3', Lang::get('global.settings_ui'), slot: $this->tab3())
+                ->addTab('tab4', Lang::get('global.settings_security'), slot: $this->tab4())
+                ->addTab('tab5', Lang::get('global.settings_misc'), slot: $this->tab5())
+                ->addTab('tab6', Lang::get('global.settings_KC'), slot: $this->tab6())
+                ->addTab('tab7', Lang::get('global.settings_email_templates'), slot: $this->tab7()),
         ];
     }
 

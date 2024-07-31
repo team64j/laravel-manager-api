@@ -43,21 +43,30 @@ class WorkspaceLayout extends Layout
 
             Tabs::make()
                 ->setId('workspace')
-                ->addTab('sidebar', 'Sidebar', null, 'p-6')
-                ->addSlot('sidebar', [
-                    [
+                ->addTab(
+                    'sidebar',
+                    'Sidebar',
+                    class: 'p-5',
+                    slot: [
                         'component' => 'AppTreeBuilder',
                         'model' => 'data.tree.data',
                     ],
-                ])
-                ->addTab('topmenu', 'Top menu', null, 'p-6')
-                ->addSlot('topmenu', [
-                    [
+                )
+                ->addTab(
+                    'topmenu',
+                    'Top menu',
+                    class: 'p-5',
+                    slot: [
                         'component' => 'AppMenuBuilder',
                         'model' => 'data.topmenu.data',
                     ],
-                ])
-                ->addTab('dashboard', 'Dashboard', null, 'p-6'),
+                )
+                ->addTab(
+                    'dashboard',
+                    'Dashboard',
+                    class: 'p-6',
+                    slot: []
+                ),
         ];
     }
 }

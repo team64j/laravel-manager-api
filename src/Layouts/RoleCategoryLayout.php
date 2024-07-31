@@ -77,17 +77,8 @@ class RoleCategoryLayout extends Layout
                     'categories',
                     Lang::get('global.category_heading'),
                     $this->icon(),
-                    route: route('manager.api.roles.categories.index')
-                )
-                ->addTab(
-                    'permissions',
-                    Lang::get('global.manage_permission'),
-                    'fa fa-user-tag',
-                    route: route('manager.api.roles.permissions.index')
-                )
-                ->addSlot(
-                    'categories',
-                    Panel::make()
+                    route: route('manager.api.roles.categories.index'),
+                    slot: Panel::make()
                         ->setId('categories')
                         ->setModel('data')
                         ->setRoute('/roles/categories/:id')
@@ -98,6 +89,12 @@ class RoleCategoryLayout extends Layout
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                         )
                         ->addColumn('name', Lang::get('global.category_heading'), ['fontWeight' => 500])
+                )
+                ->addTab(
+                    'permissions',
+                    Lang::get('global.manage_permission'),
+                    'fa fa-user-tag',
+                    route: route('manager.api.roles.permissions.index')
                 ),
         ];
     }

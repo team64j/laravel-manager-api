@@ -80,11 +80,8 @@ class RolePermissionLayout extends Layout
                     'permissions',
                     Lang::get('global.manage_permission'),
                     $this->icon(),
-                    route: route('manager.api.roles.permissions.index')
-                )
-                ->addSlot(
-                    'permissions',
-                    Panel::make()
+                    route: route('manager.api.roles.permissions.index'),
+                    slot: Panel::make()
                         ->setId('permissions')
                         ->setModel('data')
                         ->setRoute('/roles/permissions/:id')
@@ -124,7 +121,7 @@ class RolePermissionLayout extends Layout
                         Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
                     )
                 )
-                ->setIcon($this->icon())
+                ->setIcon($this->icon()),
         ];
     }
 }

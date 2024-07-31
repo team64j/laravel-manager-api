@@ -59,16 +59,8 @@ class PermissionResourceLayout extends Layout
                 ->addTab(
                     'resources',
                     Lang::get('global.access_permissions_resource_groups'),
-                    route: route('manager.api.permissions.resources')
-                )
-                ->addTab(
-                    'relations',
-                    Lang::get('global.access_permissions_links'),
-                    route: route('manager.api.permissions.relations')
-                )
-                ->addSlot(
-                    'resources',
-                    Panel::make()
+                    route: route('manager.api.permissions.resources'),
+                    slot: Panel::make()
                         ->setModel('data')
                         ->setId('resources')
                         ->setHistory(true)
@@ -79,9 +71,7 @@ class PermissionResourceLayout extends Layout
                             'actions',
                             Lang::get('global.mgrlog_action'),
                             ['width' => '3rem', 'textAlign' => 'center'],
-                            false,
-                            [],
-                            [
+                            actions: [
                                 'delete' => [
                                     'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
                                     'help' => Lang::get('global.delete'),
@@ -90,6 +80,11 @@ class PermissionResourceLayout extends Layout
                                 ],
                             ]
                         )
+                )
+                ->addTab(
+                    'relations',
+                    Lang::get('global.access_permissions_links'),
+                    route: route('manager.api.permissions.relations')
                 ),
         ];
     }
@@ -104,7 +99,7 @@ class PermissionResourceLayout extends Layout
         return [
             Title::make()
                 ->setTitle($this->title($model->name))
-                ->setIcon($this->icon())
+                ->setIcon($this->icon()),
         ];
     }
 }

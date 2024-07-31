@@ -64,16 +64,15 @@ class FileLayout extends Layout
                 ->setId($data['size'] ?? null),
 
             Tabs::make()
-                ->addTab('default', slot: [
-                    Template::make()
-                        ->setClass('px-4')
-                        ->setSlot([
-                            stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data)
-                                ->setClass('mb-4') : null,
-                            isset($data['content']) ? CodeEditor::make('content')->setLanguage($data['lang'])
-                                ->setRows('auto') : null,
-                        ]),
-                ]),
+                ->addTab(
+                    'default',
+                    slot: [
+                        stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data)
+                            ->setClass('mb-4') : null,
+                        isset($data['content']) ? CodeEditor::make('content')->setLanguage($data['lang'])
+                            ->setRows('auto') : null,
+                    ],
+                ),
         ];
     }
 }

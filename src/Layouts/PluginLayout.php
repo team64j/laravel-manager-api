@@ -141,7 +141,7 @@ class PluginLayout extends Layout
                     'fa fa-newspaper',
                     'py-4',
                     ['edit_template'],
-                    route: route('manager.api.elements.templates')
+                    route('manager.api.elements.templates')
                 )
                 ->addTab(
                     'tvs',
@@ -149,7 +149,7 @@ class PluginLayout extends Layout
                     'fa fa-list-alt',
                     'py-4',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route: route('manager.api.elements.tvs')
+                    route('manager.api.elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -157,7 +157,7 @@ class PluginLayout extends Layout
                     'fa fa-th-large',
                     'py-4',
                     ['edit_chunk'],
-                    route: route('manager.api.elements.chunks')
+                    route('manager.api.elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -165,7 +165,7 @@ class PluginLayout extends Layout
                     'fa fa-code',
                     'py-4',
                     ['edit_snippet'],
-                    route: route('manager.api.elements.snippets')
+                    route('manager.api.elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -173,27 +173,8 @@ class PluginLayout extends Layout
                     'fa fa-plug',
                     'py-4',
                     ['edit_plugin'],
-                    route: route('manager.api.elements.plugins')
-                )
-                ->addTab(
-                    'modules',
-                    Lang::get('global.modules'),
-                    'fa fa-cubes',
-                    'py-4',
-                    ['edit_module'],
-                    route: route('manager.api.elements.modules')
-                )
-                ->addTab(
-                    'categories',
-                    Lang::get('global.category_management'),
-                    'fa fa-object-group',
-                    'py-4',
-                    ['category_manager'],
-                    route: route('manager.api.elements.categories')
-                )
-                ->addSlot(
-                    'plugins',
-                    Panel::make()
+                    route('manager.api.elements.plugins'),
+                    slot: Panel::make()
                         ->setId('plugins')
                         ->setModel('data')
                         ->setRoute('/plugins/:id')
@@ -266,8 +247,23 @@ class PluginLayout extends Layout
                                     'noOpacity' => true,
                                 ],
                             ]
-                        ),
-                    ['edit_plugin']
+                        )
+                )
+                ->addTab(
+                    'modules',
+                    Lang::get('global.modules'),
+                    'fa fa-cubes',
+                    'py-4',
+                    ['edit_module'],
+                    route('manager.api.elements.modules')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    'py-4',
+                    ['category_manager'],
+                    route('manager.api.elements.categories')
                 ),
         ];
     }

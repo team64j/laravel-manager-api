@@ -65,7 +65,7 @@ class UserLayout extends Layout
                 )
                 ->when(
                     $model->getKey(),
-                    fn($actions) => $actions->setDelete()->setCopy()
+                    fn(Actions $actions) => $actions->setDelete()->setCopy()
                 )
                 ->setSaveAnd(),
 
@@ -86,7 +86,7 @@ class UserLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    'User',
+                    '/users/new',
                     'btn-green'
                 ),
 
@@ -95,8 +95,9 @@ class UserLayout extends Layout
                 ->setIcon($this->iconList()),
 
             Tabs::make()
-                ->addTab('users', slot: [
-                    Panel::make()
+                ->addTab(
+                    'users',
+                    slot: Panel::make()
                         ->setId('users')
                         ->setModel('data')
                         ->setRoute('/users/:id')
@@ -133,7 +134,7 @@ class UserLayout extends Layout
                                 1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
                             ]
                         ),
-                ]),
+                ),
         ];
     }
 }

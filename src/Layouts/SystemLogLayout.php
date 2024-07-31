@@ -42,8 +42,9 @@ class SystemLogLayout extends Layout
                 ->setIcon($this->icon()),
 
             Tabs::make()
-                ->addTab('default', slot: [
-                    Panel::make()
+                ->addTab(
+                    'default',
+                    slot: Panel::make()
                         ->setId('system-log')
                         ->setModel('data')
                         ->setHistory(!0)
@@ -54,7 +55,7 @@ class SystemLogLayout extends Layout
                         ->addColumn('timestamp', Lang::get('global.mgrlog_time'), sort: !0)
                         ->addColumn('ip', 'IP', sort: !0)
                         ->addColumn('useragent', 'USER_AGENT', sort: !0),
-                ]),
+                ),
         ];
     }
 }

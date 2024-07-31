@@ -76,17 +76,14 @@ class PermissionRelationLayout extends Layout
                 ->addTab(
                     'relations',
                     Lang::get('global.access_permissions_links'),
-                    route: route('manager.api.permissions.relations')
-                )
-                ->addSlot(
-                    'relations',
-                    Panel::make()
-                        ->setModel('data')
-                        ->setId('relations')
-                        ->setHistory(true)
-                        ->setRoute('/permissions/relations/:id')
-                        ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
-                        ->addColumn('document_groups', Lang::get('global.access_permissions_resource_groups'))
+                    route: route('manager.api.permissions.relations'),
+                    slot: Panel::make()
+                    ->setModel('data')
+                    ->setId('relations')
+                    ->setHistory(true)
+                    ->setRoute('/permissions/relations/:id')
+                    ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
+                    ->addColumn('document_groups', Lang::get('global.access_permissions_resource_groups'))
                 ),
         ];
     }
@@ -101,7 +98,7 @@ class PermissionRelationLayout extends Layout
         return [
             Title::make()
                 ->setTitle($this->title($model->name))
-                ->setIcon($this->icon())
+                ->setIcon($this->icon()),
         ];
     }
 }

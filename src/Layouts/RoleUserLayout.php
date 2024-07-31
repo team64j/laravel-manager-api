@@ -64,7 +64,19 @@ class RoleUserLayout extends Layout
                     'users',
                     Lang::get('global.role_role_management'),
                     $this->iconList(),
-                    route: route('manager.api.roles.users.index')
+                    route: route('manager.api.roles.users.index'),
+                    slot: Panel::make()
+                        ->setId('users')
+                        ->setModel('data')
+                        ->setRoute('/roles/users/:id')
+                        ->setHistory(true)
+                        ->addColumn(
+                            'id',
+                            Lang::get('global.id'),
+                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
+                        )
+                        ->addColumn('name', Lang::get('global.role'), ['fontWeight' => 500])
+                        ->addColumn('description', Lang::get('global.description'))
                 )
                 ->addTab(
                     'categories',
@@ -77,21 +89,6 @@ class RoleUserLayout extends Layout
                     Lang::get('global.manage_permission'),
                     'fa fa-user-tag',
                     route: route('manager.api.roles.permissions.index')
-                )
-                ->addSlot(
-                    'users',
-                    Panel::make()
-                        ->setId('users')
-                        ->setModel('data')
-                        ->setRoute('/roles/users/:id')
-                        ->setHistory(true)
-                        ->addColumn(
-                            'id',
-                            Lang::get('global.id'),
-                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
-                        )
-                        ->addColumn('name', Lang::get('global.role'), ['fontWeight' => 500])
-                        ->addColumn('description', Lang::get('global.description'))
                 ),
         ];
     }
@@ -106,7 +103,7 @@ class RoleUserLayout extends Layout
         return [
             Title::make()
                 ->setTitle($this->title($model->name))
-                ->setIcon($this->icon())
+                ->setIcon($this->icon()),
         ];
     }
 }

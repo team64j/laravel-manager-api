@@ -103,10 +103,10 @@ class TemplateLayout extends Layout
 
             Tabs::make()
                 ->setId('template')
-                ->addTab('default', Lang::get('global.settings_general'))
-                ->addSlot(
+                ->addTab(
                     'default',
-                    [
+                    Lang::get('global.settings_general'),
+                    slot: [
                         Template::make(
                             'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 px-5 pt-5',
                             [
@@ -180,10 +180,10 @@ class TemplateLayout extends Layout
                             ->setRows(20),
                     ]
                 )
-                ->addTab('tvs', Lang::get('global.template_assignedtv_tab'))
-                ->addSlot(
+                ->addTab(
                     'tvs',
-                    Panel::make()
+                    Lang::get('global.template_assignedtv_tab'),
+                    slot: Panel::make()
                         ->setId('tvs')
                         ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=true')
                         ->setModel('tvs')
@@ -217,10 +217,10 @@ class TemplateLayout extends Layout
                             ['width' => '12rem', 'textAlign' => 'center']
                         )
                 )
-                ->addTab('available', Lang::get('global.template_notassigned_tv'))
-                ->addSlot(
+                ->addTab(
                     'available',
-                    Panel::make()
+                    Lang::get('global.template_notassigned_tv'),
+                    slot: Panel::make()
                         ->setId('available')
                         ->setModel('tvs')
                         ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=false')
@@ -288,59 +288,8 @@ class TemplateLayout extends Layout
                     'fa fa-newspaper',
                     'py-4',
                     ['edit_template'],
-                    route: route('manager.api.elements.templates')
-                )
-                ->addTab(
-                    'tvs',
-                    Lang::get('global.tmplvars'),
-                    'fa fa-list-alt',
-                    'py-4',
-                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route: route('manager.api.elements.tvs')
-                )
-                ->addTab(
-                    'chunks',
-                    Lang::get('global.htmlsnippets'),
-                    'fa fa-th-large',
-                    'py-4',
-                    ['edit_chunk'],
-                    route: route('manager.api.elements.chunks')
-                )
-                ->addTab(
-                    'snippets',
-                    Lang::get('global.snippets'),
-                    'fa fa-code',
-                    'py-4',
-                    ['edit_snippet'],
-                    route: route('manager.api.elements.snippets')
-                )
-                ->addTab(
-                    'plugins',
-                    Lang::get('global.plugins'),
-                    'fa fa-plug',
-                    'py-4',
-                    ['edit_plugin'],
-                    route: route('manager.api.elements.plugins')
-                )
-                ->addTab(
-                    'modules',
-                    Lang::get('global.modules'),
-                    'fa fa-cubes',
-                    'py-4',
-                    ['edit_module'],
-                    route: route('manager.api.elements.modules')
-                )
-                ->addTab(
-                    'categories',
-                    Lang::get('global.category_management'),
-                    'fa fa-object-group',
-                    'py-4',
-                    ['category_manager'],
-                    route: route('manager.api.elements.categories')
-                )
-                ->addSlot(
-                    'templates',
-                    Panel::make()
+                    route('manager.api.elements.templates'),
+                    slot: Panel::make()
                         ->setId('templates')
                         ->setModel('data')
                         ->setRoute('/templates/:id')
@@ -416,8 +365,55 @@ class TemplateLayout extends Layout
                                     'noOpacity' => true,
                                 ],
                             ]
-                        ),
-                    ['edit_template']
+                        )
+                )
+                ->addTab(
+                    'tvs',
+                    Lang::get('global.tmplvars'),
+                    'fa fa-list-alt',
+                    'py-4',
+                    ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
+                    route('manager.api.elements.tvs')
+                )
+                ->addTab(
+                    'chunks',
+                    Lang::get('global.htmlsnippets'),
+                    'fa fa-th-large',
+                    'py-4',
+                    ['edit_chunk'],
+                    route('manager.api.elements.chunks')
+                )
+                ->addTab(
+                    'snippets',
+                    Lang::get('global.snippets'),
+                    'fa fa-code',
+                    'py-4',
+                    ['edit_snippet'],
+                    route('manager.api.elements.snippets')
+                )
+                ->addTab(
+                    'plugins',
+                    Lang::get('global.plugins'),
+                    'fa fa-plug',
+                    'py-4',
+                    ['edit_plugin'],
+                    route('manager.api.elements.plugins')
+                )
+                ->addTab(
+                    'modules',
+                    Lang::get('global.modules'),
+                    'fa fa-cubes',
+                    'py-4',
+                    ['edit_module'],
+                    route('manager.api.elements.modules')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    'py-4',
+                    ['category_manager'],
+                    route('manager.api.elements.categories')
                 ),
         ];
     }

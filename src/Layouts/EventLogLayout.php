@@ -60,8 +60,7 @@ class EventLogLayout extends Layout
                         'textAlign' => 'center',
                         'width' => '10rem',
                     ],
-                    false,
-                    [
+                    values: [
                         1 => '<i class="fa fa-info-circle text-blue-500"></i>',
                         2 => '<i class="fa fa-exclamation-triangle text-amber-400"></i>',
                         3 => '<i class="fa fa-times-circle text-rose-500"></i>',
