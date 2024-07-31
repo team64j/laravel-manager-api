@@ -46,4 +46,20 @@ class LoginLayout extends Layout
                 ])
         ];
     }
+
+    /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return '';
+    }
 }

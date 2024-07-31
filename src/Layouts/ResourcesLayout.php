@@ -20,6 +20,14 @@ class ResourcesLayout extends Layout
     }
 
     /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return '';
+    }
+
+    /**
      * @param SiteContent|null $model
      *
      * @return array

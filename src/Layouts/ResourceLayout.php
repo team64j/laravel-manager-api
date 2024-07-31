@@ -217,10 +217,10 @@ class ResourceLayout extends Layout
 
             Tabs::make()
                 ->setId('resource')
-                ->addTab('general', Lang::get('global.settings_general'))
-                ->addSlot(
+                ->addTab(
                     'general',
-                    array_merge([
+                    Lang::get('global.settings_general'),
+                    slot: array_merge([
                         Template::make()
                             ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 px-5 pt-5')
                             ->setSlot([
@@ -537,12 +537,8 @@ class ResourceLayout extends Layout
                         ->addTab(
                             'tvs',
                             Lang::get('global.settings_templvars'),
-                            null,
-                            'flex flex-wrap p-5'
-                        )
-                        ->addSlot(
-                            'tvs',
-                            array_map(
+                            class: 'flex flex-wrap p-5',
+                            slot: array_map(
                                 fn($slot) => Section::make()
                                     ->setClass('!p-0')
                                     ->setLabel($slot['name'])
@@ -558,12 +554,8 @@ class ResourceLayout extends Layout
                         ->addTab(
                             'tvs',
                             Lang::get('global.settings_templvars'),
-                            null,
-                            'flex flex-wrap p-5'
-                        )
-                        ->addSlot(
-                            'tvs',
-                            $tabTvs
+                            class: 'flex flex-wrap p-5',
+                            slot: $tabTvs
                         )
                 )
                 ->when(
@@ -686,10 +678,11 @@ class ResourceLayout extends Layout
     protected function tabPermissions(Tabs $tabs): Tabs
     {
         return $tabs
-            ->addTab('permissions', Lang::get('global.access_permissions'), null, 'flex-col p-5')
-            ->addSlot(
+            ->addTab(
                 'permissions',
-                [
+                Lang::get('global.access_permissions'),
+                class: 'flex-col p-5',
+                slot: [
                     Lang::get('global.access_permissions_docs_message') . '<br/><br/>',
 
                     Checkbox::make()
