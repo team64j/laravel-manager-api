@@ -108,38 +108,41 @@ class TemplateLayout extends Layout
                     'default',
                     [
                         Template::make(
-                            'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 md:pr-3',
+                            'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 px-5 pt-5',
                             [
                                 Input::make(
                                     'templatename',
                                     Lang::get('global.template_name')
                                 )
+                                    ->setClass('mb-3')
                                     ->isRequired()
                                     ->setRequired(
-                                        Config::get('global.default_template') == $model->id ? Lang::get(
-                                            'global.defaulttemplate_title'
-                                        ) : ''
+                                        Config::get('global.default_template') == $model->getKey() ?
+                                            Lang::get('global.defaulttemplate_title') : ''
                                     ),
 
                                 Input::make(
                                     'templatealias',
                                     Lang::get('global.alias')
-                                ),
+                                )
+                                    ->setClass('mb-3'),
 
                                 Textarea::make(
                                     'description',
                                     Lang::get('global.template_desc')
-                                ),
+                                )
+                                    ->setClass('mb-3'),
                             ]
                         ),
 
                         Template::make(
-                            'flex flex-wrap grow md:basis-1/3 xl:basis-3/12 md:pl-3',
+                            'flex flex-wrap grow md:basis-1/3 xl:basis-3/12 px-5 md:!pl-2 md:pt-5',
                             [
                                 Select::make(
                                     'category',
                                     Lang::get('global.existing_category')
                                 )
+                                    ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->addOption(
                                         $model->category,
@@ -152,23 +155,27 @@ class TemplateLayout extends Layout
                                     ->setNew(''),
 
                                 Checkbox::make('selectable', Lang::get('global.template_selectable'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make('locked', Lang::get('global.lock_template_msg'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]
                         ),
 
                         ($isBladeFile
-                            ? '<span class="text-green-600 mb-3">' .
+                            ? '<span class="text-green-600 mx-5 mb-3">' .
                             Lang::get('global.template_assigned_blade_file') .
                             ': ' .
                             $relativeBladeFile . '</span>'
                             :
                             Checkbox::make('createbladefile', Lang::get('global.template_create_blade_file'))
+                                ->setClass('mx-5 mb-3')
                                 ->setCheckedValue(1, 0)),
 
                         CodeEditor::make('content', Lang::get('global.template_code'))
+                            ->setClass('mx-5')
                             ->setLanguage('html')
                             ->setRows(20),
                     ]

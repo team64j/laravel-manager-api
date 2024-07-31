@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Annotations as OA;
+use Team64j\LaravelManagerApi\Layouts\CacheLayout;
 
 class CacheController extends Controller
 {
@@ -25,8 +27,15 @@ class CacheController extends Controller
      *
      * @return void
      */
-    public function index()
+    public function index(CacheLayout $layout)
     {
-
+        return JsonResource::make([])
+            ->additional([
+                'layout' => $layout->default(),
+                'meta' => [
+                    'icon' => $layout->icon(),
+                    'title' => $layout->title(),
+                ]
+            ]);
     }
 }

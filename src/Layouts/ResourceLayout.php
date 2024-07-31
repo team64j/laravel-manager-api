@@ -142,7 +142,8 @@ class ResourceLayout extends Layout
             $filedContent = Input::make(
                 'content',
                 Lang::get('global.weblink'),
-                '<b>[*content*]</b><br>' . Lang::get('global.resource_weblink_help')
+                '<b>[*content*]</b><br>' . Lang::get('global.resource_weblink_help'),
+                'mb-0'
             );
 
             $title = Lang::get('global.untitled_weblink');
@@ -150,7 +151,8 @@ class ResourceLayout extends Layout
             $filedContent = CodeEditor::make(
                 'content',
                 Lang::get('global.resource_content'),
-                '<b>[*content*]</b>'
+                '<b>[*content*]</b>',
+                'mb-0'
             )
                 ->setRows(20)
                 ->setLanguage('html');
@@ -220,13 +222,13 @@ class ResourceLayout extends Layout
                     'general',
                     array_merge([
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 lg:pr-6')
+                            ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 px-5 pt-5')
                             ->setSlot([
                                 Input::make(
                                     'pagetitle',
                                     Lang::get('global.resource_title'),
                                     '<b>[*pagetitle*]</b><br>' . Lang::get('global.resource_title_help'),
-                                    'lg:pr-2 lg:basis-2/3'
+                                    'mb-3 lg:pr-2 lg:basis-2/3'
                                 )
                                     ->isRequired(),
 
@@ -234,21 +236,22 @@ class ResourceLayout extends Layout
                                     'alias',
                                     Lang::get('global.resource_alias'),
                                     '<b>[*alias*]</b><br>' . Lang::get('global.resource_alias_help'),
-                                    'lg:pl-2 lg:basis-1/3'
+                                    'mb-3 lg:pl-2 lg:basis-1/3'
                                 )
                                     ->isRequired(),
 
                                 Input::make(
                                     'longtitle',
                                     Lang::get('global.long_title'),
-                                    '<b>[*longtitle*]</b><br>' . Lang::get('global.resource_long_title_help')
+                                    '<b>[*longtitle*]</b><br>' . Lang::get('global.resource_long_title_help'),
+                                    'mb-3'
                                 ),
 
                                 Textarea::make(
                                     'description',
                                     Lang::get('global.resource_description'),
                                     '<b>[*description*]</b><br>' . Lang::get('global.resource_description_help'),
-                                    'lg:pr-2 lg:basis-1/2'
+                                    'mb-3 lg:pr-2 lg:basis-1/2'
                                 )
                                     ->setRows(3),
 
@@ -256,7 +259,7 @@ class ResourceLayout extends Layout
                                     'introtext',
                                     Lang::get('global.resource_summary'),
                                     '<b>[*introtext*]</b><br>' . Lang::get('global.resource_summary_help'),
-                                    'lg:pl-2 lg:basis-1/2'
+                                    'mb-3 lg:pl-2 lg:basis-1/2'
                                 )
                                     ->setRows(3)
                                     ->setLanguage('html'),
@@ -265,7 +268,7 @@ class ResourceLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12')
+                            ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12 p-5 md:!pl-2')
                             ->setSlot([
                                 /*Select::make(
                                     'parent',
@@ -286,7 +289,8 @@ class ResourceLayout extends Layout
                                 Input::make(
                                     'parent',
                                     Lang::get('global.import_parent_resource'),
-                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help')
+                                    '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help'),
+                                    'mb-3'
                                 )
                                     ->setInputClass('cursor-pointer')
                                     ->setValue(
@@ -300,7 +304,8 @@ class ResourceLayout extends Layout
                                 Select::make(
                                     'template',
                                     Lang::get('global.page_data_template'),
-                                    '<b>[*template*]</b><br>' . Lang::get('global.page_data_template_help')
+                                    '<b>[*template*]</b><br>' . Lang::get('global.page_data_template_help'),
+                                    'mb-3'
                                 )
                                     ->setUrl('/templates/select')
                                     ->setData([
@@ -316,50 +321,59 @@ class ResourceLayout extends Layout
                                 Checkbox::make(
                                     'hidemenu',
                                     Lang::get('global.resource_opt_show_menu'),
-                                    '<b>[*hidemenu*]</b><br>' . Lang::get('global.resource_opt_show_menu_help')
+                                    '<b>[*hidemenu*]</b><br>' . Lang::get('global.resource_opt_show_menu_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(0, 1),
 
                                 Number::make(
                                     'menuindex',
                                     Lang::get('global.resource_opt_menu_index'),
-                                    '<b>[*menuindex*]</b><br>' . Lang::get('global.resource_opt_menu_index_help')
+                                    '<b>[*menuindex*]</b><br>' . Lang::get('global.resource_opt_menu_index_help'),
+                                    'mb-3'
                                 ),
 
                                 Input::make(
                                     'menutitle',
                                     Lang::get('global.resource_opt_menu_title'),
-                                    '<b>[*menutitle*]</b><br>' . Lang::get('global.resource_opt_menu_title_help')
+                                    '<b>[*menutitle*]</b><br>' . Lang::get('global.resource_opt_menu_title_help'),
+                                    'mb-3'
                                 ),
 
                                 Input::make(
                                     'link_attributes',
                                     Lang::get('global.link_attributes'),
-                                    '<b>[*link_attributes*]</b><br>' . Lang::get('global.link_attributes_help')
+                                    '<b>[*link_attributes*]</b><br>' . Lang::get('global.link_attributes_help'),
+                                    'mb-3'
                                 ),
 
                                 Checkbox::make(
                                     'published',
                                     Lang::get('global.resource_opt_published'),
-                                    '<b>[*published*]</b><br>' . Lang::get('global.resource_opt_published_help')
+                                    '<b>[*published*]</b><br>' . Lang::get('global.resource_opt_published_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(1, 0),
 
                                 DateTime::make(
                                     'publishedon',
-                                    Lang::get('global.page_data_published')
+                                    Lang::get('global.page_data_published'),
+                                    '',
+                                    'mb-3'
                                 )->isClear(),
 
                                 DateTime::make(
                                     'pub_date',
                                     Lang::get('global.page_data_publishdate'),
-                                    '<b>[*pub_date*]</b><br>' . Lang::get('global.page_data_publishdate_help')
+                                    '<b>[*pub_date*]</b><br>' . Lang::get('global.page_data_publishdate_help'),
+                                    'mb-3'
                                 )->isClear(),
 
                                 DateTime::make(
                                     'unpub_date',
                                     Lang::get('global.page_data_unpublishdate'),
-                                    '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
+                                    '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help'),
+                                    'mb-0'
                                 )->isClear(),
                             ]),
 
@@ -396,17 +410,18 @@ class ResourceLayout extends Layout
                         ] : [],
                     )
                 )
-                ->addTab('settings', Lang::get('global.settings_page_settings'))
-                ->addSlot(
+                ->addTab(
                     'settings',
-                    [
+                    Lang::get('global.settings_page_settings'),
+                    slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 lg:pr-3')
+                            ->setClass('flex flex-wrap grow lg:basis-1/2 px-5 pt-5')
                             ->setSlot([
                                 Select::make(
                                     'type',
                                     Lang::get('global.resource_type'),
-                                    '<b>[*type*]</b><br>' . Lang::get('global.resource_type_message')
+                                    '<b>[*type*]</b><br>' . Lang::get('global.resource_type_message'),
+                                    'mb-3'
                                 )
                                     ->setData([
                                         [
@@ -423,7 +438,8 @@ class ResourceLayout extends Layout
                                 Select::make(
                                     'contentType',
                                     Lang::get('global.page_data_contentType'),
-                                    '<b>[*contentType*]</b><br>' . Lang::get('global.page_data_contentType_help')
+                                    '<b>[*contentType*]</b><br>' . Lang::get('global.page_data_contentType_help'),
+                                    'mb-3'
                                 )
                                     ->setData(
                                         array_map(fn($k) => [
@@ -436,7 +452,8 @@ class ResourceLayout extends Layout
                                     'content_dispo',
                                     Lang::get('global.resource_opt_contentdispo'),
                                     '<b>[*content_dispo*]</b><br>' .
-                                    Lang::get('global.resource_opt_contentdispo_help')
+                                    Lang::get('global.resource_opt_contentdispo_help'),
+                                    'mb-3'
                                 )
                                     ->setData([
                                         [
@@ -451,12 +468,13 @@ class ResourceLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 lg:pl-3')
+                            ->setClass('flex flex-wrap grow lg:basis-1/2 p-5 md:!pl-2')
                             ->setSlot([
                                 Checkbox::make(
                                     'isfolder',
                                     Lang::get('global.resource_opt_folder'),
-                                    '<b>[*isfolder*]</b><br>' . Lang::get('global.resource_opt_folder_help')
+                                    '<b>[*isfolder*]</b><br>' . Lang::get('global.resource_opt_folder_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(1, 0),
 
@@ -464,7 +482,8 @@ class ResourceLayout extends Layout
                                     'hide_from_tree',
                                     Lang::get('global.track_visitors_title'),
                                     '<b>[*hide_from_tree*]</b><br>' .
-                                    Lang::get('global.resource_opt_trackvisit_help')
+                                    Lang::get('global.resource_opt_trackvisit_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(0, 1),
 
@@ -472,35 +491,40 @@ class ResourceLayout extends Layout
                                     'alias_visible',
                                     Lang::get('global.resource_opt_alvisibled'),
                                     '<b>[*alias_visible*]</b><br>' .
-                                    Lang::get('global.resource_opt_alvisibled_help')
+                                    Lang::get('global.resource_opt_alvisibled_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
                                     'richtext',
                                     Lang::get('global.resource_opt_richtext'),
-                                    '<b>[*richtext*]</b><br>' . Lang::get('global.resource_opt_richtext_help')
+                                    '<b>[*richtext*]</b><br>' . Lang::get('global.resource_opt_richtext_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
                                     'searchable',
                                     Lang::get('global.page_data_searchable'),
-                                    '<b>[*searchable*]</b><br>' . Lang::get('global.page_data_searchable_help')
+                                    '<b>[*searchable*]</b><br>' . Lang::get('global.page_data_searchable_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
                                     'cacheable',
                                     Lang::get('global.page_data_cacheable'),
-                                    '<b>[*cacheable*]</b><br>' . Lang::get('global.page_data_cacheable_help')
+                                    '<b>[*cacheable*]</b><br>' . Lang::get('global.page_data_cacheable_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
                                     'empty_cache',
                                     Lang::get('global.resource_opt_emptycache'),
-                                    Lang::get('global.resource_opt_emptycache_help')
+                                    Lang::get('global.resource_opt_emptycache_help'),
+                                    'mb-3'
                                 )
                                     ->setCheckedValue(1, 0)
                                     ->setValue(1),
@@ -514,7 +538,7 @@ class ResourceLayout extends Layout
                             'tvs',
                             Lang::get('global.settings_templvars'),
                             null,
-                            'flex flex-wrap'
+                            'flex flex-wrap p-5'
                         )
                         ->addSlot(
                             'tvs',
@@ -535,7 +559,7 @@ class ResourceLayout extends Layout
                             'tvs',
                             Lang::get('global.settings_templvars'),
                             null,
-                            'flex flex-wrap'
+                            'flex flex-wrap p-5'
                         )
                         ->addSlot(
                             'tvs',
@@ -549,6 +573,7 @@ class ResourceLayout extends Layout
                             $tabs->addTab(
                                 $tab['id'],
                                 $tab['name'],
+                                class: 'p-5',
                                 slot: $tabTvs['slots'][$tab['id']],
                             );
                         }
@@ -628,6 +653,7 @@ class ResourceLayout extends Layout
                             $tv['description']
                         )
                         ->setRows(5)
+                        ->setClass('mb-3')
                 );
             } else {
                 /** @var Field $field */
@@ -644,6 +670,7 @@ class ResourceLayout extends Layout
                             '<b>[*' . $tv['name'] . '*]</b><i class="badge">' . $tv['id'] . '</i><br>' .
                             $tv['description']
                         )
+                        ->setClass('mb-3')
                 );
             }
         }
@@ -659,7 +686,7 @@ class ResourceLayout extends Layout
     protected function tabPermissions(Tabs $tabs): Tabs
     {
         return $tabs
-            ->addTab('permissions', Lang::get('global.access_permissions'), null, 'flex-col')
+            ->addTab('permissions', Lang::get('global.access_permissions'), null, 'flex-col p-5')
             ->addSlot(
                 'permissions',
                 [
@@ -669,7 +696,8 @@ class ResourceLayout extends Layout
                         ->setModel('data.is_document_group')
                         ->setLabel(Lang::get('global.all_doc_groups'))
                         ->setCheckedValue(true, false)
-                        ->setRelation('data.document_groups', [], [], true),
+                        ->setRelation('data.document_groups', [], [], true)
+                        ->setClass('mb-3'),
 
                     Checkbox::make()
                         ->setModel('data.document_groups')
@@ -682,7 +710,8 @@ class ResourceLayout extends Layout
                                 ])
                                 ->toArray()
                         )
-                        ->setRelation('data.is_document_group', false, true),
+                        ->setRelation('data.is_document_group', false, true)
+                        ->setClass('mb-3'),
                 ]
             );
     }

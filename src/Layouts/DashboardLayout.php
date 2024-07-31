@@ -15,6 +15,22 @@ use Team64j\LaravelManagerComponents\Template;
 class DashboardLayout extends Layout
 {
     /**
+     * @return string
+     */
+    public function title(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    public function icon(): string
+    {
+        return 'fa fa-home';
+    }
+
+    /**
      * @return array
      */
     public function default(): array

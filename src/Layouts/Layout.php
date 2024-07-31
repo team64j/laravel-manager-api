@@ -22,10 +22,7 @@ abstract class Layout
     /**
      * @return string
      */
-    public function title(): string
-    {
-        return '';
-    }
+    abstract public function title(): string;
 
     /**
      * @return string
@@ -38,10 +35,7 @@ abstract class Layout
     /**
      * @return string
      */
-    public function icon(): string
-    {
-        return '';
-    }
+    abstract public function icon(): string;
 
     /**
      * @return string

@@ -116,68 +116,75 @@ class TvLayout extends Layout
 
             Tabs::make()
                 ->setId('tv')
-                ->addTab('default', Lang::get('global.page_data_general'))
-                ->addSlot('default', [
-                    Template::make()
-                        ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 md:pr-5 pb-0')
-                        ->setSlot([
-                            Input::make('name', Lang::get('global.tmplvars_name'))
-                                ->isRequired(),
-                            Input::make('caption', Lang::get('global.tmplvars_caption')),
-                            Textarea::make('description', Lang::get('global.tmplvars_description'))
-                                ->setRows(2),
-                            CodeEditor::make(
-                                'elements',
-                                Lang::get('global.tmplvars_elements'),
-                                Lang::get('global.tmplvars_binding_msg')
-                            )
-                                ->setRows(2),
-                            CodeEditor::make(
-                                'default_text',
-                                Lang::get('global.tmplvars_default'),
-                                Lang::get('global.tmplvars_binding_msg')
-                            )
-                                ->setRows(2),
-                        ]),
-                    Template::make()
-                        ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full pb-0')
-                        ->setSlot([
-                            Select::make('category', Lang::get('global.existing_category'))
-                                ->setUrl('/categories/select')
-                                ->setNew('')
-                                ->setData([
-                                    [
-                                        'key' => $model->category,
-                                        'value' => $model->categories
-                                            ? $model->categories->category
-                                            : Lang::get(
-                                                'global.no_category'
-                                            ),
-                                        'selected' => true,
-                                    ],
-                                ]),
-                            Select::make('type', Lang::get('global.tmplvars_type'))
-                                ->setUrl('/tvs/types')
-                                ->setData([
-                                    [
-                                        'key' => $model->type,
-                                        'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
-                                    ],
-                                ]),
-                            Input::make('rank', Lang::get('global.tmplvars_rank')),
-                            Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
-                                ->setCheckedValue(1, 0),
-                            Select::make('display', Lang::get('global.tmplvars_widget'))
-                                ->setUrl('/tvs/display')
-                                ->setData([
-                                    [
-                                        'key' => $model->display,
-                                        'value' => $model->getDisplay($model->display),
-                                    ],
-                                ])
-                                ->setEmitInput('inputChangeQuery'),
-                        ]),
-                ])
+                ->addTab(
+                    'default',
+                    Lang::get('global.page_data_general'),
+                    slot: [
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 px-5 pt-5')
+                            ->setSlot([
+                                Input::make('name', Lang::get('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
+                                Input::make('caption', Lang::get('global.tmplvars_caption'))->setClass('mb-3'),
+                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                    ->setClass('mb-3')
+                                    ->setRows(2),
+                                CodeEditor::make(
+                                    'elements',
+                                    Lang::get('global.tmplvars_elements'),
+                                    Lang::get('global.tmplvars_binding_msg'),
+                                    'mb-3'
+                                )
+                                    ->setRows(2),
+                                CodeEditor::make(
+                                    'default_text',
+                                    Lang::get('global.tmplvars_default'),
+                                    Lang::get('global.tmplvars_binding_msg')
+                                )
+                                    ->setRows(2),
+                            ]),
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
+                            ->setSlot([
+                                Select::make('category', Lang::get('global.existing_category'))
+                                    ->setClass('mb-3')
+                                    ->setUrl('/categories/select')
+                                    ->setNew('')
+                                    ->setData([
+                                        [
+                                            'key' => $model->category,
+                                            'value' => $model->categories
+                                                ? $model->categories->category
+                                                : Lang::get(
+                                                    'global.no_category'
+                                                ),
+                                            'selected' => true,
+                                        ],
+                                    ]),
+                                Select::make('type', Lang::get('global.tmplvars_type'))
+                                    ->setClass('mb-3')
+                                    ->setUrl('/tvs/types')
+                                    ->setData([
+                                        [
+                                            'key' => $model->type,
+                                            'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
+                                        ],
+                                    ]),
+                                Input::make('rank', Lang::get('global.tmplvars_rank'))->setClass('mb-3'),
+                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                    ->setClass('mb-3')
+                                    ->setCheckedValue(1, 0),
+                                Select::make('display', Lang::get('global.tmplvars_widget'))
+                                    ->setUrl('/tvs/display')
+                                    ->setData([
+                                        [
+                                            'key' => $model->display,
+                                            'value' => $model->getDisplay($model->display),
+                                        ],
+                                    ])
+                                    ->setEmitInput('inputChangeQuery'),
+                            ]),
+                    ]
+                )
                 ->when(
                     $model->display,
                     fn(Tabs $component) => $component->putSlot(
@@ -185,16 +192,17 @@ class TvLayout extends Layout
                         $this->display($model->display)
                     )
                 )
-                ->addTab('settings', Lang::get('global.settings_properties'))
-                ->addSlot('settings', [
-                    CodeEditor::make('properties')
+                ->addTab(
+                    'settings',
+                    Lang::get('global.settings_properties'),
+                    slot: CodeEditor::make('properties')
                         ->setLanguage('json')
-                        ->isFullSize(),
-                ])
-                ->addTab('templates', Lang::get('global.templates'))
-                ->addSlot(
+                        ->isFullSize()
+                )
+                ->addTab(
                     'templates',
-                    Panel::make()
+                    Lang::get('global.templates'),
+                    slot: Panel::make()
                         ->setId('templates')
                         ->setModel('templates')
                         ->setUrl('/templates?groupBy=category')
@@ -225,10 +233,10 @@ class TvLayout extends Layout
                             ['width' => '50%'],
                         )
                 )
-                ->addTab('roles', Lang::get('global.role_management_title'))
-                ->addSlot(
+                ->addTab(
                     'roles',
-                    Panel::make()
+                    Lang::get('global.role_management_title'),
+                    slot: Panel::make()
                         ->setId('roles')
                         ->setModel('roles')
                         ->setUrl('/roles/users')
@@ -262,19 +270,22 @@ class TvLayout extends Layout
                 ->when(
                     Auth::user()->can(['manage_groups', 'manage_tv_permissions']),
                     fn(Tabs $tabs) => $tabs
-                        ->addTab('permissions', Lang::get('global.access_permissions'))
-                        ->addSlot(
+                        ->addTab(
                             'permissions',
-                            [
+                            Lang::get('global.access_permissions'),
+                            class: 'p-5',
+                            slot: [
                                 Lang::get('global.access_permissions_docs_message') . '<br/><br/>',
 
                                 Checkbox::make()
+                                    ->setClass('mb-3')
                                     ->setModel('data.is_document_group')
                                     ->setLabel(Lang::get('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
                                     ->setRelation('data.document_groups', [], [], true),
 
                                 Checkbox::make()
+                                    ->setClass('mb-3')
                                     ->setModel('data.document_groups')
                                     ->setLabel(Lang::get('global.access_permissions_resource_groups'))
                                     ->setData(
@@ -287,36 +298,6 @@ class TvLayout extends Layout
                                     )
                                     ->setRelation('data.is_document_group', false, true),
                             ]
-                        /*Panel::make()
-                            ->setId('permissions')
-                            ->setModel('permissions')
-                            ->setUrl('/permissions/resources')
-                            ->setSlotTop('<p class="p-4">' . Lang::get('global.tmplvar_access_msg') . '</p>')
-                            ->addColumn(
-                                'attach',
-                                Lang::get('global.role_udperms'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true,
-                                component: Checkbox::make('permissions')->setKeyValue('id')
-                            )
-                            ->addColumn(
-                                'id',
-                                Lang::get('global.id'),
-                                ['width' => '4rem', 'textAlign' => 'center'],
-                                true
-                            )
-                            ->addColumn(
-                                'name',
-                                Lang::get('global.role'),
-                                ['fontWeight' => '500'],
-                                true,
-                                filter: true
-                            )
-                            ->addColumn(
-                                'description',
-                                Lang::get('global.description'),
-                                ['width' => '50%'],
-                            )*/
                         )
                 ),
 
@@ -598,7 +579,7 @@ class TvLayout extends Layout
 
         if (!empty($widgetParams[$name])) {
             $data[] = Panel::make()
-                ->setClass('!h-auto !m-0')
+                ->setClass('!h-auto mt-4 !mx-4')
                 ->setModel('data')
                 ->setColumns([
                     [
