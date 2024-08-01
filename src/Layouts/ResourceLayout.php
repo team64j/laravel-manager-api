@@ -162,6 +162,7 @@ class ResourceLayout extends Layout
 
         $tvs = $model->getTvs();
         $tabTvs = $this->tabTvs($tvs);
+        $groupTv = $tvs->count() ? Config::get('global.group_tvs') : null;
 
         return [
             Actions::make()
@@ -220,9 +221,9 @@ class ResourceLayout extends Layout
                 ->addTab(
                     'general',
                     Lang::get('global.settings_general'),
-                    slot: array_merge([
+                    slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 px-5 pt-5')
+                            ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 p-5')
                             ->setSlot([
                                 Input::make(
                                     'pagetitle',
@@ -268,7 +269,7 @@ class ResourceLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12 p-5 md:!pl-2')
+                            ->setClass('flex flex-wrap grow lg:basis-1/3 xl:basis-3/12 p-5')
                             ->setSlot([
                                 /*Select::make(
                                     'parent',
@@ -372,50 +373,44 @@ class ResourceLayout extends Layout
                                 DateTime::make(
                                     'unpub_date',
                                     Lang::get('global.page_data_unpublishdate'),
-                                    '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help'),
-                                    'mb-0'
+                                    '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
                                 )->isClear(),
                             ]),
-
-                        //                            $tvs->count() && Config::get('global.group_tvs') == 0 ? Arr::flatten($tabTvs['slots'])
-                        //                                : null,
-                        //
-                        //                            $tvs->count() && Config::get('global.group_tvs') == 1 ? array_map(
-                        //                                fn($slot) => Section::make()
-                        //                                    ->setLabel($slot['name'])
-                        //                                    ->setSlot($tabTvs['slots'][$slot['id']])
-                        //                                    ->setAttribute('expanded', true),
-                        //                                $tabTvs['attrs']['data']
-                        //                            ) : null,
-                        //
-                        //                            $tvs->count() && Config::get('global.group_tvs') == 2 ? $tabTvs->setAttribute(
-                        //                                'vertical',
-                        //                                false
-                        //                            ) : null,
-                    ],
-                        $tvs->count() && Config::get('global.group_tvs') == 0 ? Arr::flatten($tabTvs['slots'])
-                            : [],
-
-                        $tvs->count() && Config::get('global.group_tvs') == 1 ? array_map(
+                    ]
+                )
+                ->when(
+                    $groupTv == 0,
+                    fn(Tabs $tabs) => $tabs->putSlot(
+                        'general',
+                        Template::make()
+                            ->setClass('grow p-5')
+                            ->setSlot(Arr::flatten($tabTvs['slots']))
+                    )
+                )
+                ->when(
+                    $groupTv == 1,
+                    fn(Tabs $tabs) => $tabs->putSlot(
+                        'general',
+                        array_map(
                             fn($slot) => Section::make()
-                                ->setClass('!p-0')
+                                ->setClass('p-5')
                                 ->setLabel($slot['name'])
                                 ->setSlot($tabTvs['slots'][$slot['id']])
                                 ->isExpanded(),
                             $tabTvs['attrs']['data']
-                        ) : [],
-
-                        $tvs->count() && Config::get('global.group_tvs') == 2 ? [
-                            $tabTvs->toArray(),
-                        ] : [],
+                        )
                     )
+                )
+                ->when(
+                    $groupTv == 2,
+                    fn(Tabs $tabs) => $tabs->putSlot('general', $tabTvs)
                 )
                 ->addTab(
                     'settings',
                     Lang::get('global.settings_page_settings'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 px-5 pt-5')
+                            ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
                                 Select::make(
                                     'type',
@@ -452,8 +447,7 @@ class ResourceLayout extends Layout
                                     'content_dispo',
                                     Lang::get('global.resource_opt_contentdispo'),
                                     '<b>[*content_dispo*]</b><br>' .
-                                    Lang::get('global.resource_opt_contentdispo_help'),
-                                    'mb-3'
+                                    Lang::get('global.resource_opt_contentdispo_help')
                                 )
                                     ->setData([
                                         [
@@ -468,7 +462,7 @@ class ResourceLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 p-5 md:!pl-2')
+                            ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
                                 Checkbox::make(
                                     'isfolder',
@@ -523,8 +517,7 @@ class ResourceLayout extends Layout
                                 Checkbox::make(
                                     'empty_cache',
                                     Lang::get('global.resource_opt_emptycache'),
-                                    Lang::get('global.resource_opt_emptycache_help'),
-                                    'mb-3'
+                                    Lang::get('global.resource_opt_emptycache_help')
                                 )
                                     ->setCheckedValue(1, 0)
                                     ->setValue(1),
@@ -532,46 +525,40 @@ class ResourceLayout extends Layout
                     ]
                 )
                 ->when(
-                    $tvs->count() && Config::get('global.group_tvs') == 3,
-                    fn(Tabs $tabs) => $tabs
-                        ->addTab(
-                            'tvs',
-                            Lang::get('global.settings_templvars'),
-                            class: 'flex flex-wrap p-5',
-                            slot: array_map(
-                                fn($slot) => Section::make()
-                                    ->setClass('!p-0')
-                                    ->setLabel($slot['name'])
-                                    ->setSlot($tabTvs['slots'][$slot['id']])
-                                    ->isExpanded(),
-                                $tabTvs['attrs']['data']
-                            )
+                    $groupTv == 3,
+                    fn(Tabs $tabs) => $tabs->addTab(
+                        'tvs',
+                        Lang::get('global.settings_templvars'),
+                        class: 'flex flex-wrap p-5',
+                        slot: array_map(
+                            fn($slot) => Section::make()
+                                ->setClass('!p-0')
+                                ->setLabel($slot['name'])
+                                ->setSlot($tabTvs['slots'][$slot['id']])
+                                ->isExpanded(),
+                            $tabTvs['attrs']['data']
                         )
+                    )
                 )
                 ->when(
-                    $tvs->count() && Config::get('global.group_tvs') == 4,
-                    fn(Tabs $tabs) => $tabs
-                        ->addTab(
-                            'tvs',
-                            Lang::get('global.settings_templvars'),
-                            class: 'flex flex-wrap p-5',
-                            slot: $tabTvs
-                        )
+                    $groupTv == 4,
+                    fn(Tabs $tabs) => $tabs->addTab(
+                        'tvs',
+                        Lang::get('global.settings_templvars'),
+                        slot: $tabTvs
+                    )
                 )
                 ->when(
-                    $tvs->count() && Config::get('global.group_tvs') == 5,
-                    function (Tabs $tabs) use ($tabTvs) {
-                        foreach ($tabTvs['attrs']['data'] as $tab) {
-                            $tabs->addTab(
-                                $tab['id'],
-                                $tab['name'],
-                                class: 'p-5',
-                                slot: $tabTvs['slots'][$tab['id']],
-                            );
-                        }
-
-                        return $tabs;
-                    }
+                    $groupTv == 5,
+                    fn(Tabs $tabs) => array_map(
+                        fn($tab) => $tabs->addTab(
+                            $tab['id'],
+                            $tab['name'],
+                            class: 'p-5',
+                            slot: $tabTvs['slots'][$tab['id']],
+                        ),
+                        $tabTvs['attrs']['data']
+                    ),
                 )
                 ->when(
                     Config::get('global.use_udperms'),
@@ -591,6 +578,7 @@ class ResourceLayout extends Layout
     {
         $tvTabs = Tabs::make()
             ->setId('tvs')
+            ->setClass('p-5')
             ->setData([])
             ->isVertical();
 
