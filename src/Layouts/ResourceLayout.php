@@ -618,7 +618,7 @@ class ResourceLayout extends Layout
                     'key' => $key,
                     'value' => $value,
                 ];
-            }, explode('||', $tv['elements']));
+            }, explode('||', (string) $tv['elements']));
 
             if ($custom) {
                 $tvTabs->putSlot(
