@@ -605,8 +605,6 @@ class ResourceLayout extends Layout
                 $tv['category_name']
             );
 
-            $custom = str_starts_with($tv['type'], 'custom_tv:');
-
             $data = array_map(function ($item) {
                 if (stripos($item, '==')) {
                     [$value, $key] = explode('==', $item);
@@ -620,7 +618,7 @@ class ResourceLayout extends Layout
                 ];
             }, explode('||', (string) $tv['elements']));
 
-            if ($custom) {
+            if (str_starts_with($tv['type'], 'custom_tv:')) {
                 $tvTabs->putSlot(
                     $categoryId,
                     Textarea::make()
