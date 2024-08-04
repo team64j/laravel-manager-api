@@ -78,50 +78,49 @@ class FilemanagerController extends Controller
         );
 
         if (file_exists((string) $parentPath)) {
-            $directories = File::directories($parentPath);
+            //$directories = File::directories($parentPath);
             $files = File::files($parentPath, true);
             $path = str_replace($root, '', $parentPath);
 
             if ($path) {
                 $data[] = [
                     'key' => base64_encode(trim(dirname($path), DIRECTORY_SEPARATOR)),
-                    'title' => '...',
                     'folder' => true,
-                    'size' => ''/*$this->getSize(File::size($parentPath))*/,
-                    'date' => $this->getDate(filemtime($parentPath)),
+                    'icon' => '<i class="fa fa-arrow-left !text-blue-500"></i>',
                     'route' => [
                         'path' => '/filemanager/:key',
                     ],
+                    'contextMenu' => null,
                 ];
             }
 
-            foreach ($directories as $directory) {
-                $title = basename($directory);
-
-                $key = base64_encode(
-                    trim(
-                        str_replace(
-                            $root,
-                            '',
-                            $directory
-                        ),
-                        DIRECTORY_SEPARATOR
-                    )
-                );
-
-                $item = [
-                    'key' => $key,
-                    'title' => $title,
-                    'folder' => true,
-                    'size' => ''/*$this->getSize(File::size($directory))*/,
-                    'date' => $this->getDate(filemtime($directory)),
-                    'route' => [
-                        'path' => '/filemanager/:key',
-                    ],
-                ];
-
-                $data[] = $item;
-            }
+//            foreach ($directories as $directory) {
+//                $title = basename($directory);
+//
+//                $key = base64_encode(
+//                    trim(
+//                        str_replace(
+//                            $root,
+//                            '',
+//                            $directory
+//                        ),
+//                        DIRECTORY_SEPARATOR
+//                    )
+//                );
+//
+//                $item = [
+//                    'key' => $key,
+//                    'title' => $title,
+//                    'folder' => true,
+//                    'size' => ''/*$this->getSize(File::size($directory))*/,
+//                    'date' => $this->getDate(filemtime($directory)),
+//                    'route' => [
+//                        'path' => '/filemanager/:key',
+//                    ],
+//                ];
+//
+//                $data[] = $item;
+//            }
 
             foreach ($files as $file) {
                 $type = $file->getExtension();
@@ -220,6 +219,15 @@ class FilemanagerController extends Controller
         $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
         $path = $settings['parent'] ?? '';
         $parentPath = realpath($root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './'));
+        $opened = [];
+
+        if (!empty($settings['opened'])) {
+            foreach (array_filter($settings['opened']) as $value) {
+                $opened = array_merge($opened, explode(DIRECTORY_SEPARATOR, base64_decode($value)));
+            }
+
+            $opened = array_unique($opened);
+        }
 
         if (file_exists((string) $parentPath)) {
             $directories = File::directories($parentPath);
@@ -246,7 +254,7 @@ class FilemanagerController extends Controller
                     'category' => true,
                 ];
 
-                if (in_array($key, ($settings['opened'] ?? []), true)) {
+                if (in_array($title, $opened, true)) {
                     $request->query->set(
                         'settings',
                         [

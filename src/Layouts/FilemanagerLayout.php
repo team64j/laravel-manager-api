@@ -52,6 +52,7 @@ class FilemanagerLayout extends Layout
                     ])
                     ->setSettings([
                         'keyId' => 'key',
+                        'history' => 'key',
                     ]),
             ],
 
@@ -101,7 +102,55 @@ class FilemanagerLayout extends Layout
                                 'whiteSpace' => 'nowrap',
                             ],
                         ],
+                    ])
+                    ->setContextMenu([
+                        'class' => 'text-base',
+                        'actions' => [
+                            [
+                                'title' => Lang::get('global.preview'),
+                                'icon' => 'fa fa-eye',
+                                'route' => [
+                                    'path' => '/preview/:id',
+                                    'target' => '_blank',
+                                ],
+                            ],
+                            [
+                                'title' => Lang::get('global.download'),
+                                'icon' => 'fa fa-download',
+                                'route' => [
+                                    'path' => '/download/:id',
+                                ],
+                            ],
+                            [
+                                'split' => true,
+                            ],
+                            [
+                                'title' => Lang::get('global.duplicate'),
+                                'icon' => 'fa fa-copy',
+                                'route' => [
+                                    'path' => '/duplicate/:id',
+                                ],
+                            ],
+                            [
+                                'split' => true,
+                            ],
+                            [
+                                'title' => Lang::get('global.rename'),
+                                'icon' => 'fa fa-i-cursor',
+                                'route' => [
+                                    'path' => '/rename/:id',
+                                ],
+                            ],
+                            [
+                                'title' => Lang::get('global.delete'),
+                                'icon' => 'fa fa-trash',
+                                'route' => [
+                                    'path' => '/delete/:id',
+                                ],
+                            ],
+                        ],
                     ]),
+
             ],
         ])->toArray();
     }
