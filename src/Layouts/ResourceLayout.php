@@ -162,7 +162,7 @@ class ResourceLayout extends Layout
 
         $tvs = $model->getTvs();
         $tabTvs = $this->tabTvs($tvs);
-        $groupTv = $tvs->count() ? Config::get('global.group_tvs') : null;
+        $groupTv = $tvs->count() ? Config::get('global.group_tvs') : '';
 
         return [
             Actions::make()
