@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
@@ -13,7 +12,8 @@ use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use SimpleXMLElement;
 use Team64j\LaravelManagerApi\Http\Requests\DashboardRequest;
-use Team64j\LaravelManagerApi\Http\Resources\DashboardResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\DashboardLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -38,11 +38,11 @@ class DashboardController extends Controller
      * @param DashboardRequest $request
      * @param DashboardLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(DashboardRequest $request, DashboardLayout $layout): AnonymousResourceCollection
+    public function index(DashboardRequest $request, DashboardLayout $layout): ResourceCollection
     {
-        return DashboardResource::collection([
+        return JsonResource::collection([
             //'widgetDocuments' => $this->getDocuments(),
         ])
             ->additional([

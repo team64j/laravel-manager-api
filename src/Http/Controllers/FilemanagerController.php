@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -12,7 +11,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
-use Team64j\LaravelManagerApi\Http\Resources\FilesResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
 
 class FilemanagerController extends Controller
@@ -34,9 +34,9 @@ class FilemanagerController extends Controller
      * @param FilesRequest $request
      * @param FilemanagerLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(FilesRequest $request, FilemanagerLayout $layout): AnonymousResourceCollection
+    public function index(FilesRequest $request, FilemanagerLayout $layout): ResourceCollection
     {
         return $this->show($request, '', $layout);
     }
@@ -62,9 +62,9 @@ class FilemanagerController extends Controller
      * @param string $files
      * @param FilemanagerLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): AnonymousResourceCollection
+    public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): ResourceCollection
     {
         $data = [];
         $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
@@ -181,7 +181,7 @@ class FilemanagerController extends Controller
             }
         }
 
-        return FilesResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
@@ -210,9 +210,9 @@ class FilemanagerController extends Controller
      * )
      * @param FilesRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tree(FilesRequest $request): AnonymousResourceCollection
+    public function tree(FilesRequest $request): ResourceCollection
     {
         $data = [];
         $settings = $request->collect('settings')->toArray();
@@ -272,7 +272,7 @@ class FilemanagerController extends Controller
             }
         }
 
-        return FilesResource::collection($data);
+        return JsonResource::collection($data);
     }
 
     /**

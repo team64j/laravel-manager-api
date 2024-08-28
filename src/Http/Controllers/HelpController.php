@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\HelpRequest;
-use Team64j\LaravelManagerApi\Http\Resources\HelpResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\HelpLayout;
 
 class HelpController extends Controller
@@ -29,11 +28,11 @@ class HelpController extends Controller
      * @param HelpRequest $request
      * @param HelpLayout $layout
      *
-     * @return HelpResource
+     * @return JsonResource
      */
-    public function index(HelpRequest $request, HelpLayout $layout): HelpResource
+    public function index(HelpRequest $request, HelpLayout $layout): JsonResource
     {
-        return HelpResource::make([])
+        return JsonResource::make([])
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [

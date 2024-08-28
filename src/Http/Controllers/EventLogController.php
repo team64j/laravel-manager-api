@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\EventLog;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\EventLogRequest;
-use Team64j\LaravelManagerApi\Http\Resources\EventLogResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\EventLogLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -42,9 +41,9 @@ class EventLogController extends Controller
      * @param EventLogRequest $request
      * @param EventLogLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(EventLogRequest $request, EventLogLayout $layout): AnonymousResourceCollection
+    public function index(EventLogRequest $request, EventLogLayout $layout): ResourceCollection
     {
         $filterType = $request->input('type', '');
         $filterUser = $request->input('user', '');
@@ -153,7 +152,7 @@ class EventLogController extends Controller
             ],
         ];
 
-        return EventLogResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
@@ -183,16 +182,16 @@ class EventLogController extends Controller
      * @param string $eventlog
      * @param EventLogLayout $layout
      *
-     * @return EventLogResource
+     * @return JsonResource
      */
-    public function show(EventLogRequest $request, string $eventlog, EventLogLayout $layout): EventLogResource
+    public function show(EventLogRequest $request, string $eventlog, EventLogLayout $layout): JsonResource
     {
         /** @var EventLog $data */
         $data = EventLog::query()
             ->with('users', fn($query) => $query->select('id', 'username'))
             ->find($eventlog);
 
-        return EventLogResource::make([])
+        return JsonResource::make([])
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [

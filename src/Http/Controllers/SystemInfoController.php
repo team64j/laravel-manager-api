@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -14,7 +13,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemInfoRequest;
-use Team64j\LaravelManagerApi\Http\Resources\SystemInfoResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
 
 class SystemInfoController extends Controller
@@ -36,9 +36,9 @@ class SystemInfoController extends Controller
      * @param SystemInfoRequest $request
      * @param SystemInfoLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(SystemInfoRequest $request, SystemInfoLayout $layout): AnonymousResourceCollection
+    public function index(SystemInfoRequest $request, SystemInfoLayout $layout): ResourceCollection
     {
         $data = [
             [
@@ -104,7 +104,7 @@ class SystemInfoController extends Controller
             }
         }
 
-        return SystemInfoResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [

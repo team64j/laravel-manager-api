@@ -5,14 +5,14 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteContent;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourceRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Support\Url;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -45,10 +45,10 @@ class ResourceController extends Controller
      * )
      * @param ResourceRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      * @throws ValidationException
      */
-    public function index(ResourceRequest $request): AnonymousResourceCollection
+    public function index(ResourceRequest $request): ResourceCollection
     {
         $fillable = ['id', ...(new SiteContent())->getFillable()];
 
@@ -131,7 +131,7 @@ class ResourceController extends Controller
             ->paginate($limit, $fields)
             ->appends($request->all());
 
-        return ResourceResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'meta' => [
                     'columns' => $columns,
@@ -163,9 +163,9 @@ class ResourceController extends Controller
      * @param string $id
      * @param ResourceLayout $layout
      *
-     * @return ResourceResource
+     * @return JsonResource
      */
-    public function show(ResourceRequest $request, string $id, ResourceLayout $layout): ResourceResource
+    public function show(ResourceRequest $request, string $id, ResourceLayout $layout): JsonResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrNew($id);
@@ -206,7 +206,7 @@ class ResourceController extends Controller
 
         $route = Url::getRouteById($model->getKey());
 
-        return ResourceResource::make($model->withoutRelations())
+        return JsonResource::make($model->withoutRelations())
             ->additional([
                 'layout' => $layout->default($model, $route['url'] ?? ''),
                 'meta' => [
@@ -239,9 +239,9 @@ class ResourceController extends Controller
      * @param ResourceRequest $request
      * @param ResourceLayout $layout
      *
-     * @return ResourceResource
+     * @return JsonResource
      */
-    public function store(ResourceRequest $request, ResourceLayout $layout): ResourceResource
+    public function store(ResourceRequest $request, ResourceLayout $layout): JsonResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::query()->create($request->all());
@@ -272,9 +272,9 @@ class ResourceController extends Controller
      * @param string $id
      * @param ResourceLayout $layout
      *
-     * @return ResourceResource
+     * @return JsonResource
      */
-    public function update(ResourceRequest $request, string $id, ResourceLayout $layout): ResourceResource
+    public function update(ResourceRequest $request, string $id, ResourceLayout $layout): JsonResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrFail((int) $id);
@@ -331,7 +331,7 @@ class ResourceController extends Controller
      * @param string $id
      * @param ResourceLayout $layout
      *
-     * @return ResourceResource
+     * @return JsonResource
      */
     public function destroy(ResourceRequest $request, string $id, ResourceLayout $layout)
     {
@@ -369,7 +369,7 @@ class ResourceController extends Controller
      *
      * @param ResourceRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
     public function tree(ResourceRequest $request)
     {
@@ -397,7 +397,7 @@ class ResourceController extends Controller
                 ];
             }
 
-            return ResourceResource::collection($data);
+            return JsonResource::collection($data);
         }
 
         $fields = [
@@ -472,10 +472,10 @@ class ResourceController extends Controller
                                 ] + $settings
                             );
 
-                            $result = $this->tree($request);
-
-                            $data['data'] = $result->resource ?? [];
-                            $data['meta'] = $result->additional['meta'] ?? [];
+//                            $result = $this->tree($request);
+//
+//                            $data['data'] = $result->resource ?? [];
+//                            $data['meta'] = $result->additional['meta'] ?? [];
                         }
                     }
                 }
@@ -486,10 +486,8 @@ class ResourceController extends Controller
             $meta = $parent ? ['pagination' => $this->pagination($result)] : [];
         }
 
-        return ResourceResource::collection($data)
-            ->additional([
-                'meta' => $meta,
-            ]);
+        return JsonResource::collection($data)
+            ->meta($meta);
     }
 
     /**
@@ -509,11 +507,11 @@ class ResourceController extends Controller
      * @param ResourceRequest $request
      * @param int $id
      *
-     * @return ResourceResource
+     * @return JsonResource
      */
-    public function parents(ResourceRequest $request, int $id): ResourceResource
+    public function parents(ResourceRequest $request, int $id): JsonResource
     {
-        return ResourceResource::make(Url::getParentsById($id));
+        return JsonResource::make(Url::getParentsById($id));
     }
 
     /**
@@ -534,9 +532,9 @@ class ResourceController extends Controller
      * @param int $parent
      * @param int $id
      *
-     * @return ResourceResource
+     * @return JsonResource
      */
-    public function setParent(ResourceRequest $request, int $parent, int $id): ResourceResource
+    public function setParent(ResourceRequest $request, int $parent, int $id): JsonResource
     {
         if ($parent == $id) {
             abort(422, Lang::get('global.illegal_parent_self'));
@@ -565,6 +563,6 @@ class ResourceController extends Controller
             ];
         }
 
-        return ResourceResource::make($data);
+        return JsonResource::make($data);
     }
 }

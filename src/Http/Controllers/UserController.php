@@ -8,13 +8,13 @@ use EvolutionCMS\Models\ActiveUserSession;
 use EvolutionCMS\Models\User;
 use EvolutionCMS\Models\UserAttribute;
 use EvolutionCMS\Models\UserRole;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\UserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\UserResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\UserLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -46,9 +46,9 @@ class UserController extends Controller
      * @param UserRequest $request
      * @param UserLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(UserRequest $request, UserLayout $layout): AnonymousResourceCollection
+    public function index(UserRequest $request, UserLayout $layout): ResourceCollection
     {
         $filter = $request->get('filter');
         $order = $request->input('order', 'id');
@@ -171,19 +171,19 @@ class UserController extends Controller
             ],
         ];
 
-        return UserResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
-                    'title' => $layout->titleList(),
-                    'icon' => $layout->iconList(),
-                    'pagination' => $this->pagination($result),
-                    'sorting' => [
-                        'order' => $order,
-                        'dir' => $dir,
-                    ],
-                    'filters' => $filters,
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
+                        'title' => $layout->titleList(),
+                        'icon' => $layout->iconList(),
+                        'pagination' => $this->pagination($result),
+                        'sorting' => [
+                            'order' => $order,
+                            'dir' => $dir,
+                        ],
+                        'filters' => $filters,
+                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
             ]);
     }
 
@@ -205,14 +205,14 @@ class UserController extends Controller
      * @param string $user
      * @param UserLayout $layout
      *
-     * @return UserResource
+     * @return JsonResource
      */
-    public function show(UserRequest $request, string $user, UserLayout $layout): UserResource
+    public function show(UserRequest $request, string $user, UserLayout $layout): JsonResource
     {
         /** @var User $user */
         $user = User::query()->with('attributes')->findOrNew($user);
 
-        return UserResource::make($user)
+        return JsonResource::make($user)
             ->additional([
                 'layout' => $layout->default($user),
                 'meta' => [
@@ -241,9 +241,9 @@ class UserController extends Controller
      * )
      * @param UserRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function list(UserRequest $request): AnonymousResourceCollection
+    public function list(UserRequest $request): ResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -254,9 +254,8 @@ class UserController extends Controller
             )
             ->paginate(Config::get('global.number_of_results'), ['id', 'username as name']);
 
-        return UserResource::collection([
-            'data' => $result->items(),
-            'meta' => [
+        return JsonResource::collection($result->items())
+            ->meta([
                 'route' => '/users/:id',
                 'pagination' => $this->pagination($result),
                 'prepend' => [
@@ -268,8 +267,7 @@ class UserController extends Controller
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**
@@ -288,9 +286,9 @@ class UserController extends Controller
      * )
      * @param UserRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function active(UserRequest $request): AnonymousResourceCollection
+    public function active(UserRequest $request): ResourceCollection
     {
         $result = ActiveUserSession::query()
             ->select(['internalKey', 'internalKey as id', 'ip', 'lasthit'])
@@ -298,9 +296,8 @@ class UserController extends Controller
             ->orderByDesc('lasthit')
             ->paginate(Config::get('global.number_of_results'));
 
-        return UserResource::collection([
-            'data' => $result->items(),
-            'meta' => [
+        return JsonResource::collection($result->items())
+            ->meta([
                 'columns' => [
                     [
                         'key' => 'id',
@@ -329,7 +326,6 @@ class UserController extends Controller
                     ],
                 ],
                 'pagination' => $this->pagination($result),
-            ],
-        ]);
+            ]);
     }
 }

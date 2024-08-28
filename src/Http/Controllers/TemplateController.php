@@ -9,7 +9,6 @@ use EvolutionCMS\Models\SiteTemplate;
 use EvolutionCMS\Models\SiteTmplvar;
 use EvolutionCMS\Models\SiteTmplvarTemplate;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -18,8 +17,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
-use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
-use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 use Team64j\LaravelManagerComponents\Checkbox;
@@ -52,9 +51,9 @@ class TemplateController extends Controller
      * @param TemplateRequest $request
      * @param TemplateLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(TemplateRequest $request, TemplateLayout $layout): AnonymousResourceCollection
+    public function index(TemplateRequest $request, TemplateLayout $layout): ResourceCollection
     {
         $category = $request->input('category', -1);
         $name = $request->input('templatename');
@@ -112,7 +111,7 @@ class TemplateController extends Controller
             $data = $result->map($callbackItem);
         }
 
-        return TemplateResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
@@ -141,9 +140,9 @@ class TemplateController extends Controller
      * @param string $id
      * @param TemplateLayout $layout
      *
-     * @return TemplateResource
+     * @return JsonResource
      */
-    public function show(TemplateRequest $request, string $id, TemplateLayout $layout): TemplateResource
+    public function show(TemplateRequest $request, string $id, TemplateLayout $layout): JsonResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
@@ -157,7 +156,7 @@ class TemplateController extends Controller
             $model->setAttribute('content', file_get_contents($bladeFile));
         }
 
-        return TemplateResource::make($model->withoutRelations())
+        return JsonResource::make($model->withoutRelations())
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
@@ -189,9 +188,9 @@ class TemplateController extends Controller
      * @param TemplateRequest $request
      * @param TemplateLayout $layout
      *
-     * @return TemplateResource
+     * @return JsonResource
      */
-    public function store(TemplateRequest $request, TemplateLayout $layout): TemplateResource
+    public function store(TemplateRequest $request, TemplateLayout $layout): JsonResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->create($request->validated());
@@ -238,9 +237,9 @@ class TemplateController extends Controller
      * @param string $id
      * @param TemplateLayout $layout
      *
-     * @return TemplateResource
+     * @return JsonResource
      */
-    public function update(TemplateRequest $request, string $id, TemplateLayout $layout): TemplateResource
+    public function update(TemplateRequest $request, string $id, TemplateLayout $layout): JsonResource
     {
         $model = SiteTemplate::query()->findOrFail($id);
 
@@ -321,9 +320,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function list(TemplateRequest $request): AnonymousResourceCollection
+    public function list(TemplateRequest $request): ResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -340,7 +339,7 @@ class TemplateController extends Controller
             ])
             ->appends($request->all());
 
-        return TemplateResource::collection([
+        return JsonResource::collection([
             'data' => $result->items(),
             'meta' => [
                 'route' => '/templates/:id',
@@ -381,9 +380,9 @@ class TemplateController extends Controller
      * @param string $template
      * @param TemplateLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tvs(TemplateRequest $request, string $template, TemplateLayout $layout): AnonymousResourceCollection
+    public function tvs(TemplateRequest $request, string $template, TemplateLayout $layout): ResourceCollection
     {
         $filter = $request->input('filter');
         $order = $request->input('order', 'category');
@@ -420,7 +419,7 @@ class TemplateController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        return TemplateResource::collection(
+        return JsonResource::collection(
             $result->groupBy('category')
                 ->map(fn($category) => [
                     'id' => $category->first()->category,
@@ -462,11 +461,11 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function select(TemplateRequest $request): AnonymousResourceCollection
+    public function select(TemplateRequest $request): ResourceCollection
     {
-        return TemplateResource::collection(
+        return JsonResource::collection(
             Collection::make()
                 ->add([
                     'key' => 0,
@@ -514,9 +513,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tree(TemplateRequest $request): AnonymousResourceCollection
+    public function tree(TemplateRequest $request): ResourceCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -533,7 +532,7 @@ class TemplateController extends Controller
                 ->get()
                 ->map(fn(SiteTemplate $item) => $item->setHidden(['category']));
 
-            return TemplateResource::collection($result)
+            return JsonResource::collection($result)
                 ->additional([
                     'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
                 ]);
@@ -548,7 +547,7 @@ class TemplateController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return TemplateResource::collection(
+            return JsonResource::collection(
                 $result->map(fn(SiteTemplate $item) => $item->setHidden(['category']))
             )
                 ->additional([
@@ -589,7 +588,7 @@ class TemplateController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return CategoryResource::collection($result)
+        return JsonResource::collection($result)
             ->additional([
                 'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
             ]);

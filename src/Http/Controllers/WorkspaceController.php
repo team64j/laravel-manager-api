@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\WorkspaceRequest;
-use Team64j\LaravelManagerApi\Http\Resources\WorkspaceResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\WorkspaceLayout;
 
 class WorkspaceController extends Controller
@@ -34,9 +34,9 @@ class WorkspaceController extends Controller
      * @param WorkspaceRequest $request
      * @param WorkspaceLayout $layout
      *
-     * @return WorkspaceResource
+     * @return JsonResource
      */
-    public function index(WorkspaceRequest $request, WorkspaceLayout $layout): WorkspaceResource
+    public function index(WorkspaceRequest $request, WorkspaceLayout $layout): JsonResource
     {
         $data = [];
 
@@ -67,7 +67,7 @@ class WorkspaceController extends Controller
             $data['topmenu']['data'] = (new BootstrapController())->getMenu(true);
         }
 
-        return WorkspaceResource::make($data)
+        return JsonResource::make($data)
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [
@@ -105,9 +105,9 @@ class WorkspaceController extends Controller
      * @param WorkspaceRequest $request
      * @param WorkspaceLayout $layout
      *
-     * @return WorkspaceResource
+     * @return JsonResource
      */
-    public function store(WorkspaceRequest $request, WorkspaceLayout $layout): WorkspaceResource
+    public function store(WorkspaceRequest $request, WorkspaceLayout $layout): JsonResource
     {
         $data = [];
         /** @var Collection $collect */
@@ -145,7 +145,7 @@ class WorkspaceController extends Controller
         Artisan::call('optimize:clear');
         Artisan::call('config:cache');
 
-        return WorkspaceResource::make([])
+        return JsonResource::make([])
             ->additional([
                 'meta' => [
                     'reload' => true,

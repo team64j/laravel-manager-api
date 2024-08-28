@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\UserRole;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\RoleUserResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\RoleUserLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -35,9 +34,9 @@ class RoleUserController extends Controller
      * @param RoleUserRequest $request
      * @param RoleUserLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(RoleUserRequest $request, RoleUserLayout $layout): AnonymousResourceCollection
+    public function index(RoleUserRequest $request, RoleUserLayout $layout): ResourceCollection
     {
         $result = UserRole::query()
             ->when(
@@ -47,7 +46,7 @@ class RoleUserController extends Controller
             ->orderBy('id')
             ->paginate(Config::get('global.number_of_results'));
 
-        return RoleUserResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
@@ -76,9 +75,9 @@ class RoleUserController extends Controller
      * @param string $id
      * @param RoleUserLayout $layout
      *
-     * @return RoleUserResource
+     * @return JsonResource
      */
-    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): RoleUserResource
+    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): JsonResource
     {
         /** @var UserRole $model */
         $model = UserRole::query()->findOrNew($id);
@@ -89,7 +88,7 @@ class RoleUserController extends Controller
             ]);
         }
 
-        return RoleUserResource::make([])
+        return JsonResource::make([])
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [

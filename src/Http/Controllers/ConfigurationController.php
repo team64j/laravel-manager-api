@@ -7,10 +7,9 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use EvolutionCMS\Models\SystemSetting;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ConfigurationResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\ConfigurationLayout;
 
 class ConfigurationController extends Controller
@@ -32,13 +31,13 @@ class ConfigurationController extends Controller
      * @param ConfigurationRequest $request
      * @param ConfigurationLayout $layout
      *
-     * @return ConfigurationResource
+     * @return JsonResource
      */
-    public function index(ConfigurationRequest $request, ConfigurationLayout $layout): ConfigurationResource
+    public function index(ConfigurationRequest $request, ConfigurationLayout $layout): JsonResource
     {
         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', App::basePath()) . '/';
 
-        return ConfigurationResource::make(
+        return JsonResource::make(
             SystemSetting::all()
                 ->pluck('setting_value', 'setting_name')
                 ->map(function ($value, $key) use ($basePath) {
@@ -92,9 +91,9 @@ class ConfigurationController extends Controller
      * @param ConfigurationRequest $request
      * @param SystemSetting $configuration
      *
-     * @return ConfigurationResource
+     * @return JsonResource
      */
-    public function store(ConfigurationRequest $request, SystemSetting $configuration): ConfigurationResource
+    public function store(ConfigurationRequest $request, SystemSetting $configuration): JsonResource
     {
         $data = [];
         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', App::basePath()) . '/';
@@ -121,7 +120,7 @@ class ConfigurationController extends Controller
         Artisan::call('optimize:clear');
         Artisan::call('optimize');
 
-        return ConfigurationResource::make([])
+        return JsonResource::make([])
             ->additional([
                 'meta' => [
                     'reload' => true,

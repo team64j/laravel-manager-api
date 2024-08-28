@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\PermissionsGroups;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleCategoryRequest;
-use Team64j\LaravelManagerApi\Http\Resources\RoleCategoryResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\RoleCategoryLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -39,9 +39,9 @@ class RoleCategoryController extends Controller
      * @param RoleCategoryRequest $request
      * @param RoleCategoryLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(RoleCategoryRequest $request, RoleCategoryLayout $layout): AnonymousResourceCollection
+    public function index(RoleCategoryRequest $request, RoleCategoryLayout $layout): ResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -57,7 +57,7 @@ class RoleCategoryController extends Controller
                 return $item;
             });
 
-        return RoleCategoryResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
@@ -86,12 +86,12 @@ class RoleCategoryController extends Controller
      * @param string $id
      * @param RoleCategoryLayout $layout
      *
-     * @return RoleCategoryResource
+     * @return JsonResource
      */
     public function show(
         RoleCategoryRequest $request,
         string $id,
-        RoleCategoryLayout $layout): RoleCategoryResource
+        RoleCategoryLayout $layout): JsonResource
     {
         /** @var PermissionsGroups $model */
         $model = PermissionsGroups::query()->findOrNew($id);
@@ -102,7 +102,7 @@ class RoleCategoryController extends Controller
             ]);
         }
 
-        return RoleCategoryResource::make([])
+        return JsonResource::make([])
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [

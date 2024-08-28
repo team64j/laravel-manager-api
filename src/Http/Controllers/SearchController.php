@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\SiteContent;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SearchRequest;
-use Team64j\LaravelManagerApi\Http\Resources\SearchResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class SearchController extends Controller
@@ -32,9 +32,9 @@ class SearchController extends Controller
      * )
      * @param SearchRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(SearchRequest $request): AnonymousResourceCollection
+    public function index(SearchRequest $request): ResourceCollection
     {
         $data = [];
         $search = $request->input('search');
@@ -54,6 +54,6 @@ class SearchController extends Controller
             $data = array_merge($data, $result);
         }
 
-        return SearchResource::collection($data);
+        return JsonResource::collection($data);
     }
 }

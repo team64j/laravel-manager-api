@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Vite;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
-use Team64j\LaravelManagerApi\Http\Resources\BootstrapResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
 use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
@@ -40,11 +40,11 @@ class BootstrapController extends Controller
      *      )
      * )
      *
-     * @return BootstrapResource
+     * @return JsonResource
      */
-    public function init(): BootstrapResource
+    public function init(): JsonResource
     {
-        return BootstrapResource::make([])
+        return JsonResource::make([])
             ->additional([
                 'meta' => [
                     'version' => Config::get('global.settings_version'),
@@ -71,11 +71,11 @@ class BootstrapController extends Controller
      *
      * @param BootstrapRequest $request
      *
-     * @return BootstrapResource
+     * @return JsonResource
      */
-    public function index(BootstrapRequest $request): BootstrapResource
+    public function index(BootstrapRequest $request): JsonResource
     {
-        return BootstrapResource::make([
+        return JsonResource::make([
             'routes' => $this->getRoutes(),
             'assets' => $this->getAssets(),
             'config' => [

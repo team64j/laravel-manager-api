@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ScheduleRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ScheduleResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\ScheduleLayout;
 
 class ScheduleController extends Controller
@@ -29,11 +29,11 @@ class ScheduleController extends Controller
      * @param ScheduleRequest $request
      * @param ScheduleLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(ScheduleRequest $request, ScheduleLayout $layout): AnonymousResourceCollection
+    public function index(ScheduleRequest $request, ScheduleLayout $layout): ResourceCollection
     {
-        return ScheduleResource::collection([])
+        return JsonResource::collection([])
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [

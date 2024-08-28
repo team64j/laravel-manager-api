@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteHtmlSnippet;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
@@ -14,8 +13,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ChunkRequest;
-use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
-use Team64j\LaravelManagerApi\Http\Resources\ChunkResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -47,9 +46,9 @@ class ChunkController extends Controller
      * @param ChunkRequest $request
      * @param ChunkLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(ChunkRequest $request, ChunkLayout $layout): AnonymousResourceCollection
+    public function index(ChunkRequest $request, ChunkLayout $layout): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -94,7 +93,7 @@ class ChunkController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return ChunkResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
@@ -126,13 +125,13 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      *
-     * @return ChunkResource
+     * @return JsonResource
      */
-    public function store(ChunkRequest $request): ChunkResource
+    public function store(ChunkRequest $request): JsonResource
     {
         $model = SiteHtmlSnippet::query()->create($request->validated());
 
-        return ChunkResource::make($model);
+        return JsonResource::make($model);
     }
 
     /**
@@ -153,14 +152,14 @@ class ChunkController extends Controller
      * @param string $id
      * @param ChunkLayout $layout
      *
-     * @return ChunkResource
+     * @return JsonResource
      */
-    public function show(ChunkRequest $request, string $id, ChunkLayout $layout): ChunkResource
+    public function show(ChunkRequest $request, string $id, ChunkLayout $layout): JsonResource
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrNew($id);
 
-        return ChunkResource::make($model)
+        return JsonResource::make($model)
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
@@ -192,16 +191,16 @@ class ChunkController extends Controller
      * @param ChunkRequest $request
      * @param string $id
      *
-     * @return ChunkResource
+     * @return JsonResource
      */
-    public function update(ChunkRequest $request, string $id): ChunkResource
+    public function update(ChunkRequest $request, string $id): JsonResource
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrFail($id);
 
         $model->update($request->validated());
 
-        return ChunkResource::make($model);
+        return JsonResource::make($model);
     }
 
     /**
@@ -252,9 +251,9 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function list(ChunkRequest $request): AnonymousResourceCollection
+    public function list(ChunkRequest $request): ResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -270,7 +269,7 @@ class ChunkController extends Controller
                 'category',
             ]);
 
-        return ChunkResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'meta' => [
                     'route' => '/chunks/:id',
@@ -309,9 +308,9 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tree(ChunkRequest $request): AnonymousResourceCollection
+    public function tree(ChunkRequest $request): ResourceCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -328,7 +327,7 @@ class ChunkController extends Controller
                 ->get()
                 ->map(fn(SiteHtmlSnippet $item) => $item->setHidden(['category']));
 
-            return ChunkResource::collection($result)
+            return JsonResource::collection($result)
                 ->additional([
                     'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
                 ]);
@@ -343,7 +342,7 @@ class ChunkController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return ChunkResource::collection($result->map(fn(SiteHtmlSnippet $item) => $item->setHidden(['category'])))
+            return JsonResource::collection($result->map(fn(SiteHtmlSnippet $item) => $item->setHidden(['category'])))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -382,7 +381,7 @@ class ChunkController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return CategoryResource::collection($result)
+        return JsonResource::collection($result)
             ->additional([
                 'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
             ]);

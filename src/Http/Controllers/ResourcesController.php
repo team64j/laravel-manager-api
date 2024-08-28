@@ -8,7 +8,7 @@ use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourcesRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ResourcesResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\ResourcesLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -38,9 +38,9 @@ class ResourcesController extends Controller
      * @param string $id
      * @param ResourcesLayout $layout
      *
-     * @return ResourcesResource
+@return JsonResource
      */
-    public function show(ResourcesRequest $request, string $id, ResourcesLayout $layout): ResourcesResource
+    public function show(ResourcesRequest $request, string $id, ResourcesLayout $layout): JsonResource
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
@@ -87,7 +87,7 @@ class ResourcesController extends Controller
             'pagetitle' => 'root',
         ]));
 
-        return ResourcesResource::make($result->items())
+        return JsonResource::make($result->items())
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [

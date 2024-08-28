@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteSnippet;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +14,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
-use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
-use Team64j\LaravelManagerApi\Http\Resources\SnippetResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -48,9 +47,9 @@ class SnippetController extends Controller
      * @param SnippetRequest $request
      * @param SnippetLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(SnippetRequest $request, SnippetLayout $layout): AnonymousResourceCollection
+    public function index(SnippetRequest $request, SnippetLayout $layout): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -95,7 +94,7 @@ class SnippetController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return SnippetResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
@@ -127,9 +126,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return SnippetResource
+     * @return JsonResource
      */
-    public function store(SnippetRequest $request): SnippetResource
+    public function store(SnippetRequest $request): JsonResource
     {
         $snippet = SiteSnippet::query()->create($request->validated());
 
@@ -154,14 +153,14 @@ class SnippetController extends Controller
      * @param string $id
      * @param SnippetLayout $layout
      *
-     * @return SnippetResource
+     * @return JsonResource
      */
-    public function show(SnippetRequest $request, string $id, SnippetLayout $layout): SnippetResource
+    public function show(SnippetRequest $request, string $id, SnippetLayout $layout): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrNew($id);
 
-        return SnippetResource::make($model)
+        return JsonResource::make($model)
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
@@ -193,16 +192,16 @@ class SnippetController extends Controller
      * @param SnippetRequest $request
      * @param string $id
      *
-     * @return SnippetResource
+     * @return JsonResource
      */
-    public function update(SnippetRequest $request, string $id): SnippetResource
+    public function update(SnippetRequest $request, string $id): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
 
         $model->update($request->validated());
 
-        return SnippetResource::make($model);
+        return JsonResource::make($model);
     }
 
     /**
@@ -253,9 +252,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function list(SnippetRequest $request): AnonymousResourceCollection
+    public function list(SnippetRequest $request): ResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -272,7 +271,7 @@ class SnippetController extends Controller
                 'category',
             ]);
 
-        return SnippetResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'meta' => [
                     'route' => '/snippets/:id',
@@ -311,9 +310,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tree(SnippetRequest $request): AnonymousResourceCollection
+    public function tree(SnippetRequest $request): ResourceCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -330,7 +329,7 @@ class SnippetController extends Controller
                 ->get()
                 ->map(fn(SiteSnippet $item) => $item->setHidden(['category']));
 
-            return SnippetResource::collection($result)
+            return JsonResource::collection($result)
                 ->additional([
                     'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
                 ]);
@@ -345,7 +344,7 @@ class SnippetController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return SnippetResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
+            return JsonResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -384,7 +383,7 @@ class SnippetController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return CategoryResource::collection($result)
+        return JsonResource::collection($result)
             ->additional([
                 'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
             ]);

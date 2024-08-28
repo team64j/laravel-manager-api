@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
@@ -14,7 +13,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FileRequest;
-use Team64j\LaravelManagerApi\Http\Resources\FileResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\FileLayout;
 
 class FileController extends Controller
@@ -37,9 +37,9 @@ class FileController extends Controller
      * @param string $file
      * @param FileLayout $layout
      *
-     * @return FileResource
+     * @return JsonResource
      */
-    public function show(FileRequest $request, string $file, FileLayout $layout): FileResource
+    public function show(FileRequest $request, string $file, FileLayout $layout): JsonResource
     {
         $data = [];
         $root = realpath(Config::get('global.filemanager_path', App::basePath()));
@@ -92,7 +92,7 @@ class FileController extends Controller
             }
         }
 
-        return FileResource::make($data)
+        return JsonResource::make($data)
             ->additional([
                 'layout' => $layout->default($data),
                 'meta' => [
@@ -123,9 +123,9 @@ class FileController extends Controller
      * )
      * @param FileRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tree(FileRequest $request): AnonymousResourceCollection
+    public function tree(FileRequest $request): ResourceCollection
     {
         $data = [];
         $settings = $request->collect('settings')->toArray();
@@ -272,7 +272,7 @@ class FileController extends Controller
             $next = null;
         }
 
-        return FileResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'meta' => [
                     'category' => true,

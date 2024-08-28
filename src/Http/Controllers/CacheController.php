@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Annotations as OA;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\CacheLayout;
 
 class CacheController extends Controller

@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SitePlugin;
 use EvolutionCMS\Models\SystemEventname;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -16,8 +15,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\PluginRequest;
-use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
-use Team64j\LaravelManagerApi\Http\Resources\PluginResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -49,9 +48,9 @@ class PluginController extends Controller
      * @param PluginRequest $request
      * @param PluginLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(PluginRequest $request, PluginLayout $layout): AnonymousResourceCollection
+    public function index(PluginRequest $request, PluginLayout $layout): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -96,7 +95,7 @@ class PluginController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return PluginResource::collection($data)
+        return JsonResource::collection($data)
             ->additional([
                 'layout' => $layout->list(),
                 'meta' => [
@@ -128,13 +127,13 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return PluginResource
+     * @return JsonResource
      */
-    public function store(PluginRequest $request): PluginResource
+    public function store(PluginRequest $request): JsonResource
     {
         $model = SitePlugin::query()->create($request->validated());
 
-        return PluginResource::make($model);
+        return JsonResource::make($model);
     }
 
     /**
@@ -155,14 +154,14 @@ class PluginController extends Controller
      * @param string $id
      * @param PluginLayout $layout
      *
-     * @return PluginResource
+     * @return JsonResource
      */
-    public function show(PluginRequest $request, string $id, PluginLayout $layout): PluginResource
+    public function show(PluginRequest $request, string $id, PluginLayout $layout): JsonResource
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->findOrNew($id);
 
-        return PluginResource::make($model)
+        return JsonResource::make($model)
             ->additional([
                 'layout' => $layout->default($model),
                 'meta' => [
@@ -194,16 +193,16 @@ class PluginController extends Controller
      * @param PluginRequest $request
      * @param string $id
      *
-     * @return PluginResource
+     * @return JsonResource
      */
-    public function update(PluginRequest $request, string $id): PluginResource
+    public function update(PluginRequest $request, string $id): JsonResource
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->findOrFail($id);
 
         $model->update($request->validated());
 
-        return PluginResource::make($model);
+        return JsonResource::make($model);
     }
 
     /**
@@ -254,9 +253,9 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function list(PluginRequest $request): AnonymousResourceCollection
+    public function list(PluginRequest $request): ResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -273,7 +272,7 @@ class PluginController extends Controller
                 'category',
             ]);
 
-        return PluginResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'meta' => [
                     'route' => '/plugins/:id',
@@ -311,13 +310,13 @@ class PluginController extends Controller
      * @param PluginRequest $request
      * @param PluginLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function sort(PluginRequest $request, PluginLayout $layout): AnonymousResourceCollection
+    public function sort(PluginRequest $request, PluginLayout $layout): ResourceCollection
     {
         $filter = $request->input('filter');
 
-        return PluginResource::collection(
+        return JsonResource::collection(
             SystemEventname::query()
                 ->with(
                     'plugins',
@@ -364,9 +363,9 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tree(PluginRequest $request): AnonymousResourceCollection
+    public function tree(PluginRequest $request): ResourceCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -383,7 +382,7 @@ class PluginController extends Controller
                 ->get()
                 ->map(fn(SitePlugin $item) => $item->setHidden(['category']));
 
-            return PluginResource::collection($result)
+            return JsonResource::collection($result)
                 ->additional([
                     'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
                 ]);
@@ -398,7 +397,7 @@ class PluginController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return PluginResource::collection($result->map(fn(SitePlugin $item) => $item->setHidden(['category'])))
+            return JsonResource::collection($result->map(fn(SitePlugin $item) => $item->setHidden(['category'])))
                 ->additional([
                     'meta' => [
                         'pagination' => $this->pagination($result),
@@ -437,7 +436,7 @@ class PluginController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return CategoryResource::collection($result)
+        return JsonResource::collection($result)
             ->additional([
                 'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
             ]);

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\ManagerLog;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemLogRequest;
-use Team64j\LaravelManagerApi\Http\Resources\SystemLogResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\SystemLogLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -45,9 +45,9 @@ class SystemLogController extends Controller
      * @param SystemLogRequest $request
      * @param SystemLogLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(SystemLogRequest $request, SystemLogLayout $layout): AnonymousResourceCollection
+    public function index(SystemLogRequest $request, SystemLogLayout $layout): ResourceCollection
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'desc');
@@ -183,7 +183,7 @@ class SystemLogController extends Controller
             ],
         ];
 
-        return SystemLogResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->additional([
                 'layout' => $layout->default(),
                 'meta' => [

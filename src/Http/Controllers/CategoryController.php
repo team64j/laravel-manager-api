@@ -3,15 +3,14 @@
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\Category;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
-use Team64j\LaravelManagerApi\Http\Resources\CategoryResource;
-use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -42,9 +41,9 @@ class CategoryController extends Controller
      * @param CategoryRequest $request
      * @param CategoryLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function index(CategoryRequest $request, CategoryLayout $layout): AnonymousResourceCollection
+    public function index(CategoryRequest $request, CategoryLayout $layout): ResourceCollection
     {
         $filter = $request->input('filter');
         $filterName = $request->input('category');
@@ -68,15 +67,15 @@ class CategoryController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        return CategoryResource::collection($result->items())
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
+        return JsonResource::collection($result->items())
+            ->meta(
+                [
                     'title' => Lang::get('global.category_management'),
                     'icon' => $layout->icon(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            )
+            ->layout($layout->list());
     }
 
     /**
@@ -100,13 +99,13 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return CategoryResource
+     * @return JsonResource
      */
-    public function store(CategoryRequest $request): CategoryResource
+    public function store(CategoryRequest $request): JsonResource
     {
         $model = Category::query()->create($request->validated());
 
-        return CategoryResource::make($model);
+        return JsonResource::make($model);
     }
 
     /**
@@ -127,21 +126,19 @@ class CategoryController extends Controller
      * @param string $id
      * @param CategoryLayout $layout
      *
-     * @return CategoryResource
+     * @return JsonResource
      */
-    public function show(CategoryRequest $request, string $id, CategoryLayout $layout): CategoryResource
+    public function show(CategoryRequest $request, string $id, CategoryLayout $layout): JsonResource
     {
         /** @var Category $model */
         $model = Category::query()->findOrNew($id);
 
-        return CategoryResource::make($model)
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $model->category ?? $layout->title(),
-                    'icon' => $layout->icon(),
-                ],
-            ]);
+        return JsonResource::make($model)
+            ->meta([
+                'title' => $model->category ?? $layout->title(),
+                'icon' => $layout->icon(),
+            ])
+            ->layout($layout->default($model));
     }
 
     /**
@@ -166,16 +163,16 @@ class CategoryController extends Controller
      * @param CategoryRequest $request
      * @param string $id
      *
-     * @return CategoryResource
+     * @return JsonResource
      */
-    public function update(CategoryRequest $request, string $id): CategoryResource
+    public function update(CategoryRequest $request, string $id): JsonResource
     {
         /** @var Category $model */
         $model = Category::query()->findOrFail($id);
 
         $model->update($request->validated());
 
-        return CategoryResource::make($model);
+        return JsonResource::make($model);
     }
 
     /**
@@ -224,18 +221,16 @@ class CategoryController extends Controller
      * @param CategoryRequest $request
      * @param CategoryLayout $layout
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function sort(CategoryRequest $request, CategoryLayout $layout): AnonymousResourceCollection
+    public function sort(CategoryRequest $request, CategoryLayout $layout): ResourceCollection
     {
-        return CategoryResource::collection(Category::query()->orderBy('rank')->get())
-            ->additional([
-                'layout' => $layout->sort(),
-                'meta' => [
-                    'title' => Lang::get('global.cm_sort_categories'),
-                    'icon' => $layout->iconSort(),
-                ],
-            ]);
+        return JsonResource::collection(Category::query()->orderBy('rank')->get())
+            ->meta([
+                'title' => Lang::get('global.cm_sort_categories'),
+                'icon' => $layout->iconSort(),
+            ])
+            ->layout($layout->sort());
     }
 
     /**
@@ -258,13 +253,13 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function select(CategoryRequest $request): AnonymousResourceCollection
+    public function select(CategoryRequest $request): ResourceCollection
     {
         $selected = $request->integer('selected');
 
-        return TemplateResource::collection(
+        return JsonResource::collection(
             Collection::make()
                 ->add([
                     'key' => (string) $request->input('itemNew', 'newcategory'),
@@ -312,9 +307,9 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function tree(CategoryRequest $request): AnonymousResourceCollection
+    public function tree(CategoryRequest $request): ResourceCollection
     {
         $settings = $request->collect('settings');
         $filter = $request->input('filter');
@@ -339,10 +334,8 @@ class CategoryController extends Controller
                 'title' => $item->category,
             ]);
 
-        return CategoryResource::collection($result)
-            ->additional([
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+        return JsonResource::collection($result)
+            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 
     /**
@@ -364,9 +357,9 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return AnonymousResourceCollection
+     * @return ResourceCollection
      */
-    public function list(CategoryRequest $request): AnonymousResourceCollection
+    public function list(CategoryRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
 
@@ -378,18 +371,16 @@ class CategoryController extends Controller
                 'rank',
             ]);
 
-        return CategoryResource::collection($result->items())
-            ->additional([
-                'meta' => [
-                    'route' => '/categories/:id',
-                    'pagination' => $this->pagination($result),
-                    'prepend' => [
-                        [
-                            'name' => Lang::get('global.new_category'),
-                            'icon' => 'fa fa-plus-circle',
-                            'to' => [
-                                'path' => '/categories/new',
-                            ],
+        return JsonResource::collection($result->items())
+            ->meta([
+                'route' => '/categories/:id',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_category'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'path' => '/categories/new',
                         ],
                     ],
                 ],
