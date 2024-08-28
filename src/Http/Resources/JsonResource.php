@@ -5,35 +5,14 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource as BaseResource;
+use Team64j\LaravelManagerApi\Traits\ResourceTrait;
 
 /**
  * @property mixed $preserveKeys
  */
 class JsonResource extends BaseResource
 {
-    /**
-     * @param $data
-     *
-     * @return $this
-     */
-    public function meta($data): static
-    {
-        $this->additional(array_merge($this->additional, ['meta' => $data]));
-
-        return $this;
-    }
-
-    /**
-     * @param $data
-     *
-     * @return $this
-     */
-    public function layout($data): static
-    {
-        $this->additional(array_merge($this->additional, ['layout' => $data]));
-
-        return $this;
-    }
+    use ResourceTrait;
 
     /**
      * @param $resource

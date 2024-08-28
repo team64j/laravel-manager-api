@@ -40,6 +40,14 @@ class RoleUserLayout extends Layout
     }
 
     /**
+     * @return string
+     */
+    public function titleList(): string
+    {
+        return Lang::get('global.role_management_title');
+    }
+
+    /**
      * @return array
      */
     public function list(): array

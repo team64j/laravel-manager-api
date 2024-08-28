@@ -171,20 +171,20 @@ class UserController extends Controller
             ],
         ];
 
-        return JsonResource::collection($result->items())
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                        'title' => $layout->titleList(),
-                        'icon' => $layout->iconList(),
-                        'pagination' => $this->pagination($result),
-                        'sorting' => [
-                            'order' => $order,
-                            'dir' => $dir,
-                        ],
-                        'filters' => $filters,
-                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+        return JsonResource::collection($result)
+            ->meta(
+                [
+                    'title' => $layout->titleList(),
+                    'icon' => $layout->iconList(),
+                    'pagination' => $this->pagination($result),
+                    'sorting' => [
+                        'order' => $order,
+                        'dir' => $dir,
+                    ],
+                    'filters' => $filters,
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            )
+            ->layout($layout->list());
     }
 
     /**
@@ -213,13 +213,11 @@ class UserController extends Controller
         $user = User::query()->with('attributes')->findOrNew($user);
 
         return JsonResource::make($user)
-            ->additional([
-                'layout' => $layout->default($user),
-                'meta' => [
-                    'title' => $layout->title($user->username),
-                    'icon' => $layout->icon(),
-                ],
-            ]);
+            ->meta([
+                'title' => $layout->title($user->username),
+                'icon' => $layout->icon(),
+            ])
+            ->layout($layout->default($user));
     }
 
     /**
@@ -254,7 +252,7 @@ class UserController extends Controller
             )
             ->paginate(Config::get('global.number_of_results'), ['id', 'username as name']);
 
-        return JsonResource::collection($result->items())
+        return JsonResource::collection($result)
             ->meta([
                 'route' => '/users/:id',
                 'pagination' => $this->pagination($result),

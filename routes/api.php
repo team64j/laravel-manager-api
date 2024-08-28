@@ -50,10 +50,10 @@ Route::prefix($apiPath)
             ->group(fn() => [
                 Route::withoutMiddleware($authMiddleware)
                     ->group(fn() => [
-                        Route::get('/', [AuthController::class, 'loginForm'])->name('auth.login-form'),
+                        //Route::get('/', [AuthController::class, 'loginForm'])->name('auth.login-form'),
                         Route::post('/', [AuthController::class, 'login'])->name('auth.login'),
-                        Route::get('forgot', [AuthController::class, 'forgotForm'])->name('auth.forgot-form'),
-                        Route::post('forgot', [AuthController::class, 'forgot'])->name('auth.forgot'),
+                        //Route::get('forgot', [AuthController::class, 'forgotForm'])->name('auth.forgot-form'),
+                        //Route::post('forgot', [AuthController::class, 'forgot'])->name('auth.forgot'),
                     ]),
 
                 Route::post('refresh', [AuthController::class, 'refresh'])->name('auth.refresh'),

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
+use Team64j\LaravelManagerApi\Http\Requests\AuthRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\LoginLayout;
 
@@ -51,37 +53,24 @@ class AuthController extends Controller
      * )
      * @param Request $request
      *
-     * @return JsonResource
+     * @return JsonResource|JsonResponse
      * @throws ValidationException
      */
-    public function login(Request $request): JsonResource
+    public function login(AuthRequest $request): JsonResource | JsonResponse
     {
+        /** @var Guard $guard */
         $guard = auth(Config::get('manager-api.guard.provider'));
 
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        $validator->validate();
-
-        if (!$token = $guard->attempt($validator->validated())) {
-            return JsonResource::make([
-                'message' => Lang::get('global.login_processor_unknown_user'),
-            ])
-                ->response()
-                ->setStatusCode(422);
+        if (!$token = $guard->attempt($request->validated())) {
+            throw ValidationException::withMessages([Lang::get('global.login_processor_unknown_user')]);
         }
 
         $guard->login($guard->user(), $request->boolean('remember'));
 
         return JsonResource::make([
-            'data' => [
-                'access_token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => $guard->factory()->getTTL() * 60,
-                'user' => $guard->user(),
-            ],
+            'token_type' => 'bearer',
+            'expires_in' => $guard->factory()->getTTL() * 60,
+            'access_token' => $token,
         ]);
     }
 
@@ -110,19 +99,17 @@ class AuthController extends Controller
             empty($languages[Config::get('global.manager_language')]) ? 'en' : Config::get('global.manager_language');
 
         return JsonResource::make([
-            'data' => [
-                'username' => '',
-                'password' => '',
-                'remember' => true,
-            ],
-            'layout' => $layout->default(),
-            'meta' => [
+            'username' => '',
+            'password' => '',
+            'remember' => true,
+        ])
+            ->meta([
                 'site_name' => Config::get('global.site_name'),
                 'version' => Config::get('global.settings_version'),
                 'language' => $language,
                 'languages' => $languages,
-            ],
-        ]);
+            ])
+            ->layout($layout->default());
     }
 
     /**
@@ -143,10 +130,13 @@ class AuthController extends Controller
      */
     public function refresh(): JsonResource
     {
+        /** @var Guard $guard */
+        $guard = auth(Config::get('manager-api.guard.provider'));
+
         return JsonResource::make([
-            'data' => [
-                'access_token' => auth(Config::get('manager-api.guard.provider'))->refresh(),
-            ],
+            'token_type' => 'bearer',
+            'expires_in' => $guard->factory()->getTTL() * 60,
+            'access_token' => $guard->refresh(),
         ]);
     }
 
@@ -181,9 +171,7 @@ class AuthController extends Controller
      */
     public function forgot(Request $request): JsonResource
     {
-        return JsonResource::make([
-            'data' => [],
-        ]);
+        return JsonResource::make([]);
     }
 
     /**
@@ -205,9 +193,7 @@ class AuthController extends Controller
      */
     public function forgotForm(Request $request): JsonResource
     {
-        return JsonResource::make([
-            'data' => [],
-        ]);
+        return JsonResource::make([]);
     }
 
     /**
