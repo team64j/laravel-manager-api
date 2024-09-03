@@ -176,11 +176,13 @@ class ResourceLayout extends Layout
                     fn(Actions $component) => $component
                         ->setAction(
                             [
-                                'action' => 'custom:update',
+                                'action' => 'update',
                                 'method' => 'patch',
-                                'url' => '/resource/:id',
-                                'params' => [
-                                    'deleted' => 0,
+                                'route' => [
+                                    'path' => '/resource/:id',
+                                    'query' => [
+                                        'deleted' => 0,
+                                    ],
                                 ],
                             ],
                             Lang::get('global.undelete_resource'),
@@ -193,11 +195,13 @@ class ResourceLayout extends Layout
                         fn(Actions $component) => $component
                             ->setAction(
                                 [
-                                    'action' => 'custom:update',
+                                    'action' => 'update',
                                     'method' => 'patch',
-                                    'url' => '/resource/:id',
-                                    'params' => [
-                                        'deleted' => 1,
+                                    'route' => [
+                                        'path' => '/resource/:id',
+                                        'query' => [
+                                            'deleted' => 1,
+                                        ],
                                     ],
                                 ],
                                 Lang::get('global.delete'),
@@ -205,7 +209,7 @@ class ResourceLayout extends Layout
                                 'btn-red',
                                 'fa fa-trash-alt'
                             )
-                            ->setCopy()
+                            ->setCopy(to: ['path' => '/resource/new?id=' . $model->getKey()]),
                     )
                 )
                 ->setSaveAnd(),
