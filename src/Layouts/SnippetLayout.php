@@ -122,15 +122,15 @@ class SnippetLayout extends Layout
                     'templates',
                     Lang::get('global.templates'),
                     'fa fa-newspaper',
-                    'py-4',
+                    '',
                     ['edit_template'],
-                    route('manager.api.elements.templates')
+                    route('manager.api.elements.templates'),
                 )
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
                     'fa fa-list-alt',
-                    'py-4',
+                    '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route('manager.api.elements.tvs')
                 )
@@ -138,18 +138,45 @@ class SnippetLayout extends Layout
                     'chunks',
                     Lang::get('global.htmlsnippets'),
                     'fa fa-th-large',
-                    'py-4',
+                    '',
                     ['edit_chunk'],
                     route('manager.api.elements.chunks')
                 )
                 ->addTab(
                     'snippets',
-                    $this->titleList(),
-                    $this->icon(),
-                    'py-4',
+                    Lang::get('global.snippets'),
+                    'fa fa-code',
+                    '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets'),
-                    slot: Panel::make()
+                    route('manager.api.elements.snippets')
+                )
+                ->addTab(
+                    'plugins',
+                    Lang::get('global.plugins'),
+                    'fa fa-plug',
+                    '',
+                    ['edit_plugin'],
+                    route('manager.api.elements.plugins')
+                )
+                ->addTab(
+                    'modules',
+                    Lang::get('global.modules'),
+                    'fa fa-cubes',
+                    '',
+                    ['edit_module'],
+                    route('manager.api.elements.modules')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    '',
+                    ['category_manager'],
+                    route('manager.api.elements.categories')
+                )
+                ->addSlot(
+                    'snippets',
+                    Panel::make()
                         ->setId('snippets')
                         ->setModel('data')
                         ->setRoute('/snippets/:id')
@@ -223,30 +250,6 @@ class SnippetLayout extends Layout
                                 ],
                             ]
                         )
-                )
-                ->addTab(
-                    'plugins',
-                    Lang::get('global.plugins'),
-                    'fa fa-plug',
-                    'py-4',
-                    ['edit_plugin'],
-                    route('manager.api.elements.plugins')
-                )
-                ->addTab(
-                    'modules',
-                    Lang::get('global.modules'),
-                    'fa fa-cubes',
-                    'py-4',
-                    ['edit_module'],
-                    route('manager.api.elements.modules')
-                )
-                ->addTab(
-                    'categories',
-                    Lang::get('global.category_management'),
-                    'fa fa-object-group',
-                    'py-4',
-                    ['category_manager'],
-                    route('manager.api.elements.categories')
                 ),
         ];
     }

@@ -333,57 +333,57 @@ class TvLayout extends Layout
                     'templates',
                     Lang::get('global.templates'),
                     'fa fa-newspaper',
-                    'py-4',
+                    '',
                     ['edit_template'],
-                    route: route('manager.api.elements.templates')
+                    route('manager.api.elements.templates'),
                 )
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
                     'fa fa-list-alt',
-                    'py-4',
+                    '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route: route('manager.api.elements.tvs')
+                    route('manager.api.elements.tvs')
                 )
                 ->addTab(
                     'chunks',
                     Lang::get('global.htmlsnippets'),
                     'fa fa-th-large',
-                    'py-4',
+                    '',
                     ['edit_chunk'],
-                    route: route('manager.api.elements.chunks')
+                    route('manager.api.elements.chunks')
                 )
                 ->addTab(
                     'snippets',
                     Lang::get('global.snippets'),
                     'fa fa-code',
-                    'py-4',
+                    '',
                     ['edit_snippet'],
-                    route: route('manager.api.elements.snippets')
+                    route('manager.api.elements.snippets')
                 )
                 ->addTab(
                     'plugins',
                     Lang::get('global.plugins'),
                     'fa fa-plug',
-                    'py-4',
+                    '',
                     ['edit_plugin'],
-                    route: route('manager.api.elements.plugins')
+                    route('manager.api.elements.plugins')
                 )
                 ->addTab(
                     'modules',
                     Lang::get('global.modules'),
                     'fa fa-cubes',
-                    'py-4',
+                    '',
                     ['edit_module'],
-                    route: route('manager.api.elements.modules')
+                    route('manager.api.elements.modules')
                 )
                 ->addTab(
                     'categories',
                     Lang::get('global.category_management'),
                     'fa fa-object-group',
-                    'py-4',
+                    '',
                     ['category_manager'],
-                    route: route('manager.api.elements.categories')
+                    route('manager.api.elements.categories')
                 )
                 ->addSlot(
                     'tvs',

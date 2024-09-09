@@ -123,15 +123,15 @@ class ModuleLayout extends Layout
                     'templates',
                     Lang::get('global.templates'),
                     'fa fa-newspaper',
-                    'py-4',
+                    '',
                     ['edit_template'],
-                    route('manager.api.elements.templates')
+                    route('manager.api.elements.templates'),
                 )
                 ->addTab(
                     'tvs',
                     Lang::get('global.tmplvars'),
                     'fa fa-list-alt',
-                    'py-4',
+                    '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                     route('manager.api.elements.tvs')
                 )
@@ -139,7 +139,7 @@ class ModuleLayout extends Layout
                     'chunks',
                     Lang::get('global.htmlsnippets'),
                     'fa fa-th-large',
-                    'py-4',
+                    '',
                     ['edit_chunk'],
                     route('manager.api.elements.chunks')
                 )
@@ -147,7 +147,7 @@ class ModuleLayout extends Layout
                     'snippets',
                     Lang::get('global.snippets'),
                     'fa fa-code',
-                    'py-4',
+                    '',
                     ['edit_snippet'],
                     route('manager.api.elements.snippets')
                 )
@@ -155,7 +155,7 @@ class ModuleLayout extends Layout
                     'plugins',
                     Lang::get('global.plugins'),
                     'fa fa-plug',
-                    'py-4',
+                    '',
                     ['edit_plugin'],
                     route('manager.api.elements.plugins')
                 )
@@ -163,10 +163,21 @@ class ModuleLayout extends Layout
                     'modules',
                     Lang::get('global.modules'),
                     'fa fa-cubes',
-                    'py-4',
+                    '',
                     ['edit_module'],
-                    route('manager.api.elements.modules'),
-                    slot: Panel::make()
+                    route('manager.api.elements.modules')
+                )
+                ->addTab(
+                    'categories',
+                    Lang::get('global.category_management'),
+                    'fa fa-object-group',
+                    '',
+                    ['category_manager'],
+                    route('manager.api.elements.categories')
+                )
+                ->addSlot(
+                    'modules',
+                    Panel::make()
                         ->setId('modules')
                         ->setModel('data')
                         ->setRoute('/modules/:id')
@@ -240,14 +251,6 @@ class ModuleLayout extends Layout
                                 ],
                             ]
                         )
-                )
-                ->addTab(
-                    'categories',
-                    Lang::get('global.category_management'),
-                    'fa fa-object-group',
-                    'py-4',
-                    ['category_manager'],
-                    route('manager.api.elements.categories')
                 ),
         ];
     }

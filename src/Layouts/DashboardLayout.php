@@ -85,17 +85,28 @@ class DashboardLayout extends Layout
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
                         'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-750 hover:shadow-lg transition',
-                        '<div class="data"><table>' .
-                        '<tr><td class="w-52">' . Lang::get('global.yourinfo_username') .
-                        '</td><td><strong>' .
-                        Auth::user()->username . '</strong></td></tr>' .
-                        '<tr><td>' . Lang::get('global.yourinfo_role') . '</td><td><strong>' .
-                        Auth::user()->attributes->userRole->name . '</strong></td></tr>' .
-                        '<tr><td>' . Lang::get('global.yourinfo_previous_login') . '</td><td><strong>' .
-                        Auth::user()->attributes->lastlogin . '</strong></td></tr>' .
-                        '<tr><td>' . Lang::get('global.yourinfo_total_logins') . '</td><td><strong>' .
-                        Auth::user()->attributes->logincount . '</strong></td></tr>' .
-                        '</table></div>'
+                        Panel::make()
+                            ->setClass('!mt-0 !-mx-4 !-mb-4')
+                            ->addColumn('name', style: ['width' => '1%', 'white-space' => 'nowrap'])
+                            ->addColumn('value', style: ['font-weight' => 'bold'])
+                            ->setData([
+                                [
+                                    'name' => Lang::get('global.yourinfo_username'),
+                                    'value' => Auth::user()->username,
+                                ],
+                                [
+                                    'name' => Lang::get('global.yourinfo_role'),
+                                    'value' => Auth::user()->attributes->userRole->name,
+                                ],
+                                [
+                                    'name' => Lang::get('global.yourinfo_previous_login'),
+                                    'value' => Auth::user()->attributes->lastlogin,
+                                ],
+                                [
+                                    'name' => Lang::get('global.yourinfo_total_logins'),
+                                    'value' => Auth::user()->attributes->logincount,
+                                ],
+                            ])
                     )
                 )
             )
