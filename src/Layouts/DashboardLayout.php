@@ -76,15 +76,14 @@ class DashboardLayout extends Layout
     protected function getWidgets(): array
     {
         return Template::make(
-            'flex flex-wrap items-baseline pt-6 px-4'
-        )
-            ->putSlot(
+            'flex flex-wrap pt-6 px-4',
+            [
                 Template::make(
-                    'grow w-full xl:max-w-[50%] xl:pr-2',
+                    'grow w-full xl:max-w-[50%] xl:pr-2 pb-4',
                     Section::make(
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
-                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-750 hover:shadow-lg transition',
+                        'h-full',
                         Panel::make()
                             ->setClass('!mt-0 !-mx-4 !-mb-4')
                             ->addColumn('name', style: ['width' => '1%', 'white-space' => 'nowrap'])
@@ -108,18 +107,18 @@ class DashboardLayout extends Layout
                                 ],
                             ])
                     )
-                )
-            )
-            ->putSlot(
+                ),
+
                 Template::make(
-                    'grow w-full xl:max-w-[50%] xl:pl-2',
+                    'grow w-full xl:max-w-[50%] xl:pl-2 pb-4',
                     Section::make(
                         'fa fa-user',
                         Lang::get('global.onlineusers_title'),
-                        'lg:min-h-[15rem] content-baseline bg-white dark:bg-gray-750 hover:shadow-lg transition',
+                        'h-full',
                         [
                             '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
                             date('H:i:s') . '</b>)</div>',
+
                             Panel::make()
                                 ->setId('widgetUsers')
                                 ->setClass('!mt-0 !-mx-4 !-mb-4')
@@ -127,13 +126,14 @@ class DashboardLayout extends Layout
                                 ->setUrl('/users/active'),
                         ]
                     )
-                )
-            )
+                ),
+            ]
+        )
             ->when(
                 Gate::check(['view_document']),
                 fn(Template $template) => $template->putSlot(
                     Template::make(
-                        'grow w-full',
+                        'grow w-full pb-4',
                         Section::make(
                             'fa fa-pencil',
                             Lang::get('global.activity_title'),
@@ -153,7 +153,7 @@ class DashboardLayout extends Layout
                 Config::get('global.rss_url_news'),
                 fn(Template $template) => $template->putSlot(
                     Template::make(
-                        'grow w-full xl:max-w-[50%] xl:pr-2 pb-2',
+                        'grow w-full xl:max-w-[50%] xl:pr-2 pb-4',
                         Section::make(
                             'fa fa-rss',
                             Lang::get('global.modx_news'),
@@ -170,7 +170,7 @@ class DashboardLayout extends Layout
                 Config::get('global.rss_url_security'),
                 fn(Template $template) => $template->putSlot(
                     Template::make(
-                        'grow w-full xl:max-w-[50%] xl:pl-2 pb-2',
+                        'grow w-full xl:max-w-[50%] xl:pl-2 pb-4',
                         Section::make(
                             'fa fa-exclamation-triangle',
                             Lang::get('global.modx_security_notices'),
