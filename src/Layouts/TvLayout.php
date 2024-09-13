@@ -196,6 +196,7 @@ class TvLayout extends Layout
                     'settings',
                     Lang::get('global.settings_properties'),
                     slot: CodeEditor::make('properties')
+                        ->setClass('px-5 py-2')
                         ->setLanguage('json')
                         ->isFullSize()
                 )
@@ -206,7 +207,7 @@ class TvLayout extends Layout
                         ->setId('templates')
                         ->setModel('templates')
                         ->setUrl('/templates?groupBy=category')
-                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_tmpl_access_msg') . '</p>')
+                        ->setSlotTop('<p class="py-5">' . Lang::get('global.tmplvar_tmpl_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),
@@ -240,7 +241,7 @@ class TvLayout extends Layout
                         ->setId('roles')
                         ->setModel('roles')
                         ->setUrl('/roles/users')
-                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_roles_access_msg') . '</p>')
+                        ->setSlotTop('<p class="py-5">' . Lang::get('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),
@@ -579,7 +580,7 @@ class TvLayout extends Layout
 
         if (!empty($widgetParams[$name])) {
             $data[] = Panel::make()
-                ->setClass('!h-auto mt-4 !mx-4')
+                ->setClass('!h-auto mt-5 !mx-5')
                 ->setModel('data')
                 ->setColumns([
                     [
