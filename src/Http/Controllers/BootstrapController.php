@@ -44,14 +44,11 @@ class BootstrapController extends Controller
      */
     public function init(): JsonResource
     {
-        return JsonResource::make([])
-            ->additional([
-                'meta' => [
-                    'version' => Config::get('global.settings_version'),
-                    'languages' => $this->getLanguages(),
-                    'siteName' => Config::get('global.site_name'),
-                ],
-            ]);
+        return JsonResource::make([
+            'version' => Config::get('global.settings_version'),
+            'languages' => $this->getLanguages(),
+            'siteName' => Config::get('global.site_name'),
+        ]);
     }
 
     /**
