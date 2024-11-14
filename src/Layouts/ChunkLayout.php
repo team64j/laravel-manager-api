@@ -8,10 +8,16 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteHtmlSnippet;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Checkbox;
+use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Template;
+use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
 
@@ -84,10 +90,58 @@ class ChunkLayout extends Layout
             Title::make()
                 ->setModel('name')
                 ->setTitle($this->title())
+                ->setHelp(Lang::get('global.htmlsnippet_msg'))
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
-            Tabs::make(),
+            Tabs::make()
+                ->addTab(
+                    'general',
+                    Lang::get('global.page_data_general'),
+                    slot: [
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 px-5 pt-5')
+                            ->setSlot([
+                                Input::make('name', Lang::get('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
+                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                    ->setClass('mb-3')
+                                    ->setRows(2),
+                            ]),
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
+                            ->setSlot([
+                                Select::make('category', Lang::get('global.existing_category'))
+                                    ->setClass('mb-3')
+                                    ->setUrl('/categories/select')
+                                    ->setNew('')
+                                    ->setData([
+                                        [
+                                            'key' => $model->category,
+                                            'value' => $model->categories
+                                                ? $model->categories->category
+                                                : Lang::get(
+                                                    'global.no_category'
+                                                ),
+                                            'selected' => true,
+                                        ],
+                                    ]),
+                                Checkbox::make('disabled', Lang::get('global.disabled'))
+                                    ->setClass('mb-3')
+                                    ->setCheckedValue(1, 0),
+                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                    ->setClass('mb-3')
+                                    ->setCheckedValue(1, 0),
+                            ]),
+                        CodeEditor::make(
+                            'snippet',
+                            Lang::get('global.chunk_code'),
+                            null,
+                            'mx-5'
+                        )
+                            ->setRows(25)
+                            ->setLanguage('html'),
+                    ],
+                ),
 
             Crumbs::make()->setData($breadcrumbs),
         ];

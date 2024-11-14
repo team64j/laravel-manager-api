@@ -23,6 +23,13 @@ class ChunkController extends Controller
     use PaginationTrait;
 
     /**
+     * @param ChunkLayout $layout
+     */
+    public function __construct(protected ChunkLayout $layout)
+    {
+    }
+
+    /**
      * @OA\Get(
      *     path="/chunks",
      *     summary="Получение списка чанков с пагинацией",
@@ -44,11 +51,10 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param ChunkLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(ChunkRequest $request, ChunkLayout $layout): ResourceCollection
+    public function index(ChunkRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -94,14 +100,14 @@ class ChunkController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                        'title' => $layout->titleList(),
-                        'icon' => $layout->icon(),
-                        'pagination' => $this->pagination($result),
-                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+            ->layout($this->layout->list())
+            ->meta(
+                [
+                    'title' => $this->layout->titleList(),
+                    'icon' => $this->layout->icon(),
+                    'pagination' => $this->pagination($result),
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            );
     }
 
     /**
@@ -131,7 +137,7 @@ class ChunkController extends Controller
     {
         $model = SiteHtmlSnippet::query()->create($request->validated());
 
-        return JsonResource::make($model);
+        return $this->show($request, (string) $model->getKey());
     }
 
     /**
@@ -150,22 +156,25 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      * @param string $id
-     * @param ChunkLayout $layout
      *
      * @return JsonResource
      */
-    public function show(ChunkRequest $request, string $id, ChunkLayout $layout): JsonResource
+    public function show(ChunkRequest $request, string $id): JsonResource
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrNew($id);
 
+        if (!$model->exists) {
+            $model->setRawAttributes([
+                'category' => 0,
+            ]);
+        }
+
         return JsonResource::make($model)
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $model->name ?? $layout->title(),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($this->layout->default($model))
+            ->meta([
+                'title' => $model->name ?? $this->layout->title(),
+                'icon' => $this->layout->icon(),
             ]);
     }
 
@@ -200,7 +209,7 @@ class ChunkController extends Controller
 
         $model->update($request->validated());
 
-        return JsonResource::make($model);
+        return $this->show($request, (string) $model->getKey());
     }
 
     /**
@@ -270,17 +279,15 @@ class ChunkController extends Controller
             ]);
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'meta' => [
-                    'route' => '/chunks/:id',
-                    'pagination' => $this->pagination($result),
-                    'prepend' => [
-                        [
-                            'name' => Lang::get('global.new_htmlsnippet'),
-                            'icon' => 'fa fa-plus-circle',
-                            'to' => [
-                                'path' => '/chunks/new',
-                            ],
+            ->meta([
+                'route' => '/chunks/:id',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_htmlsnippet'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'path' => '/chunks/new',
                         ],
                     ],
                 ],
@@ -328,9 +335,7 @@ class ChunkController extends Controller
                 ->map(fn(SiteHtmlSnippet $item) => $item->setHidden(['category']));
 
             return JsonResource::collection($result)
-                ->additional([
-                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-                ]);
+                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -343,10 +348,8 @@ class ChunkController extends Controller
                 ->appends($request->all());
 
             return JsonResource::collection($result->map(fn(SiteHtmlSnippet $item) => $item->setHidden(['category'])))
-                ->additional([
-                    'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ],
+                ->meta([
+                    'pagination' => $this->pagination($result),
                 ]);
         }
 
@@ -382,8 +385,6 @@ class ChunkController extends Controller
             ->values();
 
         return JsonResource::collection($result)
-            ->additional([
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

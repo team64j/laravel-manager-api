@@ -28,6 +28,16 @@ class ChunkRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return match ($this->route()->getActionMethod()) {
+            'store', 'update' => [
+                'name' => 'string|required',
+                'snippet' => 'string|nullable',
+                'description' => 'string|nullable',
+                'locked' => 'int',
+                'category' => 'int',
+                'disabled' => 'int',
+            ],
+            default => []
+        };
     }
 }

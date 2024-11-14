@@ -24,6 +24,13 @@ class SnippetController extends Controller
     use PaginationTrait;
 
     /**
+     * @param SnippetLayout $layout
+     */
+    public function __construct(protected SnippetLayout $layout)
+    {
+    }
+
+    /**
      * @OA\Get(
      *     path="/snippets",
      *     summary="Получение списка сниппетов с пагинацией и фильтрацией",
@@ -45,11 +52,10 @@ class SnippetController extends Controller
      *      )
      * )
      * @param SnippetRequest $request
-     * @param SnippetLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(SnippetRequest $request, SnippetLayout $layout): ResourceCollection
+    public function index(SnippetRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -95,14 +101,14 @@ class SnippetController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                        'title' => $layout->titleList(),
-                        'icon' => $layout->iconList(),
+            ->layout($this->layout->list())
+            ->meta(
+                [
+                    'title' => $this->layout->titleList(),
+                    'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            );
     }
 
     /**
@@ -130,9 +136,15 @@ class SnippetController extends Controller
      */
     public function store(SnippetRequest $request): JsonResource
     {
-        $snippet = SiteSnippet::query()->create($request->validated());
+        $data = $request->validated();
+        
+        if (isset($data['snippet'])) {
+            $data['snippet'] = Str::replaceFirst('<?php', '', (string) $data['snippet']);
+        }
+        
+        $model = SiteSnippet::query()->create($data);
 
-        return new SnippetResource($snippet);
+        return $this->show($request, (string) $model->getKey());
     }
 
     /**
@@ -151,22 +163,22 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      * @param string $id
-     * @param SnippetLayout $layout
      *
      * @return JsonResource
      */
-    public function show(SnippetRequest $request, string $id, SnippetLayout $layout): JsonResource
+    public function show(SnippetRequest $request, string $id): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrNew($id);
 
+        $model->setAttribute('snippet', "<?php\r\n" . $model->snippet);
+        $model->setAttribute('analyze', 1);
+
         return JsonResource::make($model)
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->name),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($this->layout->default($model))
+            ->meta([
+                'title' => $this->layout->title($model->name),
+                'icon' => $this->layout->icon(),
             ]);
     }
 
@@ -198,10 +210,14 @@ class SnippetController extends Controller
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
+        
+        $data = $request->validated();
 
-        $model->update($request->validated());
+        $data['snippet'] = Str::replaceFirst('<?php', '', $data['snippet']);
 
-        return JsonResource::make($model);
+        $model->update($data);
+
+        return $this->show($request, $id);
     }
 
     /**
@@ -272,17 +288,15 @@ class SnippetController extends Controller
             ]);
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'meta' => [
-                    'route' => '/snippets/:id',
-                    'pagination' => $this->pagination($result),
-                    'prepend' => [
-                        [
-                            'name' => Lang::get('global.new_snippet'),
-                            'icon' => 'fa fa-plus-circle',
-                            'to' => [
-                                'path' => '/snippets/new',
-                            ],
+            ->meta([
+                'route' => '/snippets/:id',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_snippet'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'path' => '/snippets/new',
                         ],
                     ],
                 ],
