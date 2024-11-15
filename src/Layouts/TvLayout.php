@@ -121,7 +121,7 @@ class TvLayout extends Layout
                     Lang::get('global.page_data_general'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 px-5 pt-5')
+                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
                             ->setSlot([
                                 Input::make('name', Lang::get('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
                                 Input::make('caption', Lang::get('global.tmplvars_caption'))->setClass('mb-3'),
@@ -196,7 +196,6 @@ class TvLayout extends Layout
                     'settings',
                     Lang::get('global.settings_properties'),
                     slot: CodeEditor::make('properties')
-                        ->setClass('px-5 py-2')
                         ->setLanguage('json')
                         ->isFullSize()
                 )
@@ -207,7 +206,7 @@ class TvLayout extends Layout
                         ->setId('templates')
                         ->setModel('templates')
                         ->setUrl('/templates?groupBy=category')
-                        ->setSlotTop('<p class="py-5">' . Lang::get('global.tmplvar_tmpl_access_msg') . '</p>')
+                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_tmpl_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),
@@ -241,7 +240,7 @@ class TvLayout extends Layout
                         ->setId('roles')
                         ->setModel('roles')
                         ->setUrl('/roles/users')
-                        ->setSlotTop('<p class="py-5">' . Lang::get('global.tmplvar_roles_access_msg') . '</p>')
+                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),

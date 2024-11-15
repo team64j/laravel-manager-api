@@ -83,7 +83,7 @@ class DashboardLayout extends Layout
                     Section::make(
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
-                        'h-full',
+                        'h-full hover:shadow-lg bg-white dark:bg-gray-750 transition',
                         Panel::make()
                             ->setClass('!mt-0 !-mx-4 !-mb-4')
                             ->addColumn('name', style: ['width' => '1%', 'white-space' => 'nowrap'])
@@ -114,7 +114,7 @@ class DashboardLayout extends Layout
                     Section::make(
                         'fa fa-user',
                         Lang::get('global.onlineusers_title'),
-                        'h-full',
+                        'h-full hover:shadow-lg bg-white dark:bg-gray-750 transition',
                         [
                             '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
                             date('H:i:s') . '</b>)</div>',
