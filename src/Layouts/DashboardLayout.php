@@ -83,7 +83,7 @@ class DashboardLayout extends Layout
                     Section::make(
                         'fa fa-home',
                         Lang::get('global.welcome_title'),
-                        'h-full hover:shadow-lg bg-white dark:bg-gray-750 transition',
+                        'h-full hover:shadow-lg bg-white dark:bg-gray-700 transition',
                         Panel::make()
                             ->setClass('!mt-0 !-mx-4 !-mb-4')
                             ->addColumn('name', style: ['width' => '1%', 'white-space' => 'nowrap'])
@@ -114,7 +114,7 @@ class DashboardLayout extends Layout
                     Section::make(
                         'fa fa-user',
                         Lang::get('global.onlineusers_title'),
-                        'h-full hover:shadow-lg bg-white dark:bg-gray-750 transition',
+                        'h-full hover:shadow-lg bg-white dark:bg-gray-700 transition',
                         [
                             '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
                             date('H:i:s') . '</b>)</div>',
@@ -137,7 +137,7 @@ class DashboardLayout extends Layout
                         Section::make(
                             'fa fa-pencil',
                             Lang::get('global.activity_title'),
-                            'hover:shadow-lg bg-white dark:bg-gray-750 overflow-hidden transition',
+                            'hover:shadow-lg bg-white dark:bg-gray-700 overflow-hidden transition',
                             Panel::make()
                                 ->setId('widgetResources')
                                 ->setClass('!mt-0 !-mx-4 !-mb-4')
@@ -157,7 +157,7 @@ class DashboardLayout extends Layout
                         Section::make(
                             'fa fa-rss',
                             Lang::get('global.modx_news'),
-                            'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg transition',
+                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNews')
                                 ->setClass('h-40 !mt-0 !-mx-4 !-mb-4')
@@ -174,7 +174,7 @@ class DashboardLayout extends Layout
                         Section::make(
                             'fa fa-exclamation-triangle',
                             Lang::get('global.modx_security_notices'),
-                            'overflow-hidden bg-white dark:bg-gray-750 hover:shadow-lg transition',
+                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNewsSecurity')
                                 ->setClass('h-40 !mt-0 !-mx-4 !-mb-4 !rounded-none')
