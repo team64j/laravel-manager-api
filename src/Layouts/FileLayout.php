@@ -68,7 +68,8 @@ class FileLayout extends Layout
                     slot: [
                         stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data)
                             ->setClass('mb-4') : null,
-                        isset($data['content']) ? CodeEditor::make('content')->setLanguage($data['lang'])
+                        isset($data['content']) ? CodeEditor::make('content')
+                            ->setLanguage($data['lang'])
                             ->setRows('auto')
                             ->setInputClass('border-none') : null,
                     ],
