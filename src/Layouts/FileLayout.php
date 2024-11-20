@@ -9,7 +9,6 @@ use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Media;
 use Team64j\LaravelManagerComponents\Tabs;
-use Team64j\LaravelManagerComponents\Template;
 use Team64j\LaravelManagerComponents\Title;
 
 class FileLayout extends Layout
@@ -70,7 +69,8 @@ class FileLayout extends Layout
                         stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data)
                             ->setClass('mb-4') : null,
                         isset($data['content']) ? CodeEditor::make('content')->setLanguage($data['lang'])
-                            ->setRows('auto') : null,
+                            ->setRows('auto')
+                            ->setInputClass('border-none') : null,
                     ],
                 ),
         ];

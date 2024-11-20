@@ -79,7 +79,8 @@ class SystemInfoController extends Controller
             ],
             [
                 'name' => Lang::get('global.database_version'),
-                'value' => DB::connection()->getPdo()->getAttribute(DB::connection()->getPdo()::ATTR_SERVER_VERSION),
+                'value' => DB::connection()->getPdo()->getAttribute(DB::connection()->getPdo()::ATTR_CLIENT_VERSION) .
+                    ' - ' . DB::connection()->getPdo()->getAttribute(DB::connection()->getPdo()::ATTR_SERVER_VERSION),
             ],
             [
                 'name' => Lang::get('global.database_charset'),

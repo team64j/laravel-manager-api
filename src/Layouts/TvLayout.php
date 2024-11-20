@@ -196,6 +196,7 @@ class TvLayout extends Layout
                     'settings',
                     Lang::get('global.settings_properties'),
                     slot: CodeEditor::make('properties')
+                        ->setInputClass('border-none focus:border-none')
                         ->setLanguage('json')
                         ->isFullSize()
                 )

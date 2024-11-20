@@ -175,7 +175,7 @@ class TemplateLayout extends Layout
                                 ->setCheckedValue(1, 0)),
 
                         CodeEditor::make('content', Lang::get('global.template_code'))
-                            ->setClass('mx-5')
+                            ->setInputClass('border-none focus:border-none')
                             ->setLanguage('html')
                             ->setRows(20),
                     ]
