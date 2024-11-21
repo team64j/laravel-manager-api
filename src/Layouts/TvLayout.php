@@ -193,14 +193,6 @@ class TvLayout extends Layout
                     )
                 )
                 ->addTab(
-                    'settings',
-                    Lang::get('global.settings_properties'),
-                    slot: CodeEditor::make('properties')
-                        ->setInputClass('border-none focus:border-none')
-                        ->setLanguage('json')
-                        ->isFullSize()
-                )
-                ->addTab(
                     'templates',
                     Lang::get('global.templates'),
                     slot: Panel::make()
@@ -300,6 +292,14 @@ class TvLayout extends Layout
                                     ->setRelation('data.is_document_group', false, true),
                             ]
                         )
+                )
+                ->addTab(
+                    'settings',
+                    Lang::get('global.settings_properties'),
+                    slot: CodeEditor::make('properties')
+                        ->setClass('p-5')
+                        ->setLanguage('json')
+                        ->isFullSize()
                 ),
 
             Crumbs::make()->setData($breadcrumbs),

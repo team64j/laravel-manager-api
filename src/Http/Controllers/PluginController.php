@@ -19,10 +19,15 @@ use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
+use Team64j\LaravelManagerComponents\Checkbox;
 
 class PluginController extends Controller
 {
     use PaginationTrait;
+
+    public function __construct(protected PluginLayout $layout)
+    {
+    }
 
     /**
      * @OA\Get(
@@ -46,11 +51,10 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param PluginLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(PluginRequest $request, PluginLayout $layout): ResourceCollection
+    public function index(PluginRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -96,14 +100,14 @@ class PluginController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                        'title' => $layout->titleList(),
-                        'icon' => $layout->iconList(),
-                        'pagination' => $this->pagination($result),
-                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+            ->layout($this->layout->list())
+            ->meta(
+                [
+                    'title' => $this->layout->titleList(),
+                    'icon' => $this->layout->iconList(),
+                    'pagination' => $this->pagination($result),
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            );
     }
 
     /**
@@ -152,22 +156,21 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      * @param string $id
-     * @param PluginLayout $layout
      *
      * @return JsonResource
      */
-    public function show(PluginRequest $request, string $id, PluginLayout $layout): JsonResource
+    public function show(PluginRequest $request, string $id): JsonResource
     {
         /** @var SitePlugin $model */
-        $model = SitePlugin::query()->findOrNew($id);
+        $model = SitePlugin::query()->with('events')->findOrNew($id);
 
-        return JsonResource::make($model)
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->name),
-                    'icon' => $layout->icon(),
-                ],
+        $model->setAttribute('events', $model->events->pluck('id'));
+
+        return JsonResource::make($model->withoutRelations())
+            ->layout($this->layout->default($model))
+            ->meta([
+                'title' => $this->layout->title($model->name),
+                'icon' => $this->layout->icon(),
             ]);
     }
 
@@ -308,11 +311,10 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param PluginLayout $layout
      *
      * @return ResourceCollection
      */
-    public function sort(PluginRequest $request, PluginLayout $layout): ResourceCollection
+    public function sort(PluginRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
 
@@ -333,13 +335,60 @@ class PluginController extends Controller
                 //->setAttribute('draggable', 'priority')
                 )
         )
-            ->additional([
-                'layout' => $layout->sort(),
-                'meta' => [
-                    'title' => $layout->titleSort(),
-                    'icon' => $layout->iconSort(),
-                ],
+            ->layout($this->layout->sort())
+            ->meta([
+                'title' => $this->layout->titleSort(),
+                'icon' => $this->layout->iconSort(),
             ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/plugins/events",
+     *     summary="Получение списка событий плагинов с пагинацией",
+     *     tags={"Plugins"},
+     *     security={{"Api":{}}},
+     *     @OA\Response(
+     *          response="200",
+     *          description="ok",
+     *          @OA\JsonContent(
+     *              type="object"
+     *          )
+     *      )
+     * )
+     * @param PluginRequest $request
+     *
+     * @return ResourceCollection
+     */
+    public function events(PluginRequest $request)
+    {
+        $services = [
+            'Parser Service Events',
+            'Manager Access Events',
+            'Web Access Service Events',
+            'Cache Service Events',
+            'Template Service Events',
+            'User Defined Events',
+        ];
+
+        return JsonResource::collection(
+            SystemEventname::query()
+                ->orderByDesc('service')
+                ->orderBy('groupname')
+                ->orderBy('name')
+                ->get()
+                ->map(fn(SystemEventname $item) => $item->setAttribute(
+                    'checked',
+                    Checkbox::make('data')->setValue($item->getKey())
+                ))
+                ->groupBy(fn($item) => $item->groupname ?: $services[$item->service])
+                ->map(fn($item, $key) => [
+                    'key' => md5($key),
+                    'name' => $key,
+                    'data' => $item,
+                ])
+                ->values()
+        );
     }
 
     /**

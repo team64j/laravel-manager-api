@@ -8,10 +8,16 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SitePlugin;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Checkbox;
+use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Template;
+use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
 
@@ -105,7 +111,83 @@ class PluginLayout extends Layout
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
-            Tabs::make(),
+            Tabs::make()
+                ->setId('plugin')
+                ->addTab(
+                    'general',
+                    Lang::get('global.page_data_general'),
+                    slot: [
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
+                            ->setSlot([
+                                Input::make('name', Lang::get('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
+                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                    ->setClass('mb-3')
+                                    ->setRows(2),
+                                Checkbox::make(
+                                    'analyze',
+                                    Lang::get('global.parse_docblock'),
+                                    Lang::get('global.parse_docblock_msg')
+                                )
+                                    ->setCheckedValue(1, 0),
+                            ]),
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
+                            ->setSlot([
+                                Select::make('category', Lang::get('global.existing_category'))
+                                    ->setClass('mb-3')
+                                    ->setUrl('/categories/select')
+                                    ->setNew('')
+                                    ->setData([
+                                        [
+                                            'key' => $model->category,
+                                            'value' => $model->categories
+                                                ? $model->categories->category
+                                                : Lang::get(
+                                                    'global.no_category'
+                                                ),
+                                            'selected' => true,
+                                        ],
+                                    ]),
+                                Checkbox::make('disabled', Lang::get('global.disabled'))
+                                    ->setClass('mb-3')
+                                    ->setCheckedValue(1, 0),
+                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                    ->setClass('mb-3')
+                                    ->setCheckedValue(1, 0),
+                            ]),
+                        CodeEditor::make(
+                            'snippet',
+                            Lang::get('global.plugin_code'),
+                            null,
+                            'mx-5'
+                        )
+                            ->setRows(25)
+                            ->setLanguage('php'),
+                    ],
+                )
+                ->addTab(
+                    'settings',
+                    Lang::get('global.settings_properties'),
+                    slot: CodeEditor::make('properties')
+                        ->setLanguage('json')
+                        ->setClass('p-5')
+                        ->isFullSize()
+                )
+                ->addTab(
+                    'events',
+                    Lang::get('global.settings_events'),
+                    slot: [
+                        Panel::make()
+                            ->setSlotTop('<div class="p-5 w-full">' . Lang::get('global.plugin_event_msg') . '</div>')
+                            ->setUrl('/plugins/events')
+                            ->setModel('data.events')
+                            ->setColumns([
+                                'checked',
+                                'name',
+                            ]),
+                    ]
+                ),
 
             Crumbs::make()->setData($breadcrumbs),
         ];

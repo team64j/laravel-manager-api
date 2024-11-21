@@ -175,7 +175,7 @@ class TemplateLayout extends Layout
                                 ->setCheckedValue(1, 0)),
 
                         CodeEditor::make('content', Lang::get('global.template_code'))
-                            ->setInputClass('border-none focus:border-none')
+                            ->setClass('px-5')
                             ->setLanguage('html')
                             ->setRows(20),
                     ]
@@ -253,6 +253,14 @@ class TemplateLayout extends Layout
                             Lang::get('global.tmplvars_rank'),
                             ['width' => '12rem', 'textAlign' => 'center']
                         )
+                )
+                ->addTab(
+                    'settings',
+                    Lang::get('global.settings_properties'),
+                    slot: CodeEditor::make('properties')
+                        ->setClass('p-5')
+                        ->setLanguage('json')
+                        ->isFullSize()
                 ),
 
             Crumbs::make()->setData($breadcrumbs),

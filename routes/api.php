@@ -177,6 +177,7 @@ Route::prefix($apiPath)
                 Route::get('sort', [PluginController::class, 'sort'])->name('plugins.sort'),
                 Route::get('tree', [PluginController::class, 'tree'])->name('plugins.tree'),
                 Route::get('list', [PluginController::class, 'list'])->name('plugins.list'),
+                Route::get('events', [PluginController::class, 'events'])->name('plugins.events'),
             ])
             ->apiResource('plugins', PluginController::class),
 

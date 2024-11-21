@@ -149,6 +149,14 @@ class SnippetLayout extends Layout
                             ->setRows(25)
                             ->setLanguage('php'),
                     ],
+                )
+                ->addTab(
+                    'settings',
+                    Lang::get('global.settings_properties'),
+                    slot: CodeEditor::make('properties')
+                        ->setClass('p-5')
+                        ->setLanguage('json')
+                        ->isFullSize()
                 ),
 
             Crumbs::make()->setData($breadcrumbs),
