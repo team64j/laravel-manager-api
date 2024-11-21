@@ -23,6 +23,13 @@ class TvController extends Controller
     use PaginationTrait;
 
     /**
+     * @param TvLayout $layout
+     */
+    public function __construct(protected TvLayout $layout)
+    {
+    }
+
+    /**
      * @OA\Get(
      *     path="/tvs",
      *     summary="Получение списка TV параметров с пагинацией и фильтрацией",
@@ -44,11 +51,10 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param TvLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(TvRequest $request, TvLayout $layout): ResourceCollection
+    public function index(TvRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -94,11 +100,11 @@ class TvController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->layout($layout->list())
+            ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => $layout->titleList(),
-                    'icon' => $layout->iconList(),
+                    'title' => $this->layout->titleList(),
+                    'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
                 ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
             );
@@ -120,11 +126,10 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      * @param string $id
-     * @param TvLayout $layout
      *
      * @return JsonResource
      */
-    public function show(TvRequest $request, string $id, TvLayout $layout): JsonResource
+    public function show(TvRequest $request, string $id): JsonResource
     {
         /** @var SiteTmplvar $model */
         $model = SiteTmplvar::query()->findOrNew($id);
@@ -161,10 +166,10 @@ class TvController extends Controller
         $model->setAttribute('display_params_data', $data);
 
         return JsonResource::make($model->withoutRelations())
-            ->layout($layout->default($model))
+            ->layout($this->layout->default($model))
             ->meta([
-                'title' => $layout->title($model->name),
-                'icon' => $layout->icon(),
+                'title' => $this->layout->title($model->name),
+                'icon' => $this->layout->icon(),
             ]);
     }
 
@@ -188,11 +193,10 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param TvLayout $layout
      *
      * @return JsonResource
      */
-    public function store(TvRequest $request, TvLayout $layout): JsonResource
+    public function store(TvRequest $request): JsonResource
     {
         $data = $request->all();
 
@@ -205,7 +209,7 @@ class TvController extends Controller
         $model->templates()->sync($data['templates'] ?? []);
         $model->roles()->sync($data['roles'] ?? []);
 
-        return $this->show($request, (string) $model->getKey(), $layout);
+        return $this->show($request, (string) $model->getKey());
     }
 
     /**
@@ -229,11 +233,10 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      * @param string $id
-     * @param TvLayout $layout
      *
      * @return JsonResource
      */
-    public function update(TvRequest $request, string $id, TvLayout $layout): JsonResource
+    public function update(TvRequest $request, string $id): JsonResource
     {
         $data = $request->all();
 
@@ -246,7 +249,7 @@ class TvController extends Controller
         $model->templates()->sync($data['templates'] ?? []);
         $model->roles()->sync($data['roles'] ?? []);
 
-        return $this->show($request, $id, $layout);
+        return $this->show($request, $id);
     }
 
     /**
@@ -346,11 +349,10 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param TvLayout $layout
      *
      * @return ResourceCollection
      */
-    public function sort(TvRequest $request, TvLayout $layout): ResourceCollection
+    public function sort(TvRequest $request): ResourceCollection
     {
         $result = SiteTmplvar::query()
             ->select(['id', 'name', 'caption', 'rank'])
@@ -358,10 +360,10 @@ class TvController extends Controller
             ->paginate(Config::get('global.number_of_results'));
 
         return JsonResource::collection($result->items())
-            ->layout($layout->sort())
+            ->layout($this->layout->sort())
             ->meta([
-                'title' => $layout->titleSort(),
-                'icon' => $layout->iconSort(),
+                'title' => $this->layout->titleSort(),
+                'icon' => $this->layout->iconSort(),
                 'pagination' => $this->pagination($result)
             ]);
     }
