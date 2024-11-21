@@ -47,13 +47,11 @@ class RoleUserController extends Controller
             ->paginate(Config::get('global.number_of_results'));
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                    'title' => $layout->titleList(),
-                    'icon' => $layout->iconList(),
-                    'pagination' => $this->pagination($result),
-                ],
+            ->layout($layout->list())
+            ->meta([
+                'title' => $layout->titleList(),
+                'icon' => $layout->iconList(),
+                'pagination' => $this->pagination($result),
             ]);
     }
 
@@ -89,12 +87,10 @@ class RoleUserController extends Controller
         }
 
         return JsonResource::make([])
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->name),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default($model))
+            ->meta([
+                'title' => $layout->title($model->name),
+                'icon' => $layout->icon(),
             ]);
     }
 }

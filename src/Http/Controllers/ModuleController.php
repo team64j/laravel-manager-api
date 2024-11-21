@@ -18,11 +18,17 @@ use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
-use Throwable;
 
 class ModuleController extends Controller
 {
     use PaginationTrait;
+
+    /**
+     * @param ModuleLayout $layout
+     */
+    public function __construct(protected ModuleLayout $layout)
+    {
+    }
 
     /**
      * @OA\Get(
@@ -46,11 +52,10 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param ModuleLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(ModuleRequest $request, ModuleLayout $layout): ResourceCollection
+    public function index(ModuleRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -96,14 +101,14 @@ class ModuleController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                        'title' => $layout->titleList(),
-                        'icon' => $layout->iconList(),
-                        'pagination' => $this->pagination($result),
-                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+            ->layout($this->layout->list())
+            ->meta(
+                [
+                    'title' => $this->layout->titleList(),
+                    'icon' => $this->layout->iconList(),
+                    'pagination' => $this->pagination($result),
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            );
     }
 
     /**
@@ -131,7 +136,11 @@ class ModuleController extends Controller
      */
     public function store(ModuleRequest $request): JsonResource
     {
-        $module = SiteModule::query()->create($request->validated());
+        $data = $request->validated();
+
+        $data['modulecode'] = Str::replaceFirst('<?php', '', $data['modulecode'] ?? '');
+
+        $module = SiteModule::query()->create($data);
 
         return JsonResource::make($module);
     }
@@ -152,22 +161,21 @@ class ModuleController extends Controller
      * )
      * @param ModuleRequest $request
      * @param string $id
-     * @param ModuleLayout $layout
      *
      * @return JsonResource
      */
-    public function show(ModuleRequest $request, string $id, ModuleLayout $layout): JsonResource
+    public function show(ModuleRequest $request, string $id): JsonResource
     {
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrNew($id);
 
+        $model->setAttribute('modulecode', "<?php\r\n" . $model->modulecode);
+
         return JsonResource::make($model)
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->name),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($this->layout->default($model))
+            ->meta([
+                'title' => $this->layout->title($model->name),
+                'icon' => $this->layout->icon(),
             ]);
     }
 
@@ -200,7 +208,11 @@ class ModuleController extends Controller
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrFail($id);
 
-        $model->update($request->validated());
+        $data = $request->validated();
+
+        $data['modulecode'] = Str::replaceFirst('<?php', '', $data['modulecode'] ?? '');
+
+        $model->update($data);
 
         return JsonResource::make($model);
     }
@@ -271,17 +283,15 @@ class ModuleController extends Controller
             ]);
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'meta' => [
-                    'route' => '/modules/:id',
-                    'pagination' => $this->pagination($result),
-                    'prepend' => [
-                        [
-                            'name' => Lang::get('global.new_module'),
-                            'icon' => 'fa fa-plus-circle',
-                            'to' => [
-                                'path' => '/modules/new',
-                            ],
+            ->meta([
+                'route' => '/modules/:id',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_module'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'path' => '/modules/new',
                         ],
                     ],
                 ],
@@ -323,10 +333,8 @@ class ModuleController extends Controller
                     'name',
                 ])
         )
-            ->additional([
-                'meta' => [
-                    'route' => '/modules/exec/:id',
-                ],
+            ->meta([
+                'route' => '/modules/exec/:id',
             ]);
     }
 
@@ -415,9 +423,7 @@ class ModuleController extends Controller
                 ->map(fn(SiteModule $item) => $item->setHidden(['category']));
 
             return JsonResource::collection($result)
-                ->additional([
-                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-                ]);
+                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -430,10 +436,8 @@ class ModuleController extends Controller
                 ->appends($request->all());
 
             return JsonResource::collection($result->map(fn(SiteModule $item) => $item->setHidden(['category'])))
-                ->additional([
-                    'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ],
+                ->meta([
+                    'pagination' => $this->pagination($result),
                 ]);
         }
 
@@ -469,8 +473,6 @@ class ModuleController extends Controller
             ->values();
 
         return JsonResource::collection($result)
-            ->additional([
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

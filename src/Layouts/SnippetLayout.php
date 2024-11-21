@@ -97,6 +97,7 @@ class SnippetLayout extends Layout
                 ->setId($model->getKey()),
 
             Tabs::make()
+                ->setId('snippet')
                 ->addTab(
                     'general',
                     Lang::get('global.page_data_general'),

@@ -30,12 +30,10 @@ class CacheController extends Controller
     public function index(CacheLayout $layout)
     {
         return JsonResource::make([])
-            ->additional([
-                'layout' => $layout->default(),
-                'meta' => [
-                    'icon' => $layout->icon(),
-                    'title' => $layout->title(),
-                ]
+            ->layout($layout->default())
+            ->meta([
+                'icon' => $layout->icon(),
+                'title' => $layout->title(),
             ]);
     }
 }

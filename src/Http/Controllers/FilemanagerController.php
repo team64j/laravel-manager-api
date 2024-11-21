@@ -182,12 +182,10 @@ class FilemanagerController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->default(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
             ]);
     }
 

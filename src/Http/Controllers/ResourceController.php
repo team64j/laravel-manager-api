@@ -132,11 +132,9 @@ class ResourceController extends Controller
             ->appends($request->all());
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'meta' => [
-                    'columns' => $columns,
-                    'pagination' => $this->pagination($result),
-                ],
+            ->meta([
+                'columns' => $columns,
+                'pagination' => $this->pagination($result),
             ]);
     }
 
@@ -207,13 +205,11 @@ class ResourceController extends Controller
         $route = Url::getRouteById($model->getKey());
 
         return JsonResource::make($model->withoutRelations())
-            ->additional([
-                'layout' => $layout->default($model, $route['url'] ?? ''),
-                'meta' => [
-                    'icon' => $layout->icon(),
-                    'title' => $layout->title($model->pagetitle),
-                    'url' => $route['url'] ?? '',
-                ],
+            ->layout($layout->default($model, $route['url'] ?? ''))
+            ->meta([
+                'icon' => $layout->icon(),
+                'title' => $layout->title($model->pagetitle),
+                'url' => $route['url'] ?? '',
             ]);
     }
 

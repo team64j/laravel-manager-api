@@ -154,14 +154,12 @@ class EventLogController extends Controller
         ];
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                    'title' => $layout->titleList(),
-                    'icon' => $layout->icon(),
-                    'pagination' => $this->pagination($result),
-                    'filters' => $filters,
-                ],
+            ->layout($layout->list())
+            ->meta([
+                'title' => $layout->titleList(),
+                'icon' => $layout->icon(),
+                'pagination' => $this->pagination($result),
+                'filters' => $filters,
             ]);
     }
 
@@ -193,12 +191,10 @@ class EventLogController extends Controller
             ->find($eventlog);
 
         return JsonResource::make([])
-            ->additional([
-                'layout' => $layout->default($data),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default($data))
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
             ]);
     }
 }

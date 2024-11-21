@@ -157,7 +157,7 @@ class PluginLayout extends Layout
                                     ->setCheckedValue(1, 0),
                             ]),
                         CodeEditor::make(
-                            'snippet',
+                            'plugincode',
                             Lang::get('global.plugin_code'),
                             null,
                             'mx-5'

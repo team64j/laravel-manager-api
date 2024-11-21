@@ -75,13 +75,11 @@ class PermissionController extends Controller
                         ->setAttribute('users.html', $users);
                 })
         )
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                    'pagination' => $this->pagination($result),
-                ],
+            ->layout($layout->list())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
+                'pagination' => $this->pagination($result),
             ]);
     }
 
@@ -113,12 +111,10 @@ class PermissionController extends Controller
         $model = MembergroupName::query()->findOrNew($id);
 
         return JsonResource::make($model)
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->name),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default($model))
+            ->meta([
+                'title' => $layout->title($model->name),
+                'icon' => $layout->icon(),
             ]);
     }
 
@@ -175,13 +171,11 @@ class PermissionController extends Controller
                         ->setAttribute('documents.html', $documents);
                 })
         )
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                    'pagination' => $this->pagination($result),
-                ],
+            ->layout($layout->list())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
+                'pagination' => $this->pagination($result),
             ]);
     }
 
@@ -213,12 +207,10 @@ class PermissionController extends Controller
         $model = DocumentgroupName::query()->findOrNew($id);
 
         return JsonResource::make($model)
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->name),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default($model))
+            ->meta([
+                'title' => $layout->title($model->name),
+                'icon' => $layout->icon(),
             ]);
     }
 
@@ -277,13 +269,11 @@ class PermissionController extends Controller
                         ->setAttribute('document_groups.html', $documentGroups);
                 })
         )
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                    'pagination' => $this->pagination($result),
-                ],
+            ->layout($layout->list())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
+                'pagination' => $this->pagination($result),
             ]);
     }
 
@@ -315,12 +305,10 @@ class PermissionController extends Controller
         $data = MembergroupName::query()->findOrNew($id);
 
         return JsonResource::make($data)
-            ->additional([
-                'layout' => $layout->default($data),
-                'meta' => [
-                    'title' => $layout->title($data->name),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default($data))
+            ->meta([
+                'title' => $layout->title($data->name),
+                'icon' => $layout->icon(),
             ]);
     }
 

@@ -94,14 +94,14 @@ class TvController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                        'title' => $layout->titleList(),
-                        'icon' => $layout->iconList(),
-                        'pagination' => $this->pagination($result),
-                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+            ->layout($layout->list())
+            ->meta(
+                [
+                    'title' => $layout->titleList(),
+                    'icon' => $layout->iconList(),
+                    'pagination' => $this->pagination($result),
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            );
     }
 
     /**
@@ -161,12 +161,10 @@ class TvController extends Controller
         $model->setAttribute('display_params_data', $data);
 
         return JsonResource::make($model->withoutRelations())
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->name),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default($model))
+            ->meta([
+                'title' => $layout->title($model->name),
+                'icon' => $layout->icon(),
             ]);
     }
 
@@ -315,17 +313,15 @@ class TvController extends Controller
             ]);
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'meta' => [
-                    'route' => '/tvs/:id',
-                    'pagination' => $this->pagination($result),
-                    'prepend' => [
-                        [
-                            'name' => Lang::get('global.new_tmplvars'),
-                            'icon' => 'fa fa-plus-circle',
-                            'to' => [
-                                'path' => '/tvs/new',
-                            ],
+            ->meta([
+                'route' => '/tvs/:id',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_tmplvars'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'path' => '/tvs/new',
                         ],
                     ],
                 ],
@@ -362,13 +358,11 @@ class TvController extends Controller
             ->paginate(Config::get('global.number_of_results'));
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'layout' => $layout->sort(),
-                'meta' => [
-                    'title' => $layout->titleSort(),
-                    'icon' => $layout->iconSort(),
-                ],
-                'pagination' => $this->pagination($result),
+            ->layout($layout->sort())
+            ->meta([
+                'title' => $layout->titleSort(),
+                'icon' => $layout->iconSort(),
+                'pagination' => $this->pagination($result)
             ]);
     }
 
@@ -487,9 +481,7 @@ class TvController extends Controller
                 ->map(fn(SiteTmplvar $item) => $item->setHidden(['category']));
 
             return JsonResource::collection($result)
-                ->additional([
-                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-                ]);
+                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -502,10 +494,8 @@ class TvController extends Controller
                 ->appends($request->all());
 
             return JsonResource::collection($result->map(fn(SiteTmplvar $item) => $item->setHidden(['category'])))
-                ->additional([
-                    'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ],
+                ->meta([
+                    'pagination' => $this->pagination($result),
                 ]);
         }
 
@@ -541,8 +531,6 @@ class TvController extends Controller
             ->values();
 
         return JsonResource::collection($result)
-            ->additional([
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

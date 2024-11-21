@@ -73,13 +73,11 @@ class RolePermissionController extends Controller
         }
 
         return JsonResource::collection($data->values())
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                    'title' => $layout->titleList(),
-                    'icon' => $layout->iconList(),
-                    'pagination' => $this->pagination($result),
-                ],
+            ->layout($layout->list())
+            ->meta([
+                'title' => $layout->titleList(),
+                'icon' => $layout->iconList(),
+                'pagination' => $this->pagination($result),
             ]);
     }
 
@@ -118,14 +116,12 @@ class RolePermissionController extends Controller
         }
 
         return JsonResource::make([])
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title(
-                        Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
-                    ),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default($model))
+            ->meta([
+                'title' => $layout->title(
+                    Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                ),
+                'icon' => $layout->icon(),
             ]);
     }
 }

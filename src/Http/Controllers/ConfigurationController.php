@@ -60,12 +60,10 @@ class ConfigurationController extends Controller
                     return $value;
                 })
         )
-            ->additional([
-                'layout' => $layout->default(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
             ]);
     }
 
@@ -121,10 +119,8 @@ class ConfigurationController extends Controller
         Artisan::call('optimize');
 
         return JsonResource::make([])
-            ->additional([
-                'meta' => [
-                    'reload' => true,
-                ],
+            ->meta([
+                'reload' => true,
             ]);
     }
 }

@@ -93,12 +93,10 @@ class FileController extends Controller
         }
 
         return JsonResource::make($data)
-            ->additional([
-                'layout' => $layout->default($data),
-                'meta' => [
-                    'title' => $data['path'] ?? $layout->title(),
-                    'icon' => $layout->icon($data['ext']),
-                ],
+            ->layout($layout->default($data))
+            ->meta([
+                'title' => $data['path'] ?? $layout->title(),
+                'icon' => $layout->icon($data['ext']),
             ]);
     }
 
@@ -273,15 +271,13 @@ class FileController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'meta' => [
-                    'category' => true,
-                    'pagination' => [
-                        'next' => $next,
-                        'lang' => [
-                            'prev' => Lang::get('global.paging_prev'),
-                            'next' => Lang::get('global.paging_next'),
-                        ],
+            ->meta([
+                'category' => true,
+                'pagination' => [
+                    'next' => $next,
+                    'lang' => [
+                        'prev' => Lang::get('global.paging_prev'),
+                        'next' => Lang::get('global.paging_next'),
                     ],
                 ],
             ]);

@@ -88,16 +88,14 @@ class ResourcesController extends Controller
         ]));
 
         return JsonResource::make($result->items())
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $model->pagetitle,
-                    'icon' => $layout->icon(),
-                    'pagination' => $this->pagination($result),
-                    'sorting' => [
-                        'order' => $order,
-                        'dir' => $dir,
-                    ],
+            ->layout($layout->default($model))
+            ->meta([
+                'title' => $model->pagetitle,
+                'icon' => $layout->icon(),
+                'pagination' => $this->pagination($result),
+                'sorting' => [
+                    'order' => $order,
+                    'dir' => $dir,
                 ],
             ]);
     }

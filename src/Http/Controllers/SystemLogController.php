@@ -184,18 +184,16 @@ class SystemLogController extends Controller
         ];
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'layout' => $layout->default(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                    'sorting' => [
-                        'order' => $order,
-                        'dir' => $dir,
-                    ],
-                    'filters' => $filters,
-                    'pagination' => $this->pagination($result),
+            ->layout($layout->default())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
+                'sorting' => [
+                    'order' => $order,
+                    'dir' => $dir,
                 ],
+                'filters' => $filters,
+                'pagination' => $this->pagination($result),
             ]);
     }
 }

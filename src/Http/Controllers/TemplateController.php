@@ -28,6 +28,13 @@ class TemplateController extends Controller
     use PaginationTrait;
 
     /**
+     * @param TemplateLayout $layout
+     */
+    public function __construct(protected TemplateLayout $layout)
+    {
+    }
+
+    /**
      * @OA\Get(
      *     path="/templates",
      *     summary="Получение списка шаблонов с пагинацией и фильтрацией",
@@ -49,11 +56,10 @@ class TemplateController extends Controller
      *      )
      * )
      * @param TemplateRequest $request
-     * @param TemplateLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(TemplateRequest $request, TemplateLayout $layout): ResourceCollection
+    public function index(TemplateRequest $request): ResourceCollection
     {
         $category = $request->input('category', -1);
         $name = $request->input('templatename');
@@ -112,14 +118,14 @@ class TemplateController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->list(),
-                'meta' => [
-                    'title' => $layout->titleList(),
-                    'icon' => $layout->iconList(),
+            ->layout($this->layout->list())
+            ->meta(
+                [
+                    'title' => $this->layout->titleList(),
+                    'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []),
-            ]);
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+            );
     }
 
     /**
@@ -138,11 +144,10 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      * @param string $id
-     * @param TemplateLayout $layout
      *
      * @return JsonResource
      */
-    public function show(TemplateRequest $request, string $id, TemplateLayout $layout): JsonResource
+    public function show(TemplateRequest $request, string $id): JsonResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
@@ -157,12 +162,10 @@ class TemplateController extends Controller
         }
 
         return JsonResource::make($model->withoutRelations())
-            ->additional([
-                'layout' => $layout->default($model),
-                'meta' => [
-                    'title' => $layout->title($model->templatename),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($this->layout->default($model))
+            ->meta([
+                'title' => $this->layout->title($model->templatename),
+                'icon' => $this->layout->icon(),
             ]);
     }
 
@@ -186,11 +189,10 @@ class TemplateController extends Controller
      *      )
      * )
      * @param TemplateRequest $request
-     * @param TemplateLayout $layout
      *
      * @return JsonResource
      */
-    public function store(TemplateRequest $request, TemplateLayout $layout): JsonResource
+    public function store(TemplateRequest $request): JsonResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->create($request->validated());
@@ -211,7 +213,7 @@ class TemplateController extends Controller
             file_put_contents($bladeFile, $model->content);
         }
 
-        return $this->show($request, (string) $model->getKey(), $layout);
+        return $this->show($request, (string) $model->getKey());
     }
 
     /**
@@ -235,11 +237,10 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      * @param string $id
-     * @param TemplateLayout $layout
      *
      * @return JsonResource
      */
-    public function update(TemplateRequest $request, string $id, TemplateLayout $layout): JsonResource
+    public function update(TemplateRequest $request, string $id): JsonResource
     {
         $model = SiteTemplate::query()->findOrFail($id);
 
@@ -265,7 +266,7 @@ class TemplateController extends Controller
             file_put_contents($bladeFile, $model->content);
         }
 
-        return $this->show($request, (string) $model->getKey(), $layout);
+        return $this->show($request, (string) $model->getKey());
     }
 
     /**
@@ -378,11 +379,10 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      * @param string $template
-     * @param TemplateLayout $layout
      *
      * @return ResourceCollection
      */
-    public function tvs(TemplateRequest $request, string $template, TemplateLayout $layout): ResourceCollection
+    public function tvs(TemplateRequest $request, string $template): ResourceCollection
     {
         $filter = $request->input('filter');
         $order = $request->input('order', 'category');
@@ -435,11 +435,11 @@ class TemplateController extends Controller
                 ])
                 ->values()
         )
-            ->additional([
-                'meta' => [
+            ->meta(
+                [
                     'pagination' => $this->pagination($result),
-                    ] + ($result->isEmpty() ? ['message' => Lang::get('global.tmplvars_novars')] : []),
-            ]);
+                ] + ($result->isEmpty() ? ['message' => Lang::get('global.tmplvars_novars')] : [])
+            );
     }
 
     /**
@@ -533,9 +533,7 @@ class TemplateController extends Controller
                 ->map(fn(SiteTemplate $item) => $item->setHidden(['category']));
 
             return JsonResource::collection($result)
-                ->additional([
-                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-                ]);
+                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -550,10 +548,8 @@ class TemplateController extends Controller
             return JsonResource::collection(
                 $result->map(fn(SiteTemplate $item) => $item->setHidden(['category']))
             )
-                ->additional([
-                    'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ],
+                ->meta([
+                    'pagination' => $this->pagination($result),
                 ]);
         }
 
@@ -589,8 +585,6 @@ class TemplateController extends Controller
             ->values();
 
         return JsonResource::collection($result)
-            ->additional([
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

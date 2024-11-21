@@ -137,10 +137,8 @@ class SnippetController extends Controller
     public function store(SnippetRequest $request): JsonResource
     {
         $data = $request->validated();
-        
-        if (isset($data['snippet'])) {
-            $data['snippet'] = Str::replaceFirst('<?php', '', (string) $data['snippet']);
-        }
+
+        $data['snippet'] = Str::replaceFirst('<?php', '', $data['snippet'] ?? '');
         
         $model = SiteSnippet::query()->create($data);
 
@@ -172,7 +170,7 @@ class SnippetController extends Controller
         $model = SiteSnippet::query()->findOrNew($id);
 
         $model->setAttribute('snippet', "<?php\r\n" . $model->snippet);
-        $model->setAttribute('analyze', 1);
+        $model->setAttribute('analyze', (int) !$model->exists);
 
         return JsonResource::make($model)
             ->layout($this->layout->default($model))
@@ -213,7 +211,7 @@ class SnippetController extends Controller
         
         $data = $request->validated();
 
-        $data['snippet'] = Str::replaceFirst('<?php', '', $data['snippet']);
+        $data['snippet'] = Str::replaceFirst('<?php', '', $data['snippet'] ?? '');
 
         $model->update($data);
 
@@ -344,9 +342,7 @@ class SnippetController extends Controller
                 ->map(fn(SiteSnippet $item) => $item->setHidden(['category']));
 
             return JsonResource::collection($result)
-                ->additional([
-                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-                ]);
+                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -359,10 +355,8 @@ class SnippetController extends Controller
                 ->appends($request->all());
 
             return JsonResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
-                ->additional([
-                    'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ],
+                ->meta([
+                    'pagination' => $this->pagination($result),
                 ]);
         }
 
@@ -398,8 +392,6 @@ class SnippetController extends Controller
             ->values();
 
         return JsonResource::collection($result)
-            ->additional([
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

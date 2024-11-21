@@ -5,13 +5,21 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
+use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteModule;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Checkbox;
+use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Template;
+use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
 
@@ -90,7 +98,116 @@ class ModuleLayout extends Layout
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
-            Tabs::make(),
+            Tabs::make()
+                ->setId('module')
+                ->addTab(
+                    'general',
+                    Lang::get('global.page_data_general'),
+                    slot: [
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
+                            ->setSlot([
+                                Input::make('name', Lang::get('global.module_name'))->setClass('mb-3')->isRequired(),
+                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                    ->setClass('mb-3')
+                                    ->setRows(2),
+                                Checkbox::make(
+                                    'analyze',
+                                    Lang::get('global.parse_docblock'),
+                                    Lang::get('global.parse_docblock_msg')
+                                )
+                                    ->setCheckedValue(1, 0),
+                            ]),
+                        Template::make()
+                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
+                            ->setSlot([
+                                Select::make('category', Lang::get('global.existing_category'))
+                                    ->setClass('mb-3')
+                                    ->setUrl('/categories/select')
+                                    ->setNew('')
+                                    ->setData([
+                                        [
+                                            'key' => $model->category,
+                                            'value' => $model->categories
+                                                ? $model->categories->category
+                                                : Lang::get(
+                                                    'global.no_category'
+                                                ),
+                                            'selected' => true,
+                                        ],
+                                    ]),
+                                Checkbox::make('disabled', Lang::get('global.disabled'))
+                                    ->setClass('mb-3')
+                                    ->setCheckedValue(1, 0),
+                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                    ->setClass('mb-3')
+                                    ->setCheckedValue(1, 0),
+                            ]),
+                        CodeEditor::make(
+                            'modulecode',
+                            Lang::get('global.module_code'),
+                            null,
+                            'mx-5'
+                        )
+                            ->setRows(25)
+                            ->setLanguage('php'),
+                    ],
+                )
+                ->addTab(
+                    'settings',
+                    Lang::get('global.settings_properties'),
+                    class: 'p-5',
+                    slot: [
+                        Input::make(
+                            'guid',
+                            'GUID',
+                            Lang::get('global.import_params_msg'),
+                            'mb-3'
+                        ),
+                        Checkbox::make(
+                            'enable_sharedparams',
+                            Lang::get('global.enable_sharedparams'),
+                            Lang::get('global.enable_sharedparams_msg'),
+                            'mb-5'
+                        ),
+                        CodeEditor::make('properties')
+                            ->setRows(25)
+                            ->setLanguage('json'),
+                    ]
+                )
+                ->when(
+                    Config::get('global.use_udperms'),
+                    fn(Tabs $tabs) => $tabs
+                        ->addTab(
+                            'permissions',
+                            Lang::get('global.access_permissions'),
+                            class: 'flex-col p-5',
+                            slot: [
+                                Lang::get('global.access_permissions_docs_message') . '<br/><br/>',
+
+                                Checkbox::make()
+                                    ->setModel('data.is_module_group')
+                                    ->setLabel(Lang::get('global.all_doc_groups'))
+                                    ->setCheckedValue(true, false)
+                                    ->setRelation('data.document_groups', [], [], true)
+                                    ->setClass('mb-3'),
+
+                                Checkbox::make()
+                                    ->setModel('data.module_groups')
+                                    ->setLabel(Lang::get('global.access_permissions_resource_groups'))
+                                    ->setData(
+                                        DocumentgroupName::all()
+                                            ->map(fn(DocumentgroupName $group) => [
+                                                'key' => $group->getKey(),
+                                                'value' => $group->name,
+                                            ])
+                                            ->toArray()
+                                    )
+                                    ->setRelation('data.is_module_group', false, true)
+                                    ->setClass('mb-3'),
+                            ]
+                        )
+                ),
 
             Crumbs::make()->setData($breadcrumbs),
         ];

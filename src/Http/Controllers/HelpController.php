@@ -33,12 +33,10 @@ class HelpController extends Controller
     public function index(HelpRequest $request, HelpLayout $layout): JsonResource
     {
         return JsonResource::make([])
-            ->additional([
-                'layout' => $layout->default(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
             ]);
     }
 }

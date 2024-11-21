@@ -106,12 +106,10 @@ class SystemInfoController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->additional([
-                'layout' => $layout->default(),
-                'meta' => [
-                    'title' => Lang::get('global.view_sysinfo'),
-                    'icon' => $layout->icon(),
-                ],
+            ->layout($layout->default())
+            ->meta([
+                'title' => Lang::get('global.view_sysinfo'),
+                'icon' => $layout->icon(),
             ]);
     }
 

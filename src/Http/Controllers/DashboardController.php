@@ -45,10 +45,7 @@ class DashboardController extends Controller
         return JsonResource::collection([
             //'widgetDocuments' => $this->getDocuments(),
         ])
-            ->additional([
-                'meta' => [],
-                'layout' => $layout->default(),
-            ]);
+            ->layout($layout->default());
     }
 
     /**

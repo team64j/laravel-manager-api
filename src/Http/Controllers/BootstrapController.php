@@ -88,24 +88,22 @@ class BootstrapController extends Controller
                 'dp_startDay' => Lang::get('global.dp_startDay'),
             ],
         ])
-            ->additional([
-                'layout' => [
-                    [
-                        'component' => 'AppGlobalMenu',
-                        'attrs' => [
-                            'data' => $this->getMenu(),
-                        ],
-                        'slot' => 'top',
+            ->layout([
+                [
+                    'component' => 'AppGlobalMenu',
+                    'attrs' => [
+                        'data' => $this->getMenu(),
                     ],
-                    [
-                        ...$this->getSidebar(),
-                        'slot' => 'sidebar',
-                    ],
-                    [
-                        'component' => 'AppGlobalTabs',
-                        'slot' => 'main',
-                    ],
-                ]
+                    'slot' => 'top',
+                ],
+                [
+                    ...$this->getSidebar(),
+                    'slot' => 'sidebar',
+                ],
+                [
+                    'component' => 'AppGlobalTabs',
+                    'slot' => 'main',
+                ],
             ]);
     }
 

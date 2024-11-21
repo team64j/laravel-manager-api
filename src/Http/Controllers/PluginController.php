@@ -135,7 +135,11 @@ class PluginController extends Controller
      */
     public function store(PluginRequest $request): JsonResource
     {
-        $model = SitePlugin::query()->create($request->validated());
+        $data = $request->validated();
+
+        $data['plugincode'] = Str::replaceFirst('<?php', '', $data['plugincode'] ?? '');
+
+        $model = SitePlugin::query()->create($data);
 
         return JsonResource::make($model);
     }
@@ -164,6 +168,8 @@ class PluginController extends Controller
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->with('events')->findOrNew($id);
 
+        $model->setAttribute('plugincode', "<?php\r\n" . $model->plugincode);
+        $model->setAttribute('analyze', (int) !$model->exists);
         $model->setAttribute('events', $model->events->pluck('id'));
 
         return JsonResource::make($model->withoutRelations())
@@ -203,7 +209,11 @@ class PluginController extends Controller
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->findOrFail($id);
 
-        $model->update($request->validated());
+        $data = $request->validated();
+
+        $data['plugincode'] = Str::replaceFirst('<?php', '', $data['plugincode'] ?? '');
+
+        $model->update($data);
 
         return JsonResource::make($model);
     }
@@ -276,17 +286,15 @@ class PluginController extends Controller
             ]);
 
         return JsonResource::collection($result->items())
-            ->additional([
-                'meta' => [
-                    'route' => '/plugins/:id',
-                    'pagination' => $this->pagination($result),
-                    'prepend' => [
-                        [
-                            'name' => Lang::get('global.new_plugin'),
-                            'icon' => 'fa fa-plus-circle',
-                            'to' => [
-                                'path' => '/plugins/new',
-                            ],
+            ->meta([
+                'route' => '/plugins/:id',
+                'pagination' => $this->pagination($result),
+                'prepend' => [
+                    [
+                        'name' => Lang::get('global.new_plugin'),
+                        'icon' => 'fa fa-plus-circle',
+                        'to' => [
+                            'path' => '/plugins/new',
                         ],
                     ],
                 ],
@@ -387,6 +395,7 @@ class PluginController extends Controller
                     'name' => $key,
                     'data' => $item,
                 ])
+                ->sortBy('name')
                 ->values()
         );
     }
@@ -432,9 +441,7 @@ class PluginController extends Controller
                 ->map(fn(SitePlugin $item) => $item->setHidden(['category']));
 
             return JsonResource::collection($result)
-                ->additional([
-                    'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-                ]);
+                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -447,10 +454,8 @@ class PluginController extends Controller
                 ->appends($request->all());
 
             return JsonResource::collection($result->map(fn(SitePlugin $item) => $item->setHidden(['category'])))
-                ->additional([
-                    'meta' => [
-                        'pagination' => $this->pagination($result),
-                    ],
+                ->meta([
+                    'pagination' => $this->pagination($result),
                 ]);
         }
 
@@ -486,8 +491,6 @@ class PluginController extends Controller
             ->values();
 
         return JsonResource::collection($result)
-            ->additional([
-                'meta' => $result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [],
-            ]);
+            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

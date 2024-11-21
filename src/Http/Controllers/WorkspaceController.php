@@ -68,17 +68,15 @@ class WorkspaceController extends Controller
         }
 
         return JsonResource::make($data)
-            ->additional([
-                'layout' => $layout->default(),
-                'meta' => [
-                    'title' => $layout->title(),
-                    'icon' => $layout->icon(),
-                    'lang' => [
-                        'save' => Lang::get('global.save'),
-                        'stay_new' => Lang::get('global.stay_new'),
-                        'settings' => Lang::get('global.resource_setting'),
-                        'select' => Lang::get('global.element_selector_title'),
-                    ],
+            ->layout($layout->default())
+            ->meta([
+                'title' => $layout->title(),
+                'icon' => $layout->icon(),
+                'lang' => [
+                    'save' => Lang::get('global.save'),
+                    'stay_new' => Lang::get('global.stay_new'),
+                    'settings' => Lang::get('global.resource_setting'),
+                    'select' => Lang::get('global.element_selector_title'),
                 ],
             ]);
     }
@@ -146,10 +144,8 @@ class WorkspaceController extends Controller
         Artisan::call('config:cache');
 
         return JsonResource::make([])
-            ->additional([
-                'meta' => [
-                    'reload' => true,
-                ],
+            ->meta([
+                'reload' => true,
             ]);
     }
 }
