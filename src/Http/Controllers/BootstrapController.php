@@ -160,11 +160,11 @@ class BootstrapController extends Controller
                 'path' => '/:path(.*)',
             ],
             [
-                'path' => '/:path(.*)/:id(\\d+)',
+                'path' => '/:path(.*)/:id',
             ],
-            [
-                'path' => '/:path(.*)/new',
-            ],
+//            [
+//                'path' => '/:path(.*)/new',
+//            ],
             [
                 'path' => '/phpinfo',
                 'meta' => [

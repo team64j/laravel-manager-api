@@ -141,7 +141,7 @@ class PluginController extends Controller
 
         $model = SitePlugin::query()->create($data);
 
-        return JsonResource::make($model);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -159,15 +159,16 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param string $id
+     * @param int|string $id
      *
      * @return JsonResource
      */
-    public function show(PluginRequest $request, string $id): JsonResource
+    public function show(PluginRequest $request, int | string $id): JsonResource
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->with('events')->findOrNew($id);
 
+        $model->setAttribute('category', $model->category ?? 0);
         $model->setAttribute('plugincode', "<?php\r\n" . $model->plugincode);
         $model->setAttribute('analyze', (int) !$model->exists);
         $model->setAttribute('events', $model->events->pluck('id'));
@@ -215,7 +216,7 @@ class PluginController extends Controller
 
         $model->update($data);
 
-        return JsonResource::make($model);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -387,7 +388,7 @@ class PluginController extends Controller
                 ->get()
                 ->map(fn(SystemEventname $item) => $item->setAttribute(
                     'checked',
-                    Checkbox::make('data')->setValue($item->getKey())
+                    Checkbox::make('events')->setValue($item->getKey())
                 ))
                 ->groupBy(fn($item) => $item->groupname ?: $services[$item->service])
                 ->map(fn($item, $key) => [

@@ -181,7 +181,7 @@ class PluginLayout extends Layout
                         Panel::make()
                             ->setSlotTop('<div class="p-5 w-full">' . Lang::get('global.plugin_event_msg') . '</div>')
                             ->setUrl('/plugins/events')
-                            ->setModel('data.events')
+                            ->setModel('events')
                             ->setColumns([
                                 'checked',
                                 'name',

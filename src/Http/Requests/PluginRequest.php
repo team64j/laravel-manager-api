@@ -28,6 +28,19 @@ class PluginRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return match ($this->route()->getActionMethod()) {
+            'store', 'update' => [
+                'name' => 'required|string',
+                //'description' => 'string',
+                'editor_type' => 'int',
+                'category' => 'required|int',
+                'plugincode' => 'string|nullable',
+                'locked' => 'int',
+                'disabled' => 'int',
+                //'cache_type' => 'int',
+                'properties' => 'string|nullable',
+            ],
+            default => []
+        };
     }
 }

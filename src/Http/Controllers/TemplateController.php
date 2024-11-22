@@ -152,6 +152,14 @@ class TemplateController extends Controller
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
 
+        if (!$model->exists) {
+            $model->setRawAttributes([
+                'icon' => '',
+                'category' => 0,
+                'selectable' => 1,
+            ]);
+        }
+
         $model->setAttribute('createbladefile', 0);
         $model->setAttribute('tvs', $model->tvs->pluck('id'));
 
