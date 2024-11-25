@@ -209,7 +209,7 @@ class ResourceLayout extends Layout
                                 'btn-red',
                                 'fa fa-trash-alt'
                             )
-                            ->setCopy(to: ['path' => '/resource/new?id=' . $model->getKey()]),
+                            ->setCopy(to: ['path' => '/resource/0?id=' . $model->getKey()]),
                     )
                 )
                 ->setSaveAnd(),
@@ -748,7 +748,7 @@ class ResourceLayout extends Layout
                                 'title' => Lang::get('global.create_resource_here'),
                                 'icon' => 'fa fa-file',
                                 'to' => [
-                                    'path' => '/resource/new',
+                                    'path' => '/resource/0',
                                     'query' => [
                                         'type' => 'resource',
                                         'id' => ':id',
@@ -759,7 +759,7 @@ class ResourceLayout extends Layout
                                 'title' => Lang::get('global.create_weblink_here'),
                                 'icon' => 'fa fa-link',
                                 'to' => [
-                                    'path' => '/resource/new',
+                                    'path' => '/resource/0',
                                     'query' => [
                                         'type' => 'reference',
                                         'id' => ':id',
@@ -849,7 +849,7 @@ class ResourceLayout extends Layout
                             [
                                 'icon' => 'fa fa-file-circle-plus',
                                 'to' => [
-                                    'path' => '/resource/new',
+                                    'path' => '/resource/0',
                                     'query' => [
                                         'type' => 'document',
                                     ],
@@ -858,7 +858,7 @@ class ResourceLayout extends Layout
                             [
                                 'icon' => 'fa fa-link',
                                 'to' => [
-                                    'path' => '/resource/new',
+                                    'path' => '/resource/0',
                                     'query' => [
                                         'type' => 'reference',
                                     ],

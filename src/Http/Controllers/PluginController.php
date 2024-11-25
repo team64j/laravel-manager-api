@@ -159,11 +159,11 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param int|string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(PluginRequest $request, int | string $id): JsonResource
+    public function show(PluginRequest $request, int $id): JsonResource
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->with('events')->findOrNew($id);
@@ -201,11 +201,11 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(PluginRequest $request, string $id): JsonResource
+    public function update(PluginRequest $request, int $id): JsonResource
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->findOrFail($id);
@@ -234,11 +234,11 @@ class PluginController extends Controller
      *      )
      * )
      * @param PluginRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(PluginRequest $request, string $id): Response
+    public function destroy(PluginRequest $request, int $id): Response
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->findOrFail($id);
@@ -295,7 +295,7 @@ class PluginController extends Controller
                         'name' => Lang::get('global.new_plugin'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/plugins/new',
+                            'path' => '/plugins/0',
                         ],
                     ],
                 ],

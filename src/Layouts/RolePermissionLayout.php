@@ -53,7 +53,7 @@ class RolePermissionLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/roles/permissions/new',
+                    '/roles/permissions/0',
                     'btn-green'
                 ),
 

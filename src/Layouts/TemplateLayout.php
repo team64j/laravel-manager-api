@@ -185,7 +185,7 @@ class TemplateLayout extends Layout
                     Lang::get('global.template_assignedtv_tab'),
                     slot: Panel::make()
                         ->setId('tvs')
-                        ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=true')
+                        ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=true')
                         ->setModel('tvs')
                         ->addColumn(
                             'attach',
@@ -223,7 +223,7 @@ class TemplateLayout extends Layout
                     slot: Panel::make()
                         ->setId('available')
                         ->setModel('tvs')
-                        ->setUrl('/templates/' . ($model->getKey() ?: 'new') . '/tvs?attach=false')
+                        ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=false')
                         ->addColumn(
                             'attach',
                             Lang::get('global.role_udperms'),
@@ -276,7 +276,7 @@ class TemplateLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/templates/new',
+                    '/templates/0',
                     'btn-green',
                     'fa fa-plus'
                 ),

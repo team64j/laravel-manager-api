@@ -16,6 +16,10 @@ class ResourcesController extends Controller
 {
     use PaginationTrait;
 
+    public function __construct(protected ResourcesLayout $layout)
+    {
+    }
+
     /**
      * @OA\Get(
      *     path="/resources/{id}",
@@ -35,12 +39,11 @@ class ResourcesController extends Controller
      *      )
      * )
      * @param ResourcesRequest $request
-     * @param string $id
-     * @param ResourcesLayout $layout
+     * @param int $id
      *
-@return JsonResource
+     * @return JsonResource
      */
-    public function show(ResourcesRequest $request, string $id, ResourcesLayout $layout): JsonResource
+    public function show(ResourcesRequest $request, int $id): JsonResource
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
@@ -88,10 +91,10 @@ class ResourcesController extends Controller
         ]));
 
         return JsonResource::make($result->items())
-            ->layout($layout->default($model))
+            ->layout($this->layout->default($model))
             ->meta([
                 'title' => $model->pagetitle,
-                'icon' => $layout->icon(),
+                'icon' => $this->layout->icon(),
                 'pagination' => $this->pagination($result),
                 'sorting' => [
                     'order' => $order,

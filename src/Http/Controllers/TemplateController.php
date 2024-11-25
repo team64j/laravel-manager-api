@@ -143,11 +143,11 @@ class TemplateController extends Controller
      *      )
      * )
      * @param TemplateRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(TemplateRequest $request, string $id): JsonResource
+    public function show(TemplateRequest $request, int $id): JsonResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
@@ -221,7 +221,7 @@ class TemplateController extends Controller
             file_put_contents($bladeFile, $model->content);
         }
 
-        return $this->show($request, (string) $model->getKey());
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -244,11 +244,11 @@ class TemplateController extends Controller
      *      )
      * )
      * @param TemplateRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(TemplateRequest $request, string $id): JsonResource
+    public function update(TemplateRequest $request, int $id): JsonResource
     {
         $model = SiteTemplate::query()->findOrFail($id);
 
@@ -274,7 +274,7 @@ class TemplateController extends Controller
             file_put_contents($bladeFile, $model->content);
         }
 
-        return $this->show($request, (string) $model->getKey());
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -358,7 +358,7 @@ class TemplateController extends Controller
                         'name' => Lang::get('global.new_template'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/templates/new',
+                            'path' => '/templates/0',
                         ],
                     ],
                 ],

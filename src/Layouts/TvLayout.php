@@ -316,7 +316,7 @@ class TvLayout extends Layout
                 ->setAction('sort', Lang::get('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
                 ->setNew(
                     Lang::get('global.new_tmplvars'),
-                    '/tvs/new',
+                    '/tvs/0',
                     'btn-green',
                     'fa fa-plus'
                 ),

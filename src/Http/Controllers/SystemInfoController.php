@@ -19,6 +19,10 @@ use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
 
 class SystemInfoController extends Controller
 {
+    public function __construct(protected SystemInfoLayout $layout)
+    {
+    }
+
     /**
      * @OA\Get(
      *     path="/system-info",
@@ -34,11 +38,10 @@ class SystemInfoController extends Controller
      *      )
      * )
      * @param SystemInfoRequest $request
-     * @param SystemInfoLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(SystemInfoRequest $request, SystemInfoLayout $layout): ResourceCollection
+    public function index(SystemInfoRequest $request): ResourceCollection
     {
         $data = [
             [
@@ -106,10 +109,10 @@ class SystemInfoController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->layout($layout->default())
+            ->layout($this->layout->default())
             ->meta([
                 'title' => Lang::get('global.view_sysinfo'),
-                'icon' => $layout->icon(),
+                'icon' => $this->layout->icon(),
             ]);
     }
 

@@ -39,7 +39,7 @@ class PermissionGroupLayout extends Layout
             Actions::make()
                 ->setNew(
                     Lang::get('global.create_new'),
-                    '/permissions/groups/new',
+                    '/permissions/groups/0',
                     'btn-green'
                 ),
 

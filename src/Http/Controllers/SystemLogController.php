@@ -19,6 +19,10 @@ class SystemLogController extends Controller
 {
     use PaginationTrait;
 
+    public function __construct(protected SystemLogLayout $layout)
+    {
+    }
+
     /**
      * @OA\Get(
      *     path="/system-log",
@@ -43,11 +47,10 @@ class SystemLogController extends Controller
      *      )
      * )
      * @param SystemLogRequest $request
-     * @param SystemLogLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(SystemLogRequest $request, SystemLogLayout $layout): ResourceCollection
+    public function index(SystemLogRequest $request): ResourceCollection
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'desc');
@@ -184,10 +187,10 @@ class SystemLogController extends Controller
         ];
 
         return JsonResource::collection($result->items())
-            ->layout($layout->default())
+            ->layout($this->layout->default())
             ->meta([
-                'title' => $layout->title(),
-                'icon' => $layout->icon(),
+                'title' => $this->layout->title(),
+                'icon' => $this->layout->icon(),
                 'sorting' => [
                     'order' => $order,
                     'dir' => $dir,

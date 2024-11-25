@@ -156,7 +156,7 @@ class ChunkLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/chunks/new',
+                    '/chunks/0',
                     'btn-green',
                     'fa fa-plus'
                 ),

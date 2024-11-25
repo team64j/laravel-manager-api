@@ -125,11 +125,11 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(TvRequest $request, string $id): JsonResource
+    public function show(TvRequest $request, int $id): JsonResource
     {
         /** @var SiteTmplvar $model */
         $model = SiteTmplvar::query()->findOrNew($id);
@@ -209,7 +209,7 @@ class TvController extends Controller
         $model->templates()->sync($data['templates'] ?? []);
         $model->roles()->sync($data['roles'] ?? []);
 
-        return $this->show($request, (string) $model->getKey());
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -232,11 +232,11 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(TvRequest $request, string $id): JsonResource
+    public function update(TvRequest $request, int $id): JsonResource
     {
         $data = $request->all();
 
@@ -249,7 +249,7 @@ class TvController extends Controller
         $model->templates()->sync($data['templates'] ?? []);
         $model->roles()->sync($data['roles'] ?? []);
 
-        return $this->show($request, $id);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -267,11 +267,11 @@ class TvController extends Controller
      *      )
      * )
      * @param TvRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(TvRequest $request, string $id)
+    public function destroy(TvRequest $request, int $id)
     {
         SiteTmplvar::query()->findOrFail($id)->delete();
 
@@ -324,7 +324,7 @@ class TvController extends Controller
                         'name' => Lang::get('global.new_tmplvars'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/tvs/new',
+                            'path' => '/tvs/0',
                         ],
                     ],
                 ],

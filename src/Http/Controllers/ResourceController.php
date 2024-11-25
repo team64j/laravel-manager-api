@@ -21,6 +21,10 @@ class ResourceController extends Controller
 {
     use PaginationTrait;
 
+    public function __construct(protected ResourceLayout $layout)
+    {
+    }
+
     /**
      * @OA\Get(
      *     path="/resource",
@@ -158,12 +162,11 @@ class ResourceController extends Controller
      *      )
      * )
      * @param ResourceRequest $request
-     * @param string $id
-     * @param ResourceLayout $layout
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(ResourceRequest $request, string $id, ResourceLayout $layout): JsonResource
+    public function show(ResourceRequest $request, int $id): JsonResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrNew($id);
@@ -205,10 +208,10 @@ class ResourceController extends Controller
         $route = Url::getRouteById($model->getKey());
 
         return JsonResource::make($model->withoutRelations())
-            ->layout($layout->default($model, $route['url'] ?? ''))
+            ->layout($this->layout->default($model, $route['url'] ?? ''))
             ->meta([
-                'icon' => $layout->icon(),
-                'title' => $layout->title($model->pagetitle),
+                'icon' => $this->layout->icon(),
+                'title' => $this->layout->title($model->pagetitle),
                 'url' => $route['url'] ?? '',
             ]);
     }
@@ -233,16 +236,15 @@ class ResourceController extends Controller
      *      )
      * )
      * @param ResourceRequest $request
-     * @param ResourceLayout $layout
      *
      * @return JsonResource
      */
-    public function store(ResourceRequest $request, ResourceLayout $layout): JsonResource
+    public function store(ResourceRequest $request): JsonResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::query()->create($request->all());
 
-        return $this->show($request, (string) $model->getKey(), $layout);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -265,15 +267,14 @@ class ResourceController extends Controller
      *      )
      * )
      * @param ResourceRequest $request
-     * @param string $id
-     * @param ResourceLayout $layout
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(ResourceRequest $request, string $id, ResourceLayout $layout): JsonResource
+    public function update(ResourceRequest $request, int $id): JsonResource
     {
         /** @var SiteContent $model */
-        $model = SiteContent::withTrashed()->findOrFail((int) $id);
+        $model = SiteContent::withTrashed()->findOrFail($id);
         $model->update($request->all());
 
         $tvs = $model->getTvs()->keyBy('name');
@@ -306,7 +307,7 @@ class ResourceController extends Controller
             }
         }
 
-        return $this->show($request, $id, $layout);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -324,12 +325,11 @@ class ResourceController extends Controller
      *      )
      * )
      * @param ResourceRequest $request
-     * @param string $id
-     * @param ResourceLayout $layout
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function destroy(ResourceRequest $request, string $id, ResourceLayout $layout)
+    public function destroy(ResourceRequest $request, int $id)
     {
         $model = SiteContent::withTrashed()->findOrFail($id);
 
@@ -337,7 +337,7 @@ class ResourceController extends Controller
             'deleted' => 1
         ]);
 
-        return $this->show($request, $id, $layout);
+        return $this->show($request, $id);
     }
 
     /**

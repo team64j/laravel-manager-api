@@ -140,9 +140,9 @@ class ModuleController extends Controller
 
         $data['modulecode'] = Str::replaceFirst('<?php', '', $data['modulecode'] ?? '');
 
-        $module = SiteModule::query()->create($data);
+        $model = SiteModule::query()->create($data);
 
-        return JsonResource::make($module);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -160,15 +160,16 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(ModuleRequest $request, string $id): JsonResource
+    public function show(ModuleRequest $request, int $id): JsonResource
     {
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrNew($id);
 
+        $model->setAttribute('category', $model->category ?? 0);
         $model->setAttribute('modulecode', "<?php\r\n" . $model->modulecode);
 
         return JsonResource::make($model)
@@ -199,11 +200,11 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(ModuleRequest $request, string $id): JsonResource
+    public function update(ModuleRequest $request, int $id): JsonResource
     {
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrFail($id);
@@ -214,7 +215,7 @@ class ModuleController extends Controller
 
         $model->update($data);
 
-        return JsonResource::make($model);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -232,11 +233,11 @@ class ModuleController extends Controller
      *      )
      * )
      * @param ModuleRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(ModuleRequest $request, string $id): Response
+    public function destroy(ModuleRequest $request, int $id): Response
     {
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrFail($id);
@@ -291,7 +292,7 @@ class ModuleController extends Controller
                         'name' => Lang::get('global.new_module'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/modules/new',
+                            'path' => '/modules/0',
                         ],
                     ],
                 ],

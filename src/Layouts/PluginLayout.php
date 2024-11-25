@@ -203,7 +203,7 @@ class PluginLayout extends Layout
                 ->setAction('sort', Lang::get('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
                 ->setNew(
                     $this->title(),
-                    '/plugins/new',
+                    '/plugins/0',
                     'btn-green',
                     'fa fa-plus'
                 ),

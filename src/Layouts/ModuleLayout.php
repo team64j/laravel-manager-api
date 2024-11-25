@@ -222,7 +222,7 @@ class ModuleLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/modules/new',
+                    '/modules/0',
                     'btn-green',
                     'fa fa-plus'
                 ),

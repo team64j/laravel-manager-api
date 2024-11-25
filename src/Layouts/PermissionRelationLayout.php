@@ -51,7 +51,7 @@ class PermissionRelationLayout extends Layout
             Actions::make()
                 ->setNew(
                     Lang::get('global.create_new'),
-                    '/permissions/relations/new',
+                    '/permissions/relations/0',
                     'btn-green'
                 ),
 

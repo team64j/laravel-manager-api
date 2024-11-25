@@ -95,7 +95,7 @@ class CategoryLayout extends Layout
                 ->setAction('sort', Lang::get('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
                 ->setNew(
                     Lang::get('global.cm_add_new_category'),
-                    '/categories/new',
+                    '/categories/0',
                     'btn-green',
                     'fa fa-plus'
                 ),

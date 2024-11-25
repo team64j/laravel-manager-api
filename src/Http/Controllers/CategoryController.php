@@ -18,6 +18,10 @@ class CategoryController extends Controller
 {
     use PaginationTrait;
 
+    public function __construct(protected CategoryLayout $layout)
+    {
+    }
+
     /**
      * @OA\Get(
      *     path="/categories",
@@ -39,11 +43,10 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param CategoryLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(CategoryRequest $request, CategoryLayout $layout): ResourceCollection
+    public function index(CategoryRequest $request): ResourceCollection
     {
         $filter = $request->input('filter');
         $filterName = $request->input('category');
@@ -71,11 +74,11 @@ class CategoryController extends Controller
             ->meta(
                 [
                     'title' => Lang::get('global.category_management'),
-                    'icon' => $layout->icon(),
+                    'icon' => $this->layout->icon(),
                     'pagination' => $this->pagination($result),
                 ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
             )
-            ->layout($layout->list());
+            ->layout($this->layout->list());
     }
 
     /**
@@ -105,7 +108,7 @@ class CategoryController extends Controller
     {
         $model = Category::query()->create($request->validated());
 
-        return JsonResource::make($model);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -123,22 +126,21 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param string $id
-     * @param CategoryLayout $layout
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(CategoryRequest $request, string $id, CategoryLayout $layout): JsonResource
+    public function show(CategoryRequest $request, int $id): JsonResource
     {
         /** @var Category $model */
         $model = Category::query()->findOrNew($id);
 
         return JsonResource::make($model)
+            ->layout($this->layout->default($model))
             ->meta([
-                'title' => $model->category ?? $layout->title(),
-                'icon' => $layout->icon(),
-            ])
-            ->layout($layout->default($model));
+                'title' => $model->category ?? $this->layout->title(),
+                'icon' => $this->layout->icon(),
+            ]);
     }
 
     /**
@@ -161,18 +163,18 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(CategoryRequest $request, string $id): JsonResource
+    public function update(CategoryRequest $request, int $id): JsonResource
     {
         /** @var Category $model */
         $model = Category::query()->findOrFail($id);
 
         $model->update($request->validated());
 
-        return JsonResource::make($model);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -190,11 +192,11 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(CategoryRequest $request, string $id): Response
+    public function destroy(CategoryRequest $request, int $id): Response
     {
         /** @var Category $model */
         $model = Category::query()->findOrFail($id);
@@ -219,18 +221,17 @@ class CategoryController extends Controller
      *      )
      * )
      * @param CategoryRequest $request
-     * @param CategoryLayout $layout
      *
      * @return ResourceCollection
      */
-    public function sort(CategoryRequest $request, CategoryLayout $layout): ResourceCollection
+    public function sort(CategoryRequest $request): ResourceCollection
     {
         return JsonResource::collection(Category::query()->orderBy('rank')->get())
+            ->layout($this->layout->sort())
             ->meta([
                 'title' => Lang::get('global.cm_sort_categories'),
-                'icon' => $layout->iconSort(),
-            ])
-            ->layout($layout->sort());
+                'icon' => $this->layout->iconSort(),
+            ]);
     }
 
     /**
@@ -380,7 +381,7 @@ class CategoryController extends Controller
                         'name' => Lang::get('global.new_category'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/categories/new',
+                            'path' => '/categories/0',
                         ],
                     ],
                 ],

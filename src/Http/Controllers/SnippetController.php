@@ -142,7 +142,7 @@ class SnippetController extends Controller
         
         $model = SiteSnippet::query()->create($data);
 
-        return $this->show($request, (string) $model->getKey());
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -160,11 +160,11 @@ class SnippetController extends Controller
      *      )
      * )
      * @param SnippetRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(SnippetRequest $request, string $id): JsonResource
+    public function show(SnippetRequest $request, int $id): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrNew($id);
@@ -201,11 +201,11 @@ class SnippetController extends Controller
      *      )
      * )
      * @param SnippetRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(SnippetRequest $request, string $id): JsonResource
+    public function update(SnippetRequest $request, int $id): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
@@ -216,7 +216,7 @@ class SnippetController extends Controller
 
         $model->update($data);
 
-        return $this->show($request, $id);
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -234,11 +234,11 @@ class SnippetController extends Controller
      *      )
      * )
      * @param SnippetRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(SnippetRequest $request, string $id): Response
+    public function destroy(SnippetRequest $request, int $id): Response
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
@@ -295,7 +295,7 @@ class SnippetController extends Controller
                         'name' => Lang::get('global.new_snippet'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/snippets/new',
+                            'path' => '/snippets/0',
                         ],
                     ],
                 ],

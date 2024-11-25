@@ -56,7 +56,7 @@ class RoleCategoryLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/roles/categories/new',
+                    '/roles/categories/0',
                     'btn-green'
                 ),
 

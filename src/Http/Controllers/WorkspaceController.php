@@ -17,6 +17,10 @@ use Team64j\LaravelManagerApi\Layouts\WorkspaceLayout;
 
 class WorkspaceController extends Controller
 {
+    public function __construct(protected WorkspaceLayout $layout)
+    {
+    }
+
     /**
      * @OA\Get(
      *     path="/workspace",
@@ -32,11 +36,10 @@ class WorkspaceController extends Controller
      *      )
      * )
      * @param WorkspaceRequest $request
-     * @param WorkspaceLayout $layout
      *
      * @return JsonResource
      */
-    public function index(WorkspaceRequest $request, WorkspaceLayout $layout): JsonResource
+    public function index(WorkspaceRequest $request): JsonResource
     {
         $data = [];
 
@@ -68,10 +71,10 @@ class WorkspaceController extends Controller
         }
 
         return JsonResource::make($data)
-            ->layout($layout->default())
+            ->layout($this->layout->default())
             ->meta([
-                'title' => $layout->title(),
-                'icon' => $layout->icon(),
+                'title' => $this->layout->title(),
+                'icon' => $this->layout->icon(),
                 'lang' => [
                     'save' => Lang::get('global.save'),
                     'stay_new' => Lang::get('global.stay_new'),
@@ -101,11 +104,10 @@ class WorkspaceController extends Controller
      *      )
      * )
      * @param WorkspaceRequest $request
-     * @param WorkspaceLayout $layout
      *
      * @return JsonResource
      */
-    public function store(WorkspaceRequest $request, WorkspaceLayout $layout): JsonResource
+    public function store(WorkspaceRequest $request): JsonResource
     {
         $data = [];
         /** @var Collection $collect */

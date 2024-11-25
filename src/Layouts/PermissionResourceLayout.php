@@ -39,7 +39,7 @@ class PermissionResourceLayout extends Layout
             Actions::make()
                 ->setNew(
                     Lang::get('global.create_new'),
-                    '/permissions/resources/new',
+                    '/permissions/resources/0',
                     'btn-green'
                 ),
 

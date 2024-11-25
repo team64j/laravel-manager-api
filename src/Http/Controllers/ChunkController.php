@@ -137,7 +137,7 @@ class ChunkController extends Controller
     {
         $model = SiteHtmlSnippet::query()->create($request->validated());
 
-        return $this->show($request, (string) $model->getKey());
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -155,11 +155,11 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(ChunkRequest $request, string $id): JsonResource
+    public function show(ChunkRequest $request, int $id): JsonResource
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrNew($id);
@@ -198,18 +198,18 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function update(ChunkRequest $request, string $id): JsonResource
+    public function update(ChunkRequest $request, int $id): JsonResource
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrFail($id);
 
         $model->update($request->validated());
 
-        return $this->show($request, (string) $model->getKey());
+        return $this->show($request, $model->getKey());
     }
 
     /**
@@ -227,11 +227,11 @@ class ChunkController extends Controller
      *      )
      * )
      * @param ChunkRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(ChunkRequest $request, string $id): Response
+    public function destroy(ChunkRequest $request, int $id): Response
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrFail($id);
@@ -287,7 +287,7 @@ class ChunkController extends Controller
                         'name' => Lang::get('global.new_htmlsnippet'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/chunks/new',
+                            'path' => '/chunks/0',
                         ],
                     ],
                 ],

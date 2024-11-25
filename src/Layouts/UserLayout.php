@@ -86,7 +86,7 @@ class UserLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/users/new',
+                    '/users/0',
                     'btn-green'
                 ),
 

@@ -22,6 +22,10 @@ class UserController extends Controller
 {
     use PaginationTrait;
 
+    public function __construct(protected UserLayout $layout)
+    {
+    }
+
     /**
      * @OA\Get(
      *     path="/users",
@@ -44,11 +48,10 @@ class UserController extends Controller
      *      )
      * )
      * @param UserRequest $request
-     * @param UserLayout $layout
      *
      * @return ResourceCollection
      */
-    public function index(UserRequest $request, UserLayout $layout): ResourceCollection
+    public function index(UserRequest $request): ResourceCollection
     {
         $filter = $request->get('filter');
         $order = $request->input('order', 'id');
@@ -172,10 +175,11 @@ class UserController extends Controller
         ];
 
         return JsonResource::collection($result)
+            ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => $layout->titleList(),
-                    'icon' => $layout->iconList(),
+                    'title' => $this->layout->titleList(),
+                    'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
                     'sorting' => [
                         'order' => $order,
@@ -183,8 +187,7 @@ class UserController extends Controller
                     ],
                     'filters' => $filters,
                 ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
-            )
-            ->layout($layout->list());
+            );
     }
 
     /**
@@ -202,22 +205,21 @@ class UserController extends Controller
      *      )
      * )
      * @param UserRequest $request
-     * @param string $user
-     * @param UserLayout $layout
+     * @param int $id
      *
      * @return JsonResource
      */
-    public function show(UserRequest $request, string $user, UserLayout $layout): JsonResource
+    public function show(UserRequest $request, int $id): JsonResource
     {
-        /** @var User $user */
-        $user = User::query()->with('attributes')->findOrNew($user);
+        /** @var User $model */
+        $model = User::query()->with('attributes')->findOrNew($id);
 
-        return JsonResource::make($user)
+        return JsonResource::make($model)
+            ->layout($this->layout->default($model))
             ->meta([
-                'title' => $layout->title($user->username),
-                'icon' => $layout->icon(),
-            ])
-            ->layout($layout->default($user));
+                'title' => $this->layout->title($model->username),
+                'icon' => $this->layout->icon(),
+            ]);
     }
 
     /**
@@ -261,7 +263,7 @@ class UserController extends Controller
                         'name' => Lang::get('global.new_user'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
-                            'path' => '/users/new',
+                            'path' => '/users/0',
                         ],
                     ],
                 ],

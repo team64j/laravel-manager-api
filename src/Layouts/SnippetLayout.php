@@ -173,7 +173,7 @@ class SnippetLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/snippets/new',
+                    '/snippets/0',
                     'btn-green',
                     'fa fa-plus'
                 ),
