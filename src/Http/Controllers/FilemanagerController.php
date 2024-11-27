@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
 
 class FilemanagerController extends Controller
@@ -34,9 +34,9 @@ class FilemanagerController extends Controller
      * @param FilesRequest $request
      * @param FilemanagerLayout $layout
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(FilesRequest $request, FilemanagerLayout $layout): ResourceCollection
+    public function index(FilesRequest $request, FilemanagerLayout $layout): ApiCollection
     {
         return $this->show($request, '', $layout);
     }
@@ -62,9 +62,9 @@ class FilemanagerController extends Controller
      * @param string $files
      * @param FilemanagerLayout $layout
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): ResourceCollection
+    public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): ApiCollection
     {
         $data = [];
         $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
@@ -181,7 +181,7 @@ class FilemanagerController extends Controller
             }
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->layout($layout->default())
             ->meta([
                 'title' => $layout->title(),
@@ -208,9 +208,9 @@ class FilemanagerController extends Controller
      * )
      * @param FilesRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tree(FilesRequest $request): ResourceCollection
+    public function tree(FilesRequest $request): ApiCollection
     {
         $data = [];
         $settings = $request->collect('settings')->toArray();
@@ -270,7 +270,7 @@ class FilemanagerController extends Controller
             }
         }
 
-        return JsonResource::collection($data);
+        return ApiResource::collection($data);
     }
 
     /**

@@ -12,6 +12,7 @@ use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Select;
@@ -69,17 +70,24 @@ class TemplateLayout extends Layout
         $isBladeFile = file_exists($bladeFile);
         $relativeBladeFile = str_replace([dirname(app_path()), DIRECTORY_SEPARATOR], ['', '/'], $bladeFile);
 
-        $category = $model->category()->firstOr(fn() => new Category());
+        $category = $model->category()->firstOr(
+            fn() => (new Category())->setAttribute('id', 0)->setAttribute('category', Lang::get('global.no_category'))
+        );
 
         $breadcrumbs = [
             [
-                'id' => $category->getKey() ?? 0,
-                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
-                'to' => '/elements/templates?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'id' => $category->getKey(),
+                'title' => $this->titleList() . ': ' . $category->category,
+                'to' => '/elements/templates?groupBy=none&category=' . $category->getKey(),
             ],
         ];
 
         return [
+            GlobalTab::make(
+                $this->icon(),
+                $this->title($model->templatename)
+            ),
+
             Actions::make()
                 ->setCancel(
                     Lang::get('global.cancel'),
@@ -95,7 +103,7 @@ class TemplateLayout extends Layout
                 ->setSaveAnd(),
 
             Title::make()
-                ->setModel('templatename')
+                ->setModel('data.attributes.templatename')
                 ->setHelp(Lang::get('global.template_msg'))
                 ->setId($model->getKey())
                 ->setIcon($this->icon())
@@ -111,7 +119,7 @@ class TemplateLayout extends Layout
                             'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 px-5 pt-5',
                             [
                                 Input::make(
-                                    'templatename',
+                                    'data.attributes.templatename',
                                     Lang::get('global.template_name')
                                 )
                                     ->setClass('mb-3')
@@ -122,13 +130,13 @@ class TemplateLayout extends Layout
                                     ),
 
                                 Input::make(
-                                    'templatealias',
+                                    'data.attributes.templatealias',
                                     Lang::get('global.alias')
                                 )
                                     ->setClass('mb-3'),
 
                                 Textarea::make(
-                                    'description',
+                                    'data.attributes.description',
                                     Lang::get('global.template_desc')
                                 )
                                     ->setClass('mb-3'),
@@ -139,26 +147,22 @@ class TemplateLayout extends Layout
                             'flex flex-wrap grow md:basis-1/3 xl:basis-3/12 px-5 md:!pl-2 md:pt-5',
                             [
                                 Select::make(
-                                    'category',
+                                    'data.attributes.category',
                                     Lang::get('global.existing_category')
                                 )
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->addOption(
-                                        $model->category,
-                                        $model->categories
-                                            ? $model->categories->category
-                                            : Lang::get(
-                                            'global.no_category'
-                                        )
+                                        $category->getKey(),
+                                        $category->category
                                     )
                                     ->setNew(''),
 
-                                Checkbox::make('selectable', Lang::get('global.template_selectable'))
+                                Checkbox::make('data.attributes.selectable', Lang::get('global.template_selectable'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Checkbox::make('locked', Lang::get('global.lock_template_msg'))
+                                Checkbox::make('data.attributes.locked', Lang::get('global.lock_template_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]
@@ -170,11 +174,14 @@ class TemplateLayout extends Layout
                             ': ' .
                             $relativeBladeFile . '</span>'
                             :
-                            Checkbox::make('createbladefile', Lang::get('global.template_create_blade_file'))
+                            Checkbox::make(
+                                'data.attributes.createbladefile',
+                                Lang::get('global.template_create_blade_file')
+                            )
                                 ->setClass('mx-5 mb-3')
                                 ->setCheckedValue(1, 0)),
 
-                        CodeEditor::make('content', Lang::get('global.template_code'))
+                        CodeEditor::make('data.attributes.content', Lang::get('global.template_code'))
                             ->setClass('px-5')
                             ->setLanguage('html')
                             ->setRows(20),
@@ -257,7 +264,7 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'settings',
                     Lang::get('global.settings_properties'),
-                    slot: CodeEditor::make('properties')
+                    slot: CodeEditor::make('data.attributes.properties')
                         ->setClass('p-5')
                         ->setLanguage('json')
                         ->isFullSize()

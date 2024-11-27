@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ModuleRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -53,9 +53,9 @@ class ModuleController extends Controller
      * )
      * @param ModuleRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(ModuleRequest $request): ResourceCollection
+    public function index(ModuleRequest $request): ApiCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -100,7 +100,7 @@ class ModuleController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->layout($this->layout->list())
             ->meta(
                 [
@@ -132,9 +132,9 @@ class ModuleController extends Controller
      * )
      * @param ModuleRequest $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function store(ModuleRequest $request): JsonResource
+    public function store(ModuleRequest $request): ApiResource
     {
         $data = $request->validated();
 
@@ -162,9 +162,9 @@ class ModuleController extends Controller
      * @param ModuleRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(ModuleRequest $request, int $id): JsonResource
+    public function show(ModuleRequest $request, int $id): ApiResource
     {
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrNew($id);
@@ -172,7 +172,7 @@ class ModuleController extends Controller
         $model->setAttribute('category', $model->category ?? 0);
         $model->setAttribute('modulecode', "<?php\r\n" . $model->modulecode);
 
-        return JsonResource::make($model)
+        return ApiResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
@@ -202,9 +202,9 @@ class ModuleController extends Controller
      * @param ModuleRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function update(ModuleRequest $request, int $id): JsonResource
+    public function update(ModuleRequest $request, int $id): ApiResource
     {
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrFail($id);
@@ -266,9 +266,9 @@ class ModuleController extends Controller
      * )
      * @param ModuleRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function list(ModuleRequest $request): ResourceCollection
+    public function list(ModuleRequest $request): ApiCollection
     {
         $filter = $request->get('filter');
 
@@ -283,7 +283,7 @@ class ModuleController extends Controller
                 'disabled',
             ]);
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta([
                 'route' => '/modules/:id',
                 'pagination' => $this->pagination($result),
@@ -320,11 +320,11 @@ class ModuleController extends Controller
      * )
      * @param ModuleRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function exec(ModuleRequest $request): ResourceCollection
+    public function exec(ModuleRequest $request): ApiCollection
     {
-        return JsonResource::collection(
+        return ApiResource::collection(
             SiteModule::withoutLocked()
                 ->withoutProtected()
                 ->orderBy('name')
@@ -404,9 +404,9 @@ class ModuleController extends Controller
      * )
      * @param ModuleRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tree(ModuleRequest $request): ResourceCollection
+    public function tree(ModuleRequest $request): ApiCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -423,7 +423,7 @@ class ModuleController extends Controller
                 ->get()
                 ->map(fn(SiteModule $item) => $item->setHidden(['category']));
 
-            return JsonResource::collection($result)
+            return ApiResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
@@ -436,7 +436,7 @@ class ModuleController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return JsonResource::collection($result->map(fn(SiteModule $item) => $item->setHidden(['category'])))
+            return ApiResource::collection($result->map(fn(SiteModule $item) => $item->setHidden(['category'])))
                 ->meta([
                     'pagination' => $this->pagination($result),
                 ]);
@@ -473,7 +473,7 @@ class ModuleController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

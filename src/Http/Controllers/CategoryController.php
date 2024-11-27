@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -44,9 +44,9 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(CategoryRequest $request): ResourceCollection
+    public function index(CategoryRequest $request): ApiCollection
     {
         $filter = $request->input('filter');
         $filterName = $request->input('category');
@@ -70,7 +70,7 @@ class CategoryController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta(
                 [
                     'title' => Lang::get('global.category_management'),
@@ -102,9 +102,9 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function store(CategoryRequest $request): JsonResource
+    public function store(CategoryRequest $request): ApiResource
     {
         $model = Category::query()->create($request->validated());
 
@@ -128,14 +128,14 @@ class CategoryController extends Controller
      * @param CategoryRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(CategoryRequest $request, int $id): JsonResource
+    public function show(CategoryRequest $request, int $id): ApiResource
     {
         /** @var Category $model */
         $model = Category::query()->findOrNew($id);
 
-        return JsonResource::make($model)
+        return ApiResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $model->category ?? $this->layout->title(),
@@ -165,9 +165,9 @@ class CategoryController extends Controller
      * @param CategoryRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function update(CategoryRequest $request, int $id): JsonResource
+    public function update(CategoryRequest $request, int $id): ApiResource
     {
         /** @var Category $model */
         $model = Category::query()->findOrFail($id);
@@ -222,11 +222,11 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function sort(CategoryRequest $request): ResourceCollection
+    public function sort(CategoryRequest $request): ApiCollection
     {
-        return JsonResource::collection(Category::query()->orderBy('rank')->get())
+        return ApiResource::collection(Category::query()->orderBy('rank')->get())
             ->layout($this->layout->sort())
             ->meta([
                 'title' => Lang::get('global.cm_sort_categories'),
@@ -254,13 +254,13 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function select(CategoryRequest $request): ResourceCollection
+    public function select(CategoryRequest $request): ApiCollection
     {
         $selected = $request->integer('selected');
 
-        return JsonResource::collection(
+        return ApiResource::collection(
             Collection::make()
                 ->add([
                     'key' => (string) $request->input('itemNew', 'newcategory'),
@@ -308,9 +308,9 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tree(CategoryRequest $request): ResourceCollection
+    public function tree(CategoryRequest $request): ApiCollection
     {
         $settings = $request->collect('settings');
         $filter = $request->input('filter');
@@ -335,7 +335,7 @@ class CategoryController extends Controller
                 'title' => $item->category,
             ]);
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 
@@ -358,9 +358,9 @@ class CategoryController extends Controller
      * )
      * @param CategoryRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function list(CategoryRequest $request): ResourceCollection
+    public function list(CategoryRequest $request): ApiCollection
     {
         $filter = $request->input('filter');
 
@@ -372,7 +372,7 @@ class CategoryController extends Controller
                 'rank',
             ]);
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta([
                 'route' => '/categories/:id',
                 'pagination' => $this->pagination($result),

@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TvRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -52,9 +52,9 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(TvRequest $request): ResourceCollection
+    public function index(TvRequest $request): ApiCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -99,7 +99,7 @@ class TvController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->layout($this->layout->list())
             ->meta(
                 [
@@ -127,9 +127,9 @@ class TvController extends Controller
      * @param TvRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(TvRequest $request, int $id): JsonResource
+    public function show(TvRequest $request, int $id): ApiResource
     {
         /** @var SiteTmplvar $model */
         $model = SiteTmplvar::query()->findOrNew($id);
@@ -165,7 +165,7 @@ class TvController extends Controller
 
         $model->setAttribute('display_params_data', $data);
 
-        return JsonResource::make($model->withoutRelations())
+        return ApiResource::make($model->withoutRelations())
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
@@ -194,9 +194,9 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function store(TvRequest $request): JsonResource
+    public function store(TvRequest $request): ApiResource
     {
         $data = $request->all();
 
@@ -234,9 +234,9 @@ class TvController extends Controller
      * @param TvRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function update(TvRequest $request, int $id): JsonResource
+    public function update(TvRequest $request, int $id): ApiResource
     {
         $data = $request->all();
 
@@ -297,9 +297,9 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function list(TvRequest $request): ResourceCollection
+    public function list(TvRequest $request): ApiCollection
     {
         $filter = $request->get('filter');
 
@@ -315,7 +315,7 @@ class TvController extends Controller
                 'category',
             ]);
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta([
                 'route' => '/tvs/:id',
                 'pagination' => $this->pagination($result),
@@ -350,16 +350,16 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function sort(TvRequest $request): ResourceCollection
+    public function sort(TvRequest $request): ApiCollection
     {
         $result = SiteTmplvar::query()
             ->select(['id', 'name', 'caption', 'rank'])
             ->orderBy('rank')
             ->paginate(Config::get('global.number_of_results'));
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->layout($this->layout->sort())
             ->meta([
                 'title' => $this->layout->titleSort(),
@@ -387,9 +387,9 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function types(TvRequest $request): ResourceCollection
+    public function types(TvRequest $request): ApiCollection
     {
         $types = (new SiteTmplvar())->parameterTypes();
         $selected = $request->string('selected')->toString();
@@ -402,7 +402,7 @@ class TvController extends Controller
             }
         }
 
-        return JsonResource::collection($types);
+        return ApiResource::collection($types);
     }
 
     /**
@@ -424,11 +424,11 @@ class TvController extends Controller
      * )
      * @param TvRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
     public function display(TvRequest $request)
     {
-        return JsonResource::make(
+        return ApiResource::make(
             array_merge(
                 [
                     [
@@ -463,9 +463,9 @@ class TvController extends Controller
      * @param TvRequest $request
      *ф
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tree(TvRequest $request): ResourceCollection
+    public function tree(TvRequest $request): ApiCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -482,7 +482,7 @@ class TvController extends Controller
                 ->get()
                 ->map(fn(SiteTmplvar $item) => $item->setHidden(['category']));
 
-            return JsonResource::collection($result)
+            return ApiResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
@@ -495,7 +495,7 @@ class TvController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return JsonResource::collection($result->map(fn(SiteTmplvar $item) => $item->setHidden(['category'])))
+            return ApiResource::collection($result->map(fn(SiteTmplvar $item) => $item->setHidden(['category'])))
                 ->meta([
                     'pagination' => $this->pagination($result),
                 ]);
@@ -532,7 +532,7 @@ class TvController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

@@ -8,8 +8,8 @@ use EvolutionCMS\Models\UserRole;
 use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\RoleUserLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -34,9 +34,9 @@ class RoleUserController extends Controller
      * @param RoleUserRequest $request
      * @param RoleUserLayout $layout
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(RoleUserRequest $request, RoleUserLayout $layout): ResourceCollection
+    public function index(RoleUserRequest $request, RoleUserLayout $layout): ApiCollection
     {
         $result = UserRole::query()
             ->when(
@@ -46,7 +46,7 @@ class RoleUserController extends Controller
             ->orderBy('id')
             ->paginate(Config::get('global.number_of_results'));
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->layout($layout->list())
             ->meta([
                 'title' => $layout->titleList(),
@@ -73,9 +73,9 @@ class RoleUserController extends Controller
      * @param string $id
      * @param RoleUserLayout $layout
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): JsonResource
+    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): ApiResource
     {
         /** @var UserRole $model */
         $model = UserRole::query()->findOrNew($id);
@@ -86,7 +86,7 @@ class RoleUserController extends Controller
             ]);
         }
 
-        return JsonResource::make([])
+        return ApiResource::make([])
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title($model->name),

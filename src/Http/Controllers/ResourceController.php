@@ -2,17 +2,16 @@
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteContent;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourceRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ResourceResource;
 use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Support\Url;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -49,10 +48,10 @@ class ResourceController extends Controller
      * )
      * @param ResourceRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      * @throws ValidationException
      */
-    public function index(ResourceRequest $request): ResourceCollection
+    public function index(ResourceRequest $request): ApiCollection
     {
         $fillable = ['id', ...(new SiteContent())->getFillable()];
 
@@ -135,7 +134,7 @@ class ResourceController extends Controller
             ->paginate($limit, $fields)
             ->appends($request->all());
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta([
                 'columns' => $columns,
                 'pagination' => $this->pagination($result),
@@ -161,59 +160,17 @@ class ResourceController extends Controller
      *          )
      *      )
      * )
-     * @param ResourceRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(ResourceRequest $request, int $id): JsonResource
+    public function show(int $id): ApiResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrNew($id);
 
-        if ($request->has('template')) {
-            $model->template = $request->input('template');
-        }
-
-        if ($request->has('parent')) {
-            $model->parent = $request->input('parent');
-        }
-
-        if ($request->has('type')) {
-            $model->type = $request->input('type');
-        }
-
-        $model->setAttribute(
-            'tvs',
-            $model->getTvs()->keyBy('name')->map(fn($tv) => $tv['value'])
-        );
-
-        if (Config::get('global.use_udperms')) {
-            /** @var Collection $groups */
-            $groups = $model->documentGroups;
-
-            $model->setAttribute(
-                'is_document_group',
-                $groups->isEmpty()
-            );
-
-            $model->setAttribute(
-                'document_groups',
-                $groups->map(
-                    fn(DocumentgroupName $group) => $group->getKey()
-                )
-            );
-        }
-
-        $route = Url::getRouteById($model->getKey());
-
-        return JsonResource::make($model->withoutRelations())
-            ->layout($this->layout->default($model, $route['url'] ?? ''))
-            ->meta([
-                'icon' => $this->layout->icon(),
-                'title' => $this->layout->title($model->pagetitle),
-                'url' => $route['url'] ?? '',
-            ]);
+        return ResourceResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -237,14 +194,15 @@ class ResourceController extends Controller
      * )
      * @param ResourceRequest $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function store(ResourceRequest $request): JsonResource
+    public function store(ResourceRequest $request): ApiResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::query()->create($request->all());
 
-        return $this->show($request, $model->getKey());
+        return ResourceResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -269,13 +227,13 @@ class ResourceController extends Controller
      * @param ResourceRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function update(ResourceRequest $request, int $id): JsonResource
+    public function update(ResourceRequest $request, int $id): ApiResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrFail($id);
-        $model->update($request->all());
+        $model->update($request->input('attributes'));
 
         $tvs = $model->getTvs()->keyBy('name');
         foreach ($request->input('tvs', []) as $key => $value) {
@@ -307,7 +265,8 @@ class ResourceController extends Controller
             }
         }
 
-        return $this->show($request, $model->getKey());
+        return ResourceResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -324,20 +283,20 @@ class ResourceController extends Controller
      *          )
      *      )
      * )
-     * @param ResourceRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ResourceResource
      */
-    public function destroy(ResourceRequest $request, int $id)
+    public function destroy(int $id)
     {
         $model = SiteContent::withTrashed()->findOrFail($id);
 
         $model->update([
-            'deleted' => 1
+            'deleted' => !$model->deleted
         ]);
 
-        return $this->show($request, $id);
+        return ResourceResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -365,7 +324,7 @@ class ResourceController extends Controller
      *
      * @param ResourceRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
     public function tree(ResourceRequest $request)
     {
@@ -393,7 +352,7 @@ class ResourceController extends Controller
                 ];
             }
 
-            return JsonResource::collection($data);
+            return ApiResource::collection($data);
         }
 
         $fields = [
@@ -482,7 +441,7 @@ class ResourceController extends Controller
             $meta = $parent ? ['pagination' => $this->pagination($result)] : [];
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->meta($meta);
     }
 
@@ -503,11 +462,11 @@ class ResourceController extends Controller
      * @param ResourceRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function parents(ResourceRequest $request, int $id): JsonResource
+    public function parents(ResourceRequest $request, int $id): ApiResource
     {
-        return JsonResource::make(Url::getParentsById($id));
+        return ApiResource::make(Url::getParentsById($id));
     }
 
     /**
@@ -528,9 +487,9 @@ class ResourceController extends Controller
      * @param int $parent
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function setParent(ResourceRequest $request, int $parent, int $id): JsonResource
+    public function setParent(ResourceRequest $request, int $parent, int $id): ApiResource
     {
         if ($parent == $id) {
             abort(422, Lang::get('global.illegal_parent_self'));
@@ -559,6 +518,6 @@ class ResourceController extends Controller
             ];
         }
 
-        return JsonResource::make($data);
+        return ApiResource::make($data);
     }
 }

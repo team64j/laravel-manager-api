@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RolePermissionRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\RolePermissionLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -36,9 +36,9 @@ class RolePermissionController extends Controller
      * @param RolePermissionRequest $request
      * @param RolePermissionLayout $layout
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(RolePermissionRequest $request, RolePermissionLayout $layout): ResourceCollection
+    public function index(RolePermissionRequest $request, RolePermissionLayout $layout): ApiCollection
     {
         $data = Collection::make();
         $filter = $request->get('filter');
@@ -72,7 +72,7 @@ class RolePermissionController extends Controller
             $data[$item->group_id]['data']->add($item->withoutRelations());
         }
 
-        return JsonResource::collection($data->values())
+        return ApiResource::collection($data->values())
             ->layout($layout->list())
             ->meta([
                 'title' => $layout->titleList(),
@@ -99,12 +99,12 @@ class RolePermissionController extends Controller
      * @param string $id
      * @param RolePermissionLayout $layout
      *
-     * @return JsonResource
+     * @return ApiResource
      */
     public function show(
         RolePermissionRequest $request,
         string $id,
-        RolePermissionLayout $layout): JsonResource
+        RolePermissionLayout $layout): ApiResource
     {
         /** @var Permissions $model */
         $model = Permissions::query()->findOrNew($id);
@@ -115,7 +115,7 @@ class RolePermissionController extends Controller
             ]);
         }
 
-        return JsonResource::make([])
+        return ApiResource::make([])
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title(

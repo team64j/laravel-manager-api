@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Resources;
 
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Team64j\LaravelManagerApi\Traits\ResourceTrait;
+use Team64j\LaravelManagerApi\Traits\ApiResourceTrait;
 
-class ResourceCollection extends AnonymousResourceCollection
+class ApiCollection extends AnonymousResourceCollection
 {
-    use ResourceTrait;
+    use ApiResourceTrait;
 }

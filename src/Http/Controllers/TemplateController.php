@@ -17,8 +17,9 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 use Team64j\LaravelManagerComponents\Checkbox;
@@ -57,9 +58,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(TemplateRequest $request): ResourceCollection
+    public function index(TemplateRequest $request): ApiCollection
     {
         $category = $request->input('category', -1);
         $name = $request->input('templatename');
@@ -117,7 +118,7 @@ class TemplateController extends Controller
             $data = $result->map($callbackItem);
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->layout($this->layout->list())
             ->meta(
                 [
@@ -142,39 +143,17 @@ class TemplateController extends Controller
      *          )
      *      )
      * )
-     * @param TemplateRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(TemplateRequest $request, int $id): JsonResource
+    public function show(int $id): ApiResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
 
-        if (!$model->exists) {
-            $model->setRawAttributes([
-                'icon' => '',
-                'category' => 0,
-                'selectable' => 1,
-            ]);
-        }
-
-        $model->setAttribute('createbladefile', 0);
-        $model->setAttribute('tvs', $model->tvs->pluck('id'));
-
-        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
-
-        if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
-            $model->setAttribute('content', file_get_contents($bladeFile));
-        }
-
-        return JsonResource::make($model->withoutRelations())
-            ->layout($this->layout->default($model))
-            ->meta([
-                'title' => $this->layout->title($model->templatename),
-                'icon' => $this->layout->icon(),
-            ]);
+        return TemplateResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -198,22 +177,20 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function store(TemplateRequest $request): JsonResource
+    public function store(TemplateRequest $request): ApiResource
     {
         /** @var SiteTemplate $model */
-        $model = SiteTemplate::query()->create($request->validated());
+        $model = SiteTemplate::query()->create($request->input('attributes'));
 
-        $tvsTemplates = $request->input('tvs', []);
-        foreach ($tvsTemplates as &$tvsTemplate) {
-            $tvsTemplate = [
-                'tmplvarid' => $tvsTemplate,
+        SiteTmplvarTemplate::query()->upsert(
+            $request->collect('tvs')->map(fn($item) => [
+                'tmplvarid' => $item,
                 'templateid' => $model->getKey(),
-            ];
-        }
-
-        SiteTmplvarTemplate::query()->upsert($tvsTemplates, 'tmplvarid');
+            ])->toArray(),
+            'tmplvarid'
+        );
 
         $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
 
@@ -221,7 +198,8 @@ class TemplateController extends Controller
             file_put_contents($bladeFile, $model->content);
         }
 
-        return $this->show($request, $model->getKey());
+        return TemplateResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -246,27 +224,25 @@ class TemplateController extends Controller
      * @param TemplateRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function update(TemplateRequest $request, int $id): JsonResource
+    public function update(TemplateRequest $request, int $id): ApiResource
     {
         $model = SiteTemplate::query()->findOrFail($id);
 
-        $model->update($request->validated());
+        $model->update($request->input('attributes'));
 
         SiteTmplvarTemplate::query()
             ->where('templateid', $model->getKey())
             ->delete();
 
-        $tvsTemplates = $request->input('tvs', []);
-        foreach ($tvsTemplates as &$tvsTemplate) {
-            $tvsTemplate = [
-                'tmplvarid' => $tvsTemplate,
+        SiteTmplvarTemplate::query()->upsert(
+            $request->collect('tvs')->map(fn($item) => [
+                'tmplvarid' => $item,
                 'templateid' => $model->getKey(),
-            ];
-        }
-
-        SiteTmplvarTemplate::query()->upsert($tvsTemplates, 'tmplvarid');
+            ])->toArray(),
+            'tmplvarid'
+        );
 
         $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
 
@@ -274,7 +250,8 @@ class TemplateController extends Controller
             file_put_contents($bladeFile, $model->content);
         }
 
-        return $this->show($request, $model->getKey());
+        return TemplateResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -291,12 +268,11 @@ class TemplateController extends Controller
      *          )
      *      )
      * )
-     * @param TemplateRequest $request
-     * @param string $id
+     * @param int $id
      *
      * @return Response
      */
-    public function destroy(TemplateRequest $request, string $id): Response
+    public function destroy(int $id): Response
     {
 //        $model = SiteTemplate::query()->findOrFail($id);
 //        $model->delete();
@@ -329,9 +305,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function list(TemplateRequest $request): ResourceCollection
+    public function list(TemplateRequest $request): ApiCollection
     {
         $filter = $request->get('filter');
 
@@ -348,9 +324,8 @@ class TemplateController extends Controller
             ])
             ->appends($request->all());
 
-        return JsonResource::collection([
-            'data' => $result->items(),
-            'meta' => [
+        return ApiResource::collection($result->items())
+            ->meta([
                 'route' => '/templates/:id',
                 'pagination' => $this->pagination($result),
                 'prepend' => [
@@ -362,8 +337,7 @@ class TemplateController extends Controller
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
     }
 
     /**
@@ -388,9 +362,9 @@ class TemplateController extends Controller
      * @param TemplateRequest $request
      * @param string $template
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tvs(TemplateRequest $request, string $template): ResourceCollection
+    public function tvs(TemplateRequest $request, string $template): ApiCollection
     {
         $filter = $request->input('filter');
         $order = $request->input('order', 'category');
@@ -427,7 +401,7 @@ class TemplateController extends Controller
             ->paginate(Config::get('global.number_of_results'))
             ->appends($request->all());
 
-        return JsonResource::collection(
+        return ApiResource::collection(
             $result->groupBy('category')
                 ->map(fn($category) => [
                     'id' => $category->first()->category,
@@ -469,11 +443,11 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function select(TemplateRequest $request): ResourceCollection
+    public function select(TemplateRequest $request): ApiCollection
     {
-        return JsonResource::collection(
+        return ApiResource::collection(
             Collection::make()
                 ->add([
                     'key' => 0,
@@ -521,9 +495,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tree(TemplateRequest $request): ResourceCollection
+    public function tree(TemplateRequest $request): ApiCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -540,7 +514,7 @@ class TemplateController extends Controller
                 ->get()
                 ->map(fn(SiteTemplate $item) => $item->setHidden(['category']));
 
-            return JsonResource::collection($result)
+            return ApiResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
@@ -553,7 +527,7 @@ class TemplateController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return JsonResource::collection(
+            return ApiResource::collection(
                 $result->map(fn(SiteTemplate $item) => $item->setHidden(['category']))
             )
                 ->meta([
@@ -592,7 +566,7 @@ class TemplateController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

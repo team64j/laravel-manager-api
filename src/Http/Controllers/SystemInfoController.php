@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemInfoRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
 
 class SystemInfoController extends Controller
@@ -39,9 +39,9 @@ class SystemInfoController extends Controller
      * )
      * @param SystemInfoRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(SystemInfoRequest $request): ResourceCollection
+    public function index(SystemInfoRequest $request): ApiCollection
     {
         $data = [
             [
@@ -108,7 +108,7 @@ class SystemInfoController extends Controller
             }
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->layout($this->layout->default())
             ->meta([
                 'title' => Lang::get('global.view_sysinfo'),

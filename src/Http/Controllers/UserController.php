@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\UserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\UserLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -49,9 +49,9 @@ class UserController extends Controller
      * )
      * @param UserRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(UserRequest $request): ResourceCollection
+    public function index(UserRequest $request): ApiCollection
     {
         $filter = $request->get('filter');
         $order = $request->input('order', 'id');
@@ -174,7 +174,7 @@ class UserController extends Controller
             ],
         ];
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->layout($this->layout->list())
             ->meta(
                 [
@@ -207,14 +207,14 @@ class UserController extends Controller
      * @param UserRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(UserRequest $request, int $id): JsonResource
+    public function show(UserRequest $request, int $id): ApiResource
     {
         /** @var User $model */
         $model = User::query()->with('attributes')->findOrNew($id);
 
-        return JsonResource::make($model)
+        return ApiResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->username),
@@ -241,9 +241,9 @@ class UserController extends Controller
      * )
      * @param UserRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function list(UserRequest $request): ResourceCollection
+    public function list(UserRequest $request): ApiCollection
     {
         $filter = $request->get('filter');
 
@@ -254,7 +254,7 @@ class UserController extends Controller
             )
             ->paginate(Config::get('global.number_of_results'), ['id', 'username as name']);
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->meta([
                 'route' => '/users/:id',
                 'pagination' => $this->pagination($result),
@@ -286,9 +286,9 @@ class UserController extends Controller
      * )
      * @param UserRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function active(UserRequest $request): ResourceCollection
+    public function active(UserRequest $request): ApiCollection
     {
         $result = ActiveUserSession::query()
             ->select(['internalKey', 'internalKey as id', 'ip', 'lasthit'])
@@ -296,7 +296,7 @@ class UserController extends Controller
             ->orderByDesc('lasthit')
             ->paginate(Config::get('global.number_of_results'));
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta([
                 'columns' => [
                     [

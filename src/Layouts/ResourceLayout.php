@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Team64j\LaravelManagerApi\Support\Url;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -19,6 +20,7 @@ use Team64j\LaravelManagerComponents\DateTime;
 use Team64j\LaravelManagerComponents\Email;
 use Team64j\LaravelManagerComponents\Field;
 use Team64j\LaravelManagerComponents\File;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Radio;
@@ -91,11 +93,10 @@ class ResourceLayout extends Layout
 
     /**
      * @param SiteContent|null $model
-     * @param string $url
      *
      * @return array
      */
-    public function default(SiteContent $model = null, string $url = ''): array
+    public function default(SiteContent $model = null): array
     {
         /**
          * @param $items
@@ -140,7 +141,7 @@ class ResourceLayout extends Layout
 
         if (request()->input('type') == 'reference') {
             $filedContent = Input::make(
-                'content',
+                'data.attributes.content',
                 Lang::get('global.weblink'),
                 '<b>[*content*]</b><br>' . Lang::get('global.resource_weblink_help'),
                 'mb-0'
@@ -149,7 +150,7 @@ class ResourceLayout extends Layout
             $title = Lang::get('global.untitled_weblink');
         } else {
             $filedContent = CodeEditor::make(
-                'content',
+                'data.attributes.content',
                 Lang::get('global.resource_content'),
                 '<b>[*content*]</b>',
                 'mb-0'
@@ -163,27 +164,27 @@ class ResourceLayout extends Layout
         $tvs = $model->getTvs();
         $tabTvs = $this->tabTvs($tvs);
         $groupTv = $tvs->count() ? Config::get('global.group_tvs') : '';
+        $route = Url::getRouteById($model->getKey());
 
         return [
+            GlobalTab::make(
+                $this->icon(),
+                $this->title($model->pagetitle),
+            ),
+
             Actions::make()
                 ->setCancelTo([
                     'path' => '/resources/' . $model->parent,
                     'close' => true,
                 ])
-                ->setViewTo(['href' => $url])
+                ->setViewTo(['href' => $route['url']])
                 ->when(
                     $model->deleted,
                     fn(Actions $component) => $component
                         ->setAction(
                             [
                                 'action' => 'update',
-                                'method' => 'patch',
-                                'route' => [
-                                    'path' => '/resource/:id',
-                                    'query' => [
-                                        'deleted' => 0,
-                                    ],
-                                ],
+                                'method' => 'delete',
                             ],
                             Lang::get('global.undelete_resource'),
                             null,
@@ -196,13 +197,7 @@ class ResourceLayout extends Layout
                             ->setAction(
                                 [
                                     'action' => 'update',
-                                    'method' => 'patch',
-                                    'route' => [
-                                        'path' => '/resource/:id',
-                                        'query' => [
-                                            'deleted' => 1,
-                                        ],
-                                    ],
+                                    'method' => 'delete',
                                 ],
                                 Lang::get('global.delete'),
                                 null,
@@ -215,7 +210,7 @@ class ResourceLayout extends Layout
                 ->setSaveAnd(),
 
             Title::make()
-                ->setModel('pagetitle')
+                ->setModel('data.attributes.pagetitle')
                 ->setTitle($title)
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -230,7 +225,7 @@ class ResourceLayout extends Layout
                             ->setClass('flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 p-5')
                             ->setSlot([
                                 Input::make(
-                                    'pagetitle',
+                                    'data.attributes.pagetitle',
                                     Lang::get('global.resource_title'),
                                     '<b>[*pagetitle*]</b><br>' . Lang::get('global.resource_title_help'),
                                     'mb-3 lg:pr-2 lg:basis-2/3'
@@ -238,7 +233,7 @@ class ResourceLayout extends Layout
                                     ->isRequired(),
 
                                 Input::make(
-                                    'alias',
+                                    'data.attributes.alias',
                                     Lang::get('global.resource_alias'),
                                     '<b>[*alias*]</b><br>' . Lang::get('global.resource_alias_help'),
                                     'mb-3 lg:pl-2 lg:basis-1/3'
@@ -246,14 +241,14 @@ class ResourceLayout extends Layout
                                     ->isRequired(),
 
                                 Input::make(
-                                    'longtitle',
+                                    'data.attributes.longtitle',
                                     Lang::get('global.long_title'),
                                     '<b>[*longtitle*]</b><br>' . Lang::get('global.resource_long_title_help'),
                                     'mb-3'
                                 ),
 
                                 Textarea::make(
-                                    'description',
+                                    'data.attributes.description',
                                     Lang::get('global.resource_description'),
                                     '<b>[*description*]</b><br>' . Lang::get('global.resource_description_help'),
                                     'mb-3 lg:pr-2 lg:basis-1/2'
@@ -261,7 +256,7 @@ class ResourceLayout extends Layout
                                     ->setRows(3),
 
                                 CodeEditor::make(
-                                    'introtext',
+                                    'data.attributes.introtext',
                                     Lang::get('global.resource_summary'),
                                     '<b>[*introtext*]</b><br>' . Lang::get('global.resource_summary_help'),
                                     'mb-3 lg:pl-2 lg:basis-1/2'
@@ -292,7 +287,7 @@ class ResourceLayout extends Layout
                                     ->setEmitInput('inputChangeQuery'),*/
 
                                 Input::make(
-                                    'parent',
+                                    'data.attributes.parent',
                                     Lang::get('global.import_parent_resource'),
                                     '<b>[*parent*]</b><br>' . Lang::get('global.resource_parent_help'),
                                     'mb-3'
@@ -307,7 +302,7 @@ class ResourceLayout extends Layout
                                     ->isReadonly(),
 
                                 Select::make(
-                                    'template',
+                                    'data.attributes.template',
                                     Lang::get('global.page_data_template'),
                                     '<b>[*template*]</b><br>' . Lang::get('global.page_data_template_help'),
                                     'mb-3'
@@ -324,7 +319,7 @@ class ResourceLayout extends Layout
                                     ->setEmitInput('inputChangeQuery'),
 
                                 Checkbox::make(
-                                    'hidemenu',
+                                    'data.attributes.hidemenu',
                                     Lang::get('global.resource_opt_show_menu'),
                                     '<b>[*hidemenu*]</b><br>' . Lang::get('global.resource_opt_show_menu_help'),
                                     'mb-3'
@@ -332,28 +327,28 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(0, 1),
 
                                 Number::make(
-                                    'menuindex',
+                                    'data.attributes.menuindex',
                                     Lang::get('global.resource_opt_menu_index'),
                                     '<b>[*menuindex*]</b><br>' . Lang::get('global.resource_opt_menu_index_help'),
                                     'mb-3'
                                 ),
 
                                 Input::make(
-                                    'menutitle',
+                                    'data.attributes.menutitle',
                                     Lang::get('global.resource_opt_menu_title'),
                                     '<b>[*menutitle*]</b><br>' . Lang::get('global.resource_opt_menu_title_help'),
                                     'mb-3'
                                 ),
 
                                 Input::make(
-                                    'link_attributes',
+                                    'data.attributes.link_attributes',
                                     Lang::get('global.link_attributes'),
                                     '<b>[*link_attributes*]</b><br>' . Lang::get('global.link_attributes_help'),
                                     'mb-3'
                                 ),
 
                                 Checkbox::make(
-                                    'published',
+                                    'data.attributes.published',
                                     Lang::get('global.resource_opt_published'),
                                     '<b>[*published*]</b><br>' . Lang::get('global.resource_opt_published_help'),
                                     'mb-3'
@@ -361,21 +356,21 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(1, 0),
 
                                 DateTime::make(
-                                    'publishedon',
+                                    'data.attributes.publishedon',
                                     Lang::get('global.page_data_published'),
                                     '',
                                     'mb-3'
                                 )->isClear(),
 
                                 DateTime::make(
-                                    'pub_date',
+                                    'data.attributes.pub_date',
                                     Lang::get('global.page_data_publishdate'),
                                     '<b>[*pub_date*]</b><br>' . Lang::get('global.page_data_publishdate_help'),
                                     'mb-3'
                                 )->isClear(),
 
                                 DateTime::make(
-                                    'unpub_date',
+                                    'data.attributes.unpub_date',
                                     Lang::get('global.page_data_unpublishdate'),
                                     '<b>[*unpub_date*]</b><br>' . Lang::get('global.page_data_unpublishdate_help')
                                 )->isClear(),
@@ -417,7 +412,7 @@ class ResourceLayout extends Layout
                             ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
                                 Select::make(
-                                    'type',
+                                    'data.attributes.type',
                                     Lang::get('global.resource_type'),
                                     '<b>[*type*]</b><br>' . Lang::get('global.resource_type_message'),
                                     'mb-3'
@@ -435,7 +430,7 @@ class ResourceLayout extends Layout
                                     ->setEmitInput('inputChangeQuery'),
 
                                 Select::make(
-                                    'contentType',
+                                    'data.attributes.contentType',
                                     Lang::get('global.page_data_contentType'),
                                     '<b>[*contentType*]</b><br>' . Lang::get('global.page_data_contentType_help'),
                                     'mb-3'
@@ -448,7 +443,7 @@ class ResourceLayout extends Layout
                                     ),
 
                                 Select::make(
-                                    'content_dispo',
+                                    'data.attributes.content_dispo',
                                     Lang::get('global.resource_opt_contentdispo'),
                                     '<b>[*content_dispo*]</b><br>' .
                                     Lang::get('global.resource_opt_contentdispo_help')
@@ -469,7 +464,7 @@ class ResourceLayout extends Layout
                             ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
                                 Checkbox::make(
-                                    'isfolder',
+                                    'data.attributes.isfolder',
                                     Lang::get('global.resource_opt_folder'),
                                     '<b>[*isfolder*]</b><br>' . Lang::get('global.resource_opt_folder_help'),
                                     'mb-3'
@@ -477,7 +472,7 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
-                                    'hide_from_tree',
+                                    'data.attributes.hide_from_tree',
                                     Lang::get('global.track_visitors_title'),
                                     '<b>[*hide_from_tree*]</b><br>' .
                                     Lang::get('global.resource_opt_trackvisit_help'),
@@ -486,7 +481,7 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(0, 1),
 
                                 Checkbox::make(
-                                    'alias_visible',
+                                    'data.attributes.alias_visible',
                                     Lang::get('global.resource_opt_alvisibled'),
                                     '<b>[*alias_visible*]</b><br>' .
                                     Lang::get('global.resource_opt_alvisibled_help'),
@@ -495,7 +490,7 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
-                                    'richtext',
+                                    'data.attributes.richtext',
                                     Lang::get('global.resource_opt_richtext'),
                                     '<b>[*richtext*]</b><br>' . Lang::get('global.resource_opt_richtext_help'),
                                     'mb-3'
@@ -503,7 +498,7 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
-                                    'searchable',
+                                    'data.attributes.searchable',
                                     Lang::get('global.page_data_searchable'),
                                     '<b>[*searchable*]</b><br>' . Lang::get('global.page_data_searchable_help'),
                                     'mb-3'
@@ -511,7 +506,7 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
-                                    'cacheable',
+                                    'data.attributes.cacheable',
                                     Lang::get('global.page_data_cacheable'),
                                     '<b>[*cacheable*]</b><br>' . Lang::get('global.page_data_cacheable_help'),
                                     'mb-3'
@@ -519,7 +514,7 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make(
-                                    'empty_cache',
+                                    'data.attributes.empty_cache',
                                     Lang::get('global.resource_opt_emptycache'),
                                     Lang::get('global.resource_opt_emptycache_help')
                                 )

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\AuthRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\LoginLayout;
 
 class AuthController extends Controller
@@ -53,10 +53,10 @@ class AuthController extends Controller
      * )
      * @param Request $request
      *
-     * @return JsonResource|JsonResponse
+     * @return ApiResource|JsonResponse
      * @throws ValidationException
      */
-    public function login(AuthRequest $request): JsonResource | JsonResponse
+    public function login(AuthRequest $request): ApiResource | JsonResponse
     {
         /** @var Guard $guard */
         $guard = auth(Config::get('manager-api.guard.provider'));
@@ -67,7 +67,7 @@ class AuthController extends Controller
 
         $guard->login($guard->user(), $request->boolean('remember'));
 
-        return JsonResource::make([
+        return ApiResource::make([
             'token_type' => 'bearer',
             'expires_in' => $guard->factory()->getTTL() * 60,
             'access_token' => $token,
@@ -90,15 +90,15 @@ class AuthController extends Controller
      * @param Request $request
      * @param LoginLayout $layout
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    protected function loginForm(Request $request, LoginLayout $layout): JsonResource
+    protected function loginForm(Request $request, LoginLayout $layout): ApiResource
     {
         $languages = $this->getLanguages();
         $language =
             empty($languages[Config::get('global.manager_language')]) ? 'en' : Config::get('global.manager_language');
 
-        return JsonResource::make([
+        return ApiResource::make([
             'username' => '',
             'password' => '',
             'remember' => true,
@@ -126,14 +126,14 @@ class AuthController extends Controller
      *          )
      *      )
      * )
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function refresh(): JsonResource
+    public function refresh(): ApiResource
     {
         /** @var Guard $guard */
         $guard = auth(Config::get('manager-api.guard.provider'));
 
-        return JsonResource::make([
+        return ApiResource::make([
             'token_type' => 'bearer',
             'expires_in' => $guard->factory()->getTTL() * 60,
             'access_token' => $guard->refresh(),
@@ -167,11 +167,11 @@ class AuthController extends Controller
      * )
      * @param Request $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function forgot(Request $request): JsonResource
+    public function forgot(Request $request): ApiResource
     {
-        return JsonResource::make([]);
+        return ApiResource::make([]);
     }
 
     /**
@@ -189,11 +189,11 @@ class AuthController extends Controller
      * )
      * @param Request $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function forgotForm(Request $request): JsonResource
+    public function forgotForm(Request $request): ApiResource
     {
-        return JsonResource::make([]);
+        return ApiResource::make([]);
     }
 
     /**

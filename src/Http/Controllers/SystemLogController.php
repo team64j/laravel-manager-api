@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemLogRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\SystemLogLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -48,9 +48,9 @@ class SystemLogController extends Controller
      * )
      * @param SystemLogRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(SystemLogRequest $request): ResourceCollection
+    public function index(SystemLogRequest $request): ApiCollection
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'desc');
@@ -186,7 +186,7 @@ class SystemLogController extends Controller
             ],
         ];
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->layout($this->layout->default())
             ->meta([
                 'title' => $this->layout->title(),

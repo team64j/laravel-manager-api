@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\PluginRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 use Team64j\LaravelManagerComponents\Checkbox;
@@ -52,9 +52,9 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(PluginRequest $request): ResourceCollection
+    public function index(PluginRequest $request): ApiCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -99,7 +99,7 @@ class PluginController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->layout($this->layout->list())
             ->meta(
                 [
@@ -131,9 +131,9 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function store(PluginRequest $request): JsonResource
+    public function store(PluginRequest $request): ApiResource
     {
         $data = $request->validated();
 
@@ -161,9 +161,9 @@ class PluginController extends Controller
      * @param PluginRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(PluginRequest $request, int $id): JsonResource
+    public function show(PluginRequest $request, int $id): ApiResource
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->with('events')->findOrNew($id);
@@ -173,7 +173,7 @@ class PluginController extends Controller
         $model->setAttribute('analyze', (int) !$model->exists);
         $model->setAttribute('events', $model->events->pluck('id'));
 
-        return JsonResource::make($model->withoutRelations())
+        return ApiResource::make($model->withoutRelations())
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
@@ -203,9 +203,9 @@ class PluginController extends Controller
      * @param PluginRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function update(PluginRequest $request, int $id): JsonResource
+    public function update(PluginRequest $request, int $id): ApiResource
     {
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->findOrFail($id);
@@ -267,9 +267,9 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function list(PluginRequest $request): ResourceCollection
+    public function list(PluginRequest $request): ApiCollection
     {
         $filter = $request->get('filter');
 
@@ -286,7 +286,7 @@ class PluginController extends Controller
                 'category',
             ]);
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta([
                 'route' => '/plugins/:id',
                 'pagination' => $this->pagination($result),
@@ -321,13 +321,13 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function sort(PluginRequest $request): ResourceCollection
+    public function sort(PluginRequest $request): ApiCollection
     {
         $filter = $request->input('filter');
 
-        return JsonResource::collection(
+        return ApiResource::collection(
             SystemEventname::query()
                 ->with(
                     'plugins',
@@ -367,7 +367,7 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
     public function events(PluginRequest $request)
     {
@@ -380,7 +380,7 @@ class PluginController extends Controller
             'User Defined Events',
         ];
 
-        return JsonResource::collection(
+        return ApiResource::collection(
             SystemEventname::query()
                 ->orderByDesc('service')
                 ->orderBy('groupname')
@@ -422,9 +422,9 @@ class PluginController extends Controller
      * )
      * @param PluginRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tree(PluginRequest $request): ResourceCollection
+    public function tree(PluginRequest $request): ApiCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -441,7 +441,7 @@ class PluginController extends Controller
                 ->get()
                 ->map(fn(SitePlugin $item) => $item->setHidden(['category']));
 
-            return JsonResource::collection($result)
+            return ApiResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
@@ -454,7 +454,7 @@ class PluginController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return JsonResource::collection($result->map(fn(SitePlugin $item) => $item->setHidden(['category'])))
+            return ApiResource::collection($result->map(fn(SitePlugin $item) => $item->setHidden(['category'])))
                 ->meta([
                     'pagination' => $this->pagination($result),
                 ]);
@@ -491,7 +491,7 @@ class PluginController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }

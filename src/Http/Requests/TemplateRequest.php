@@ -34,15 +34,15 @@ class TemplateRequest extends FormRequest
     {
         return match ($this->route()->getActionMethod()) {
             'update', 'store' => [
-                'templatename' => 'required|string',
-                'templatealias' => 'string|nullable',
-                'description' => 'string',
-                'editor_type' => 'int',
-                'category' => 'required|int',
-                'template_type' => 'int',
-                'content' => 'string|nullable',
-                'locked' => 'int',
-                'selectable' => 'int',
+                'attributes.templatename' => 'required|string',
+                'attributes.templatealias' => 'string|nullable',
+                'attributes.description' => 'string',
+                'attributes.editor_type' => 'int',
+                'attributes.category' => 'required|int',
+                'attributes.template_type' => 'int',
+                'attributes.content' => 'string|nullable',
+                'attributes.locked' => 'int',
+                'attributes.selectable' => 'int',
             ],
             default => []
         };
@@ -51,10 +51,10 @@ class TemplateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'templatename' => '"' . Lang::get('global.template_name') . '"',
-            'templatealias' => '"' . Lang::get('global.alias') . '"',
-            'description' => '"' . Lang::get('global.template_desc') . '"',
-            'content' => '"' . Lang::get('global.template_code') . '"',
+            'attributes.templatename' => '"' . Lang::get('global.template_name') . '"',
+            'attributes.templatealias' => '"' . Lang::get('global.alias') . '"',
+            'attributes.description' => '"' . Lang::get('global.template_desc') . '"',
+            'attributes.content' => '"' . Lang::get('global.template_code') . '"',
         ];
     }
 }

@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
-use Team64j\LaravelManagerApi\Http\Resources\ResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -53,9 +53,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function index(SnippetRequest $request): ResourceCollection
+    public function index(SnippetRequest $request): ApiCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -100,7 +100,7 @@ class SnippetController extends Controller
             $data = $result->map(fn($item) => $item->withoutRelations());
         }
 
-        return JsonResource::collection($data)
+        return ApiResource::collection($data)
             ->layout($this->layout->list())
             ->meta(
                 [
@@ -132,9 +132,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function store(SnippetRequest $request): JsonResource
+    public function store(SnippetRequest $request): ApiResource
     {
         $data = $request->validated();
 
@@ -162,9 +162,9 @@ class SnippetController extends Controller
      * @param SnippetRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function show(SnippetRequest $request, int $id): JsonResource
+    public function show(SnippetRequest $request, int $id): ApiResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrNew($id);
@@ -173,7 +173,7 @@ class SnippetController extends Controller
         $model->setAttribute('snippet', "<?php\r\n" . $model->snippet);
         $model->setAttribute('analyze', (int) !$model->exists);
 
-        return JsonResource::make($model)
+        return ApiResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
@@ -203,9 +203,9 @@ class SnippetController extends Controller
      * @param SnippetRequest $request
      * @param int $id
      *
-     * @return JsonResource
+     * @return ApiResource
      */
-    public function update(SnippetRequest $request, int $id): JsonResource
+    public function update(SnippetRequest $request, int $id): ApiResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
@@ -267,9 +267,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function list(SnippetRequest $request): ResourceCollection
+    public function list(SnippetRequest $request): ApiCollection
     {
         $filter = $request->get('filter');
 
@@ -286,7 +286,7 @@ class SnippetController extends Controller
                 'category',
             ]);
 
-        return JsonResource::collection($result->items())
+        return ApiResource::collection($result->items())
             ->meta([
                 'route' => '/snippets/:id',
                 'pagination' => $this->pagination($result),
@@ -323,9 +323,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return ResourceCollection
+     * @return ApiCollection
      */
-    public function tree(SnippetRequest $request): ResourceCollection
+    public function tree(SnippetRequest $request): ApiCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -342,7 +342,7 @@ class SnippetController extends Controller
                 ->get()
                 ->map(fn(SiteSnippet $item) => $item->setHidden(['category']));
 
-            return JsonResource::collection($result)
+            return ApiResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
         }
 
@@ -355,7 +355,7 @@ class SnippetController extends Controller
                 ->paginate(Config::get('global.number_of_results'))
                 ->appends($request->all());
 
-            return JsonResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
+            return ApiResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
                 ->meta([
                     'pagination' => $this->pagination($result),
                 ]);
@@ -392,7 +392,7 @@ class SnippetController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
             ->values();
 
-        return JsonResource::collection($result)
+        return ApiResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
     }
 }
