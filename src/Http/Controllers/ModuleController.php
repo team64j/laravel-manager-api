@@ -138,7 +138,7 @@ class ModuleController extends Controller
     {
         $data = $request->validated();
 
-        $data['modulecode'] = Str::replaceFirst('<?php', '', $data['modulecode'] ?? '');
+        $data['modulecode'] = trim(Str::replaceFirst('<?php', '', $data['modulecode'] ?? ''));
 
         $model = SiteModule::query()->create($data);
 
@@ -170,7 +170,7 @@ class ModuleController extends Controller
         $model = SiteModule::query()->findOrNew($id);
 
         $model->setAttribute('category', $model->category ?? 0);
-        $model->setAttribute('modulecode', "<?php\r\n" . $model->modulecode);
+        $model->setAttribute('modulecode', "<?php\r\n" . trim(Str::replaceFirst('<?php', '', $model->modulecode ?? '')));
 
         return ApiResource::make($model)
             ->layout($this->layout->default($model))
@@ -211,7 +211,7 @@ class ModuleController extends Controller
 
         $data = $request->validated();
 
-        $data['modulecode'] = Str::replaceFirst('<?php', '', $data['modulecode'] ?? '');
+        $data['modulecode'] = trim(Str::replaceFirst('<?php', '', $data['modulecode'] ?? ''));
 
         $model->update($data);
 
@@ -290,7 +290,7 @@ class ModuleController extends Controller
                 'prepend' => [
                     [
                         'name' => Lang::get('global.new_module'),
-                        'icon' => 'fa fa-plus-circle',
+                        'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/modules/0',
                         ],

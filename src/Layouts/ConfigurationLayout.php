@@ -509,13 +509,17 @@ class ConfigurationLayout extends Layout
                         'name' => Lang::get('global.login_logo_title'),
                         'name.help' => Lang::get('global.login_logo_message'),
                         'key' => 'login_logo',
-                        'value' => \Team64j\LaravelManagerComponents\File::make('login_logo'),
+                        'value' => \Team64j\LaravelManagerComponents\File::make('login_logo')
+                            ->setEmitClick('modal:component')
+                            ->setUrl(route('manager.api.filemanager.index', ['type' => 'images'])),
                     ],
                     [
                         'name' => Lang::get('global.login_bg_title'),
                         'name.help' => Lang::get('global.login_bg_message'),
                         'key' => 'login_bg',
-                        'value' => \Team64j\LaravelManagerComponents\File::make('login_bg'),
+                        'value' => \Team64j\LaravelManagerComponents\File::make('login_bg')
+                            ->setEmitClick('modal:component')
+                            ->setUrl(route('manager.api.filemanager.index', ['type' => 'images'])),
                     ],
                     [
                         'name' => Lang::get('global.login_form_position_title'),

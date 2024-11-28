@@ -293,7 +293,7 @@ class PluginController extends Controller
                 'prepend' => [
                     [
                         'name' => Lang::get('global.new_plugin'),
-                        'icon' => 'fa fa-plus-circle',
+                        'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/plugins/0',
                         ],

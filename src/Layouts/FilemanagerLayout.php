@@ -34,125 +34,127 @@ class FilemanagerLayout extends Layout
      */
     public function default(): array
     {
-        return Main::make([
-            'title' => Title::make()
-                ->setTitle($this->title())
-                ->setIcon($this->icon()),
+        return [
+            Main::make([
+                'title' => Title::make()
+                    ->setTitle($this->title())
+                    ->setIcon($this->icon()),
 
-            'sidebar' => [
-                Tree::make()
-                    ->setId('filemanagerTree')
-                    ->setUrl('/filemanager/tree')
-                    ->setRoute([
-                        'path' => '/filemanager/:key',
-                    ])
-                    ->setIcons([
-                        'default-folder' => 'fa fa-folder',
-                        'default-folder-open' => $this->icon(),
-                    ])
-                    ->setSettings([
-                        'keyId' => 'key',
-                        'history' => 'key',
-                    ]),
-            ],
+                'sidebar' => [
+                    Tree::make()
+                        ->setId('filemanagerTree')
+                        ->setUrl('/filemanager/tree')
+                        ->setRoute([
+                            'path' => '/filemanager/:key',
+                        ])
+                        ->setIcons([
+                            'default-folder' => 'fa fa-folder',
+                            'default-folder-open' => $this->icon(),
+                        ])
+                        ->setSettings([
+                            'keyId' => 'key',
+                            'history' => 'key',
+                        ]),
+                ],
 
-            'main' => [
-                Panel::make()
-                    ->setId('filemanagerPanel')
-                    ->setModel('data')
-                    //->setUrl('/filemanager/:key')
-                    ->setHistory('key')
-                    ->setView('icons')
-                    ->setColumns([
-                        [
-                            'name' => 'icon',
-                            'label' => Lang::get('global.icon'),
-                            'width' => '2rem',
-                            'style' => [
-                                'textAlign' => 'center',
-                                'flexGrow' => '1',
-                                'alignItems' => 'center',
-                                'justifyContent' => 'center',
-                            ],
-                            'values' => [
-                                'folder' => [
-                                    'false' => '<i class="far fa-file fa-fw"></i>',
-                                    'true' => '<i class="fa fa-folder fa-fw"></i>',
-                                ],
-                            ],
-                        ],
-                        [
-                            'name' => 'title',
-                            'label' => Lang::get('global.files_filename'),
-                        ],
-                        [
-                            'name' => 'size',
-                            'label' => Lang::get('global.files_filesize'),
-                            'width' => '12rem',
-                            'style' => [
-                                'textAlign' => 'right',
-                            ],
-                        ],
-                        [
-                            'name' => 'date',
-                            'label' => Lang::get('global.datechanged'),
-                            'width' => '12rem',
-                            'style' => [
-                                'textAlign' => 'right',
-                                'whiteSpace' => 'nowrap',
-                            ],
-                        ],
-                    ])
-                    ->setContextMenu([
-                        'class' => 'text-base',
-                        'actions' => [
+                'main' => [
+                    Panel::make()
+                        ->setId('filemanagerPanel')
+                        ->setModel('data')
+                        //->setUrl('/filemanager/:key')
+                        ->setHistory('key')
+                        ->setView('icons')
+                        ->setColumns([
                             [
-                                'title' => Lang::get('global.preview'),
-                                'icon' => 'fa fa-eye',
-                                'route' => [
-                                    'path' => '/preview/:id',
-                                    'target' => '_blank',
+                                'name' => 'icon',
+                                'label' => Lang::get('global.icon'),
+                                'width' => '2rem',
+                                'style' => [
+                                    'textAlign' => 'center',
+                                    'flexGrow' => '1',
+                                    'alignItems' => 'center',
+                                    'justifyContent' => 'center',
+                                ],
+                                'values' => [
+                                    'folder' => [
+                                        'false' => '<i class="far fa-file fa-fw"></i>',
+                                        'true' => '<i class="fa fa-folder fa-fw"></i>',
+                                    ],
                                 ],
                             ],
                             [
-                                'title' => Lang::get('global.download'),
-                                'icon' => 'fa fa-download',
-                                'route' => [
-                                    'path' => '/download/:id',
+                                'name' => 'title',
+                                'label' => Lang::get('global.files_filename'),
+                            ],
+                            [
+                                'name' => 'size',
+                                'label' => Lang::get('global.files_filesize'),
+                                'width' => '12rem',
+                                'style' => [
+                                    'textAlign' => 'right',
                                 ],
                             ],
                             [
-                                'split' => true,
-                            ],
-                            [
-                                'title' => Lang::get('global.duplicate'),
-                                'icon' => 'fa fa-copy',
-                                'route' => [
-                                    'path' => '/duplicate/:id',
+                                'name' => 'date',
+                                'label' => Lang::get('global.datechanged'),
+                                'width' => '12rem',
+                                'style' => [
+                                    'textAlign' => 'right',
+                                    'whiteSpace' => 'nowrap',
                                 ],
                             ],
-                            [
-                                'split' => true,
-                            ],
-                            [
-                                'title' => Lang::get('global.rename'),
-                                'icon' => 'fa fa-i-cursor',
-                                'route' => [
-                                    'path' => '/rename/:id',
+                        ])
+                        ->setContextMenu([
+                            'class' => 'text-base',
+                            'actions' => [
+                                [
+                                    'title' => Lang::get('global.preview'),
+                                    'icon' => 'fa fa-eye',
+                                    'route' => [
+                                        'path' => '/preview/:id',
+                                        'target' => '_blank',
+                                    ],
+                                ],
+                                [
+                                    'title' => Lang::get('global.download'),
+                                    'icon' => 'fa fa-download',
+                                    'route' => [
+                                        'path' => '/download/:id',
+                                    ],
+                                ],
+                                [
+                                    'split' => true,
+                                ],
+                                [
+                                    'title' => Lang::get('global.duplicate'),
+                                    'icon' => 'fa fa-copy',
+                                    'route' => [
+                                        'path' => '/duplicate/:id',
+                                    ],
+                                ],
+                                [
+                                    'split' => true,
+                                ],
+                                [
+                                    'title' => Lang::get('global.rename'),
+                                    'icon' => 'fa fa-i-cursor',
+                                    'route' => [
+                                        'path' => '/rename/:id',
+                                    ],
+                                ],
+                                [
+                                    'title' => Lang::get('global.delete'),
+                                    'icon' => 'fa fa-trash',
+                                    'route' => [
+                                        'path' => '/delete/:id',
+                                    ],
                                 ],
                             ],
-                            [
-                                'title' => Lang::get('global.delete'),
-                                'icon' => 'fa fa-trash',
-                                'route' => [
-                                    'path' => '/delete/:id',
-                                ],
-                            ],
-                        ],
-                    ]),
+                        ]),
 
-            ],
-        ])->toArray();
+                ],
+            ]),
+        ];
     }
 
     /**

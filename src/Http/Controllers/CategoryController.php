@@ -379,7 +379,7 @@ class CategoryController extends Controller
                 'prepend' => [
                     [
                         'name' => Lang::get('global.new_category'),
-                        'icon' => 'fa fa-plus-circle',
+                        'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/categories/0',
                         ],

@@ -30,6 +30,23 @@ class ModuleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return match ($this->route()->getActionMethod()) {
+            'update', 'store' => [
+                'name' => 'required|string',
+                'description' => 'string|nullable',
+                'modulecode' => 'string|nullable',
+                'editor_type' => 'int',
+                'enable_resource' => 'int',
+                'enable_sharedparams' => 'int',
+                'guid' => 'string',
+                'icon' => 'string|nullable',
+                'properties' => 'string|nullable',
+                'rank' => 'int',
+                'locked' => 'int',
+                'category' => 'int',
+                'disabled' => 'int',
+            ],
+            default => []
+        };
     }
 }

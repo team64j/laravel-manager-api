@@ -177,7 +177,10 @@ class ResourceLayout extends Layout
                     'path' => '/resources/' . $model->parent,
                     'close' => true,
                 ])
-                ->setViewTo(['href' => $route['url']])
+                ->when(
+                    $model->exists,
+                    fn(Actions $actions): Actions => $actions->setViewTo(['href' => $route['url'] ?? ''])
+                )
                 ->when(
                     $model->deleted,
                     fn(Actions $component) => $component
