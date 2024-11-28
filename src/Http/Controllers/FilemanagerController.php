@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
 
 class FilemanagerController extends Controller
@@ -76,6 +76,8 @@ class FilemanagerController extends Controller
 //            explode(',', Config::get('global.upload_images', '')),
 //            explode(',', Config::get('global.upload_media', '')),
         );
+        $title = $layout->title();
+        $fullTitle = $title;
 
         if (file_exists((string) $parentPath)) {
             //$directories = File::directories($parentPath);
@@ -179,12 +181,17 @@ class FilemanagerController extends Controller
 
                 $data[] = $item;
             }
+
+            if ($path) {
+                $fullTitle .= ':: ' . basename($root) . str_replace(DIRECTORY_SEPARATOR, '/', $path);
+            }
         }
 
         return ApiResource::collection($data)
             ->layout($layout->default())
             ->meta([
-                'title' => $layout->title(),
+                'title' => $title,
+                'fullTitle' => $fullTitle,
                 'icon' => $layout->icon(),
             ]);
     }
