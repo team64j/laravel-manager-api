@@ -76,8 +76,7 @@ class FilemanagerController extends Controller
 //            explode(',', Config::get('global.upload_images', '')),
 //            explode(',', Config::get('global.upload_media', '')),
         );
-        $title = $layout->title();
-        $fullTitle = $title;
+        $fullTitle = $layout->title();;
 
         if (file_exists((string) $parentPath)) {
             //$directories = File::directories($parentPath);
@@ -131,13 +130,10 @@ class FilemanagerController extends Controller
                     continue;
                 }
 
-                $title = $file->getFilename();
-                $key = base64_encode(
-                    str_replace(
-                        DIRECTORY_SEPARATOR,
-                        '/',
-                        trim(str_replace($root, '', $file->getPathname()), DIRECTORY_SEPARATOR)
-                    )
+                $filePath = str_replace(
+                    DIRECTORY_SEPARATOR,
+                    '/',
+                    trim(str_replace($root, '', $file->getPathname()), DIRECTORY_SEPARATOR)
                 );
 
                 if (!$type) {
@@ -150,14 +146,16 @@ class FilemanagerController extends Controller
                 }
 
                 $item = [
-                    'key' => $key,
-                    'title' => $title,
+                    'key' => base64_encode($filePath),
+                    'title' => $file->getFilename(),
+                    'value' => '/' . $filePath,
                     'folder' => false,
                     'type' => $type,
                     'unpublished' => !$file->isWritable() || !$file->isReadable(),
                     'class' => 'f-ext-' . $file->getExtension(),
                     'size' => $this->getSize($file->getSize()),
                     'date' => $this->getDate($file->getATime()),
+                    'dbClick' => 'modal:select'
                 ];
 
                 $mimeType = File::mimeType($file->getPathname());
@@ -181,17 +179,12 @@ class FilemanagerController extends Controller
 
                 $data[] = $item;
             }
-
-            if ($path) {
-                $fullTitle .= ':: ' . basename($root) . str_replace(DIRECTORY_SEPARATOR, '/', $path);
-            }
         }
 
         return ApiResource::collection($data)
             ->layout($layout->default())
             ->meta([
-                'title' => $title,
-                'fullTitle' => $fullTitle,
+                'title' => $layout->title(),
                 'icon' => $layout->icon(),
             ]);
     }
