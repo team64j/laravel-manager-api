@@ -63,7 +63,19 @@ class FilemanagerLayout extends Layout
                         ->setModel('data')
                         //->setUrl('/filemanager/:key')
                         ->setHistory('key')
-                        ->setView('icons')
+                        ->setView('list')
+                        ->setViews([
+                            [
+                                'key' => 'icon',
+                                'value' => 'Icons',
+                                'icon' => 'fas fa-image'
+                            ],
+                            [
+                                'key' => 'list',
+                                'value' => 'List',
+                                'icon' => 'fas fa-list'
+                            ],
+                        ])
                         ->setColumns([
                             [
                                 'name' => 'icon',
