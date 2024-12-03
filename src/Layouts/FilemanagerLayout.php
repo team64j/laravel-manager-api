@@ -67,12 +67,12 @@ class FilemanagerLayout extends Layout
                         ->setViews([
                             [
                                 'key' => 'icon',
-                                'value' => 'Icons',
+                                //'value' => 'Icons',
                                 'icon' => 'fas fa-image'
                             ],
                             [
                                 'key' => 'list',
-                                'value' => 'List',
+                                //'value' => 'List',
                                 'icon' => 'fas fa-list'
                             ],
                         ])

@@ -104,7 +104,7 @@ class ConfigurationController extends Controller
             }
 
             if ($key == 'rb_base_dir') {
-                $value = str_replace('[(base_path)]', $basePath, $value);
+                $value = str_replace('[(base_path)]', $basePath, (string) $value);
             }
 
             $data[] = [

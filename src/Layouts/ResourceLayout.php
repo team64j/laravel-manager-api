@@ -651,6 +651,12 @@ class ResourceLayout extends Layout
                             $tv['description']
                         )
                         ->setClass('mb-3')
+                        ->when(
+                            in_array($tv['type'], ['file', 'image']),
+                            fn(Field $field) => $field
+                                ->setEmitClick('modal:component')
+                                ->setUrl(route('manager.api.filemanager.index', ['type' => $tv['type']]))
+                        )
                 );
             }
         }
