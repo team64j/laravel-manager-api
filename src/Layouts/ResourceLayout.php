@@ -11,7 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelManagerApi\Support\Url;
+use Illuminate\Support\Facades\URL;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -164,7 +164,7 @@ class ResourceLayout extends Layout
         $tvs = $model->getTvs();
         $tabTvs = $this->tabTvs($tvs);
         $groupTv = $tvs->count() ? Config::get('global.group_tvs') : '';
-        $route = Url::getRouteById($model->getKey());
+        $route = URL::getRouteById($model->getKey());
 
         return [
             GlobalTab::make(

@@ -6,6 +6,7 @@ use EvolutionCMS\Models\SiteContent;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourceRequest;
@@ -13,7 +14,6 @@ use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ResourceResource;
 use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
-use Team64j\LaravelManagerApi\Support\Url;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class ResourceController extends Controller
@@ -466,7 +466,7 @@ class ResourceController extends Controller
      */
     public function parents(ResourceRequest $request, int $id): ApiResource
     {
-        return ApiResource::make(Url::getParentsById($id));
+        return ApiResource::make(URL::getParentsById($id));
     }
 
     /**
@@ -494,7 +494,7 @@ class ResourceController extends Controller
         if ($parent == $id) {
             abort(422, Lang::get('global.illegal_parent_self'));
         } else {
-            $parents = Url::getParentsById($id, true);
+            $parents = URL::getParentsById($id, true);
 
             if (isset($parents[$parent])) {
                 abort(422, Lang::get('global.illegal_parent_child'));

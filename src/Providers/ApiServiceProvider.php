@@ -7,10 +7,11 @@ namespace Team64j\LaravelManagerApi\Providers;
 use EvolutionCMS\Models\SystemSetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Team64j\LaravelManagerApi\Http\Middleware\Authenticate;
-use Team64j\LaravelManagerApi\Http\Middleware\Permissions as PermissionsMiddleware;
+use Team64j\LaravelManagerApi\Mixin\UrlMixin;
 use Team64j\LaravelManagerApi\Models\Permissions;
 use Team64j\LaravelManagerApi\Models\User;
 
@@ -21,6 +22,8 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->bootMixin();
+
         if (!$this->app->runningInConsole()) {
             header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
             header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
@@ -116,5 +119,13 @@ class ApiServiceProvider extends ServiceProvider
         Permissions::all()->map(function ($permission) {
             Gate::define($permission->key, fn(User $user) => $user->hasPermission($permission));
         });
+    }
+
+    /**
+     * @return void
+     */
+    protected function bootMixin(): void
+    {
+        URL::mixin(new UrlMixin());
     }
 }
