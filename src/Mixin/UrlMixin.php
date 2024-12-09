@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\URL;
 /**
  * @mixin URL
  * @see URL
+ * @see \Illuminate\Routing\UrlGenerator
  */
 class UrlMixin
 {
