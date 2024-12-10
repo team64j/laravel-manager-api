@@ -72,6 +72,8 @@ class BootstrapController extends Controller
      */
     public function index(BootstrapRequest $request): ApiResource
     {
+        $sidebar = $this->getSidebar();
+
         return ApiResource::make([
             'routes' => $this->getRoutes(),
             'assets' => $this->getAssets(),
@@ -97,7 +99,12 @@ class BootstrapController extends Controller
                     'slot' => 'top',
                 ],
                 [
-                    ...$this->getSidebar(),
+                    'component' => 'AppTabsNavigation',
+                    'attrs' => $sidebar['attrs'],
+                    'slot' => 'left',
+                ],
+                [
+                    ...$sidebar,
                     'slot' => 'sidebar',
                 ],
                 [
@@ -965,7 +972,9 @@ class BootstrapController extends Controller
             ->setId('tree')
             ->setUid('TREE')
             ->setClass('h-full')
-            //->setNavigation(false)
+            ->isVertical()
+            ->isHideable()
+            ->setNavigation(false)
             ->isSmallTabs()
             ->isLoadOnce();
 
