@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\PermissionsGroups;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -36,7 +35,7 @@ class RoleCategoryLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.new_category');
+        return $value ?? __('global.new_category');
     }
 
     /**
@@ -44,7 +43,7 @@ class RoleCategoryLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.role_management_title');
+        return __('global.role_management_title');
     }
 
     /**
@@ -69,13 +68,13 @@ class RoleCategoryLayout extends Layout
                 ->setHistory(true)
                 ->addTab(
                     'users',
-                    Lang::get('global.role_role_management'),
+                    __('global.role_role_management'),
                     $this->iconList(),
                     route: route('manager.api.roles.users.index')
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_heading'),
+                    __('global.category_heading'),
                     $this->icon(),
                     route: route('manager.api.roles.categories.index'),
                     slot: Panel::make()
@@ -85,14 +84,14 @@ class RoleCategoryLayout extends Layout
                         ->setHistory(true)
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                         )
-                        ->addColumn('name', Lang::get('global.category_heading'), ['fontWeight' => 500])
+                        ->addColumn('name', __('global.category_heading'), ['fontWeight' => 500])
                 )
                 ->addTab(
                     'permissions',
-                    Lang::get('global.manage_permission'),
+                    __('global.manage_permission'),
                     'fa fa-user-tag',
                     route: route('manager.api.roles.permissions.index')
                 ),
@@ -110,7 +109,7 @@ class RoleCategoryLayout extends Layout
             Title::make()
                 ->setTitle(
                     $this->title(
-                        Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                        trans()->has('global.' . $model->lang_key) ? __('global.' . $model->lang_key) : null
                     )
                 )
                 ->setIcon($this->icon()),

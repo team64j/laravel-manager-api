@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class ResourcesRequest extends FormRequest
 {
@@ -14,7 +13,7 @@ class ResourcesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::check('view_document');
+        return auth()->user()->can('view_document');
     }
 
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Title;
 
 class ScheduleLayout extends Layout
@@ -24,7 +23,7 @@ class ScheduleLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.site_schedule');
+        return $value ?? __('global.site_schedule');
     }
 
     /**

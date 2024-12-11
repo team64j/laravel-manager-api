@@ -7,8 +7,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteTmplvar;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
@@ -57,7 +55,7 @@ class TvLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.new_tmplvars');
+        return $value ?? __('global.new_tmplvars');
     }
 
     /**
@@ -65,7 +63,7 @@ class TvLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.tmplvars');
+        return __('global.tmplvars');
     }
 
     /**
@@ -73,7 +71,7 @@ class TvLayout extends Layout
      */
     public function titleSort(): string
     {
-        return Lang::get('global.template_tv_edit_title');
+        return __('global.template_tv_edit_title');
     }
 
     /**
@@ -88,7 +86,7 @@ class TvLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
                 'to' => '/elements/tvs?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -96,7 +94,7 @@ class TvLayout extends Layout
         return [
             Actions::make()
                 ->setCancel(
-                    Lang::get('global.cancel'),
+                    __('global.cancel'),
                     [
                         'path' => '/elements/tvs',
                         'close' => true,
@@ -118,34 +116,34 @@ class TvLayout extends Layout
                 ->setId('tv')
                 ->addTab(
                     'default',
-                    Lang::get('global.page_data_general'),
+                    __('global.page_data_general'),
                     slot: [
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
                             ->setSlot([
-                                Input::make('name', Lang::get('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
-                                Input::make('caption', Lang::get('global.tmplvars_caption'))->setClass('mb-3'),
-                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                Input::make('name', __('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
+                                Input::make('caption', __('global.tmplvars_caption'))->setClass('mb-3'),
+                                Textarea::make('description', __('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
                                 CodeEditor::make(
                                     'elements',
-                                    Lang::get('global.tmplvars_elements'),
-                                    Lang::get('global.tmplvars_binding_msg'),
+                                    __('global.tmplvars_elements'),
+                                    __('global.tmplvars_binding_msg'),
                                     'mb-3'
                                 )
                                     ->setRows(2),
                                 CodeEditor::make(
                                     'default_text',
-                                    Lang::get('global.tmplvars_default'),
-                                    Lang::get('global.tmplvars_binding_msg')
+                                    __('global.tmplvars_default'),
+                                    __('global.tmplvars_binding_msg')
                                 )
                                     ->setRows(2),
                             ]),
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
                             ->setSlot([
-                                Select::make('category', Lang::get('global.existing_category'))
+                                Select::make('category', __('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
@@ -154,13 +152,13 @@ class TvLayout extends Layout
                                             'key' => $model->category,
                                             'value' => $model->categories
                                                 ? $model->categories->category
-                                                : Lang::get(
+                                                : __(
                                                     'global.no_category'
                                                 ),
                                             'selected' => true,
                                         ],
                                     ]),
-                                Select::make('type', Lang::get('global.tmplvars_type'))
+                                Select::make('type', __('global.tmplvars_type'))
                                     ->setClass('mb-3')
                                     ->setUrl('/tvs/types')
                                     ->setData([
@@ -169,11 +167,11 @@ class TvLayout extends Layout
                                             'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
                                         ],
                                     ]),
-                                Input::make('rank', Lang::get('global.tmplvars_rank'))->setClass('mb-3'),
-                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                Input::make('rank', __('global.tmplvars_rank'))->setClass('mb-3'),
+                                Checkbox::make('locked', __('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Select::make('display', Lang::get('global.tmplvars_widget'))
+                                Select::make('display', __('global.tmplvars_widget'))
                                     ->setUrl('/tvs/display')
                                     ->setData([
                                         [
@@ -194,93 +192,93 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'templates',
-                    Lang::get('global.templates'),
+                    __('global.templates'),
                     slot: Panel::make()
                         ->setId('templates')
                         ->setModel('templates')
                         ->setUrl('/templates?groupBy=category')
-                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_tmpl_access_msg') . '</p>')
+                        ->setSlotTop('<p class="p-5">' . __('global.tmplvar_tmpl_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
-                            Lang::get('global.role_udperms'),
+                            __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             component: Checkbox::make('templates')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true
                         )
                         ->addColumn(
                             'templatename',
-                            Lang::get('global.template_name'),
+                            __('global.template_name'),
                             ['fontWeight' => '500'],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'description',
-                            Lang::get('global.description'),
+                            __('global.description'),
                             ['width' => '50%'],
                         )
                 )
                 ->addTab(
                     'roles',
-                    Lang::get('global.role_management_title'),
+                    __('global.role_management_title'),
                     slot: Panel::make()
                         ->setId('roles')
                         ->setModel('roles')
                         ->setUrl('/roles/users')
-                        ->setSlotTop('<p class="p-5">' . Lang::get('global.tmplvar_roles_access_msg') . '</p>')
+                        ->setSlotTop('<p class="p-5">' . __('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
-                            Lang::get('global.role_udperms'),
+                            __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             component: Checkbox::make('roles')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true
                         )
                         ->addColumn(
                             'name',
-                            Lang::get('global.role'),
+                            __('global.role'),
                             ['fontWeight' => '500'],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'description',
-                            Lang::get('global.description'),
+                            __('global.description'),
                             ['width' => '50%'],
                         )
                 )
                 ->when(
-                    Auth::user()->can(['manage_groups', 'manage_tv_permissions']),
+                    auth()->user()->can(['manage_groups', 'manage_tv_permissions']),
                     fn(Tabs $tabs) => $tabs
                         ->addTab(
                             'permissions',
-                            Lang::get('global.access_permissions'),
+                            __('global.access_permissions'),
                             class: 'p-5',
                             slot: [
-                                Lang::get('global.access_permissions_docs_message') . '<br/><br/>',
+                                __('global.access_permissions_docs_message') . '<br/><br/>',
 
                                 Checkbox::make()
                                     ->setClass('mb-3')
                                     ->setModel('data.is_document_group')
-                                    ->setLabel(Lang::get('global.all_doc_groups'))
+                                    ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
                                     ->setRelation('data.document_groups', [], [], true),
 
                                 Checkbox::make()
                                     ->setClass('mb-3')
                                     ->setModel('data.document_groups')
-                                    ->setLabel(Lang::get('global.access_permissions_resource_groups'))
+                                    ->setLabel(__('global.access_permissions_resource_groups'))
                                     ->setData(
                                         DocumentgroupName::all()
                                             ->map(fn(DocumentgroupName $group) => [
@@ -295,7 +293,7 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'settings',
-                    Lang::get('global.settings_properties'),
+                    __('global.settings_properties'),
                     slot: CodeEditor::make('properties')
                         ->setClass('p-5')
                         ->setLanguage('json')
@@ -313,9 +311,9 @@ class TvLayout extends Layout
     {
         return [
             Actions::make()
-                ->setAction('sort', Lang::get('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
+                ->setAction('sort', __('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
                 ->setNew(
-                    Lang::get('global.new_tmplvars'),
+                    __('global.new_tmplvars'),
                     '/tvs/0',
                     'btn-green',
                     'fa fa-plus'
@@ -324,7 +322,7 @@ class TvLayout extends Layout
             Title::make()
                 ->setTitle($this->titleList())
                 ->setIcon($this->iconList())
-                ->setHelp(Lang::get('global.tmplvars_management_msg')),
+                ->setHelp(__('global.tmplvars_management_msg')),
 
             Tabs::make()
                 ->setId('elements')
@@ -332,7 +330,7 @@ class TvLayout extends Layout
                 ->isWatch()
                 ->addTab(
                     'templates',
-                    Lang::get('global.templates'),
+                    __('global.templates'),
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
@@ -340,7 +338,7 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'tvs',
-                    Lang::get('global.tmplvars'),
+                    __('global.tmplvars'),
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
@@ -348,7 +346,7 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'chunks',
-                    Lang::get('global.htmlsnippets'),
+                    __('global.htmlsnippets'),
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
@@ -356,7 +354,7 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'snippets',
-                    Lang::get('global.snippets'),
+                    __('global.snippets'),
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
@@ -364,7 +362,7 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'plugins',
-                    Lang::get('global.plugins'),
+                    __('global.plugins'),
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
@@ -372,7 +370,7 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'modules',
-                    Lang::get('global.modules'),
+                    __('global.modules'),
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
@@ -380,7 +378,7 @@ class TvLayout extends Layout
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_management'),
+                    __('global.category_management'),
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
@@ -401,56 +399,56 @@ class TvLayout extends Layout
                             [
                                 '<i class="fa fa-list-alt fa-fw"/>',
                                 '<i class="fa fa-list-alt fa-fw" title="' .
-                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                                __('global.locked') . '"><i class="fa fa-lock"/></i>',
                             ]
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
                             true
                         )
                         ->addColumn(
                             'name',
-                            Lang::get('global.tmplvars_name'),
+                            __('global.tmplvars_name'),
                             ['width' => '20rem', 'fontWeight' => 500],
                             true,
                             filter: true
                         )
-                        ->addColumn('caption', Lang::get('global.tmplvars_caption'), [], true)
-                        ->addColumn('type', Lang::get('global.tmplvars_type'), ['width' => '10rem'])
+                        ->addColumn('caption', __('global.tmplvars_caption'), [], true)
+                        ->addColumn('type', __('global.tmplvars_type'), ['width' => '10rem'])
                         ->addColumn(
                             'locked',
-                            Lang::get('global.locked'),
+                            __('global.locked'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'rank',
-                            Lang::get('global.tmplvars_rank'),
+                            __('global.tmplvars_rank'),
                             ['width' => '15rem', 'textAlign' => 'center'],
                             true
                         )
                         ->addColumn(
                             'actions',
-                            Lang::get('global.onlineusers_action'),
+                            __('global.onlineusers_action'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             false,
                             [],
                             [
                                 'copy' => [
                                     'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => Lang::get('global.duplicate'),
+                                    'help' => __('global.duplicate'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
                                 'delete' => [
                                     'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => Lang::get('global.delete'),
+                                    'help' => __('global.delete'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
@@ -494,14 +492,14 @@ class TvLayout extends Layout
                 )
                 ->addColumn(
                     'id',
-                    Lang::get('global.id'),
+                    __('global.id'),
                     ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                 )
-                ->addColumn('name', Lang::get('global.plugin_name'), ['fontWeight' => 500])
-                ->addColumn('caption', Lang::get('global.tmplvars_caption'))
+                ->addColumn('name', __('global.plugin_name'), ['fontWeight' => 500])
+                ->addColumn('caption', __('global.tmplvars_caption'))
                 ->addColumn(
                     'rank',
-                    Lang::get('global.tmplvars_rank'),
+                    __('global.tmplvars_rank'),
                     ['width' => '15rem', 'textAlign' => 'center']
                 ),
         ];
@@ -540,7 +538,11 @@ class TvLayout extends Layout
                                 'loader' => true,
                             ],
                             [
-                                'component' => 'search',
+                                'icon' => 'fa fa-circle-plus',
+                                'title' => __('global.new_tmplvars'),
+                                'to' => [
+                                    'path' => '/tvs/0',
+                                ],
                             ],
                         ],
                     ])
@@ -558,7 +560,7 @@ class TvLayout extends Layout
      */
     public function display(string $name): array
     {
-        $name = Str::lower($name);
+        $name = str($name)->lower();
         $data = [];
 
         $widgetParams['date'] =
@@ -585,11 +587,11 @@ class TvLayout extends Layout
                 ->setColumns([
                     [
                         'name' => 'title',
-                        'label' => Lang::get('global.name'),
+                        'label' => __('global.name'),
                     ],
                     [
                         'name' => 'value',
-                        'label' => Lang::get('global.value'),
+                        'label' => __('global.value'),
                     ],
                 ])
                 ->setData($this->parseParams($widgetParams[$name]));

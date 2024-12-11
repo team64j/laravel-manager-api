@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SitePlugin;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -30,7 +29,7 @@ class PluginLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.new_plugin');
+        return $value ?? __('global.new_plugin');
     }
 
     /**
@@ -38,7 +37,7 @@ class PluginLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.plugins');
+        return __('global.plugins');
     }
 
     /**
@@ -70,7 +69,7 @@ class PluginLayout extends Layout
      */
     public function titleSort(): string
     {
-        return Lang::get('global.plugin_priority_title');
+        return __('global.plugin_priority_title');
     }
 
     /**
@@ -85,7 +84,7 @@ class PluginLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
                 'to' => '/elements/plugins?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -93,7 +92,7 @@ class PluginLayout extends Layout
         return [
             Actions::make()
                 ->setCancel(
-                    Lang::get('global.cancel'),
+                    __('global.cancel'),
                     [
                         'path' => '/elements/plugins',
                         'close' => true,
@@ -115,26 +114,26 @@ class PluginLayout extends Layout
                 ->setId('plugin')
                 ->addTab(
                     'general',
-                    Lang::get('global.page_data_general'),
+                    __('global.page_data_general'),
                     slot: [
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
                             ->setSlot([
-                                Input::make('name', Lang::get('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
-                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                Input::make('name', __('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
+                                Textarea::make('description', __('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
                                 Checkbox::make(
                                     'analyze',
-                                    Lang::get('global.parse_docblock'),
-                                    Lang::get('global.parse_docblock_msg')
+                                    __('global.parse_docblock'),
+                                    __('global.parse_docblock_msg')
                                 )
                                     ->setCheckedValue(1, 0),
                             ]),
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
                             ->setSlot([
-                                Select::make('category', Lang::get('global.existing_category'))
+                                Select::make('category', __('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
@@ -143,22 +142,22 @@ class PluginLayout extends Layout
                                             'key' => $model->category,
                                             'value' => $model->categories
                                                 ? $model->categories->category
-                                                : Lang::get(
+                                                : __(
                                                     'global.no_category'
                                                 ),
                                             'selected' => true,
                                         ],
                                     ]),
-                                Checkbox::make('disabled', Lang::get('global.disabled'))
+                                Checkbox::make('disabled', __('global.disabled'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                Checkbox::make('locked', __('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
                         CodeEditor::make(
                             'plugincode',
-                            Lang::get('global.plugin_code'),
+                            __('global.plugin_code'),
                             null,
                             'mx-5'
                         )
@@ -168,7 +167,7 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'settings',
-                    Lang::get('global.settings_properties'),
+                    __('global.settings_properties'),
                     slot: CodeEditor::make('properties')
                         ->setLanguage('json')
                         ->setClass('p-5')
@@ -176,10 +175,10 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'events',
-                    Lang::get('global.settings_events'),
+                    __('global.settings_events'),
                     slot: [
                         Panel::make()
-                            ->setSlotTop('<div class="p-5 w-full">' . Lang::get('global.plugin_event_msg') . '</div>')
+                            ->setSlotTop('<div class="p-5 w-full">' . __('global.plugin_event_msg') . '</div>')
                             ->setUrl('/plugins/events')
                             ->setModel('events')
                             ->setColumns([
@@ -200,7 +199,7 @@ class PluginLayout extends Layout
     {
         return [
             Actions::make()
-                ->setAction('sort', Lang::get('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
+                ->setAction('sort', __('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
                 ->setNew(
                     $this->title(),
                     '/plugins/0',
@@ -211,7 +210,7 @@ class PluginLayout extends Layout
             Title::make()
                 ->setTitle($this->titleList())
                 ->setIcon($this->icon())
-                ->setHelp(Lang::get('global.plugin_management_msg')),
+                ->setHelp(__('global.plugin_management_msg')),
 
             Tabs::make()
                 ->setId('elements')
@@ -219,7 +218,7 @@ class PluginLayout extends Layout
                 ->isWatch()
                 ->addTab(
                     'templates',
-                    Lang::get('global.templates'),
+                    __('global.templates'),
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
@@ -227,7 +226,7 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'tvs',
-                    Lang::get('global.tmplvars'),
+                    __('global.tmplvars'),
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
@@ -235,7 +234,7 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'chunks',
-                    Lang::get('global.htmlsnippets'),
+                    __('global.htmlsnippets'),
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
@@ -243,7 +242,7 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'snippets',
-                    Lang::get('global.snippets'),
+                    __('global.snippets'),
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
@@ -251,7 +250,7 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'plugins',
-                    Lang::get('global.plugins'),
+                    __('global.plugins'),
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
@@ -259,7 +258,7 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'modules',
-                    Lang::get('global.modules'),
+                    __('global.modules'),
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
@@ -267,7 +266,7 @@ class PluginLayout extends Layout
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_management'),
+                    __('global.category_management'),
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
@@ -288,62 +287,62 @@ class PluginLayout extends Layout
                             [
                                 '<i class="fa fa-plug fa-fw"/>',
                                 '<i class="fa fa-plug fa-fw" data-tooltip="' .
-                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                                __('global.locked') . '"><i class="fa fa-lock"/></i>',
                             ]
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
                             true
                         )
                         ->addColumn(
                             'name',
-                            Lang::get('global.plugin_name'),
+                            __('global.plugin_name'),
                             ['width' => '20rem', 'fontWeight' => 500],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'description',
-                            Lang::get('global.plugin_desc')
+                            __('global.plugin_desc')
                         )
                         ->addColumn(
                             'locked',
-                            Lang::get('global.locked'),
+                            __('global.locked'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'disabled',
-                            Lang::get('global.disabled'),
+                            __('global.disabled'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'actions',
-                            Lang::get('global.onlineusers_action'),
+                            __('global.onlineusers_action'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             false,
                             [],
                             [
                                 'copy' => [
                                     'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => Lang::get('global.duplicate'),
+                                    'help' => __('global.duplicate'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
                                 'delete' => [
                                     'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => Lang::get('global.delete'),
+                                    'help' => __('global.delete'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
@@ -382,17 +381,17 @@ class PluginLayout extends Layout
                 )
                 ->addColumn(
                     'id',
-                    Lang::get('global.id'),
+                    __('global.id'),
                     ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                 )
                 ->addColumn(
                     'name',
-                    Lang::get('global.plugin_name'),
+                    __('global.plugin_name'),
                     ['fontWeight' => 500]
                 )
                 ->addColumn(
                     'priority',
-                    Lang::get('global.tmplvars_rank'),
+                    __('global.tmplvars_rank'),
                     ['width' => '15rem', 'textAlign' => 'center']
                 ),
         ];
@@ -432,7 +431,11 @@ class PluginLayout extends Layout
                                 'loader' => true,
                             ],
                             [
-                                'component' => 'search',
+                                'icon' => 'fa fa-circle-plus',
+                                'title' => __('global.new_plugin'),
+                                'to' => [
+                                    'path' => '/plugins/0',
+                                ],
                             ],
                         ],
                     ])

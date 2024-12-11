@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemInfoRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\SystemInfoLayout;
 
 class SystemInfoController extends Controller
@@ -45,11 +40,11 @@ class SystemInfoController extends Controller
     {
         $data = [
             [
-                'name' => Lang::get('global.modx_version'),
-                'value' => Config::get('global.settings_version'),
+                'name' => __('global.modx_version'),
+                'value' => config('global.settings_version'),
             ],
             [
-                'name' => Lang::get('global.release_date'),
+                'name' => __('global.release_date'),
                 'value' => '',//$this->managerTheme->getCore()->getVersionData('release_date')
             ],
             [
@@ -57,50 +52,53 @@ class SystemInfoController extends Controller
                 'value.html' => '<a href="/phpinfo" style="text-decoration: underline">' . phpversion() . '</a>',
             ],
             [
-                'name' => Lang::get('global.access_permissions'),
-                'value' => Lang::get('global.' . (Config::get('global.use_udperms') ? 'enabled' : 'disabled')),
+                'name' => __('global.access_permissions'),
+                'value' => __('global.' . (config('global.use_udperms') ? 'enabled' : 'disabled')),
             ],
             [
-                'name' => Lang::get('global.servertime'),
+                'name' => __('global.servertime'),
                 'value' => Carbon::now()->toTimeString(),
             ],
             [
-                'name' => Lang::get('global.localtime'),
-                'value' => Carbon::now()->addHours(Config::get('global.server_offset_time'))->toTimeString(),
+                'name' => __('global.localtime'),
+                'value' => Carbon::now()->addHours(config('global.server_offset_time'))->toTimeString(),
             ],
             [
-                'name' => Lang::get('global.serveroffset'),
-                'value' => Config::get('global.server_offset_time') . ' h',
+                'name' => __('global.serveroffset'),
+                'value' => config('global.server_offset_time') . ' h',
             ],
             [
-                'name' => Lang::get('global.database_name'),
+                'name' => __('global.database_name'),
                 'value' => DB::connection()->getDatabaseName(),
             ],
             [
-                'name' => Lang::get('global.database_server'),
+                'name' => __('global.database_server'),
                 'value' => DB::connection()->getConfig('host'),
             ],
             [
-                'name' => Lang::get('global.database_version'),
+                'name' => __('global.database_version'),
                 'value' => DB::connection()->getPdo()->getAttribute(DB::connection()->getPdo()::ATTR_CLIENT_VERSION) .
                     ' - ' . DB::connection()->getPdo()->getAttribute(DB::connection()->getPdo()::ATTR_SERVER_VERSION),
             ],
             [
-                'name' => Lang::get('global.database_charset'),
+                'name' => __('global.database_charset'),
                 'value' => $this->resolveCharset(),
             ],
             [
-                'name' => Lang::get('global.database_collation'),
+                'name' => __('global.database_collation'),
                 'value' => $this->resolveCollation(),
             ],
             [
-                'name' => Lang::get('global.table_prefix'),
+                'name' => __('global.table_prefix'),
                 'value' => DB::connection()->getTablePrefix(),
             ],
         ];
 
-        foreach (get_defined_constants() as $key => $value) {
-            if (Str::startsWith($key, ['MODX_', 'EVO_'])) {
+        $constants = get_defined_constants();
+        ksort($constants);
+
+        foreach ($constants as $key => $value) {
+            if (str($key)->startsWith(['MODX_', 'EVO_'])) {
                 $data[] = [
                     'name' => $key,
                     'value' => $value,
@@ -111,7 +109,7 @@ class SystemInfoController extends Controller
         return ApiResource::collection($data)
             ->layout($this->layout->default())
             ->meta([
-                'title' => Lang::get('global.view_sysinfo'),
+                'title' => __('global.view_sysinfo'),
                 'icon' => $this->layout->icon(),
             ]);
     }
@@ -141,7 +139,7 @@ class SystemInfoController extends Controller
         $info = ob_get_contents();
         ob_get_clean();
 
-        $path = URL::to('/') . str_replace([App::basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3));
+        $path = url('/') . str_replace([app()->basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3));
 
         $style = '
         <script src="' . $path . '/resources/js/message.js?v=1.1.1"></script>
@@ -154,7 +152,7 @@ class SystemInfoController extends Controller
 
     protected function resolveCharset()
     {
-        switch (Config::get('database.default')) {
+        switch (config('database.default')) {
             case 'pgsql':
 //                $result = $this->database->query("SELECT * FROM pg_settings WHERE name='client_encoding'");
 //                $charset = $this->database->getRow($result, 'num');
@@ -173,7 +171,7 @@ class SystemInfoController extends Controller
 
     protected function resolveCollation()
     {
-        switch (Config::get('database.default')) {
+        switch (config('database.default')) {
             case 'pgsql':
 //                $result = $this->database->query("SELECT * FROM pg_settings WHERE name = 'lc_collate'");
 //                $charset = $this->database->getRow($result, 'num');

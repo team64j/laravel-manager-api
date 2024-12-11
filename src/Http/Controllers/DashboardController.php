@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use SimpleXMLElement;
 use Team64j\LaravelManagerApi\Http\Requests\DashboardRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\DashboardLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -68,13 +65,13 @@ class DashboardController extends Controller
      */
     public function news(DashboardRequest $request): array
     {
-        $data = Cache::remember('cms.dashboard.news', 86400, function () {
+        $data = cache()->remember('cms.dashboard.news', 86400, function () {
             $data = [];
 
-            if (Config::get('global.rss_url_news')) {
+            if (config('global.rss_url_news')) {
                 /** @var SimpleXMLElement $result */
                 $result = simplexml_load_string(
-                    Http::get(Config::get('global.rss_url_news'))->body()
+                    Http::get(config('global.rss_url_news'))->body()
                 );
 
                 if ($result instanceof SimpleXMLElement) {
@@ -101,7 +98,7 @@ class DashboardController extends Controller
 
         return [
             'data' => $data,
-            'meta' => !$data ? ['message' => Lang::get('global.not_set')] : [],
+            'meta' => !$data ? ['message' => __('global.not_set')] : [],
         ];
     }
 
@@ -125,13 +122,13 @@ class DashboardController extends Controller
      */
     public function newsSecurity(DashboardRequest $request): array
     {
-        $data = Cache::remember('cms.dashboard.news-security', 86400, function () {
+        $data = cache()->remember('cms.dashboard.news-security', 86400, function () {
             $data = [];
 
-            if (Config::get('global.rss_url_security')) {
+            if (config('global.rss_url_security')) {
                 /** @var SimpleXMLElement $result */
                 $result = simplexml_load_string(
-                    Http::get(Config::get('global.rss_url_security'))->body()
+                    Http::get(config('global.rss_url_security'))->body()
                 );
 
                 if ($result instanceof SimpleXMLElement) {
@@ -158,7 +155,7 @@ class DashboardController extends Controller
 
         return [
             'data' => $data,
-            'meta' => !$data ? ['message' => Lang::get('global.not_set')] : [],
+            'meta' => !$data ? ['message' => __('global.not_set')] : [],
         ];
     }
 }

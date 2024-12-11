@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Section;
 use Team64j\LaravelManagerComponents\Template;
@@ -48,22 +44,22 @@ class DashboardLayout extends Layout
     {
         $data = [];
 
-        if (!Config::get('global.site_status')) {
+        if (!config('global.site_status')) {
             $data[] = Template::make(
                 'block app-alert__warning p-4 mt-4 mx-4 rounded',
-                Lang::get('global.siteunavailable_message_default') .
-                ' ' . Lang::get('global.update_settings_from_language') .
-                '<a href="/configuration" class="btn-sm btn-green ml-2">' . Lang::get('global.online') . '</a>'
+                __('global.siteunavailable_message_default') .
+                ' ' . __('global.update_settings_from_language') .
+                '<a href="/configuration" class="btn-sm btn-green ml-2">' . __('global.online') . '</a>'
             );
         }
 
         if (is_dir(base_path('install'))) {
             $data[] = Template::make(
                 'block app-alert__warning p-4 mt-4 mx-4 rounded',
-                '<strong>' . Lang::get('global.configcheck_warning') . '</strong>' .
-                '<br>' . Lang::get('global.configcheck_installer') .
-                '<br><br><i>' . Lang::get('global.configcheck_what') . '</i>' .
-                '<br>' . Lang::get('global.configcheck_installer_msg')
+                '<strong>' . __('global.configcheck_warning') . '</strong>' .
+                '<br>' . __('global.configcheck_installer') .
+                '<br><br><i>' . __('global.configcheck_what') . '</i>' .
+                '<br>' . __('global.configcheck_installer_msg')
             );
         }
 
@@ -75,6 +71,8 @@ class DashboardLayout extends Layout
      */
     protected function getWidgets(): array
     {
+        $user = auth()->user();
+        
         return Template::make(
             'flex flex-wrap pt-6 px-4',
             [
@@ -82,7 +80,7 @@ class DashboardLayout extends Layout
                     'grow w-full xl:max-w-[50%] xl:pr-2 pb-4',
                     Section::make(
                         'fa fa-home',
-                        Lang::get('global.welcome_title'),
+                        __('global.welcome_title'),
                         'h-full hover:shadow-lg bg-white dark:bg-gray-700 transition',
                         Panel::make()
                             ->setClass('!mt-0 !-mx-4 !-mb-4')
@@ -90,20 +88,20 @@ class DashboardLayout extends Layout
                             ->addColumn('value', style: ['font-weight' => 'bold'])
                             ->setData([
                                 [
-                                    'name' => Lang::get('global.yourinfo_username'),
-                                    'value' => Auth::user()->username,
+                                    'name' => __('global.yourinfo_username'),
+                                    'value' => $user->username,
                                 ],
                                 [
-                                    'name' => Lang::get('global.yourinfo_role'),
-                                    'value' => Auth::user()->attributes->userRole->name,
+                                    'name' => __('global.yourinfo_role'),
+                                    'value' => $user->attributes->userRole->name,
                                 ],
                                 [
-                                    'name' => Lang::get('global.yourinfo_previous_login'),
-                                    'value' => Auth::user()->attributes->lastlogin,
+                                    'name' => __('global.yourinfo_previous_login'),
+                                    'value' => $user->attributes->lastlogin,
                                 ],
                                 [
-                                    'name' => Lang::get('global.yourinfo_total_logins'),
-                                    'value' => Auth::user()->attributes->logincount,
+                                    'name' => __('global.yourinfo_total_logins'),
+                                    'value' => $user->attributes->logincount,
                                 ],
                             ])
                     )
@@ -113,10 +111,10 @@ class DashboardLayout extends Layout
                     'grow w-full xl:max-w-[50%] xl:pl-2 pb-4',
                     Section::make(
                         'fa fa-user',
-                        Lang::get('global.onlineusers_title'),
+                        __('global.onlineusers_title'),
                         'h-full hover:shadow-lg bg-white dark:bg-gray-700 transition',
                         [
-                            '<div class="mb-4">' . Lang::get('global.onlineusers_message') . '<b>' .
+                            '<div class="mb-4">' . __('global.onlineusers_message') . '<b>' .
                             date('H:i:s') . '</b>)</div>',
 
                             Panel::make()
@@ -130,13 +128,13 @@ class DashboardLayout extends Layout
             ]
         )
             ->when(
-                Gate::check(['view_document']),
+                auth()->user()->can(['view_document']),
                 fn(Template $template) => $template->putSlot(
                     Template::make(
                         'grow w-full pb-4',
                         Section::make(
                             'fa fa-pencil',
-                            Lang::get('global.activity_title'),
+                            __('global.activity_title'),
                             'hover:shadow-lg bg-white dark:bg-gray-700 overflow-hidden transition',
                             Panel::make()
                                 ->setId('widgetResources')
@@ -150,13 +148,13 @@ class DashboardLayout extends Layout
                 )
             )
             ->when(
-                Config::get('global.rss_url_news'),
+                config('global.rss_url_news'),
                 fn(Template $template) => $template->putSlot(
                     Template::make(
                         'grow w-full xl:max-w-[50%] xl:pr-2 pb-4',
                         Section::make(
                             'fa fa-rss',
-                            Lang::get('global.modx_news'),
+                            __('global.modx_news'),
                             'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNews')
@@ -167,13 +165,13 @@ class DashboardLayout extends Layout
                 )
             )
             ->when(
-                Config::get('global.rss_url_security'),
+                config('global.rss_url_security'),
                 fn(Template $template) => $template->putSlot(
                     Template::make(
                         'grow w-full xl:max-w-[50%] xl:pl-2 pb-4',
                         Section::make(
                             'fa fa-exclamation-triangle',
-                            Lang::get('global.modx_security_notices'),
+                            __('global.modx_security_notices'),
                             'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
                             Panel::make()
                                 ->setId('widgetNewsSecurity')

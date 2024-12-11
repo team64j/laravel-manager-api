@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class Permissions
@@ -168,7 +167,7 @@ class Permissions
     {
         $permission = $this->permission[$request->route()->getName()] ?? null;
 
-        if ($permission && !Gate::check($permission)) {
+        if ($permission && auth()->user()->cant($permission)) {
             abort(403, 'Forbidden');
         }
 

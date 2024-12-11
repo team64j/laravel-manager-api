@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Http\Resources;
 
 use EvolutionCMS\Models\SiteTemplate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 /**
  * @property SiteTemplate $resource
@@ -28,7 +27,7 @@ class TemplateResource extends ApiResource
             ]);
         }
 
-        $bladeFile = current(Config::get('view.paths')) . '/' . $this->resource->templatealias . '.blade.php';
+        $bladeFile = current(config('view.paths')) . '/' . $this->resource->templatealias . '.blade.php';
 
         if (($request->input('createbladefile') || file_exists($bladeFile)) && $this->resource->templatealias) {
             $this->resource->setAttribute('content', file_get_contents($bladeFile));

@@ -4,14 +4,11 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\SiteContent;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourceRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ResourceResource;
 use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -74,8 +71,8 @@ class ResourceController extends Controller
         ];
 
         $limit = min(
-            $request->integer('limit', Config::get('global.number_of_results')),
-            Config::get('global.number_of_results')
+            $request->integer('limit', config('global.number_of_results')),
+            config('global.number_of_results')
         );
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
@@ -122,7 +119,7 @@ class ResourceController extends Controller
 
             $columns[$key] = [
                 'name' => $column,
-                'label' => Lang::get('global.' . $lang),
+                'label' => __('global.' . $lang),
             ];
         }
 
@@ -394,14 +391,14 @@ class ResourceController extends Controller
             ->when(
                 $parent,
                 fn($q) => $q
-                    ->paginate(Config::get('global.number_of_results'), $fields, 'settings[page]', $page)
+                    ->paginate(config('global.number_of_results'), $fields, 'settings[page]', $page)
                     ->appends($request->all()),
                 fn($q) => $q->get($fields)
             );
 
         if ($result->isEmpty()) {
             $data = [];
-            $meta = ['message' => Lang::get('global.no_results')];
+            $meta = ['message' => __('global.no_results')];
         } else {
             $data = $result->map(function (SiteContent $item) use ($request, $settings) {
                 $title = $item->pagetitle;
@@ -466,7 +463,7 @@ class ResourceController extends Controller
      */
     public function parents(ResourceRequest $request, int $id): ApiResource
     {
-        return ApiResource::make(URL::getParentsById($id));
+        return ApiResource::make(url()->getParentsById($id));
     }
 
     /**
@@ -492,12 +489,12 @@ class ResourceController extends Controller
     public function setParent(ResourceRequest $request, int $parent, int $id): ApiResource
     {
         if ($parent == $id) {
-            abort(422, Lang::get('global.illegal_parent_self'));
+            abort(422, __('global.illegal_parent_self'));
         } else {
-            $parents = URL::getParentsById($id, true);
+            $parents = url()->getParentsById($id, true);
 
             if (isset($parents[$parent])) {
-                abort(422, Lang::get('global.illegal_parent_child'));
+                abort(422, __('global.illegal_parent_child'));
             }
         }
 

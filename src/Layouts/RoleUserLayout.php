@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\UserRole;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -36,7 +35,7 @@ class RoleUserLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.role_management_title');
+        return $value ?? __('global.role_management_title');
     }
 
     /**
@@ -44,7 +43,7 @@ class RoleUserLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.role_management_title');
+        return __('global.role_management_title');
     }
 
     /**
@@ -55,7 +54,7 @@ class RoleUserLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.new_role'),
+                    __('global.new_role'),
                     '/roles/users/0',
                     'btn-green'
                 ),
@@ -63,14 +62,14 @@ class RoleUserLayout extends Layout
             Title::make()
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
-                ->setHelp(Lang::get('global.role_management_msg')),
+                ->setHelp(__('global.role_management_msg')),
 
             Tabs::make()
                 ->setId('userManagement')
                 ->setHistory(true)
                 ->addTab(
                     'users',
-                    Lang::get('global.role_role_management'),
+                    __('global.role_role_management'),
                     $this->iconList(),
                     route: route('manager.api.roles.users.index'),
                     slot: Panel::make()
@@ -80,21 +79,21 @@ class RoleUserLayout extends Layout
                         ->setHistory(true)
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                         )
-                        ->addColumn('name', Lang::get('global.role'), ['fontWeight' => 500])
-                        ->addColumn('description', Lang::get('global.description'))
+                        ->addColumn('name', __('global.role'), ['fontWeight' => 500])
+                        ->addColumn('description', __('global.description'))
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_heading'),
+                    __('global.category_heading'),
                     'fa fa-object-group',
                     route: route('manager.api.roles.categories.index')
                 )
                 ->addTab(
                     'permissions',
-                    Lang::get('global.manage_permission'),
+                    __('global.manage_permission'),
                     'fa fa-user-tag',
                     route: route('manager.api.roles.permissions.index')
                 ),

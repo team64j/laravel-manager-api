@@ -8,12 +8,10 @@ use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\MembergroupName;
 use EvolutionCMS\Models\SiteContent;
 use EvolutionCMS\Models\User;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\PermissionRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\PermissionGroupLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionRelationLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionResourceLayout;
@@ -49,7 +47,7 @@ class PermissionController extends Controller
         $result = MembergroupName::query()
             ->with('users')
             ->orderBy('name')
-            ->paginate(Config::get('global.number_of_results'));
+            ->paginate(config('global.number_of_results'));
 
         return ApiResource::collection(
             $result
@@ -67,7 +65,7 @@ class PermissionController extends Controller
                             ->join(' ');
                     } else {
                         $users =
-                            '<span class="opacity-50">' . Lang::get('global.access_permissions_no_users_in_group') .
+                            '<span class="opacity-50">' . __('global.access_permissions_no_users_in_group') .
                             '</span>';
                     }
 
@@ -145,7 +143,7 @@ class PermissionController extends Controller
             ->with('documents')
             ->when($request->has('name'), fn($q) => $q->where('name', 'like', '%' . $request->input('name') . '%'))
             ->orderBy('name')
-            ->paginate(Config::get('global.number_of_results'));
+            ->paginate(config('global.number_of_results'));
 
         return ApiResource::collection(
             $result
@@ -163,7 +161,7 @@ class PermissionController extends Controller
                             ->join(' ');
                     } else {
                         $documents =
-                            '<span class="opacity-50">' . Lang::get('global.access_permissions_no_resources_in_group') .
+                            '<span class="opacity-50">' . __('global.access_permissions_no_resources_in_group') .
                             '</span>';
                     }
 
@@ -240,7 +238,7 @@ class PermissionController extends Controller
         $result = MembergroupName::query()
             ->with('documentGroups')
             ->orderBy('name')
-            ->paginate(Config::get('global.number_of_results'));
+            ->paginate(config('global.number_of_results'));
 
         $documents = DocumentgroupName::query()
             ->with('documents')
@@ -262,7 +260,7 @@ class PermissionController extends Controller
                             )
                             ->join(' ');
                     } else {
-                        $documentGroups = '<span class="opacity-50">' . Lang::get('global.no_groups_found') . '</span>';
+                        $documentGroups = '<span class="opacity-50">' . __('global.no_groups_found') . '</span>';
                     }
 
                     return $group->withoutRelations()
@@ -342,10 +340,10 @@ class PermissionController extends Controller
             PermissionsGroups::with('permissions')
                 ->get()
                 ->map(fn(PermissionsGroups $group) => [
-                    'name' => Lang::get('global.' . $group->lang_key),
+                    'name' => __('global.' . $group->lang_key),
                     'data' => $group->permissions->map(fn(Permissions $permission) => [
                         'key' => $permission->key,
-                        'value' => Lang::get('global.' . $permission->lang_key),
+                        'value' => __('global.' . $permission->lang_key),
                         'selected' => in_array($permission->key, $selected, true),
                     ]),
                 ])

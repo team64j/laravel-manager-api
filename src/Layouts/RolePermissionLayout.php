@@ -33,7 +33,7 @@ class RolePermissionLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.new_permission');
+        return $value ?? __('global.new_permission');
     }
 
     /**
@@ -41,7 +41,7 @@ class RolePermissionLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.role_management_title');
+        return __('global.role_management_title');
     }
 
     /**
@@ -66,19 +66,19 @@ class RolePermissionLayout extends Layout
                 ->setHistory(true)
                 ->addTab(
                     'users',
-                    Lang::get('global.role_role_management'),
+                    __('global.role_role_management'),
                     $this->iconList(),
                     route: route('manager.api.roles.users.index')
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_heading'),
+                    __('global.category_heading'),
                     'fa fa-object-group',
                     route: route('manager.api.roles.categories.index')
                 )
                 ->addTab(
                     'permissions',
-                    Lang::get('global.manage_permission'),
+                    __('global.manage_permission'),
                     $this->icon(),
                     route: route('manager.api.roles.permissions.index'),
                     slot: Panel::make()
@@ -88,19 +88,19 @@ class RolePermissionLayout extends Layout
                         ->setHistory(true)
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                         )
-                        ->addColumn('name', Lang::get('global.role_name'), ['fontWeight' => 500])
-                        ->addColumn('key', Lang::get('global.key_desc'), ['width' => '5rem'])
+                        ->addColumn('name', __('global.role_name'), ['fontWeight' => 500])
+                        ->addColumn('key', __('global.key_desc'), ['width' => '5rem'])
                         ->addColumn(
                             'disabled',
-                            Lang::get('global.disabled'),
+                            __('global.disabled'),
                             ['width' => '7rem', 'textAlign' => 'center'],
                             false,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                 ),
@@ -118,7 +118,7 @@ class RolePermissionLayout extends Layout
             Title::make()
                 ->setTitle(
                     $this->title(
-                        Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                        trans()->has('global.' . $model->lang_key) ? __('global.' . $model->lang_key) : null
                     )
                 )
                 ->setIcon($this->icon()),

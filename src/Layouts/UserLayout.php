@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\User;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -36,7 +35,7 @@ class UserLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.new_user');
+        return $value ?? __('global.new_user');
     }
 
     /**
@@ -44,7 +43,7 @@ class UserLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.users');
+        return __('global.users');
     }
 
     /**
@@ -57,7 +56,7 @@ class UserLayout extends Layout
         return [
             Actions::make()
                 ->setCancel(
-                    Lang::get('global.cancel'),
+                    __('global.cancel'),
                     [
                         'path' => '/users',
                         'close' => true,
@@ -104,34 +103,34 @@ class UserLayout extends Layout
                         ->setHistory(true)
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
                             true
                         )
-                        ->addColumn('username', Lang::get('global.name'), ['fontWeight' => 500], true)
-                        ->addColumn('fullname', Lang::get('global.user_full_name'), [], true)
-                        ->addColumn('email', Lang::get('global.email'), [], true)
-                        ->addColumn(['role', 'rolename'], Lang::get('global.role'), ['width' => '10rem'], true)
+                        ->addColumn('username', __('global.name'), ['fontWeight' => 500], true)
+                        ->addColumn('fullname', __('global.user_full_name'), [], true)
+                        ->addColumn('email', __('global.email'), [], true)
+                        ->addColumn(['role', 'rolename'], __('global.role'), ['width' => '10rem'], true)
                         ->addColumn(
                             'lastlogin',
-                            Lang::get('global.user_prevlogin'),
+                            __('global.user_prevlogin'),
                             ['width' => '12rem', 'textAlign' => 'center'],
                             true
                         )
                         ->addColumn(
                             'logincount',
-                            Lang::get('global.user_logincount'),
+                            __('global.user_logincount'),
                             ['width' => '20rem', 'textAlign' => 'center'],
                             true
                         )
                         ->addColumn(
                             'blocked',
-                            Lang::get('global.user_block'),
+                            __('global.user_block'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         ),
                 ),

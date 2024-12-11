@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteHtmlSnippet;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -28,7 +27,7 @@ class ChunkLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.new_htmlsnippet');
+        return __('global.new_htmlsnippet');
     }
 
     /**
@@ -36,7 +35,7 @@ class ChunkLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.htmlsnippets');
+        return __('global.htmlsnippets');
     }
 
     /**
@@ -67,7 +66,7 @@ class ChunkLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => $this->titleList() . ': ' . ($category->category ?? Lang::get('global.no_category')),
+                'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
                 'to' => '/elements/chunks?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -75,7 +74,7 @@ class ChunkLayout extends Layout
         return [
             Actions::make()
                 ->setCancel(
-                    Lang::get('global.cancel'),
+                    __('global.cancel'),
                     [
                         'path' => '/elements/chunks',
                         'close' => true,
@@ -90,27 +89,27 @@ class ChunkLayout extends Layout
             Title::make()
                 ->setModel('name')
                 ->setTitle($this->title())
-                ->setHelp(Lang::get('global.htmlsnippet_msg'))
+                ->setHelp(__('global.htmlsnippet_msg'))
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make()
                 ->addTab(
                     'general',
-                    Lang::get('global.page_data_general'),
+                    __('global.page_data_general'),
                     slot: [
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 px-5 pt-5')
                             ->setSlot([
-                                Input::make('name', Lang::get('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
-                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                Input::make('name', __('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
+                                Textarea::make('description', __('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
                             ]),
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
                             ->setSlot([
-                                Select::make('category', Lang::get('global.existing_category'))
+                                Select::make('category', __('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
@@ -119,22 +118,22 @@ class ChunkLayout extends Layout
                                             'key' => $model->category,
                                             'value' => $model->categories
                                                 ? $model->categories->category
-                                                : Lang::get(
+                                                : __(
                                                     'global.no_category'
                                                 ),
                                             'selected' => true,
                                         ],
                                     ]),
-                                Checkbox::make('disabled', Lang::get('global.disabled'))
+                                Checkbox::make('disabled', __('global.disabled'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                Checkbox::make('locked', __('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
                         CodeEditor::make(
                             'snippet',
-                            Lang::get('global.chunk_code'),
+                            __('global.chunk_code'),
                             null,
                             'mx-5'
                         )
@@ -164,7 +163,7 @@ class ChunkLayout extends Layout
             Title::make()
                 ->setTitle($this->titleList())
                 ->setIcon($this->iconList())
-                ->setHelp(Lang::get('global.htmlsnippet_management_msg')),
+                ->setHelp(__('global.htmlsnippet_management_msg')),
 
             Tabs::make()
                 ->setId('elements')
@@ -172,7 +171,7 @@ class ChunkLayout extends Layout
                 ->isWatch()
                 ->addTab(
                     'templates',
-                    Lang::get('global.templates'),
+                    __('global.templates'),
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
@@ -180,7 +179,7 @@ class ChunkLayout extends Layout
                 )
                 ->addTab(
                     'tvs',
-                    Lang::get('global.tmplvars'),
+                    __('global.tmplvars'),
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
@@ -188,7 +187,7 @@ class ChunkLayout extends Layout
                 )
                 ->addTab(
                     'chunks',
-                    Lang::get('global.htmlsnippets'),
+                    __('global.htmlsnippets'),
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
@@ -196,7 +195,7 @@ class ChunkLayout extends Layout
                 )
                 ->addTab(
                     'snippets',
-                    Lang::get('global.snippets'),
+                    __('global.snippets'),
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
@@ -204,7 +203,7 @@ class ChunkLayout extends Layout
                 )
                 ->addTab(
                     'plugins',
-                    Lang::get('global.plugins'),
+                    __('global.plugins'),
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
@@ -212,7 +211,7 @@ class ChunkLayout extends Layout
                 )
                 ->addTab(
                     'modules',
-                    Lang::get('global.modules'),
+                    __('global.modules'),
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
@@ -220,7 +219,7 @@ class ChunkLayout extends Layout
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_management'),
+                    __('global.category_management'),
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
@@ -241,62 +240,62 @@ class ChunkLayout extends Layout
                             [
                                 '<i class="fa fa-th-large fa-fw"/>',
                                 '<i class="fa fa-th-large fa-fw" title="' .
-                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                                __('global.locked') . '"><i class="fa fa-lock"/></i>',
                             ]
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
                             true
                         )
                         ->addColumn(
                             'name',
-                            Lang::get('global.htmlsnippet_name'),
+                            __('global.htmlsnippet_name'),
                             ['width' => '20rem', 'fontWeight' => 500],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'description',
-                            Lang::get('global.htmlsnippet_desc')
+                            __('global.htmlsnippet_desc')
                         )
                         ->addColumn(
                             'locked',
-                            Lang::get('global.locked'),
+                            __('global.locked'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'disabled',
-                            Lang::get('global.disabled'),
+                            __('global.disabled'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'actions',
-                            Lang::get('global.onlineusers_action'),
+                            __('global.onlineusers_action'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             false,
                             [],
                             [
                                 'copy' => [
                                     'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => Lang::get('global.duplicate'),
+                                    'help' => __('global.duplicate'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
                                 'delete' => [
                                     'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => Lang::get('global.delete'),
+                                    'help' => __('global.delete'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
@@ -340,7 +339,11 @@ class ChunkLayout extends Layout
                                 'loader' => true,
                             ],
                             [
-                                'component' => 'search',
+                                'icon' => 'fa fa-circle-plus',
+                                'title' => __('global.new_htmlsnippet'),
+                                'to' => [
+                                    'path' => '/chunks/0',
+                                ],
                             ],
                         ],
                     ])

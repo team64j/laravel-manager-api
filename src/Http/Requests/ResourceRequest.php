@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class ResourceRequest extends FormRequest
 {
@@ -15,11 +14,11 @@ class ResourceRequest extends FormRequest
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
-            'index' => Gate::any(['edit_document', 'view_document']),
-            'store' => Gate::check('new_document'),
-            'update' => Gate::check('save_document'),
-            'destroy' => Gate::check('delete_document'),
-            default => Gate::any(
+            'index' => auth()->user()->canAny(['edit_document', 'view_document']),
+            'store' => auth()->user()->can('new_document'),
+            'update' => auth()->user()->can('save_document'),
+            'destroy' => auth()->user()->can('delete_document'),
+            default => auth()->user()->canAny(
                 [
                     'new_document',
                     'edit_document',

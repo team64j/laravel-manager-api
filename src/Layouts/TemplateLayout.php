@@ -6,8 +6,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTemplate;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -32,7 +30,7 @@ class TemplateLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.new_template');
+        return $value ?? __('global.new_template');
     }
 
     /**
@@ -40,7 +38,7 @@ class TemplateLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.templates');
+        return __('global.templates');
     }
 
     /**
@@ -66,12 +64,12 @@ class TemplateLayout extends Layout
      */
     public function default(SiteTemplate $model = null): array
     {
-        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+        $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
         $isBladeFile = file_exists($bladeFile);
         $relativeBladeFile = str_replace([dirname(app_path()), DIRECTORY_SEPARATOR], ['', '/'], $bladeFile);
 
         $category = $model->category()->firstOr(
-            fn() => (new Category())->setAttribute('id', 0)->setAttribute('category', Lang::get('global.no_category'))
+            fn() => (new Category())->setAttribute('id', 0)->setAttribute('category', __('global.no_category'))
         );
 
         $breadcrumbs = [
@@ -90,7 +88,7 @@ class TemplateLayout extends Layout
 
             Actions::make()
                 ->setCancel(
-                    Lang::get('global.cancel'),
+                    __('global.cancel'),
                     [
                         'path' => '/elements/templates',
                         'close' => true,
@@ -104,7 +102,7 @@ class TemplateLayout extends Layout
 
             Title::make()
                 ->setModel('data.attributes.templatename')
-                ->setHelp(Lang::get('global.template_msg'))
+                ->setHelp(__('global.template_msg'))
                 ->setId($model->getKey())
                 ->setIcon($this->icon())
                 ->setTitle($this->title()),
@@ -113,31 +111,31 @@ class TemplateLayout extends Layout
                 ->setId('template')
                 ->addTab(
                     'default',
-                    Lang::get('global.settings_general'),
+                    __('global.settings_general'),
                     slot: [
                         Template::make(
                             'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 px-5 pt-5',
                             [
                                 Input::make(
                                     'data.attributes.templatename',
-                                    Lang::get('global.template_name')
+                                    __('global.template_name')
                                 )
                                     ->setClass('mb-3')
                                     ->isRequired()
                                     ->setRequired(
-                                        Config::get('global.default_template') == $model->getKey() ?
-                                            Lang::get('global.defaulttemplate_title') : ''
+                                        config('global.default_template') == $model->getKey() ?
+                                            __('global.defaulttemplate_title') : ''
                                     ),
 
                                 Input::make(
                                     'data.attributes.templatealias',
-                                    Lang::get('global.alias')
+                                    __('global.alias')
                                 )
                                     ->setClass('mb-3'),
 
                                 Textarea::make(
                                     'data.attributes.description',
-                                    Lang::get('global.template_desc')
+                                    __('global.template_desc')
                                 )
                                     ->setClass('mb-3'),
                             ]
@@ -148,7 +146,7 @@ class TemplateLayout extends Layout
                             [
                                 Select::make(
                                     'data.attributes.category',
-                                    Lang::get('global.existing_category')
+                                    __('global.existing_category')
                                 )
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
@@ -158,11 +156,11 @@ class TemplateLayout extends Layout
                                     )
                                     ->setNew(''),
 
-                                Checkbox::make('data.attributes.selectable', Lang::get('global.template_selectable'))
+                                Checkbox::make('data.attributes.selectable', __('global.template_selectable'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Checkbox::make('data.attributes.locked', Lang::get('global.lock_template_msg'))
+                                Checkbox::make('data.attributes.locked', __('global.lock_template_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]
@@ -170,18 +168,18 @@ class TemplateLayout extends Layout
 
                         ($isBladeFile
                             ? '<span class="text-green-600 mx-5 mb-3">' .
-                            Lang::get('global.template_assigned_blade_file') .
+                            __('global.template_assigned_blade_file') .
                             ': ' .
                             $relativeBladeFile . '</span>'
                             :
                             Checkbox::make(
                                 'data.attributes.createbladefile',
-                                Lang::get('global.template_create_blade_file')
+                                __('global.template_create_blade_file')
                             )
                                 ->setClass('mx-5 mb-3')
                                 ->setCheckedValue(1, 0)),
 
-                        CodeEditor::make('data.attributes.content', Lang::get('global.template_code'))
+                        CodeEditor::make('data.attributes.content', __('global.template_code'))
                             ->setClass('px-5')
                             ->setLanguage('html')
                             ->setRows(20),
@@ -189,14 +187,14 @@ class TemplateLayout extends Layout
                 )
                 ->addTab(
                     'tvs',
-                    Lang::get('global.template_assignedtv_tab'),
+                    __('global.template_assignedtv_tab'),
                     slot: Panel::make()
                         ->setId('tvs')
                         ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=true')
                         ->setModel('tvs')
                         ->addColumn(
                             'attach',
-                            Lang::get('global.role_udperms'),
+                            __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true
                         )
@@ -208,32 +206,32 @@ class TemplateLayout extends Layout
                         )
                         ->addColumn(
                             'name',
-                            Lang::get('global.tmplvars_name'),
+                            __('global.tmplvars_name'),
                             ['fontWeight' => '500'],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'caption',
-                            Lang::get('global.tmplvars_caption'),
+                            __('global.tmplvars_caption'),
                             ['width' => '50%'],
                         )
                         ->addColumn(
                             'rank',
-                            Lang::get('global.tmplvars_rank'),
+                            __('global.tmplvars_rank'),
                             ['width' => '12rem', 'textAlign' => 'center']
                         )
                 )
                 ->addTab(
                     'available',
-                    Lang::get('global.template_notassigned_tv'),
+                    __('global.template_notassigned_tv'),
                     slot: Panel::make()
                         ->setId('available')
                         ->setModel('tvs')
                         ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=false')
                         ->addColumn(
                             'attach',
-                            Lang::get('global.role_udperms'),
+                            __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true
                         )
@@ -245,25 +243,25 @@ class TemplateLayout extends Layout
                         )
                         ->addColumn(
                             'name',
-                            Lang::get('global.tmplvars_name'),
+                            __('global.tmplvars_name'),
                             ['fontWeight' => '500'],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'caption',
-                            Lang::get('global.tmplvars_caption'),
+                            __('global.tmplvars_caption'),
                             ['width' => '50%'],
                         )
                         ->addColumn(
                             'rank',
-                            Lang::get('global.tmplvars_rank'),
+                            __('global.tmplvars_rank'),
                             ['width' => '12rem', 'textAlign' => 'center']
                         )
                 )
                 ->addTab(
                     'settings',
-                    Lang::get('global.settings_properties'),
+                    __('global.settings_properties'),
                     slot: CodeEditor::make('data.attributes.properties')
                         ->setClass('p-5')
                         ->setLanguage('json')
@@ -291,7 +289,7 @@ class TemplateLayout extends Layout
             Title::make()
                 ->setTitle($this->titleList())
                 ->setIcon($this->iconList())
-                ->setHelp(Lang::get('global.template_management_msg')),
+                ->setHelp(__('global.template_management_msg')),
 
             Tabs::make()
                 ->setId('elements')
@@ -299,7 +297,7 @@ class TemplateLayout extends Layout
                 ->isWatch()
                 ->addTab(
                     'templates',
-                    Lang::get('global.templates'),
+                    __('global.templates'),
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
@@ -307,7 +305,7 @@ class TemplateLayout extends Layout
                 )
                 ->addTab(
                     'tvs',
-                    Lang::get('global.tmplvars'),
+                    __('global.tmplvars'),
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
@@ -315,7 +313,7 @@ class TemplateLayout extends Layout
                 )
                 ->addTab(
                     'chunks',
-                    Lang::get('global.htmlsnippets'),
+                    __('global.htmlsnippets'),
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
@@ -323,7 +321,7 @@ class TemplateLayout extends Layout
                 )
                 ->addTab(
                     'snippets',
-                    Lang::get('global.snippets'),
+                    __('global.snippets'),
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
@@ -331,7 +329,7 @@ class TemplateLayout extends Layout
                 )
                 ->addTab(
                     'plugins',
-                    Lang::get('global.plugins'),
+                    __('global.plugins'),
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
@@ -339,7 +337,7 @@ class TemplateLayout extends Layout
                 )
                 ->addTab(
                     'modules',
-                    Lang::get('global.modules'),
+                    __('global.modules'),
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
@@ -347,7 +345,7 @@ class TemplateLayout extends Layout
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_management'),
+                    __('global.category_management'),
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
@@ -367,66 +365,66 @@ class TemplateLayout extends Layout
                             false,
                             [
                                 'id' => [
-                                    Config::get(
+                                    config(
                                         'global.default_template'
                                     ) => '<i class="fa fa-home fa-fw text-blue-500" data-tooltip="' .
-                                        Lang::get('global.defaulttemplate_title') . '"></i>',
+                                        __('global.defaulttemplate_title') . '"></i>',
                                 ],
                                 'locked' => [
                                     '<i class="fa fa-newspaper fa-fw"></i>',
-                                    '<i class="fa fa-newspaper fa-fw" data-tooltip="' . Lang::get('global.locked') .
+                                    '<i class="fa fa-newspaper fa-fw" data-tooltip="' . __('global.locked') .
                                     '"><i class="fa fa-lock"></i></i>',
                                 ],
                             ]
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
                             true
                         )
                         ->addColumn(
                             'templatename',
-                            Lang::get('global.template_name'),
+                            __('global.template_name'),
                             ['width' => '20rem', 'fontWeight' => 500],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'file',
-                            Lang::get('global.files_management'),
+                            __('global.files_management'),
                             ['width' => '5rem', 'textAlign' => 'center']
                         )
                         ->addColumn(
                             'description',
-                            Lang::get('global.template_desc')
+                            __('global.template_desc')
                         )
                         ->addColumn(
                             'locked',
-                            Lang::get('global.locked'),
+                            __('global.locked'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'actions',
-                            Lang::get('global.onlineusers_action'),
+                            __('global.onlineusers_action'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             false,
                             [],
                             [
                                 'copy' => [
                                     'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => Lang::get('global.duplicate'),
+                                    'help' => __('global.duplicate'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
                                 'delete' => [
                                     'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => Lang::get('global.delete'),
+                                    'help' => __('global.delete'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
@@ -460,7 +458,7 @@ class TemplateLayout extends Layout
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => $this->icon(),
-                        Config::get('global.default_template') => 'fa fa-home fa-fw text-blue-500',
+                        config('global.default_template') => 'fa fa-home fa-fw text-blue-500',
                     ])
                     ->setMenu([
                         'actions' => [
@@ -470,7 +468,11 @@ class TemplateLayout extends Layout
                                 'loader' => true,
                             ],
                             [
-                                'component' => 'search',
+                                'icon' => 'fa fa-circle-plus',
+                                'title' => __('global.new_template'),
+                                'to' => [
+                                    'path' => '/templates/0',
+                                ],
                             ],
                         ],
                     ])

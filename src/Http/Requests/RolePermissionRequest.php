@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class RolePermissionRequest extends FormRequest
 {
@@ -14,7 +13,7 @@ class RolePermissionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::check(['new_role', 'edit_role', 'save_role', 'delete_role']);
+        return auth()->user()->can(['new_role', 'edit_role', 'save_role', 'delete_role']);
     }
 
     /**

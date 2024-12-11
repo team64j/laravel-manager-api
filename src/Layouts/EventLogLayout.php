@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\EventLog;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Title;
@@ -25,7 +24,7 @@ class EventLogLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.eventlog');
+        return __('global.eventlog');
     }
 
     /**
@@ -33,7 +32,7 @@ class EventLogLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.eventlog_viewer');
+        return __('global.eventlog_viewer');
     }
 
     /**
@@ -43,7 +42,7 @@ class EventLogLayout extends Layout
     {
         return [
             Actions::make()
-                ->setClear(Lang::get('global.clear_log'), '', 'btn-red', 'fa fa-trash'),
+                ->setClear(__('global.clear_log'), '', 'btn-red', 'fa fa-trash'),
 
             Title::make()
                 ->setTitle($this->titleList())
@@ -55,7 +54,7 @@ class EventLogLayout extends Layout
                 ->setHistory(true)
                 ->addColumn(
                     'type',
-                    Lang::get('global.type'),
+                    __('global.type'),
                     [
                         'textAlign' => 'center',
                         'width' => '10rem',
@@ -66,10 +65,10 @@ class EventLogLayout extends Layout
                         3 => '<i class="fa fa-times-circle text-rose-500"></i>',
                     ]
                 )
-                ->addColumn('source', Lang::get('global.source'))
-                ->addColumn('createdon', Lang::get('global.date'), ['textAlign' => 'center', 'width' => '20rem'])
-                ->addColumn('eventid', Lang::get('global.event_id'), ['textAlign' => 'center', 'width' => '10rem'])
-                ->addColumn(['user', 'users.username'], Lang::get('global.user'), ['width' => '20rem']),
+                ->addColumn('source', __('global.source'))
+                ->addColumn('createdon', __('global.date'), ['textAlign' => 'center', 'width' => '20rem'])
+                ->addColumn('eventid', __('global.event_id'), ['textAlign' => 'center', 'width' => '10rem'])
+                ->addColumn(['user', 'users.username'], __('global.user'), ['width' => '20rem']),
         ];
     }
 
@@ -102,10 +101,10 @@ class EventLogLayout extends Layout
                     <th colspan="4" class="text-lg pb-4">' . e($model->source . ' - ' . $this->titleList()) . '</th>
                   </tr>
                   <tr>
-                    <th>' . Lang::get('global.event_id') . '</th>
-                    <th>' . Lang::get('global.source') . '</th>
-                    <th>' . Lang::get('global.date') . '</th>
-                    <th>' . Lang::get('global.user') . '</th>
+                    <th>' . __('global.event_id') . '</th>
+                    <th>' . __('global.source') . '</th>
+                    <th>' . __('global.date') . '</th>
+                    <th>' . __('global.user') . '</th>
                   </tr>
                   </thead>
                   <tbody>

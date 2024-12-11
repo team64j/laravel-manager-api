@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Vite;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
@@ -405,7 +400,7 @@ class BootstrapController extends Controller
      */
     public function getMenu(bool $edit = false): array
     {
-        if (!$edit && Config::has('global.workspace_topmenu_data') &&
+        if (!$edit && config()->has('global.workspace_topmenu_data') &&
             config('global.workspace_topmenu_data') != '[]'
         ) {
             $data = config('global.workspace_topmenu_data');
@@ -797,7 +792,7 @@ class BootstrapController extends Controller
             foreach ($matches[1] as $match) {
                 $item = str_replace(
                     '[%' . $match . '%]',
-                    Lang::has('global.' . $match) ? __('global.' . $match) : '',
+                    trans()->has('global.' . $match) ? __('global.' . $match) : '',
                     $item
                 );
             }
@@ -867,7 +862,7 @@ class BootstrapController extends Controller
     {
         foreach ($data as $k => &$item) {
             if (!empty($item['permissions'])) {
-                if (!Gate::check($item['permissions'])) {
+                if (!auth()->user()->can($item['permissions'])) {
                     unset($data[$k]);
                 }
                 unset($item['permissions']);
@@ -979,7 +974,7 @@ class BootstrapController extends Controller
             ->isSmallTabs()
             ->isLoadOnce();
 
-        if (!$edit && Config::has('global.workspace_tree_data') && config('global.workspace_tree_data') != '[]') {
+        if (!$edit && config()->has('global.workspace_tree_data') && config('global.workspace_tree_data') != '[]') {
             $data = json_decode(config('global.workspace_tree_data'), true);
         } else {
             $data = [
@@ -1053,7 +1048,7 @@ class BootstrapController extends Controller
                 continue;
             }
 
-            $tab = App::call($v['class']);
+            $tab = app()->call($v['class']);
 
             if ($tab) {
                 $tabs->addTab(...$tab);

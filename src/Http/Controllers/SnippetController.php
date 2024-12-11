@@ -8,14 +8,10 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteSnippet;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -81,14 +77,14 @@ class SnippetController extends Controller
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
                     'id' => $group->first()->category,
-                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
+                    'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map->withoutRelations(),
                 ];
             };
@@ -107,7 +103,7 @@ class SnippetController extends Controller
                     'title' => $this->layout->titleList(),
                     'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+                ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
@@ -138,7 +134,7 @@ class SnippetController extends Controller
     {
         $data = $request->validated();
 
-        $data['snippet'] = Str::replaceFirst('<?php', '', $data['snippet'] ?? '');
+        $data['snippet'] = str($data['snippet'] ?? '')->replaceFirst('<?php', '');
         
         $model = SiteSnippet::query()->create($data);
 
@@ -212,7 +208,7 @@ class SnippetController extends Controller
         
         $data = $request->validated();
 
-        $data['snippet'] = Str::replaceFirst('<?php', '', $data['snippet'] ?? '');
+        $data['snippet'] = str($data['snippet'] ?? '')->replaceFirst('<?php', '');
 
         $model->update($data);
 
@@ -275,9 +271,9 @@ class SnippetController extends Controller
 
         $result = SiteSnippet::withoutLocked()
             ->where(fn($query) => $filter ? $query->where('name', 'like', '%' . $filter . '%') : null)
-            ->whereIn('disabled', Auth::user()->isAdmin() ? [0, 1] : [0])
+            ->whereIn('disabled', auth()->user()->isAdmin() ? [0, 1] : [0])
             ->orderBy('name')
-            ->paginate(Config::get('global.number_of_results'), [
+            ->paginate(config('global.number_of_results'), [
                 'id',
                 'name',
                 'description',
@@ -292,7 +288,7 @@ class SnippetController extends Controller
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
-                        'name' => Lang::get('global.new_snippet'),
+                        'name' => __('global.new_snippet'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/snippets/0',
@@ -343,7 +339,7 @@ class SnippetController extends Controller
                 ->map(fn(SiteSnippet $item) => $item->setHidden(['category']));
 
             return ApiResource::collection($result)
-                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+                ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -352,7 +348,7 @@ class SnippetController extends Controller
                 ->with('category')
                 ->select($fields)
                 ->where('category', $category)->orderBy('name')
-                ->paginate(Config::get('global.number_of_results'))
+                ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
             return ApiResource::collection($result->map(fn(SiteSnippet $item) => $item->setHidden(['category'])))
@@ -372,7 +368,7 @@ class SnippetController extends Controller
         $result = $result->map(function ($category) use ($request, $settings) {
             $data = [
                 'id' => $category->getKey() ?? 0,
-                'name' => $category->category ?? Lang::get('global.no_category'),
+                'name' => $category->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
@@ -389,10 +385,10 @@ class SnippetController extends Controller
 
             return $data;
         })
-            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['name'])->upper() > str($b['name'])->upper()))
             ->values();
 
         return ApiResource::collection($result)
-            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+            ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -24,7 +23,7 @@ class WorkspaceLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.settings_ui');
+        return __('global.settings_ui');
     }
 
     /**

@@ -9,12 +9,10 @@ use EvolutionCMS\Models\User;
 use EvolutionCMS\Models\UserAttribute;
 use EvolutionCMS\Models\UserRole;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\UserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\UserLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -117,7 +115,7 @@ class UserController extends Controller
                 $filterDatetime->count() == 2,
                 fn($query) => $query->whereBetween($a->qualifyColumn('lastlogin'), $filterDatetime)
             )
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         $datetimeMin = UserAttribute::query()->where('lastlogin', '>', 0)->min('lastlogin');
@@ -143,7 +141,7 @@ class UserController extends Controller
                     ])
                     ->prepend([
                         'key' => '',
-                        'value' => Lang::get('global.mgrlog_anyall'),
+                        'value' => __('global.mgrlog_anyall'),
                     ], '')
                     ->values(),
             ],
@@ -162,12 +160,12 @@ class UserController extends Controller
                 'data' => $distinct->keyBy('blocked')
                     ->map(fn(UserAttribute $item) => [
                         'key' => $item->blocked,
-                        'value' => $item->blocked ? Lang::get('global.yes') : Lang::get('global.no'),
+                        'value' => $item->blocked ? __('global.yes') : __('global.no'),
                         'selected' => $item->blocked == $filterBlocked,
                     ])
                     ->prepend([
                         'key' => '',
-                        'value' => Lang::get('global.mgrlog_anyall'),
+                        'value' => __('global.mgrlog_anyall'),
                     ], '')
                     ->sortBy('blocked')
                     ->values(),
@@ -186,7 +184,7 @@ class UserController extends Controller
                         'dir' => $dir,
                     ],
                     'filters' => $filters,
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+                ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
@@ -252,7 +250,7 @@ class UserController extends Controller
                 $filter,
                 fn($q) => $q->where('username', 'like', '%' . $filter . '%')->orWhere('username', $filter)
             )
-            ->paginate(Config::get('global.number_of_results'), ['id', 'username as name']);
+            ->paginate(config('global.number_of_results'), ['id', 'username as name']);
 
         return ApiResource::collection($result)
             ->meta([
@@ -260,7 +258,7 @@ class UserController extends Controller
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
-                        'name' => Lang::get('global.new_user'),
+                        'name' => __('global.new_user'),
                         'icon' => 'fa fa-plus-circle',
                         'to' => [
                             'path' => '/users/0',
@@ -294,7 +292,7 @@ class UserController extends Controller
             ->select(['internalKey', 'internalKey as id', 'ip', 'lasthit'])
             ->with('user', fn($q) => $q->select(['id', 'username']))
             ->orderByDesc('lasthit')
-            ->paginate(Config::get('global.number_of_results'));
+            ->paginate(config('global.number_of_results'));
 
         return ApiResource::collection($result->items())
             ->meta([
@@ -308,7 +306,7 @@ class UserController extends Controller
                     ],
                     [
                         'name' => 'user.username',
-                        'label' => Lang::get('global.user'),
+                        'label' => __('global.user'),
                     ],
                     [
                         'name' => 'ip',
@@ -319,7 +317,7 @@ class UserController extends Controller
                     ],
                     [
                         'name' => 'lasthit',
-                        'label' => Lang::get('global.onlineusers_lasthit'),
+                        'label' => __('global.onlineusers_lasthit'),
                         'style' => [
                             'textAlign' => 'center',
                         ],

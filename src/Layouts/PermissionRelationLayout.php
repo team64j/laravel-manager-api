@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -20,7 +19,7 @@ class PermissionRelationLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.manage_permission');
+        return $value ?? __('global.manage_permission');
     }
 
     /**
@@ -28,7 +27,7 @@ class PermissionRelationLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.manage_permission');
+        return __('global.manage_permission');
     }
 
     /**
@@ -50,7 +49,7 @@ class PermissionRelationLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.create_new'),
+                    __('global.create_new'),
                     '/permissions/relations/0',
                     'btn-green'
                 ),
@@ -58,32 +57,32 @@ class PermissionRelationLayout extends Layout
             Title::make()
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
-                ->setHelp(Lang::get('global.access_permissions_links_tab')),
+                ->setHelp(__('global.access_permissions_links_tab')),
 
             Tabs::make()
                 ->setId('permissions')
                 ->setHistory(true)
                 ->addTab(
                     'groups',
-                    Lang::get('global.web_access_permissions_user_groups'),
+                    __('global.web_access_permissions_user_groups'),
                     route: route('manager.api.permissions.groups')
                 )
                 ->addTab(
                     'resources',
-                    Lang::get('global.access_permissions_resource_groups'),
+                    __('global.access_permissions_resource_groups'),
                     route: route('manager.api.permissions.resources')
                 )
                 ->addTab(
                     'relations',
-                    Lang::get('global.access_permissions_links'),
+                    __('global.access_permissions_links'),
                     route: route('manager.api.permissions.relations'),
                     slot: Panel::make()
                     ->setModel('data')
                     ->setId('relations')
                     ->setHistory(true)
                     ->setRoute('/permissions/relations/:id')
-                    ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
-                    ->addColumn('document_groups', Lang::get('global.access_permissions_resource_groups'))
+                        ->addColumn('name', __('global.name'), ['width' => '20rem', 'fontWeight' => 500])
+                        ->addColumn('document_groups', __('global.access_permissions_resource_groups'))
                 ),
         ];
     }

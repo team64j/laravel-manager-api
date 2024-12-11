@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\Permissions;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RolePermissionRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\RolePermissionLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -40,14 +37,14 @@ class RolePermissionController extends Controller
      */
     public function index(RolePermissionRequest $request, RolePermissionLayout $layout): ApiCollection
     {
-        $data = Collection::make();
+        $data = collect();
         $filter = $request->get('filter');
 
         $result = Permissions::query()
             ->with('groups')
             ->when($filter, fn($query) => $query->where('key', 'like', '%' . $filter . '%'))
             ->orderBy('id')
-            ->paginate(Config::get('global.number_of_results'));
+            ->paginate(config('global.number_of_results'));
 
         /** @var Permissions $item */
         foreach ($result->items() as $item) {
@@ -55,19 +52,19 @@ class RolePermissionController extends Controller
                 if ($item->group_id) {
                     $data[$item->group_id] = [
                         'id' => $item->group_id,
-                        'name' => Lang::get('global.' . $item->groups->lang_key),
-                        'data' => Collection::make(),
+                        'name' => __('global.' . $item->groups->lang_key),
+                        'data' => collect(),
                     ];
                 } else {
                     $data[0] = [
                         'id' => 0,
-                        'name' => Lang::get('global.no_category'),
-                        'data' => Collection::make(),
+                        'name' => __('global.no_category'),
+                        'data' => collect(),
                     ];
                 }
             }
 
-            $item->name = Lang::get('global.' . $item->lang_key);
+            $item->name = __('global.' . $item->lang_key);
 
             $data[$item->group_id]['data']->add($item->withoutRelations());
         }
@@ -119,7 +116,7 @@ class RolePermissionController extends Controller
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title(
-                    Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                    trans()->has('global.' . $model->lang_key) ? __('global.' . $model->lang_key) : null
                 ),
                 'icon' => $layout->icon(),
             ]);

@@ -4,13 +4,10 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\Category;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -67,16 +64,16 @@ class CategoryController extends Controller
             ->when($filter, fn($query) => $query->where('category', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('category', 'like', '%' . $filterName . '%'))
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         return ApiResource::collection($result->items())
             ->meta(
                 [
-                    'title' => Lang::get('global.category_management'),
+                    'title' => __('global.category_management'),
                     'icon' => $this->layout->icon(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+                ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             )
             ->layout($this->layout->list());
     }
@@ -229,7 +226,7 @@ class CategoryController extends Controller
         return ApiResource::collection(Category::query()->orderBy('rank')->get())
             ->layout($this->layout->sort())
             ->meta([
-                'title' => Lang::get('global.cm_sort_categories'),
+                'title' => __('global.cm_sort_categories'),
                 'icon' => $this->layout->iconSort(),
             ]);
     }
@@ -261,18 +258,18 @@ class CategoryController extends Controller
         $selected = $request->integer('selected');
 
         return ApiResource::collection(
-            Collection::make()
+            collect()
                 ->add([
                     'key' => (string) $request->input('itemNew', 'newcategory'),
-                    'value' => Lang::get('global.cm_create_new_category'),
+                    'value' => __('global.cm_create_new_category'),
                 ])
                 ->add([
-                    'name' => Lang::get('global.category_management'),
-                    'data' => Collection::make()
+                    'name' => __('global.category_management'),
+                    'data' => collect()
                         ->add(
                             new Category([
                                 'key' => 0,
-                                'category' => Lang::get('global.no_category'),
+                                'category' => __('global.no_category'),
                             ])
                         )
                         ->merge(
@@ -336,7 +333,7 @@ class CategoryController extends Controller
             ]);
 
         return ApiResource::collection($result)
-            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+            ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 
     /**
@@ -366,7 +363,7 @@ class CategoryController extends Controller
 
         $result = Category::query()
             ->when(!is_null($filter), fn($query) => $query->where('category', 'like', '%' . $filter . '%'))
-            ->paginate(Config::get('global.number_of_results'), [
+            ->paginate(config('global.number_of_results'), [
                 'id',
                 'category as name',
                 'rank',
@@ -378,7 +375,7 @@ class CategoryController extends Controller
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
-                        'name' => Lang::get('global.new_category'),
+                        'name' => __('global.new_category'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/categories/0',

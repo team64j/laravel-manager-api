@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\URL;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
@@ -67,14 +64,14 @@ class FilemanagerController extends Controller
     public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): ApiCollection
     {
         $data = [];
-        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
+        $root = realpath(config('global.rb_base_dir', app()->basePath()));
         $parent = trim(base64_decode($files), './');
         $parentPath = realpath($root . ($parent ? DIRECTORY_SEPARATOR . $parent : ''));
         $extensions = array_merge(
-//            explode(',', Config::get('global.upload_files', '')),
-//            explode(',', Config::get('global.upload_flash', '')),
-//            explode(',', Config::get('global.upload_images', '')),
-//            explode(',', Config::get('global.upload_media', '')),
+//            explode(',', config('global.upload_files', '')),
+//            explode(',', config('global.upload_flash', '')),
+//            explode(',', config('global.upload_images', '')),
+//            explode(',', config('global.upload_media', '')),
         );
         $fullTitle = $layout->title();;
 
@@ -163,9 +160,9 @@ class FilemanagerController extends Controller
 
                 if ($isImage) {
                     $folderBase = str_replace(
-                        realpath(App::basePath()),
+                        realpath(app()->basePath()),
                         '',
-                        realpath(Config::get('global.rb_base_dir'))
+                        realpath(config('global.rb_base_dir'))
                     );
 
                     $imageUrl = str_replace(
@@ -174,7 +171,7 @@ class FilemanagerController extends Controller
                         $folderBase . str_replace($root, '', $file->getPathname())
                     );
 
-                    $item['icon'] = '<img src="' . URL::to($imageUrl) . '" class="inline-block" />';
+                    $item['icon'] = '<img src="' . url($imageUrl) . '" class="inline-block" />';
                 }
 
                 $data[] = $item;
@@ -214,7 +211,7 @@ class FilemanagerController extends Controller
     {
         $data = [];
         $settings = $request->collect('settings')->toArray();
-        $root = realpath(Config::get('global.rb_base_dir', App::basePath()));
+        $root = realpath(config('global.rb_base_dir', app()->basePath()));
         $path = $settings['parent'] ?? '';
         $parentPath = realpath($root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './'));
         $opened = [];

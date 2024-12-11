@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class WorkspaceRequest extends FormRequest
 {
@@ -14,7 +13,7 @@ class WorkspaceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::check('settings');
+        return auth()->user()->can('settings');
     }
 
     /**

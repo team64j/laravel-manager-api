@@ -5,16 +5,11 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FileRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\FileLayout;
 
 class FileController extends Controller
@@ -42,7 +37,7 @@ class FileController extends Controller
     public function show(FileRequest $request, string $file, FileLayout $layout): ApiResource
     {
         $data = [];
-        $root = realpath(Config::get('global.filemanager_path', App::basePath()));
+        $root = realpath(config('global.filemanager_path', app()->basePath()));
         $filename = trim(base64_decode(urldecode($file)), '/');
         $path = $root . DIRECTORY_SEPARATOR . $filename;
         $types = [
@@ -72,7 +67,7 @@ class FileController extends Controller
             $data['url'] = str_replace(
                 DIRECTORY_SEPARATOR,
                 '/',
-                URL::to($filename, [], Config::get('global.server_protocol') == 'https')
+                url($filename, [], config('global.server_protocol') == 'https')
             );
 
             $content = File::get($path);
@@ -84,7 +79,7 @@ class FileController extends Controller
             if (!in_array($data['ext'], $ignoreExtensions, true)) {
                 if (
                     in_array($data['type'], $types) ||
-                    Str::startsWith($data['type'], 'text/') ||
+                    str($data['type'])->startsWith('text/') ||
                     in_array($data['ext'], $extensions)
                 ) {
                     $data['content'] = $content;
@@ -127,7 +122,7 @@ class FileController extends Controller
     {
         $data = [];
         $settings = $request->collect('settings')->toArray();
-        $root = realpath(Config::get('global.filemanager_path', App::basePath()));
+        $root = realpath(config('global.filemanager_path', app()->basePath()));
         $path = $settings['parent'] ?? '';
         $parentPath = $root . DIRECTORY_SEPARATOR . trim(base64_decode($path), './');
         $after = basename(base64_decode($settings['after'] ?? ''));
@@ -136,7 +131,7 @@ class FileController extends Controller
         $directories = File::directories($parentPath);
         $files = File::files($parentPath, true);
         $checkAfter = true;
-        $limit = Config::get('global.number_of_results');
+        $limit = config('global.number_of_results');
         $counter = 0;
         $next = '';
 
@@ -276,8 +271,8 @@ class FileController extends Controller
                 'pagination' => [
                     'next' => $next,
                     'lang' => [
-                        'prev' => Lang::get('global.paging_prev'),
-                        'next' => Lang::get('global.paging_next'),
+                        'prev' => __('global.paging_prev'),
+                        'next' => __('global.paging_next'),
                     ],
                 ],
             ]);

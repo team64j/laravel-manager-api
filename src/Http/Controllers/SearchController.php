@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\SiteContent;
-use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SearchRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class SearchController extends Controller
@@ -46,7 +45,7 @@ class SearchController extends Controller
                     'pagetitle as name',
                 ])
                 ->where('pagetitle', 'like', '%' . $search . '%')
-                ->limit(Config::get('global.number_of_results'))
+                ->limit(config('global.number_of_results'))
                 ->get()
                 ->map(fn(SiteContent $i) => $i->setAttribute('route', 'Document'))
                 ->toArray();

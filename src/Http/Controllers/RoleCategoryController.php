@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\PermissionsGroups;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleCategoryRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\RoleCategoryLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -48,11 +45,11 @@ class RoleCategoryController extends Controller
         $result = PermissionsGroups::query()
             ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->orderBy('id')
-            ->paginate(Config::get('global.number_of_results'));
+            ->paginate(config('global.number_of_results'));
 
-        $data = Collection::make($result->items())
+        $data = collect($result->items())
             ->map(function (PermissionsGroups $item) {
-                $item->name = Lang::get('global.' . $item->lang_key);
+                $item->name = __('global.' . $item->lang_key);
 
                 return $item;
             });
@@ -104,7 +101,7 @@ class RoleCategoryController extends Controller
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title(
-                    Lang::has('global.' . $model->lang_key) ? Lang::get('global.' . $model->lang_key) : null
+                    trans()->has('global.' . $model->lang_key) ? __('global.' . $model->lang_key) : null
                 ),
                 'icon' => $layout->icon(),
             ]);

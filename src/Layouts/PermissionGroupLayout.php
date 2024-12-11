@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -27,7 +26,7 @@ class PermissionGroupLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.manage_permission');
+        return $value ?? __('global.manage_permission');
     }
 
     /**
@@ -38,7 +37,7 @@ class PermissionGroupLayout extends Layout
         return [
             Actions::make()
                 ->setNew(
-                    Lang::get('global.create_new'),
+                    __('global.create_new'),
                     '/permissions/groups/0',
                     'btn-green'
                 ),
@@ -46,32 +45,32 @@ class PermissionGroupLayout extends Layout
             Title::make()
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
-                ->setHelp(Lang::get('global.access_permissions_users_tab')),
+                ->setHelp(__('global.access_permissions_users_tab')),
 
             Tabs::make()
                 ->setId('permissions')
                 ->setHistory(true)
                 ->addTab(
                     'groups',
-                    Lang::get('global.web_access_permissions_user_groups'),
+                    __('global.web_access_permissions_user_groups'),
                     route: route('manager.api.permissions.groups'),
                     slot: Panel::make()
                     ->setModel('data')
                     ->setId('groups')
                     ->setHistory(true)
                     ->setRoute('/permissions/groups/:id')
-                    ->addColumn('name', Lang::get('global.name'), ['width' => '20rem', 'fontWeight' => 500])
-                    ->addColumn('users', Lang::get('global.access_permissions_users_in_group'))
+                        ->addColumn('name', __('global.name'), ['width' => '20rem', 'fontWeight' => 500])
+                        ->addColumn('users', __('global.access_permissions_users_in_group'))
                     ->addColumn(
                         'actions',
-                        Lang::get('global.mgrlog_action'),
+                        __('global.mgrlog_action'),
                         ['width' => '3rem', 'textAlign' => 'center'],
                         false,
                         [],
                         [
                             'delete' => [
                                 'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                'help' => Lang::get('global.delete'),
+                                'help' => __('global.delete'),
                                 'helpFit' => true,
                                 'noOpacity' => true,
                             ],
@@ -80,12 +79,12 @@ class PermissionGroupLayout extends Layout
                 )
                 ->addTab(
                     'resources',
-                    Lang::get('global.access_permissions_resource_groups'),
+                    __('global.access_permissions_resource_groups'),
                     route: route('manager.api.permissions.resources')
                 )
                 ->addTab(
                     'relations',
-                    Lang::get('global.access_permissions_links'),
+                    __('global.access_permissions_links'),
                     route: route('manager.api.permissions.relations')
                 ),
         ];

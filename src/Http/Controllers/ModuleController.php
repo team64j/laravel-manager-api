@@ -8,14 +8,10 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteModule;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ModuleRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\ModuleLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -81,14 +77,14 @@ class ModuleController extends Controller
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
                     'id' => $group->first()->category,
-                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
+                    'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map->withoutRelations(),
                 ];
             };
@@ -107,7 +103,7 @@ class ModuleController extends Controller
                     'title' => $this->layout->titleList(),
                     'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+                ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
@@ -138,7 +134,7 @@ class ModuleController extends Controller
     {
         $data = $request->validated();
 
-        $data['modulecode'] = trim(Str::replaceFirst('<?php', '', $data['modulecode'] ?? ''));
+        $data['modulecode'] = trim(str($data['modulecode'] ?? '')->replaceFirst('<?php', ''));
 
         $model = SiteModule::query()->create($data);
 
@@ -170,7 +166,10 @@ class ModuleController extends Controller
         $model = SiteModule::query()->findOrNew($id);
 
         $model->setAttribute('category', $model->category ?? 0);
-        $model->setAttribute('modulecode', "<?php\r\n" . trim(Str::replaceFirst('<?php', '', $model->modulecode ?? '')));
+        $model->setAttribute(
+            'modulecode',
+            "<?php\r\n" . trim(str($model->modulecode ?? '')->replaceFirst('<?php', ''))
+        );
 
         return ApiResource::make($model)
             ->layout($this->layout->default($model))
@@ -211,7 +210,7 @@ class ModuleController extends Controller
 
         $data = $request->validated();
 
-        $data['modulecode'] = trim(Str::replaceFirst('<?php', '', $data['modulecode'] ?? ''));
+        $data['modulecode'] = trim(str($data['modulecode'] ?? '')->replaceFirst('<?php', ''));
 
         $model->update($data);
 
@@ -275,8 +274,8 @@ class ModuleController extends Controller
         $result = SiteModule::withoutLocked()
             ->orderBy('name')
             ->where(fn($query) => $filter ? $query->where('name', 'like', '%' . $filter . '%') : null)
-            ->whereIn('disabled', Auth::user()->isAdmin() ? [0, 1] : [0])
-            ->paginate(Config::get('global.number_of_results'), [
+            ->whereIn('disabled', auth()->user()->isAdmin() ? [0, 1] : [0])
+            ->paginate(config('global.number_of_results'), [
                 'id',
                 'name',
                 'locked',
@@ -289,7 +288,7 @@ class ModuleController extends Controller
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
-                        'name' => Lang::get('global.new_module'),
+                        'name' => __('global.new_module'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/modules/0',
@@ -328,7 +327,7 @@ class ModuleController extends Controller
             SiteModule::withoutLocked()
                 ->withoutProtected()
                 ->orderBy('name')
-                ->whereIn('disabled', Auth::user()->isAdmin() ? [0, 1] : [0])
+                ->whereIn('disabled', auth()->user()->isAdmin() ? [0, 1] : [0])
                 ->get([
                     'id',
                     'name',
@@ -424,7 +423,7 @@ class ModuleController extends Controller
                 ->map(fn(SiteModule $item) => $item->setHidden(['category']));
 
             return ApiResource::collection($result)
-                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+                ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -433,7 +432,7 @@ class ModuleController extends Controller
                 ->with('category')
                 ->select($fields)
                 ->where('category', $category)->orderBy('name')
-                ->paginate(Config::get('global.number_of_results'))
+                ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
             return ApiResource::collection($result->map(fn(SiteModule $item) => $item->setHidden(['category'])))
@@ -453,7 +452,7 @@ class ModuleController extends Controller
         $result = $result->map(function ($category) use ($request, $settings) {
             $data = [
                 'id' => $category->getKey() ?? 0,
-                'name' => $category->category ?? Lang::get('global.no_category'),
+                'name' => $category->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
@@ -470,10 +469,10 @@ class ModuleController extends Controller
 
             return $data;
         })
-            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['name'])->upper() > str($b['name'])->upper()))
             ->values();
 
         return ApiResource::collection($result)
-            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+            ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 }

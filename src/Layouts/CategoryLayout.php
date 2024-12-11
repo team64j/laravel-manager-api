@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
@@ -44,7 +43,7 @@ class CategoryLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.new_category');
+        return __('global.new_category');
     }
 
     /**
@@ -52,7 +51,7 @@ class CategoryLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.category_management');
+        return __('global.category_management');
     }
 
     /**
@@ -65,7 +64,7 @@ class CategoryLayout extends Layout
         return [
             Actions::make()
                 ->setCancel(
-                    Lang::get('global.cancel'),
+                    __('global.cancel'),
                     [
                         'path' => '/elements/categories',
                         'close' => true,
@@ -79,7 +78,7 @@ class CategoryLayout extends Layout
 
             Title::make()
                 ->setModel('category')
-                ->setTitle(Lang::get('global.new_category'))
+                ->setTitle(__('global.new_category'))
                 ->setIcon(self::icon())
                 ->setId($model->getKey()),
         ];
@@ -92,9 +91,9 @@ class CategoryLayout extends Layout
     {
         return [
             Actions::make()
-                ->setAction('sort', Lang::get('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
+                ->setAction('sort', __('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
                 ->setNew(
-                    Lang::get('global.cm_add_new_category'),
+                    __('global.cm_add_new_category'),
                     '/categories/0',
                     'btn-green',
                     'fa fa-plus'
@@ -110,7 +109,7 @@ class CategoryLayout extends Layout
                 ->isWatch()
                 ->addTab(
                     'templates',
-                    Lang::get('global.templates'),
+                    __('global.templates'),
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
@@ -118,7 +117,7 @@ class CategoryLayout extends Layout
                 )
                 ->addTab(
                     'tvs',
-                    Lang::get('global.tmplvars'),
+                    __('global.tmplvars'),
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
@@ -126,7 +125,7 @@ class CategoryLayout extends Layout
                 )
                 ->addTab(
                     'chunks',
-                    Lang::get('global.htmlsnippets'),
+                    __('global.htmlsnippets'),
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
@@ -134,7 +133,7 @@ class CategoryLayout extends Layout
                 )
                 ->addTab(
                     'snippets',
-                    Lang::get('global.snippets'),
+                    __('global.snippets'),
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
@@ -142,7 +141,7 @@ class CategoryLayout extends Layout
                 )
                 ->addTab(
                     'plugins',
-                    Lang::get('global.plugins'),
+                    __('global.plugins'),
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
@@ -150,7 +149,7 @@ class CategoryLayout extends Layout
                 )
                 ->addTab(
                     'modules',
-                    Lang::get('global.modules'),
+                    __('global.modules'),
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
@@ -158,7 +157,7 @@ class CategoryLayout extends Layout
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_management'),
+                    __('global.category_management'),
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
@@ -186,20 +185,20 @@ class CategoryLayout extends Layout
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
                             true
                         )
                         ->addColumn(
                             'category',
-                            Lang::get('global.cm_category_name'),
+                            __('global.cm_category_name'),
                             ['fontWeight' => 500],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'rank',
-                            Lang::get('global.cm_category_position'),
+                            __('global.cm_category_position'),
                             ['width' => '15rem', 'textAlign' => 'center'],
                             true
                         )
@@ -221,7 +220,7 @@ class CategoryLayout extends Layout
                 ->setSave(),
 
             Title::make()
-                ->setTitle(Lang::get('global.cm_sort_categories'))
+                ->setTitle(__('global.cm_sort_categories'))
                 ->setIcon('fa fa-sort-numeric-asc'),
 
             Panel::make()
@@ -240,13 +239,13 @@ class CategoryLayout extends Layout
                 )
                 ->addColumn(
                     'id',
-                    Lang::get('global.id'),
+                    __('global.id'),
                     ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
                 )
-                ->addColumn('category', Lang::get('global.cm_category_name'), ['fontWeight' => 500])
+                ->addColumn('category', __('global.cm_category_name'), ['fontWeight' => 500])
                 ->addColumn(
                     'rank',
-                    Lang::get('global.cm_category_position'),
+                    __('global.cm_category_position'),
                     ['width' => '15rem', 'textAlign' => 'center']
                 )
                 ->isDraggable('rank'),
@@ -286,7 +285,11 @@ class CategoryLayout extends Layout
                                 'loader' => true,
                             ],
                             [
-                                'component' => 'search',
+                                'icon' => 'fa fa-circle-plus',
+                                'title' => __('global.new_category'),
+                                'to' => [
+                                    'path' => '/categories/0',
+                                ],
                             ],
                         ],
                     ])

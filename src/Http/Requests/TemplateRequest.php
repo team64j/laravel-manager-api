@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Lang;
 use Throwable;
 
 class TemplateRequest extends FormRequest
@@ -19,11 +17,11 @@ class TemplateRequest extends FormRequest
     {
         return match ($this->route()->getActionMethod()) {
             'select' => true,
-            'index' => Gate::check('edit_template'),
-            'store' => Gate::check('new_template'),
-            'update' => Gate::check('save_template'),
-            'destroy' => Gate::check('delete_template'),
-            default => Gate::any(['edit_template', 'new_template', 'save_template', 'delete_template']),
+            'index' => auth()->user()->can('edit_template'),
+            'store' => auth()->user()->can('new_template'),
+            'update' => auth()->user()->can('save_template'),
+            'destroy' => auth()->user()->can('delete_template'),
+            default => auth()->user()->canAny(['edit_template', 'new_template', 'save_template', 'delete_template']),
         };
     }
 
@@ -51,10 +49,10 @@ class TemplateRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'attributes.templatename' => '"' . Lang::get('global.template_name') . '"',
-            'attributes.templatealias' => '"' . Lang::get('global.alias') . '"',
-            'attributes.description' => '"' . Lang::get('global.template_desc') . '"',
-            'attributes.content' => '"' . Lang::get('global.template_code') . '"',
+            'attributes.templatename' => '"' . __('global.template_name') . '"',
+            'attributes.templatealias' => '"' . __('global.alias') . '"',
+            'attributes.description' => '"' . __('global.template_desc') . '"',
+            'attributes.content' => '"' . __('global.template_code') . '"',
         ];
     }
 }

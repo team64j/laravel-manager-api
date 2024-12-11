@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -24,7 +23,7 @@ class SystemInfoLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.view_sysinfo');
+        return __('global.view_sysinfo');
     }
 
     /**

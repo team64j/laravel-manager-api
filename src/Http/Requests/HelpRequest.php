@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class HelpRequest extends FormRequest
 {
@@ -14,7 +13,7 @@ class HelpRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::check('help');
+        return auth()->user()->can('help');
     }
 
     /**

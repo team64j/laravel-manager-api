@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class ModuleRequest extends FormRequest
 {
@@ -15,13 +14,13 @@ class ModuleRequest extends FormRequest
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
-            'index' => Gate::check('edit_module'),
-            'store' => Gate::check('new_module'),
-            'update' => Gate::check('save_module'),
-            'destroy' => Gate::check('delete_module'),
-            'exec' => Gate::check('list_module'),
-            'run' => Gate::check('exec_module'),
-            default => Gate::any(['edit_module', 'new_module', 'save_module', 'delete_module']),
+            'index' => auth()->user()->can('edit_module'),
+            'store' => auth()->user()->can('new_module'),
+            'update' => auth()->user()->can('save_module'),
+            'destroy' => auth()->user()->can('delete_module'),
+            'exec' => auth()->user()->can('list_module'),
+            'run' => auth()->user()->can('exec_module'),
+            default => auth()->user()->canAny(['edit_module', 'new_module', 'save_module', 'delete_module']),
         };
     }
 

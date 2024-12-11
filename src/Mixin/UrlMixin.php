@@ -6,9 +6,6 @@ namespace Team64j\LaravelManagerApi\Mixin;
 
 use Closure;
 use EvolutionCMS\Models\SiteContent;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\URL;
 
 /**
@@ -23,7 +20,7 @@ class UrlMixin
      */
     public function getCurrentRoute(): Closure
     {
-        return fn() => URL::getRouteByPath(Request::getPathInfo());
+        return fn() => URL::getRouteByPath(request()->getPathInfo());
     }
 
     /**
@@ -33,11 +30,11 @@ class UrlMixin
     {
         return function (string $path): string
         {
-            $prefix = Config::get('global.friendly_url_prefix', '');
-            $suffix = Config::get('global.friendly_url_suffix', '');
-            $secure = Config::get('global.server_protocol') == 'https';
+            $prefix = config('global.friendly_url_prefix', '');
+            $suffix = config('global.friendly_url_suffix', '');
+            $secure = config('global.server_protocol') == 'https';
 
-            return URL::to($prefix . trim($path, '/') . $suffix, [], $secure);
+            return url($prefix . trim($path, '/') . $suffix, [], $secure);
         };
     }
 
@@ -52,12 +49,12 @@ class UrlMixin
                 return null;
             }
 
-            return Cache::store('file')
+            return cache()->store('file')
                 ->rememberForever('cms.routes.' . $id, function () use ($id) {
                     $routes = URL::getParentsById($id, true);
 
                     if (!empty($routes[$id])) {
-                        $siteStart = Config::get('global.site_start');
+                        $siteStart = config('global.site_start');
                         $route = $routes[$id];
                         $path = '/';
 
@@ -92,15 +89,15 @@ class UrlMixin
         {
             $path = trim($path, '/');
 
-            if (Cache::has('cms.routes.' . $path)) {
-                return Cache::get('cms.routes.' . $path);
+            if (cache()->has('cms.routes.' . $path)) {
+                return cache()->get('cms.routes.' . $path);
             }
 
             if ($path == '') {
-                $route = URL::getRouteById((int) Config::get('global.site_start'));
+                $route = URL::getRouteById((int) config('global.site_start'));
 
                 if ($route) {
-                    Cache::forever('cms.routes.' . $path, $route);
+                    cache()->forever('cms.routes.' . $path, $route);
                 }
 
                 return $route;
@@ -147,12 +144,12 @@ class UrlMixin
             }
 
             if ($route) {
-                Cache::forever('cms.routes.' . $path, $route);
+                cache()->forever('cms.routes.' . $path, $route);
 
                 return $route;
             }
 
-            return URL::getRouteById((int) Config::get('global.error_page'));
+            return URL::getRouteById((int) config('global.error_page'));
         };
     }
 

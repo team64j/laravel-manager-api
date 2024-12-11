@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Title;
 
@@ -30,7 +29,7 @@ class CacheLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.refresh_site');
+        return __('global.refresh_site');
     }
 
     /**

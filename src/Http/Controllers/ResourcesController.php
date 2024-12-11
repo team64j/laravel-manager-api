@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\SiteContent;
-use Illuminate\Support\Facades\Config;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourcesRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
@@ -79,7 +78,7 @@ class ResourcesController extends Controller
             ->select($fields)
             ->where('parent', $id)
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         $model = SiteContent::withTrashed()->findOr($id, [

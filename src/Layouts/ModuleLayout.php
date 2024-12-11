@@ -7,8 +7,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteModule;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -48,7 +46,7 @@ class ModuleLayout extends Layout
      */
     public function title(string $value = null): string
     {
-        return $value ?? Lang::get('global.new_module');
+        return $value ?? __('global.new_module');
     }
 
     /**
@@ -56,7 +54,7 @@ class ModuleLayout extends Layout
      */
     public function titleList(): string
     {
-        return Lang::get('global.modules');
+        return __('global.modules');
     }
 
     /**
@@ -71,8 +69,8 @@ class ModuleLayout extends Layout
         $breadcrumbs = [
             [
                 'id' => $category->getKey() ?? 0,
-                'title' => Lang::get('global.modules') . ': ' .
-                    ($category->category ?? Lang::get('global.no_category')),
+                'title' => __('global.modules') . ': ' .
+                    ($category->category ?? __('global.no_category')),
                 'to' => '/elements/modules?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
@@ -80,7 +78,7 @@ class ModuleLayout extends Layout
         return [
             Actions::make()
                 ->setCancel(
-                    Lang::get('global.cancel'),
+                    __('global.cancel'),
                     [
                         'path' => '/elements/modules',
                         'close' => true,
@@ -102,26 +100,26 @@ class ModuleLayout extends Layout
                 ->setId('module')
                 ->addTab(
                     'general',
-                    Lang::get('global.page_data_general'),
+                    __('global.page_data_general'),
                     slot: [
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
                             ->setSlot([
-                                Input::make('name', Lang::get('global.module_name'))->setClass('mb-3')->isRequired(),
-                                Textarea::make('description', Lang::get('global.tmplvars_description'))
+                                Input::make('name', __('global.module_name'))->setClass('mb-3')->isRequired(),
+                                Textarea::make('description', __('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
                                 Checkbox::make(
                                     'analyze',
-                                    Lang::get('global.parse_docblock'),
-                                    Lang::get('global.parse_docblock_msg')
+                                    __('global.parse_docblock'),
+                                    __('global.parse_docblock_msg')
                                 )
                                     ->setCheckedValue(1, 0),
                             ]),
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
                             ->setSlot([
-                                Select::make('category', Lang::get('global.existing_category'))
+                                Select::make('category', __('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
@@ -130,22 +128,22 @@ class ModuleLayout extends Layout
                                             'key' => $model->category,
                                             'value' => $model->categories
                                                 ? $model->categories->category
-                                                : Lang::get(
+                                                : __(
                                                     'global.no_category'
                                                 ),
                                             'selected' => true,
                                         ],
                                     ]),
-                                Checkbox::make('disabled', Lang::get('global.disabled'))
+                                Checkbox::make('disabled', __('global.disabled'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Checkbox::make('locked', Lang::get('global.lock_tmplvars_msg'))
+                                Checkbox::make('locked', __('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
                         CodeEditor::make(
                             'modulecode',
-                            Lang::get('global.module_code'),
+                            __('global.module_code'),
                             null,
                             'mx-5'
                         )
@@ -155,19 +153,19 @@ class ModuleLayout extends Layout
                 )
                 ->addTab(
                     'settings',
-                    Lang::get('global.settings_properties'),
+                    __('global.settings_properties'),
                     class: 'p-5',
                     slot: [
                         Input::make(
                             'guid',
                             'GUID',
-                            Lang::get('global.import_params_msg'),
+                            __('global.import_params_msg'),
                             'mb-3'
                         ),
                         Checkbox::make(
                             'enable_sharedparams',
-                            Lang::get('global.enable_sharedparams'),
-                            Lang::get('global.enable_sharedparams_msg'),
+                            __('global.enable_sharedparams'),
+                            __('global.enable_sharedparams_msg'),
                             'mb-5'
                         ),
                         CodeEditor::make('properties')
@@ -176,25 +174,25 @@ class ModuleLayout extends Layout
                     ]
                 )
                 ->when(
-                    Config::get('global.use_udperms'),
+                    config('global.use_udperms'),
                     fn(Tabs $tabs) => $tabs
                         ->addTab(
                             'permissions',
-                            Lang::get('global.access_permissions'),
+                            __('global.access_permissions'),
                             class: 'flex-col p-5',
                             slot: [
-                                Lang::get('global.access_permissions_docs_message') . '<br/><br/>',
+                                __('global.access_permissions_docs_message') . '<br/><br/>',
 
                                 Checkbox::make()
                                     ->setModel('data.is_module_group')
-                                    ->setLabel(Lang::get('global.all_doc_groups'))
+                                    ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
                                     ->setRelation('data.document_groups', [], [], true)
                                     ->setClass('mb-3'),
 
                                 Checkbox::make()
                                     ->setModel('data.module_groups')
-                                    ->setLabel(Lang::get('global.access_permissions_resource_groups'))
+                                    ->setLabel(__('global.access_permissions_resource_groups'))
                                     ->setData(
                                         DocumentgroupName::all()
                                             ->map(fn(DocumentgroupName $group) => [
@@ -230,7 +228,7 @@ class ModuleLayout extends Layout
             Title::make()
                 ->setTitle($this->titleList())
                 ->setIcon($this->iconList())
-                ->setHelp(Lang::get('global.module_management_msg')),
+                ->setHelp(__('global.module_management_msg')),
 
             Tabs::make()
                 ->setId('elements')
@@ -238,7 +236,7 @@ class ModuleLayout extends Layout
                 ->isWatch()
                 ->addTab(
                     'templates',
-                    Lang::get('global.templates'),
+                    __('global.templates'),
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
@@ -246,7 +244,7 @@ class ModuleLayout extends Layout
                 )
                 ->addTab(
                     'tvs',
-                    Lang::get('global.tmplvars'),
+                    __('global.tmplvars'),
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
@@ -254,7 +252,7 @@ class ModuleLayout extends Layout
                 )
                 ->addTab(
                     'chunks',
-                    Lang::get('global.htmlsnippets'),
+                    __('global.htmlsnippets'),
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
@@ -262,7 +260,7 @@ class ModuleLayout extends Layout
                 )
                 ->addTab(
                     'snippets',
-                    Lang::get('global.snippets'),
+                    __('global.snippets'),
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
@@ -270,7 +268,7 @@ class ModuleLayout extends Layout
                 )
                 ->addTab(
                     'plugins',
-                    Lang::get('global.plugins'),
+                    __('global.plugins'),
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
@@ -278,7 +276,7 @@ class ModuleLayout extends Layout
                 )
                 ->addTab(
                     'modules',
-                    Lang::get('global.modules'),
+                    __('global.modules'),
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
@@ -286,7 +284,7 @@ class ModuleLayout extends Layout
                 )
                 ->addTab(
                     'categories',
-                    Lang::get('global.category_management'),
+                    __('global.category_management'),
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
@@ -307,62 +305,62 @@ class ModuleLayout extends Layout
                             [
                                 '<i class="fa fa-cube fa-fw"/>',
                                 '<i class="fa fa-cube fa-fw" title="' .
-                                Lang::get('global.locked') . '"><i class="fa fa-lock"/></i>',
+                                __('global.locked') . '"><i class="fa fa-lock"/></i>',
                             ]
                         )
                         ->addColumn(
                             'id',
-                            Lang::get('global.id'),
+                            __('global.id'),
                             ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold'],
                             true
                         )
                         ->addColumn(
                             'name',
-                            Lang::get('global.module_name'),
+                            __('global.module_name'),
                             ['width' => '20rem', 'fontWeight' => 500],
                             true,
                             filter: true
                         )
                         ->addColumn(
                             'description',
-                            Lang::get('global.module_desc')
+                            __('global.module_desc')
                         )
                         ->addColumn(
                             'locked',
-                            Lang::get('global.locked'),
+                            __('global.locked'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'disabled',
-                            Lang::get('global.disabled'),
+                            __('global.disabled'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . Lang::get('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . Lang::get('global.yes') . '</span>',
+                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
+                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
                             ]
                         )
                         ->addColumn(
                             'actions',
-                            Lang::get('global.onlineusers_action'),
+                            __('global.onlineusers_action'),
                             ['width' => '10rem', 'textAlign' => 'center'],
                             false,
                             [],
                             [
                                 'copy' => [
                                     'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => Lang::get('global.duplicate'),
+                                    'help' => __('global.duplicate'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
                                 'delete' => [
                                     'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => Lang::get('global.delete'),
+                                    'help' => __('global.delete'),
                                     'helpFit' => true,
                                     'noOpacity' => true,
                                 ],
@@ -379,7 +377,7 @@ class ModuleLayout extends Layout
     {
         return Tab::make()
             ->setId('modules')
-            ->setTitle(Lang::get('global.modules'))
+            ->setTitle(__('global.modules'))
             ->setIcon($this->iconList())
             ->setPermissions('edit_module')
             ->setRoute('/modules/:id')
@@ -406,7 +404,11 @@ class ModuleLayout extends Layout
                                 'loader' => true,
                             ],
                             [
-                                'component' => 'search',
+                                'icon' => 'fa fa-circle-plus',
+                                'title' => __('global.new_module'),
+                                'to' => [
+                                    'path' => '/modules/0',
+                                ],
                             ],
                         ],
                     ])

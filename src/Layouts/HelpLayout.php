@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Title;
 
 class HelpLayout extends Layout
@@ -14,7 +13,7 @@ class HelpLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.help');
+        return __('global.help');
     }
 
     /**

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Media;
@@ -18,7 +17,7 @@ class FileLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.new_file');
+        return __('global.new_file');
     }
 
     /**
@@ -50,7 +49,7 @@ class FileLayout extends Layout
     {
         return [
             Actions::make()
-                ->setCancel(Lang::get('global.close'))
+                ->setCancel(__('global.close'))
                 ->when(
                     $data['basename'] ?? false,
                     fn(Actions $actions) => $actions->setDelete()->setCopy()

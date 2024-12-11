@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Support\Facades\Cache;
 use OpenApi\Annotations as OA;
 use OpenApi\Generator;
 
@@ -27,7 +26,7 @@ class OpenApiController extends Controller
      */
     public function index()
     {
-        return Cache::rememberForever(__METHOD__, function () {
+        return cache()->rememberForever(__METHOD__, function () {
             $openapi = Generator::scan(
                 [__DIR__],
                 [

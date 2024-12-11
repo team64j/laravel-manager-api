@@ -6,12 +6,10 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\ManagerLog;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemLogRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\SystemLogLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -88,7 +86,7 @@ class SystemLogController extends Controller
             ->when($filterItemId != '', fn($query) => $query->where('itemid', (int) $filterItemId))
             ->when($filterItemName, fn($query) => $query->where('itemname', $filterItemName))
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         $datetime = ManagerLog::query()
@@ -110,7 +108,7 @@ class SystemLogController extends Controller
             ])
             ->prepend([
                 'key' => '',
-                'value' => Lang::get('global.mgrlog_anyall'),
+                'value' => __('global.mgrlog_anyall'),
             ], '')
             ->filter(fn($item) => $item['value'])
             ->values();
@@ -124,7 +122,7 @@ class SystemLogController extends Controller
             ])
             ->prepend([
                 'key' => '',
-                'value' => Lang::get('global.mgrlog_anyall'),
+                'value' => __('global.mgrlog_anyall'),
             ], 0)
             ->filter(fn($item) => $item['value'])
             ->values();
@@ -138,7 +136,7 @@ class SystemLogController extends Controller
             ])
             ->prepend([
                 'key' => '',
-                'value' => Lang::get('global.mgrlog_anyall'),
+                'value' => __('global.mgrlog_anyall'),
             ], '')
             ->values();
 
@@ -151,7 +149,7 @@ class SystemLogController extends Controller
             ])
             ->prepend([
                 'key' => '',
-                'value' => Lang::get('global.mgrlog_anyall'),
+                'value' => __('global.mgrlog_anyall'),
             ], 0)
             ->filter(fn($item) => $item['value'])
             ->values();
@@ -164,7 +162,7 @@ class SystemLogController extends Controller
             [
                 'name' => 'action',
                 'data' => $filterAction,
-                'placeholder' => Lang::get('global.mgrlog_action'),
+                'placeholder' => __('global.mgrlog_action'),
             ],
             [
                 'name' => 'itemid',

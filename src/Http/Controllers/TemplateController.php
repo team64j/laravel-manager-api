@@ -11,10 +11,6 @@ use EvolutionCMS\Models\SiteTmplvarTemplate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
@@ -84,7 +80,7 @@ class TemplateController extends Controller
             ->when($name, fn($query) => $query->where('templatename', 'like', '%' . $name . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         $viewPath = resource_path('views');
@@ -95,7 +91,7 @@ class TemplateController extends Controller
             if (file_exists($viewPath . $file)) {
                 $item->setAttribute(
                     'file.help',
-                    Lang::get('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath . $file
+                    __('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath . $file
                 );
             }
 
@@ -106,7 +102,7 @@ class TemplateController extends Controller
             $callbackGroup = function ($group) use ($callbackItem) {
                 return [
                     'id' => $group->first()->category,
-                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
+                    'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map($callbackItem),
                 ];
             };
@@ -125,7 +121,7 @@ class TemplateController extends Controller
                     'title' => $this->layout->titleList(),
                     'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+                ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
@@ -192,7 +188,7 @@ class TemplateController extends Controller
             'tmplvarid'
         );
 
-        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+        $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
 
         if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
             file_put_contents($bladeFile, $model->content);
@@ -244,7 +240,7 @@ class TemplateController extends Controller
             'tmplvarid'
         );
 
-        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+        $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
 
         if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
             file_put_contents($bladeFile, $model->content);
@@ -277,7 +273,7 @@ class TemplateController extends Controller
 //        $model = SiteTemplate::query()->findOrFail($id);
 //        $model->delete();
 //
-//        $bladeFile = current(Config::get('view.paths')) . '/' . $model->templatealias . '.blade.php';
+//        $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
 //
 //        if (file_exists($bladeFile)) {
 //            unlink($bladeFile);
@@ -314,7 +310,7 @@ class TemplateController extends Controller
         $result = SiteTemplate::withoutLocked()
             ->where(fn($query) => $filter ? $query->where('templatename', 'like', '%' . $filter . '%') : null)
             ->orderBy('templatename')
-            ->paginate(Config::get('global.number_of_results'), [
+            ->paginate(config('global.number_of_results'), [
                 'id',
                 'templatename as name',
                 'templatealias as alias',
@@ -330,7 +326,7 @@ class TemplateController extends Controller
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
-                        'name' => Lang::get('global.new_template'),
+                        'name' => __('global.new_template'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/templates/0',
@@ -398,7 +394,7 @@ class TemplateController extends Controller
                         )
                     )
             )
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         return ApiResource::collection(
@@ -406,7 +402,7 @@ class TemplateController extends Controller
                 ->map(fn($category) => [
                     'id' => $category->first()->category,
                     'name' => $category->first()->getRelation('category')->category ??
-                        Lang::get('global.no_category'),
+                        __('global.no_category'),
                     'data' => $category->map(function (SiteTmplvar $item) {
                         return $item->setAttribute(
                             'attach',
@@ -420,7 +416,7 @@ class TemplateController extends Controller
             ->meta(
                 [
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.tmplvars_novars')] : [])
+                ] + ($result->isEmpty() ? ['message' => __('global.tmplvars_novars')] : [])
             );
     }
 
@@ -448,7 +444,7 @@ class TemplateController extends Controller
     public function select(TemplateRequest $request): ApiCollection
     {
         return ApiResource::collection(
-            Collection::make()
+            collect()
                 ->add([
                     'key' => 0,
                     'value' => 'blank (0)',
@@ -462,7 +458,7 @@ class TemplateController extends Controller
                         ->map(fn($group) => [
                             'id' => $group->first()->category,
                             'name' => $group->first()->getRelation('category')->category ??
-                                Lang::get('global.no_category'),
+                                __('global.no_category'),
                             'data' => $group->map(fn($item) => [
                                 'key' => $item->getKey(),
                                 'value' => $item->templatename . ' (' . $item->getKey() . ')',
@@ -515,7 +511,7 @@ class TemplateController extends Controller
                 ->map(fn(SiteTemplate $item) => $item->setHidden(['category']));
 
             return ApiResource::collection($result)
-                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+                ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -524,7 +520,7 @@ class TemplateController extends Controller
                 ->with('category')
                 ->select($fields)
                 ->where('category', $category)->orderBy('templatename')
-                ->paginate(Config::get('global.number_of_results'))
+                ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
             return ApiResource::collection(
@@ -546,7 +542,7 @@ class TemplateController extends Controller
         $result = $result->map(function ($category) use ($request, $settings) {
             $data = [
                 'id' => $category->getKey() ?? 0,
-                'name' => $category->category ?? Lang::get('global.no_category'),
+                'name' => $category->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
@@ -563,10 +559,10 @@ class TemplateController extends Controller
 
             return $data;
         })
-            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['name'])->upper() > str($b['name'])->upper()))
             ->values();
 
         return ApiResource::collection($result)
-            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+            ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 }

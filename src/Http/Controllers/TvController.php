@@ -8,13 +8,10 @@ use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TvRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -80,14 +77,14 @@ class TvController extends Controller
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
             ->orderBy($order, $dir)
-            ->paginate(Config::get('global.number_of_results'))
+            ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
         if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
                     'id' => $group->first()->category,
-                    'name' => $group->first()->getRelation('category')->category ?? Lang::get('global.no_category'),
+                    'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map->withoutRelations(),
                 ];
             };
@@ -106,7 +103,7 @@ class TvController extends Controller
                     'title' => $this->layout->titleList(),
                     'icon' => $this->layout->iconList(),
                     'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : [])
+                ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
@@ -306,7 +303,7 @@ class TvController extends Controller
         $result = SiteTmplvar::withoutLocked()
             ->where(fn($query) => $filter ? $query->where('name', 'like', '%' . $filter . '%') : null)
             ->orderBy('name')
-            ->paginate(Config::get('global.number_of_results'), [
+            ->paginate(config('global.number_of_results'), [
                 'id',
                 'name',
                 'caption as description',
@@ -321,7 +318,7 @@ class TvController extends Controller
                 'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
-                        'name' => Lang::get('global.new_tmplvars'),
+                        'name' => __('global.new_tmplvars'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to' => [
                             'path' => '/tvs/0',
@@ -357,7 +354,7 @@ class TvController extends Controller
         $result = SiteTmplvar::query()
             ->select(['id', 'name', 'caption', 'rank'])
             ->orderBy('rank')
-            ->paginate(Config::get('global.number_of_results'));
+            ->paginate(config('global.number_of_results'));
 
         return ApiResource::collection($result->items())
             ->layout($this->layout->sort())
@@ -483,7 +480,7 @@ class TvController extends Controller
                 ->map(fn(SiteTmplvar $item) => $item->setHidden(['category']));
 
             return ApiResource::collection($result)
-                ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+                ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
         }
 
         if ($showFromCategory) {
@@ -492,7 +489,7 @@ class TvController extends Controller
                 ->with('category')
                 ->select($fields)
                 ->where('category', $category)->orderBy('name')
-                ->paginate(Config::get('global.number_of_results'))
+                ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
             return ApiResource::collection($result->map(fn(SiteTmplvar $item) => $item->setHidden(['category'])))
@@ -512,7 +509,7 @@ class TvController extends Controller
         $result = $result->map(function ($category) use ($request, $settings) {
             $data = [
                 'id' => $category->getKey() ?? 0,
-                'name' => $category->category ?? Lang::get('global.no_category'),
+                'name' => $category->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
@@ -529,10 +526,10 @@ class TvController extends Controller
 
             return $data;
         })
-            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['name'])->upper() > str($b['name'])->upper()))
             ->values();
 
         return ApiResource::collection($result)
-            ->meta($result->isEmpty() ? ['message' => Lang::get('global.no_results')] : []);
+            ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 }

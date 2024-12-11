@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelManagerComponents\Main;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
@@ -18,7 +17,7 @@ class FilemanagerLayout extends Layout
      */
     public function title(): string
     {
-        return Lang::get('global.settings_misc');
+        return __('global.settings_misc');
     }
 
     /**
@@ -79,7 +78,7 @@ class FilemanagerLayout extends Layout
                         ->setColumns([
                             [
                                 'name' => 'icon',
-                                'label' => Lang::get('global.icon'),
+                                'label' => __('global.icon'),
                                 'width' => '2rem',
                                 'style' => [
                                     'textAlign' => 'center',
@@ -96,11 +95,11 @@ class FilemanagerLayout extends Layout
                             ],
                             [
                                 'name' => 'title',
-                                'label' => Lang::get('global.files_filename'),
+                                'label' => __('global.files_filename'),
                             ],
                             [
                                 'name' => 'size',
-                                'label' => Lang::get('global.files_filesize'),
+                                'label' => __('global.files_filesize'),
                                 'width' => '12rem',
                                 'style' => [
                                     'textAlign' => 'right',
@@ -108,7 +107,7 @@ class FilemanagerLayout extends Layout
                             ],
                             [
                                 'name' => 'date',
-                                'label' => Lang::get('global.datechanged'),
+                                'label' => __('global.datechanged'),
                                 'width' => '12rem',
                                 'style' => [
                                     'textAlign' => 'right',
@@ -120,7 +119,7 @@ class FilemanagerLayout extends Layout
                             'class' => 'text-base',
                             'actions' => [
                                 [
-                                    'title' => Lang::get('global.preview'),
+                                    'title' => __('global.preview'),
                                     'icon' => 'fa fa-eye',
                                     'route' => [
                                         'path' => '/preview/:id',
@@ -128,7 +127,7 @@ class FilemanagerLayout extends Layout
                                     ],
                                 ],
                                 [
-                                    'title' => Lang::get('global.download'),
+                                    'title' => __('global.download'),
                                     'icon' => 'fa fa-download',
                                     'route' => [
                                         'path' => '/download/:id',
@@ -138,7 +137,7 @@ class FilemanagerLayout extends Layout
                                     'split' => true,
                                 ],
                                 [
-                                    'title' => Lang::get('global.duplicate'),
+                                    'title' => __('global.duplicate'),
                                     'icon' => 'fa fa-copy',
                                     'route' => [
                                         'path' => '/duplicate/:id',
@@ -148,14 +147,14 @@ class FilemanagerLayout extends Layout
                                     'split' => true,
                                 ],
                                 [
-                                    'title' => Lang::get('global.rename'),
+                                    'title' => __('global.rename'),
                                     'icon' => 'fa fa-i-cursor',
                                     'route' => [
                                         'path' => '/rename/:id',
                                     ],
                                 ],
                                 [
-                                    'title' => Lang::get('global.delete'),
+                                    'title' => __('global.delete'),
                                     'icon' => 'fa fa-trash',
                                     'route' => [
                                         'path' => '/delete/:id',
@@ -177,7 +176,7 @@ class FilemanagerLayout extends Layout
         return Tab::make()
             ->setId('files')
             ->setIcon($this->icon())
-            ->setTitle(Lang::get('global.files_files'))
+            ->setTitle(__('global.files_files'))
             ->setPermissions(['file_manager'])
             ->setRoute('/files/:id')
             ->isNeedUpdate()
@@ -261,8 +260,8 @@ class FilemanagerLayout extends Layout
                     ->setTemplates([
                         'title' =>
                             '{title}' . PHP_EOL .
-                            Lang::get('global.createdon') . ': {date}' . PHP_EOL .
-                            Lang::get('global.files_filesize') . ': {size}' . PHP_EOL,
+                            __('global.createdon') . ': {date}' . PHP_EOL .
+                            __('global.files_filesize') . ': {size}' . PHP_EOL,
                     ])
                     ->setSettings([
                         'parent' => 'Lw==',

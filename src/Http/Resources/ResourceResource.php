@@ -6,7 +6,6 @@ namespace Team64j\LaravelManagerApi\Http\Resources;
 
 use EvolutionCMS\Models\SiteContent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 
 /**
  * @property SiteContent $resource
@@ -37,7 +36,7 @@ class ResourceResource extends ApiResource
             'attributes' => $this->resource->attributesToArray(),
             'tvs' => $this->resource->getTvs()->pluck('value', 'name'),
             $this->mergeWhen(
-                Config::get('global.use_udperms'),
+                config('global.use_udperms'),
                 fn() => [
                     'is_document_group' => $this->resource->documentGroups->isEmpty(),
                     'document_groups' => $this->resource->documentGroups->pluck('id'),

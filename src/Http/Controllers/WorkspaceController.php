@@ -6,10 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\SystemSetting;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Lang;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\WorkspaceRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
@@ -76,10 +73,10 @@ class WorkspaceController extends Controller
                 'title' => $this->layout->title(),
                 'icon' => $this->layout->icon(),
                 'lang' => [
-                    'save' => Lang::get('global.save'),
-                    'stay_new' => Lang::get('global.stay_new'),
-                    'settings' => Lang::get('global.resource_setting'),
-                    'select' => Lang::get('global.element_selector_title'),
+                    'save' => __('global.save'),
+                    'stay_new' => __('global.stay_new'),
+                    'settings' => __('global.resource_setting'),
+                    'select' => __('global.element_selector_title'),
                 ],
             ]);
     }
@@ -110,8 +107,7 @@ class WorkspaceController extends Controller
     public function store(WorkspaceRequest $request): ApiResource
     {
         $data = [];
-        /** @var Collection $collect */
-        $collect = Collection::make(
+        $collect = collect(
             Arr::dot(
                 $request->only([
                     'dashboard',
@@ -140,7 +136,7 @@ class WorkspaceController extends Controller
 
         SystemSetting::query()->upsert($data, 'setting_name');
 
-        Cache::clear();
+        cache()->clear();
 
         Artisan::call('optimize:clear');
         Artisan::call('config:cache');

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\SystemSetting;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
@@ -35,7 +34,7 @@ class ConfigurationController extends Controller
      */
     public function index(ConfigurationRequest $request, ConfigurationLayout $layout): ApiResource
     {
-        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', App::basePath()) . '/';
+        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', app()->basePath()) . '/';
 
         return ApiResource::make(
             SystemSetting::all()
@@ -94,7 +93,7 @@ class ConfigurationController extends Controller
     public function store(ConfigurationRequest $request, SystemSetting $configuration): ApiResource
     {
         $data = [];
-        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', App::basePath()) . '/';
+        $basePath = str_replace(DIRECTORY_SEPARATOR, '/', app()->basePath()) . '/';
 
         foreach ($request->all() as $key => $value) {
             if ($key == 'filemanager_path') {

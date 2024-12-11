@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
 class TvRequest extends FormRequest
 {
@@ -14,7 +13,7 @@ class TvRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::check(['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']);
+        return auth()->user()->can(['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin']);
     }
 
     /**
