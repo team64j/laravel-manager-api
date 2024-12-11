@@ -45,9 +45,9 @@ class BootstrapController extends Controller
     public function init(): ApiResource
     {
         return ApiResource::make([
-            'version' => Config::get('global.settings_version'),
+            'version' => config('global.settings_version'),
             'languages' => $this->getLanguages(),
-            'siteName' => Config::get('global.site_name'),
+            'siteName' => config('global.site_name'),
         ]);
     }
 
@@ -78,16 +78,16 @@ class BootstrapController extends Controller
             'routes' => $this->getRoutes(),
             'assets' => $this->getAssets(),
             'config' => [
-                'site_name' => Config::get('global.site_name'),
-                'site_status' => (bool) Config::get('global.site_status'),
-                'remember_last_tab' => (bool) Config::get('global.remember_last_tab'),
-                'datetime_format' => Config::get('global.datetime_format'),
+                'site_name' => config('global.site_name'),
+                'site_status' => (bool) config('global.site_status'),
+                'remember_last_tab' => (bool) config('global.remember_last_tab'),
+                'datetime_format' => config('global.datetime_format'),
             ],
             'lang' => [
-                'warning_not_saved' => Lang::get('global.warning_not_saved'),
-                'dp_dayNames' => Lang::get('global.dp_dayNames'),
-                'dp_monthNames' => Lang::get('global.dp_monthNames'),
-                'dp_startDay' => Lang::get('global.dp_startDay'),
+                'warning_not_saved' => __('global.warning_not_saved'),
+                'dp_dayNames' => __('global.dp_dayNames'),
+                'dp_monthNames' => __('global.dp_monthNames'),
+                'dp_startDay' => __('global.dp_startDay'),
             ],
         ])
             ->layout([
@@ -101,7 +101,7 @@ class BootstrapController extends Controller
                 [
                     'component' => 'AppTabsNavigation',
                     'attrs' => $sidebar['attrs'],
-                    'slot' => 'left',
+                    'slot' => 'left.top',
                 ],
                 [
                     ...$sidebar,
@@ -144,7 +144,7 @@ class BootstrapController extends Controller
                 'meta' => [
                     'icon' => 'fa fa-cube',
                     'isIframe' => true,
-                    'title' => Lang::get('global.run_module'),
+                    'title' => __('global.run_module'),
                 ],
             ],
             [
@@ -406,9 +406,9 @@ class BootstrapController extends Controller
     public function getMenu(bool $edit = false): array
     {
         if (!$edit && Config::has('global.workspace_topmenu_data') &&
-            Config::get('global.workspace_topmenu_data') != '[]'
+            config('global.workspace_topmenu_data') != '[]'
         ) {
-            $data = Config::get('global.workspace_topmenu_data');
+            $data = config('global.workspace_topmenu_data');
         } else {
             $data = json_encode([
                 [
@@ -429,7 +429,7 @@ class BootstrapController extends Controller
 //                        ],
                         [
                             'key' => 'dashboard',
-                            'icon' => Config::get('global.login_logo')
+                            'icon' => config('global.login_logo')
                                 ?: 'https://avatars.githubusercontent.com/u/46722965?s=64&v=4',
                             'class' => 'line-height-1',
                             'to' => [
@@ -602,7 +602,7 @@ class BootstrapController extends Controller
                         [
                             'key' => 'siteStatus',
                             'icon' => 'fa fa-desktop',
-                            'value' => Config::get('global.site_status'),
+                            'value' => config('global.site_status'),
                             'values' => [
                                 [
                                     'icon' => 'fa fa-desktop relative',
@@ -741,7 +741,7 @@ class BootstrapController extends Controller
 
         $data = json_decode($this->replaceVariables($data), true);
 
-        if (Auth::user()->isAdmin()) {
+        if (auth()->user()->isAdmin()) {
             return $data;
         }
 
@@ -758,9 +758,8 @@ class BootstrapController extends Controller
         $data = $this->replaceUserVariables($data);
         $data = $this->replaceConfigVariables($data);
         $data = $this->replaceLangVariables($data);
-        $data = $this->replaceUrlVariables($data);
 
-        return $data;
+        return $this->replaceUrlVariables($data);
     }
 
     /**
@@ -776,7 +775,7 @@ class BootstrapController extends Controller
             foreach ($matches[1] as $match) {
                 $item = str_replace(
                     '[(' . $match . ')]',
-                    Config::get('global.' . $match, ''),
+                    config('global.' . $match, ''),
                     $item
                 );
             }
@@ -798,7 +797,7 @@ class BootstrapController extends Controller
             foreach ($matches[1] as $match) {
                 $item = str_replace(
                     '[%' . $match . '%]',
-                    Lang::has('global.' . $match) ? Lang::get('global.' . $match) : '',
+                    Lang::has('global.' . $match) ? __('global.' . $match) : '',
                     $item
                 );
             }
@@ -839,10 +838,12 @@ class BootstrapController extends Controller
         preg_match_all('!\[\+user\.(.*)\+]!U', $item, $matches);
 
         if (!empty($matches[1])) {
+            $model = auth()->user();
+
             $user = [
-                'name' => Auth::user()->username,
-                'username' => Auth::user()->username,
-                'photo' => Auth::user()->attributes->photo,
+                'name' => $model->username,
+                'username' => $model->username,
+                'photo' => $model->attributes->photo,
             ];
 
             foreach ($matches[1] as $match) {
@@ -907,50 +908,50 @@ class BootstrapController extends Controller
     {
         $data = [
             '' => '',
-            '{"name":"Dashboard"}' => Lang::get('global.home'),
-            '{"name":"Elements"}' => Lang::get('global.elements'),
-            '{"name":"Elements","params":{"element":"templates"}}' => Lang::get('global.elements') . ' - ' .
-                Lang::get('global.templates'),
-            '{"name":"Elements","params":{"element":"tvs"}}' => Lang::get('global.elements') . ' - ' .
-                Lang::get('global.tmplvars'),
-            '{"name":"Elements","params":{"element":"chunks"}}' => Lang::get('global.elements') . ' - ' .
-                Lang::get('global.htmlsnippets'),
-            '{"name":"Elements","params":{"element":"snippets"}}' => Lang::get('global.elements') . ' - ' .
-                Lang::get('global.snippets'),
-            '{"name":"Elements","params":{"element":"plugins"}}' => Lang::get('global.elements') . ' - ' .
-                Lang::get('global.plugins'),
-            '{"name":"Elements","params":{"element":"modules"}}' => Lang::get('global.elements') . ' - ' .
-                Lang::get('global.modules'),
-            '{"name":"Elements","params":{"element":"categories"}}' => Lang::get('global.elements') . ' - ' .
-                Lang::get('global.category_management'),
-            '{"name":"ModuleExec"}' => Lang::get('global.role_run_module'),
-            '{"name":"User"}' => Lang::get('global.users'),
-            '{"name":"Roles","params":{"element":"users"}}' => Lang::get('global.role_role_management') . ' - ' .
-                Lang::get('global.role_role_management'),
-            '{"name":"Roles","params":{"element":"categories"}}' => Lang::get('global.role_role_management') . ' - ' .
-                Lang::get('global.category_management'),
-            '{"name":"Roles","params":{"element":"permissions"}}' => Lang::get('global.role_role_management') . ' - ' .
-                Lang::get('global.manage_permission'),
-            '{"name":"Permissions","params":{"element":"groups"}}' => Lang::get('global.manage_permission') . ' - ' .
-                Lang::get('global.access_permissions_user_groups'),
-            '{"name":"Permissions","params":{"element":"relations"}}' => Lang::get('global.manage_permission') . ' - ' .
-                Lang::get('global.access_permissions_resource_groups'),
-            '{"name":"Permissions","params":{"element":"resources"}}' => Lang::get('global.manage_permission') . ' - ' .
-                Lang::get('global.access_permissions_links'),
-            '{"name":"Configuration"}' => Lang::get('global.settings_title'),
-            '{"name":"Workspace"}' => Lang::get('global.settings_ui'),
-            '{"name":"Schedules"}' => Lang::get('global.site_schedule'),
-            '{"name":"EventLogs"}' => Lang::get('global.eventlog_viewer'),
-            '{"name":"EventLog"}' => Lang::get('global.eventlog'),
-            '{"name":"SystemLog"}' => Lang::get('global.mgrlog_view'),
-            '{"name":"SystemInfo"}' => Lang::get('global.view_sysinfo'),
+            '{"name":"Dashboard"}' => __('global.home'),
+            '{"name":"Elements"}' => __('global.elements'),
+            '{"name":"Elements","params":{"element":"templates"}}' => __('global.elements') . ' - ' .
+                __('global.templates'),
+            '{"name":"Elements","params":{"element":"tvs"}}' => __('global.elements') . ' - ' .
+                __('global.tmplvars'),
+            '{"name":"Elements","params":{"element":"chunks"}}' => __('global.elements') . ' - ' .
+                __('global.htmlsnippets'),
+            '{"name":"Elements","params":{"element":"snippets"}}' => __('global.elements') . ' - ' .
+                __('global.snippets'),
+            '{"name":"Elements","params":{"element":"plugins"}}' => __('global.elements') . ' - ' .
+                __('global.plugins'),
+            '{"name":"Elements","params":{"element":"modules"}}' => __('global.elements') . ' - ' .
+                __('global.modules'),
+            '{"name":"Elements","params":{"element":"categories"}}' => __('global.elements') . ' - ' .
+                __('global.category_management'),
+            '{"name":"ModuleExec"}' => __('global.role_run_module'),
+            '{"name":"User"}' => __('global.users'),
+            '{"name":"Roles","params":{"element":"users"}}' => __('global.role_role_management') . ' - ' .
+                __('global.role_role_management'),
+            '{"name":"Roles","params":{"element":"categories"}}' => __('global.role_role_management') . ' - ' .
+                __('global.category_management'),
+            '{"name":"Roles","params":{"element":"permissions"}}' => __('global.role_role_management') . ' - ' .
+                __('global.manage_permission'),
+            '{"name":"Permissions","params":{"element":"groups"}}' => __('global.manage_permission') . ' - ' .
+                __('global.access_permissions_user_groups'),
+            '{"name":"Permissions","params":{"element":"relations"}}' => __('global.manage_permission') . ' - ' .
+                __('global.access_permissions_resource_groups'),
+            '{"name":"Permissions","params":{"element":"resources"}}' => __('global.manage_permission') . ' - ' .
+                __('global.access_permissions_links'),
+            '{"name":"Configuration"}' => __('global.settings_title'),
+            '{"name":"Workspace"}' => __('global.settings_ui'),
+            '{"name":"Schedules"}' => __('global.site_schedule'),
+            '{"name":"EventLogs"}' => __('global.eventlog_viewer'),
+            '{"name":"EventLog"}' => __('global.eventlog'),
+            '{"name":"SystemLog"}' => __('global.mgrlog_view'),
+            '{"name":"SystemInfo"}' => __('global.view_sysinfo'),
             '{"name":"PhpInfo"}' => 'PHP Version',
-            '{"name":"Help"}' => Lang::get('global.help'),
-            '{"name":"Files"}' => Lang::get('global.manage_files'),
-            '{"name":"File"}' => Lang::get('global.files_management'),
-            '{"name":"Cache"}' => Lang::get('global.resource_opt_emptycache'),
-            '{"name":"Password"}' => Lang::get('global.change_password'),
-            '{"name":"Logout"}' => Lang::get('global.logout'),
+            '{"name":"Help"}' => __('global.help'),
+            '{"name":"Files"}' => __('global.manage_files'),
+            '{"name":"File"}' => __('global.files_management'),
+            '{"name":"Cache"}' => __('global.resource_opt_emptycache'),
+            '{"name":"Password"}' => __('global.change_password'),
+            '{"name":"Logout"}' => __('global.logout'),
         ];
 
         return [
@@ -978,8 +979,8 @@ class BootstrapController extends Controller
             ->isSmallTabs()
             ->isLoadOnce();
 
-        if (!$edit && Config::has('global.workspace_tree_data') && Config::get('global.workspace_tree_data') != '[]') {
-            $data = json_decode(Config::get('global.workspace_tree_data'), true);
+        if (!$edit && Config::has('global.workspace_tree_data') && config('global.workspace_tree_data') != '[]') {
+            $data = json_decode(config('global.workspace_tree_data'), true);
         } else {
             $data = [
                 [
