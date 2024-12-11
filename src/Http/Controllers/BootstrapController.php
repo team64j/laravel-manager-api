@@ -414,19 +414,19 @@ class BootstrapController extends Controller
                 [
                     'key' => 'primary',
                     'data' => [
-                        [
-                            'key' => 'sidebarShow',
-                            'values' => [
-                                [
-                                    'value' => true,
-                                    'icon' => 'fa fa-bars',
-                                ],
-                                [
-                                    'value' => false,
-                                    'icon' => 'fa fa-ellipsis-vertical',
-                                ],
-                            ],
-                        ],
+//                        [
+//                            'key' => 'sidebarShow',
+//                            'values' => [
+//                                [
+//                                    'value' => true,
+//                                    'icon' => 'fa fa-bars',
+//                                ],
+//                                [
+//                                    'value' => false,
+//                                    'icon' => 'fa fa-ellipsis-vertical',
+//                                ],
+//                            ],
+//                        ],
                         [
                             'key' => 'dashboard',
                             'icon' => Config::get('global.login_logo')
