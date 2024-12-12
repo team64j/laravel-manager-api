@@ -615,11 +615,12 @@ class BootstrapController extends Controller
                             'values' => [
                                 [
                                     'icon' => 'fa fa-desktop relative',
+                                    'title' => '[%online%]',
                                     'value' => '1'
                                 ],
                                 [
                                     'icon' => 'fa fa-triangle-exclamation text-amber-400',
-                                    'title' => '[(site_unavailable_message)]',
+                                    'title' => config('global.site_unavailable_message'),
                                     'value' => '0'
                                 ],
                             ],
