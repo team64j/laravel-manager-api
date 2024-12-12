@@ -87,12 +87,26 @@ class BootstrapController extends Controller
         ])
             ->layout([
                 [
-                    'component' => 'AppGlobalMenu',
+                    'component' => 'AppMainMenu',
                     'attrs' => [
-                        'data' => $this->getMenu(),
+                        'data' => $this->getMenu()[0]['data'],
                     ],
-                    'slot' => 'top',
+                    'slot' => 'top.left'
                 ],
+                [
+                    'component' => 'AppMainMenu',
+                    'attrs' => [
+                        'data' => $this->getMenu()[1]['data'],
+                    ],
+                    'slot' => 'top.right'
+                ],
+//                [
+//                    'component' => 'AppGlobalMenu',
+//                    'attrs' => [
+//                        'data' => $this->getMenu(),
+//                    ],
+//                    'slot' => 'top',
+//                ],
                 [
                     'component' => 'AppTabsNavigation',
                     'attrs' => $sidebar['attrs'],

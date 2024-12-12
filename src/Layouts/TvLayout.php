@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use EvolutionCMS\Models\Category;
 use EvolutionCMS\Models\DocumentgroupName;
 use EvolutionCMS\Models\SiteTmplvar;
-use Illuminate\Support\Str;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -560,7 +559,7 @@ class TvLayout extends Layout
      */
     public function display(string $name): array
     {
-        $name = str($name)->lower();
+        $name = str($name)->lower()->toString();
         $data = [];
 
         $widgetParams['date'] =
