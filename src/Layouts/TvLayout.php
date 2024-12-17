@@ -11,6 +11,7 @@ use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Panel;
@@ -31,6 +32,7 @@ class TvLayout extends Layout
     {
         return 'fa fa-list-alt';
     }
+
     /**
      * @return string
      */
@@ -91,6 +93,11 @@ class TvLayout extends Layout
         ];
 
         return [
+            GlobalTab::make(
+                $this->icon(),
+                $this->title($model->name)
+            ),
+
             Actions::make()
                 ->setCancel(
                     __('global.cancel'),
@@ -106,7 +113,7 @@ class TvLayout extends Layout
                 ->setSaveAnd(),
 
             Title::make()
-                ->setModel('name')
+                ->setModel('data.attributes.name')
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -121,20 +128,36 @@ class TvLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
                             ->setSlot([
-                                Input::make('name', __('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
-                                Input::make('caption', __('global.tmplvars_caption'))->setClass('mb-3'),
-                                Textarea::make('description', __('global.tmplvars_description'))
+                                Input::make(
+                                    'data.attributes.name',
+                                    __('global.tmplvars_name')
+                                )
+                                    ->setClass('mb-3')
+                                    ->isRequired(),
+
+                                Input::make(
+                                    'data.attributes.caption',
+                                    __('global.tmplvars_caption')
+                                )
+                                    ->setClass('mb-3'),
+
+                                Textarea::make(
+                                    'data.attributes.description',
+                                    __('global.tmplvars_description')
+                                )
                                     ->setClass('mb-3')
                                     ->setRows(2),
+
                                 CodeEditor::make(
-                                    'elements',
+                                    'data.attributes.elements',
                                     __('global.tmplvars_elements'),
                                     __('global.tmplvars_binding_msg'),
                                     'mb-3'
                                 )
                                     ->setRows(2),
+
                                 CodeEditor::make(
-                                    'default_text',
+                                    'data.attributes.default_text',
                                     __('global.tmplvars_default'),
                                     __('global.tmplvars_binding_msg')
                                 )
@@ -143,7 +166,8 @@ class TvLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
                             ->setSlot([
-                                Select::make('category', __('global.existing_category'))
+
+                                Select::make('data.attributes.category', __('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
@@ -158,7 +182,8 @@ class TvLayout extends Layout
                                             'selected' => true,
                                         ],
                                     ]),
-                                Select::make('type', __('global.tmplvars_type'))
+
+                                Select::make('data.attributes.type', __('global.tmplvars_type'))
                                     ->setClass('mb-3')
                                     ->setUrl('/tvs/types')
                                     ->setData([
@@ -167,12 +192,16 @@ class TvLayout extends Layout
                                             'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
                                         ],
                                     ]),
-                                Input::make('rank', __('global.tmplvars_rank'))->setClass('mb-3'),
-                                Checkbox::make('locked', __('global.lock_tmplvars_msg'))
+
+                                Input::make('data.attributes.rank', __('global.tmplvars_rank'))->setClass('mb-3'),
+
+                                Checkbox::make('data.attributes.locked', __('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Select::make('display', __('global.tmplvars_widget'))
+
+                                Select::make('data.attributes.display', __('global.tmplvars_widget'))
                                     ->setUrl('/tvs/display')
+                                    ->setKey('display')
                                     ->setData([
                                         [
                                             'key' => $model->display,
@@ -195,7 +224,7 @@ class TvLayout extends Layout
                     __('global.templates'),
                     slot: Panel::make()
                         ->setId('templates')
-                        ->setModel('templates')
+                        ->setModel('data.templates')
                         ->setUrl('/templates?groupBy=category')
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_tmpl_access_msg') . '</p>')
                         ->addColumn(
@@ -229,7 +258,7 @@ class TvLayout extends Layout
                     __('global.role_management_title'),
                     slot: Panel::make()
                         ->setId('roles')
-                        ->setModel('roles')
+                        ->setModel('data.roles')
                         ->setUrl('/roles/users')
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
@@ -270,14 +299,14 @@ class TvLayout extends Layout
 
                                 Checkbox::make()
                                     ->setClass('mb-3')
-                                    ->setModel('data.is_document_group')
+                                    ->setModel('data.attributes.is_document_group')
                                     ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
-                                    ->setRelation('data.document_groups', [], [], true),
+                                    ->setRelation('data.attributes.document_groups', [], [], true),
 
                                 Checkbox::make()
                                     ->setClass('mb-3')
-                                    ->setModel('data.document_groups')
+                                    ->setModel('data.attributes.document_groups')
                                     ->setLabel(__('global.access_permissions_resource_groups'))
                                     ->setData(
                                         DocumentgroupName::all()
@@ -287,14 +316,14 @@ class TvLayout extends Layout
                                             ])
                                             ->toArray()
                                     )
-                                    ->setRelation('data.is_document_group', false, true),
+                                    ->setRelation('data.attributes.is_document_group', false, true),
                             ]
                         )
                 )
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make('properties')
+                    slot: CodeEditor::make('data.attributes.properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),

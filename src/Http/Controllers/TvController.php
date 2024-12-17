@@ -12,6 +12,7 @@ use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TvRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\TvResource;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -131,43 +132,12 @@ class TvController extends Controller
         /** @var SiteTmplvar $model */
         $model = SiteTmplvar::query()->findOrNew($id);
 
-        if (!$model->getKey()) {
-            $model->setRawAttributes([
-                'type' => 'text',
-                'category' => 0,
-                'rank' => 0,
-            ]);
-        }
-
         if ($request->has('display')) {
             $model->display = $request->string('display')->toString();
         }
 
-        $model->properties = $model->properties ? json_encode(
-            $model->properties,
-            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
-        ) : '[]';
-
-        $model->setAttribute('permissions', $model->permissions->pluck('id'));
-        $model->setAttribute('templates', $model->templates->pluck('id'));
-        $model->setAttribute('roles', $model->roles->pluck('id'));
-
-        $params = array_filter(explode('&', $model->display_params ?? ''));
-        $data = [];
-
-        foreach ($params as $param) {
-            [$key, $value] = explode('=', $param);
-            $data[$key] = $value;
-        }
-
-        $model->setAttribute('display_params_data', $data);
-
-        return ApiResource::make($model->withoutRelations())
-            ->layout($this->layout->default($model))
-            ->meta([
-                'title' => $this->layout->title($model->name),
-                'icon' => $this->layout->icon(),
-            ]);
+        return TvResource::make($model)
+            ->layout($this->layout->default($model));
     }
 
     /**
@@ -206,7 +176,7 @@ class TvController extends Controller
         $model->templates()->sync($data['templates'] ?? []);
         $model->roles()->sync($data['roles'] ?? []);
 
-        return $this->show($request, $model->getKey());
+        return $this->show($model->getKey());
     }
 
     /**
@@ -246,7 +216,7 @@ class TvController extends Controller
         $model->templates()->sync($data['templates'] ?? []);
         $model->roles()->sync($data['roles'] ?? []);
 
-        return $this->show($request, $model->getKey());
+        return $this->show($model->getKey());
     }
 
     /**
