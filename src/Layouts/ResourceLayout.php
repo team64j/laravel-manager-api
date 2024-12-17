@@ -317,7 +317,7 @@ class ResourceLayout extends Layout
                                             'selected' => true,
                                         ],
                                     ])
-                                    ->setEmitInput('inputChangeQuery'),
+                                    ->setEmitInput('inputChangeQuery', 'template'),
 
                                 Checkbox::make(
                                     'data.attributes.hidemenu',
@@ -428,7 +428,7 @@ class ResourceLayout extends Layout
                                             'value' => __('global.resource_type_weblink'),
                                         ],
                                     ])
-                                    ->setEmitInput('inputChangeQuery'),
+                                    ->setEmitInput('inputChangeQuery', 'type'),
 
                                 Select::make(
                                     'data.attributes.contentType',

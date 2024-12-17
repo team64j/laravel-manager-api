@@ -201,14 +201,13 @@ class TvLayout extends Layout
 
                                 Select::make('data.attributes.display', __('global.tmplvars_widget'))
                                     ->setUrl('/tvs/display')
-                                    ->setKey('display')
                                     ->setData([
                                         [
                                             'key' => $model->display,
                                             'value' => $model->getDisplay($model->display),
                                         ],
                                     ])
-                                    ->setEmitInput('inputChangeQuery'),
+                                    ->setEmitInput('inputChangeQuery', 'display'),
                             ]),
                     ]
                 )
