@@ -109,6 +109,7 @@ class TemplateLayout extends Layout
 
             Tabs::make()
                 ->setId('template')
+                ->setClass('px-4 pb-4')
                 ->addTab(
                     'default',
                     __('global.settings_general'),
@@ -166,23 +167,29 @@ class TemplateLayout extends Layout
                             ]
                         ),
 
-                        ($isBladeFile
-                            ? '<span class="text-green-600 mx-5 mb-3">' .
-                            __('global.template_assigned_blade_file') .
-                            ': ' .
-                            $relativeBladeFile . '</span>'
-                            :
-                            Checkbox::make(
-                                'data.attributes.createbladefile',
-                                __('global.template_create_blade_file')
-                            )
-                                ->setClass('mx-5 mb-3')
-                                ->setCheckedValue(1, 0)),
+                        Template::make(
+                            'flex flex-wrap grow px-5',
+                            [
+                                ($isBladeFile
+                                    ? '<span class="text-green-600 mx-5 mb-3">' .
+                                    __('global.template_assigned_blade_file') .
+                                    ': ' .
+                                    $relativeBladeFile . '</span>'
+                                    :
+                                    Checkbox::make(
+                                        'data.attributes.createbladefile',
+                                        __('global.template_create_blade_file')
+                                    )
+                                        ->setClass('mb-3')
+                                        ->setCheckedValue(1, 0)),
 
-                        CodeEditor::make('data.attributes.content', __('global.template_code'))
-                            ->setClass('px-5')
-                            ->setLanguage('html')
-                            ->setRows(20),
+                                CodeEditor::make('data.attributes.content', __('global.template_code'))
+                                    ->setClass('')
+                                    ->setLanguage('html')
+                                    ->setRows(20),
+                            ]
+                        ),
+
                     ]
                 )
                 ->addTab(
@@ -263,7 +270,6 @@ class TemplateLayout extends Layout
                     'settings',
                     __('global.settings_properties'),
                     slot: CodeEditor::make('data.attributes.properties')
-                        ->setClass('p-5')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -293,6 +299,7 @@ class TemplateLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
+                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

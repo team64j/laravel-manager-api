@@ -41,6 +41,7 @@ class ResourcesLayout extends Layout
             Panel::make()
                 ->setModel('data')
                 ->setId('resources')
+                ->setClass('mx-4 mb-4')
                 ->setRoute('/resource/:id')
                 ->setHistory(true)
                 ->addColumn('id', __('global.id'), ['width' => '4rem', 'textAlign' => 'right'], true)

@@ -63,6 +63,7 @@ class RolePermissionLayout extends Layout
 
             Tabs::make()
                 ->setId('userManagement')
+                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->addTab(
                     'users',

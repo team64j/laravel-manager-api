@@ -52,6 +52,7 @@ class EventLogLayout extends Layout
                 ->setModel('data')
                 ->setRoute('/event-log/:id')
                 ->setHistory(true)
+                ->setClass('mx-4 mb-4')
                 ->addColumn(
                     'type',
                     __('global.type'),

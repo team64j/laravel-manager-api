@@ -49,6 +49,7 @@ class PermissionGroupLayout extends Layout
 
             Tabs::make()
                 ->setId('permissions')
+                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->addTab(
                     'groups',

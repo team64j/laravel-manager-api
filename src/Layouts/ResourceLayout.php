@@ -128,7 +128,7 @@ class ResourceLayout extends Layout
                     [
                         'id' => 0,
                         'parent' => null,
-                        'name' => __('global.manage_documents'),
+                        'name' => 'root',
                         'to' => '/resources/0',
                         'tooltip' => 'ID: 0<br>root',
                     ],
@@ -217,6 +217,7 @@ class ResourceLayout extends Layout
 
             Tabs::make()
                 ->setId('resource')
+                ->setClass('px-4 pb-4')
                 ->addTab(
                     'general',
                     __('global.settings_general'),

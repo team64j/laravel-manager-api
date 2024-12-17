@@ -113,6 +113,7 @@ class TvLayout extends Layout
 
             Tabs::make()
                 ->setId('tv')
+                ->setClass('px-4 pb-4')
                 ->addTab(
                     'default',
                     __('global.page_data_general'),
@@ -294,7 +295,6 @@ class TvLayout extends Layout
                     'settings',
                     __('global.settings_properties'),
                     slot: CodeEditor::make('properties')
-                        ->setClass('p-5')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -325,6 +325,7 @@ class TvLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
+                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

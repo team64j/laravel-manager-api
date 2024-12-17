@@ -168,7 +168,7 @@ class ModuleController extends Controller
         $model->setAttribute('category', $model->category ?? 0);
         $model->setAttribute(
             'modulecode',
-            "<?php\r\n" . trim(str($model->modulecode ?? '')->replaceFirst('<?php', ''))
+            "<?php\r\n" . str($model->modulecode ?? '')->replaceFirst('<?php', '')->trim()
         );
 
         return ApiResource::make($model)
@@ -210,7 +210,7 @@ class ModuleController extends Controller
 
         $data = $request->validated();
 
-        $data['modulecode'] = trim(str($data['modulecode'] ?? '')->replaceFirst('<?php', ''));
+        $data['modulecode'] = str($data['modulecode'] ?? '')->replaceFirst('<?php', '')->trim();
 
         $model->update($data);
 

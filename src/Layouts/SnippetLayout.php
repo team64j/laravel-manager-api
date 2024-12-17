@@ -97,6 +97,7 @@ class SnippetLayout extends Layout
 
             Tabs::make()
                 ->setId('snippet')
+                ->setClass('px-4 pb-4')
                 ->addTab(
                     'general',
                     __('global.page_data_general'),
@@ -154,7 +155,6 @@ class SnippetLayout extends Layout
                     'settings',
                     __('global.settings_properties'),
                     slot: CodeEditor::make('properties')
-                        ->setClass('p-5')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -184,6 +184,7 @@ class SnippetLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
+                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

@@ -105,6 +105,7 @@ class CategoryLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
+                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

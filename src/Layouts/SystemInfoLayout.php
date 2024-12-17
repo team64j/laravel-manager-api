@@ -36,15 +36,12 @@ class SystemInfoLayout extends Layout
                 ->setTitle($this->title())
                 ->setIcon($this->icon()),
 
-            Tabs::make()
-                ->addTab(
-                    'default',
-                    slot: Panel::make()
-                        ->setId('system-info')
-                        ->setModel('data')
-                        ->addColumn('name')
-                        ->addColumn('value'),
-                ),
+            Panel::make()
+                ->setModel('data')
+                ->setId('system-info')
+                ->setClass('mx-4 mb-4')
+                ->addColumn('name')
+                ->addColumn('value'),
         ];
     }
 }

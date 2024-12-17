@@ -94,6 +94,8 @@ class UserLayout extends Layout
                 ->setIcon($this->iconList()),
 
             Tabs::make()
+                ->setId('users')
+                ->setClass('px-4 pb-4')
                 ->addTab(
                     'users',
                     slot: Panel::make()

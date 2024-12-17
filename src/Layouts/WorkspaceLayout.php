@@ -42,6 +42,7 @@ class WorkspaceLayout extends Layout
 
             Tabs::make()
                 ->setId('workspace')
+                ->setClass('px-4 pb-4')
                 ->addTab(
                     'sidebar',
                     'Sidebar',

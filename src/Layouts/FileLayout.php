@@ -64,13 +64,15 @@ class FileLayout extends Layout
             Tabs::make()
                 ->addTab(
                     'default',
+                    class: 'h-full',
                     slot: [
                         stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data)
                             ->setClass('mb-4') : null,
                         isset($data['content']) ? CodeEditor::make('content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
-                            ->setInputClass('border-none') : null,
+                            ->setClass('p-5 h-full')
+                            ->setInputClass('h-full') : null,
                     ],
                 ),
         ];

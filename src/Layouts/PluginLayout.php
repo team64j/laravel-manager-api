@@ -112,6 +112,7 @@ class PluginLayout extends Layout
 
             Tabs::make()
                 ->setId('plugin')
+                ->setClass('px-4 pb-4')
                 ->addTab(
                     'general',
                     __('global.page_data_general'),
@@ -166,14 +167,6 @@ class PluginLayout extends Layout
                     ],
                 )
                 ->addTab(
-                    'settings',
-                    __('global.settings_properties'),
-                    slot: CodeEditor::make('properties')
-                        ->setLanguage('json')
-                        ->setClass('p-5')
-                        ->isFullSize()
-                )
-                ->addTab(
                     'events',
                     __('global.settings_events'),
                     slot: [
@@ -186,6 +179,13 @@ class PluginLayout extends Layout
                                 'name',
                             ]),
                     ]
+                )
+                ->addTab(
+                    'settings',
+                    __('global.settings_properties'),
+                    slot: CodeEditor::make('properties')
+                        ->setLanguage('json')
+                        ->isFullSize()
                 ),
 
             Crumbs::make()->setData($breadcrumbs),
@@ -214,6 +214,7 @@ class PluginLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
+                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(
