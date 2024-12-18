@@ -3,6 +3,7 @@
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use EvolutionCMS\Models\SiteContent;
+use EvolutionCMS\Models\SiteTmplvarContentvalue;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
@@ -233,7 +234,8 @@ class ResourceController extends Controller
         $model->update($request->input('attributes'));
 
         $tvs = $model->getTvs()->keyBy('name');
-        foreach ($request->input('tvs', []) as $key => $value) {
+
+        foreach ($request->collect('tvs') as $key => $value) {
             if ($tvs->has($key)) {
                 $tv = $tvs->get($key);
 
@@ -252,17 +254,24 @@ class ResourceController extends Controller
                         break;
                 }
 
-                if ($tv['value'] != $value) {
-                    if ($value != '' && !is_null($value)) {
-                        // insert tv value
-                    } else {
-                        // delete tv value
-                    }
+                if ($value != '' && !is_null($value) && $tv['value'] != $value) {
+                    SiteTmplvarContentvalue::query()
+                        ->updateOrInsert([
+                            'tmplvarid' => $tv['id'],
+                            'contentid' => $model->getKey(),
+                        ], [
+                            'value' => $value,
+                        ]);
+                } else {
+                    SiteTmplvarContentvalue::query()
+                        ->where('tmplvarid', $tv['id'])
+                        ->where('contentid', $model->getKey())
+                        ->delete();
                 }
             }
         }
 
-        return ResourceResource::make($model)
+        return ResourceResource::make($model->refresh())
             ->layout($this->layout->default($model));
     }
 
@@ -289,7 +298,7 @@ class ResourceController extends Controller
         $model = SiteContent::withTrashed()->findOrFail($id);
 
         $model->update([
-            'deleted' => !$model->deleted
+            'deleted' => !$model->deleted,
         ]);
 
         return ResourceResource::make($model)
