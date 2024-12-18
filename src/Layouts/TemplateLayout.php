@@ -171,7 +171,7 @@ class TemplateLayout extends Layout
                             'flex flex-wrap grow px-5',
                             [
                                 ($isBladeFile
-                                    ? '<span class="text-green-600 mx-5 mb-3">' .
+                                    ? '<span class="text-green-600 mb-3">' .
                                     __('global.template_assigned_blade_file') .
                                     ': ' .
                                     $relativeBladeFile . '</span>'
@@ -203,7 +203,8 @@ class TemplateLayout extends Layout
                             'attach',
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
-                            true
+                            true,
+                            component: Checkbox::make('tvs')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -240,7 +241,8 @@ class TemplateLayout extends Layout
                             'attach',
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
-                            true
+                            true,
+                            component: Checkbox::make('tvs')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',

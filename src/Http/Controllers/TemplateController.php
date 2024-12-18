@@ -403,13 +403,13 @@ class TemplateController extends Controller
                     'id' => $category->first()->category,
                     'name' => $category->first()->getRelation('category')->category ??
                         __('global.no_category'),
-                    'data' => $category->map(function (SiteTmplvar $item) {
+                    'data' => $category/*->map(function (SiteTmplvar $item) {
                         return $item->setAttribute(
                             'attach',
                             Checkbox::make('tvs')->setValue($item->id)
                         )
                             ->withoutRelations();
-                    }),
+                    })*/,
                 ])
                 ->values()
         )
