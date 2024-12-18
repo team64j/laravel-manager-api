@@ -381,8 +381,6 @@ class BootstrapController extends Controller
      */
     protected function getAssets(): array
     {
-        $assets = [];
-
         $packageFolder = trim(
             str_replace([app()->basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3)),
             '/'
@@ -403,8 +401,14 @@ class BootstrapController extends Controller
             ),
         ];
 
-        return $assets;
-        //return array_merge($assets, Arr::flatten(Event::until('OnManagerMainFrameHeaderHTMLBlock'), 1) ?? []);
+        return array_values(
+            array_filter(
+                array_merge(
+                    $assets,
+                    []//Arr::flatten(Event::until('OnManagerMainFrameHeaderHTMLBlock') ?? [], 1)
+                )
+            )
+        );
     }
 
     /**

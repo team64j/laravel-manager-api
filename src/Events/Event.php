@@ -27,7 +27,7 @@ class Event
         } else {
             $this->plugins = SystemEventname::with('plugins')
                 ->withWhereHas('plugins', fn($query) => $query->where('disabled', 0))
-                ->Where('name', $eventName)
+                ->where('name', $eventName)
                 ->firstOrNew()
                 ->plugins
                 ->toArray();
@@ -60,6 +60,16 @@ class Event
             $responses[] = eval($plugin['plugincode']);
         }
 
-        return $responses ?: null;
+        return $this->render($responses) ?: null;
+    }
+
+    /**
+     * @param array $value
+     *
+     * @return array
+     */
+    public function render(array $value): array
+    {
+        return $value;
     }
 }
