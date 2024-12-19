@@ -158,14 +158,27 @@ class ResourceController extends Controller
      *          )
      *      )
      * )
+     * @param ResourceRequest $request
      * @param int $id
      *
      * @return ApiResource
      */
-    public function show(int $id): ApiResource
+    public function show(ResourceRequest $request, int $id): ApiResource
     {
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrNew($id);
+
+        if ($request->has('template')) {
+            $model->template = $request->input('template');
+        }
+
+        if ($request->has('parent')) {
+            $model->parent = $request->input('parent');
+        }
+
+        if ($request->has('type')) {
+            $model->type = $request->input('type');
+        }
 
         return ResourceResource::make($model)
             ->layout($this->layout->default($model));

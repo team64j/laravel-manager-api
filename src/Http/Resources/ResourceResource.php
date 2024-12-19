@@ -19,18 +19,6 @@ class ResourceResource extends ApiResource
      */
     public function toArray(Request $request): array
     {
-        if ($request->has('template')) {
-            $this->resource->template = $request->input('template');
-        }
-
-        if ($request->has('parent')) {
-            $this->resource->parent = $request->input('parent');
-        }
-
-        if ($request->has('type')) {
-            $this->resource->type = $request->input('type');
-        }
-
         return [
             'id' => $this->resource->getKey(),
             'attributes' => $this->resource->attributesToArray(),
