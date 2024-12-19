@@ -18,7 +18,6 @@ use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
-use Team64j\LaravelManagerComponents\Checkbox;
 
 class TemplateController extends Controller
 {

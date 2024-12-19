@@ -231,6 +231,7 @@ class TvLayout extends Layout
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
+                            selectable: true,
                             component: Checkbox::make('templates')->setKeyValue('id')
                         )
                         ->addColumn(
@@ -265,6 +266,7 @@ class TvLayout extends Layout
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
+                            selectable: true,
                             component: Checkbox::make('roles')->setKeyValue('id')
                         )
                         ->addColumn(

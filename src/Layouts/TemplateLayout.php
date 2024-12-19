@@ -204,6 +204,7 @@ class TemplateLayout extends Layout
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
+                            selectable: true,
                             component: Checkbox::make('tvs')->setKeyValue('id')
                         )
                         ->addColumn(
@@ -242,6 +243,7 @@ class TemplateLayout extends Layout
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
+                            selectable: true,
                             component: Checkbox::make('tvs')->setKeyValue('id')
                         )
                         ->addColumn(

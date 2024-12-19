@@ -174,10 +174,15 @@ class PluginLayout extends Layout
                             ->setSlotTop('<div class="p-5 w-full">' . __('global.plugin_event_msg') . '</div>')
                             ->setUrl('/plugins/events')
                             ->setModel('events')
-                            ->setColumns([
+                            ->addColumn(
                                 'checked',
-                                'name',
-                            ]),
+                                style: ['width' => '1%'],
+                                selectable: true,
+                                component: Checkbox::make('tvs')->setKeyValue('id')
+                            )
+                            ->addColumn(
+                                'name'
+                            ),
                     ]
                 )
                 ->addTab(

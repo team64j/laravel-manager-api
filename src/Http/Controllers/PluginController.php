@@ -16,7 +16,6 @@ use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
-use Team64j\LaravelManagerComponents\Checkbox;
 
 class PluginController extends Controller
 {
@@ -383,10 +382,6 @@ class PluginController extends Controller
                 ->orderBy('groupname')
                 ->orderBy('name')
                 ->get()
-                ->map(fn(SystemEventname $item) => $item->setAttribute(
-                    'checked',
-                    Checkbox::make('events')->setValue($item->getKey())
-                ))
                 ->groupBy(fn($item) => $item->groupname ?: $services[$item->service])
                 ->map(fn($item, $key) => [
                     'key' => md5($key),
