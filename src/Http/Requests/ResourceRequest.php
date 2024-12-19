@@ -38,6 +38,7 @@ class ResourceRequest extends FormRequest
     {
         return match ($this->route()->getActionMethod()) {
             'store', 'update' => [
+                'attributes.pagetitle' => 'string|required',
                 'attributes.alias' => 'string|required',
                 'attributes.alias_visible' => 'int',
                 'attributes.cacheable' => 'int',
@@ -63,7 +64,6 @@ class ResourceRequest extends FormRequest
                 'attributes.longtitle' => 'string|nullable',
                 'attributes.menuindex' => 'int',
                 'attributes.menutitle' => 'string|nullable',
-                'attributes.pagetitle' => 'string|required',
                 'attributes.parent' => 'int|required',
                 'attributes.privatemgr' => 'int',
                 'attributes.privateweb' => 'int',
