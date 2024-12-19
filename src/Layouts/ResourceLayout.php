@@ -753,7 +753,7 @@ class ResourceLayout extends Layout
                                     'path' => '/resource/0',
                                     'query' => [
                                         'type' => 'resource',
-                                        'id' => ':id',
+                                        'parent' => ':id',
                                     ],
                                 ],
                             ],
@@ -764,7 +764,7 @@ class ResourceLayout extends Layout
                                     'path' => '/resource/0',
                                     'query' => [
                                         'type' => 'reference',
-                                        'id' => ':id',
+                                        'parent' => ':id',
                                     ],
                                 ],
                             ],
