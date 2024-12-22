@@ -88,11 +88,7 @@ class FileController extends Controller
         }
 
         return ApiResource::make($data)
-            ->layout($layout->default($data))
-            ->meta([
-                'title' => $data['path'] ?? $layout->title(),
-                'icon' => $layout->icon($data['ext']),
-            ]);
+            ->layout($layout->default($data));
     }
 
     /**

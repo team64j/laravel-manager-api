@@ -6,6 +6,8 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\CodeEditor;
+use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Media;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -48,6 +50,11 @@ class FileLayout extends Layout
     public function default(array $data = []): array
     {
         return [
+            GlobalTab::make(
+                $this->icon($data['ext'] ?? 'default'),
+                $data['basename'] ?? $this->title()
+            ),
+
             Actions::make()
                 ->setCancel(__('global.close'))
                 ->when(
@@ -57,8 +64,8 @@ class FileLayout extends Layout
                 ->setSaveAnd(),
 
             Title::make()
-                ->setModel('path')
-                ->setIcon($this->icon())
+                ->setModel('basename')
+                ->setIcon($this->icon($data['ext'] ?? 'default'))
                 ->setId($data['size'] ?? null),
 
             Tabs::make()
@@ -74,6 +81,16 @@ class FileLayout extends Layout
                             ->setClass('p-5 h-full')
                             ->setInputClass('h-full') : null,
                     ],
+                ),
+
+            Crumbs::make()
+                ->setData(
+                    array_map(
+                        fn($i) => [
+                            'name' => $i,
+                        ],
+                        explode('\\', $data['path'])
+                    )
                 ),
         ];
     }
