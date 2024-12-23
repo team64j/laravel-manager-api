@@ -370,7 +370,7 @@ class TemplateLayout extends Layout
                         ->setRoute('/templates/:id')
                         ->setHistory(true)
                         ->addColumn(
-                            '#',
+                            ['#', 'locked'],
                             null,
                             ['width' => '3rem'],
                             false,
@@ -409,37 +409,6 @@ class TemplateLayout extends Layout
                         ->addColumn(
                             'description',
                             __('global.template_desc')
-                        )
-                        ->addColumn(
-                            'locked',
-                            __('global.locked'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
-                            true,
-                            [
-                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
-                            ]
-                        )
-                        ->addColumn(
-                            'actions',
-                            __('global.onlineusers_action'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
-                            false,
-                            [],
-                            [
-                                'copy' => [
-                                    'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => __('global.duplicate'),
-                                    'helpFit' => true,
-                                    'noOpacity' => true,
-                                ],
-                                'delete' => [
-                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => __('global.delete'),
-                                    'helpFit' => true,
-                                    'noOpacity' => true,
-                                ],
-                            ]
                         )
                 ),
         ];

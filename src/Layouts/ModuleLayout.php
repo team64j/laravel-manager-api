@@ -328,16 +328,6 @@ class ModuleLayout extends Layout
                             __('global.module_desc')
                         )
                         ->addColumn(
-                            'locked',
-                            __('global.locked'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
-                            true,
-                            [
-                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
-                            ]
-                        )
-                        ->addColumn(
                             'disabled',
                             __('global.disabled'),
                             ['width' => '10rem', 'textAlign' => 'center'],
@@ -345,27 +335,6 @@ class ModuleLayout extends Layout
                             [
                                 0 => '<span class="text-green-600">' . __('global.no') . '</span>',
                                 1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
-                            ]
-                        )
-                        ->addColumn(
-                            'actions',
-                            __('global.onlineusers_action'),
-                            ['width' => '10rem', 'textAlign' => 'center'],
-                            false,
-                            [],
-                            [
-                                'copy' => [
-                                    'icon' => 'far fa-clone fa-fw hover:text-blue-500',
-                                    'help' => __('global.duplicate'),
-                                    'helpFit' => true,
-                                    'noOpacity' => true,
-                                ],
-                                'delete' => [
-                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => __('global.delete'),
-                                    'helpFit' => true,
-                                    'noOpacity' => true,
-                                ],
                             ]
                         )
                 ),
