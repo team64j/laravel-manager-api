@@ -988,8 +988,8 @@ class BootstrapController extends Controller
             ->setUid('TREE')
             ->setClass('h-full')
             ->isVertical()
-            ->isHideable()
             ->setNavigation(false)
+            ->isHiddenTabs()
             ->isSmallTabs()
             ->isLoadOnce();
 
