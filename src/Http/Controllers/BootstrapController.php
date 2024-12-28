@@ -104,6 +104,7 @@ class BootstrapController extends Controller
 //                    'component' => 'AppGlobalMenu',
 //                    'attrs' => [
 //                        'data' => $this->getMenu(),
+//                        'class' => 'w-full'
 //                    ],
 //                    'slot' => 'top',
 //                ],
