@@ -80,9 +80,9 @@ class BootstrapController extends Controller
             ],
             'lang' => [
                 'warning_not_saved' => __('global.warning_not_saved'),
-                'dp_dayNames' => __('global.dp_dayNames'),
-                'dp_monthNames' => __('global.dp_monthNames'),
-                'dp_startDay' => __('global.dp_startDay'),
+                'dayNames' => __('global.dp_dayNames'),
+                'monthNames' => __('global.dp_monthNames'),
+                'startDay' => __('global.dp_startDay'),
             ],
         ])
             ->layout([

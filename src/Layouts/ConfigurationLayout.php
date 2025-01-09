@@ -42,7 +42,7 @@ class ConfigurationLayout extends Layout
         return [
             Actions::make()
                 ->setCancel()
-                ->setSave(),
+                ->setSave(class: 'btn-green'),
 
             Title::make()
                 ->setTitle($this->title())
