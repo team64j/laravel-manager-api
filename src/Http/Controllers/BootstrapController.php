@@ -40,9 +40,11 @@ class BootstrapController extends Controller
     public function init(): ApiResource
     {
         return ApiResource::make([
-            'version' => config('global.settings_version'),
             'languages' => $this->getLanguages(),
-            'siteName' => config('global.site_name'),
+            'config' => [
+                'siteName' => config('global.site_name'),
+                'version' => config('global.settings_version'),
+            ],
         ]);
     }
 
@@ -73,10 +75,8 @@ class BootstrapController extends Controller
             'routes' => $this->getRoutes(),
             'assets' => $this->getAssets(),
             'config' => [
-                'site_name' => config('global.site_name'),
-                'site_status' => (bool) config('global.site_status'),
-                'remember_last_tab' => (bool) config('global.remember_last_tab'),
-                'datetime_format' => config('global.datetime_format'),
+                'siteName' => config('global.site_name'),
+                'datetimeFormat' => config('global.datetime_format'),
             ],
             'lang' => [
                 'warning_not_saved' => __('global.warning_not_saved'),
@@ -443,8 +443,7 @@ class BootstrapController extends Controller
 //                        ],
                         [
                             'key' => 'dashboard',
-                            'icon' => config('global.login_logo')
-                                ?: 'https://avatars.githubusercontent.com/u/46722965?s=64&v=4',
+                            'icon' => 'https://avatars.githubusercontent.com/u/46722965?s=64&v=4',
                             'class' => 'line-height-1',
                             'to' => [
                                 'path' => '/',
