@@ -24,8 +24,12 @@ class CategoryRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            //
-        ];
+        return match ($this->route()->getActionMethod()) {
+            'store', 'update' => [
+                'category' => 'required|string',
+                'rank' => 'integer|nullable',
+            ],
+            default => []
+        };
     }
 }

@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use EvolutionCMS\Models\Category;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -81,6 +82,19 @@ class CategoryLayout extends Layout
                 ->setTitle(__('global.new_category'))
                 ->setIcon(self::icon())
                 ->setId($model->getKey()),
+
+            Tabs::make()
+                ->setId('category')
+                ->setClass('px-4 pb-4')
+                ->addTab(
+                    'general',
+                    icon: self::icon(),
+                    class: 'p-5',
+                    slot: [
+                        Input::make('category', __('global.cm_category_name'))->setClass('mb-3')->isRequired(),
+                        Input::make('rank', __('global.cm_category_position')),
+                    ]
+                ),
         ];
     }
 
