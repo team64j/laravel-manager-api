@@ -433,6 +433,9 @@ class TemplateLayout extends Layout
                     ->setUrl('/templates/tree')
                     ->isCategory()
                     ->setAppends(['id'])
+                    ->setAliases([
+                        'locked' => 'locked:1',
+                    ])
                     ->setIcons([
                         'default' => $this->icon(),
                         config('global.default_template') => 'fa fa-home fa-fw text-blue-500',

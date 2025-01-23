@@ -438,8 +438,6 @@ class ModuleController extends Controller
             return ApiResource::collection($result->map(fn(SiteModule $item) => [
                 'id' => $item->id,
                 'title' => $item->name,
-                'muted' => $item->locked,
-                'deleted' => $item->disabled,
                 'attributes' => $item,
             ]))
                 ->meta([

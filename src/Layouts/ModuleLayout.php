@@ -360,6 +360,10 @@ class ModuleLayout extends Layout
                     ->setUrl('/modules/tree')
                     ->isCategory()
                     ->setAppends(['id'])
+                    ->setAliases([
+                        'locked' => 'locked:1',
+                        'muted' => 'disabled:1',
+                    ])
                     ->setIcons([
                         'default' => $this->icon(),
                     ])

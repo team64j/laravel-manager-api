@@ -449,8 +449,6 @@ class PluginController extends Controller
             return ApiResource::collection($result->map(fn(SitePlugin $item) => [
                 'id' => $item->id,
                 'title' => $item->name,
-                'muted' => $item->locked,
-                'deleted' => $item->disabled,
                 'attributes' => $item,
             ]))
                 ->meta([

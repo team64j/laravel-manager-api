@@ -719,6 +719,11 @@ class ResourceLayout extends Layout
                     ->setRouteList('Resources')
                     ->setUrl('/resource/tree')
                     ->setAppends(['id'])
+                    ->setAliases([
+                        'selected' => 'hidemenu:0',
+                        'deleted' => 'deleted:1',
+                        'muted' => 'published:0',
+                    ])
                     ->setIcons([
                         'default' => 'far fa-file',
                         config('global.unauthorized_page') => 'fa fa-lock text-rose-600',

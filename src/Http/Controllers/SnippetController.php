@@ -354,8 +354,6 @@ class SnippetController extends Controller
             return ApiResource::collection($result->map(fn(SiteSnippet $item) => [
                 'id' => $item->id,
                 'title' => $item->name,
-                'muted' => $item->locked,
-                'deleted' => $item->disabled,
                 'attributes' => $item,
             ]))
                 ->meta([

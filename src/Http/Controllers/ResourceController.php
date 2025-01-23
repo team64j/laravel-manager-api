@@ -426,9 +426,6 @@ class ResourceController extends Controller
                 $data = [
                     'id' => $item->id,
                     'title' => $item->{$settings['keyTitle']} ?? $item->pagetitle,
-                    'deleted' => $item->deleted,
-                    'selected' => !$item->hidemenu,
-                    'muted' => !$item->published,
                     'attributes' => $item,
                 ];
 

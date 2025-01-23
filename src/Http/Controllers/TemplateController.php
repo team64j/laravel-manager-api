@@ -526,7 +526,6 @@ class TemplateController extends Controller
                 $result->map(fn(SiteTemplate $item) => [
                     'id' => $item->id,
                     'title' => $item->templatename,
-                    'muted' => $item->locked,
                     'attributes' => $item,
                 ])
             )

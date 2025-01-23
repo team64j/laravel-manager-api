@@ -465,7 +465,6 @@ class TvController extends Controller
             return ApiResource::collection($result->map(fn(SiteTmplvar $item) => [
                 'id' => $item->id,
                 'title' => $item->name,
-                'muted' => $item->locked,
                 'attributes' => $item,
             ]))
                 ->meta([
