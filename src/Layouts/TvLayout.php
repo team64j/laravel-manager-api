@@ -525,9 +525,6 @@ class TvLayout extends Layout
                     ->setRoute('/tvs/:id')
                     ->setUrl('/tvs/tree')
                     ->isCategory()
-                    ->setAliases([
-                        'title' => 'name',
-                    ])
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => $this->icon(),

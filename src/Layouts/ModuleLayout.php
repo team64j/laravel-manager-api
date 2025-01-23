@@ -359,10 +359,6 @@ class ModuleLayout extends Layout
                     ->setRoute('/modules/:id')
                     ->setUrl('/modules/tree')
                     ->isCategory()
-                    ->setAliases([
-                        'title' => 'name',
-                        'deleted' => 'disabled',
-                    ])
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => $this->icon(),

@@ -523,7 +523,12 @@ class TemplateController extends Controller
                 ->appends($request->all());
 
             return ApiResource::collection(
-                $result->map(fn(SiteTemplate $item) => $item->setHidden(['category']))
+                $result->map(fn(SiteTemplate $item) => [
+                    'id' => $item->id,
+                    'title' => $item->templatename,
+                    'muted' => $item->locked,
+                    'attributes' => $item,
+                ])
             )
                 ->meta([
                     'pagination' => $this->pagination($result),
@@ -541,7 +546,7 @@ class TemplateController extends Controller
         $result = $result->map(function ($category) use ($request, $settings) {
             $data = [
                 'id' => $category->getKey() ?? 0,
-                'name' => $category->category ?? __('global.no_category'),
+                'title' => $category->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
@@ -558,7 +563,7 @@ class TemplateController extends Controller
 
             return $data;
         })
-            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['name'])->upper() > str($b['name'])->upper()))
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 
         return ApiResource::collection($result)

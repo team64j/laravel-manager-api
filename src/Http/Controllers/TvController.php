@@ -462,7 +462,12 @@ class TvController extends Controller
                 ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
-            return ApiResource::collection($result->map(fn(SiteTmplvar $item) => $item->setHidden(['category'])))
+            return ApiResource::collection($result->map(fn(SiteTmplvar $item) => [
+                'id' => $item->id,
+                'title' => $item->name,
+                'muted' => $item->locked,
+                'attributes' => $item,
+            ]))
                 ->meta([
                     'pagination' => $this->pagination($result),
                 ]);
@@ -479,7 +484,7 @@ class TvController extends Controller
         $result = $result->map(function ($category) use ($request, $settings) {
             $data = [
                 'id' => $category->getKey() ?? 0,
-                'name' => $category->category ?? __('global.no_category'),
+                'title' => $category->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
@@ -496,7 +501,7 @@ class TvController extends Controller
 
             return $data;
         })
-            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['name'])->upper() > str($b['name'])->upper()))
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 
         return ApiResource::collection($result)

@@ -423,13 +423,14 @@ class ResourceController extends Controller
             $meta = ['message' => __('global.no_results')];
         } else {
             $data = $result->map(function (SiteContent $item) use ($request, $settings) {
-                $title = $item->pagetitle;
-
-                if (!empty($settings['keyTitle']) && $item->{$settings['keyTitle']} != null) {
-                    $title = $item->{$settings['keyTitle']};
-                }
-
-                $data = $item->setAttribute('pagetitle', $title)->toArray();
+                $data = [
+                    'id' => $item->id,
+                    'title' => $item->{$settings['keyTitle']} ?? $item->pagetitle,
+                    'deleted' => $item->deleted,
+                    'selected' => !$item->hidemenu,
+                    'muted' => !$item->published,
+                    'attributes' => $item,
+                ];
 
                 if ($item->isfolder) {
                     if ($item->hide_from_tree) {
@@ -446,10 +447,10 @@ class ResourceController extends Controller
                                 ] + $settings
                             );
 
-//                            $result = $this->tree($request);
-//
-//                            $data['data'] = $result->resource ?? [];
-//                            $data['meta'] = $result->additional['meta'] ?? [];
+                            $result = $this->tree($request);
+
+                            $data['data'] = $result->resource ?? [];
+                            $data['meta'] = $result->additional['meta'] ?? [];
                         }
                     }
                 }

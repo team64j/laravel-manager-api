@@ -295,10 +295,6 @@ class ChunkLayout extends Layout
                     ->setRoute('/chunks/:id')
                     ->setUrl('/chunks/tree')
                     ->isCategory()
-                    ->setAliases([
-                        'title' => 'name',
-                        'deleted' => 'disabled',
-                    ])
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => $this->icon(),

@@ -727,21 +727,17 @@ class ResourceLayout extends Layout
                         config('global.error_page') => 'fa fa-exclamation-triangle text-rose-600',
                         'reference' => 'fa fa-link',
                     ])
-                    ->setAliases([
-                        'selected' => 'hidemenu:0',
-                        'muted' => 'published:0',
-                    ])
                     ->setTemplates([
                         'title' =>
                             __('global.pagetitle') . ': {title}' . PHP_EOL .
                             __('global.id') . ': {id}' . PHP_EOL .
-                            __('global.resource_opt_menu_title') . ': {menutitle}' . PHP_EOL .
-                            __('global.resource_opt_menu_index') . ': {menuindex}' . PHP_EOL .
-                            __('global.alias') . ': {alias}' . PHP_EOL .
-                            __('global.template') . ': {template}' . PHP_EOL .
-                            __('global.resource_opt_richtext') . ': {richtext}' . PHP_EOL .
-                            __('global.page_data_searchable') . ': {searchable}' . PHP_EOL .
-                            __('global.page_data_cacheable') . ': {cacheable}' . PHP_EOL,
+                            __('global.resource_opt_menu_title') . ': {attributes.menutitle}' . PHP_EOL .
+                            __('global.resource_opt_menu_index') . ': {attributes.menuindex}' . PHP_EOL .
+                            __('global.alias') . ': {attributes.alias}' . PHP_EOL .
+                            __('global.template') . ': {attributes.template}' . PHP_EOL .
+                            __('global.resource_opt_richtext') . ': {attributes.richtext}' . PHP_EOL .
+                            __('global.page_data_searchable') . ': {attributes.searchable}' . PHP_EOL .
+                            __('global.page_data_cacheable') . ': {attributes.cacheable}' . PHP_EOL,
                     ])
                     ->setContextMenu([
                         'class' => 'text-base',

@@ -285,9 +285,6 @@ class CategoryLayout extends Layout
                     ->setRoute('/categories/:id')
                     ->setUrl('/categories/tree')
                     ->isCategory()
-                    ->setAliases([
-                        'title' => 'name',
-                    ])
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => $this->icon(),

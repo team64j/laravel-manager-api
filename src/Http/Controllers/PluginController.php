@@ -446,7 +446,13 @@ class PluginController extends Controller
                 ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
-            return ApiResource::collection($result->map(fn(SitePlugin $item) => $item->setHidden(['category'])))
+            return ApiResource::collection($result->map(fn(SitePlugin $item) => [
+                'id' => $item->id,
+                'title' => $item->name,
+                'muted' => $item->locked,
+                'deleted' => $item->disabled,
+                'attributes' => $item,
+            ]))
                 ->meta([
                     'pagination' => $this->pagination($result),
                 ]);
@@ -463,7 +469,7 @@ class PluginController extends Controller
         $result = $result->map(function ($category) use ($request, $settings) {
             $data = [
                 'id' => $category->getKey() ?? 0,
-                'name' => $category->category ?? __('global.no_category'),
+                'title' => $category->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
@@ -480,7 +486,7 @@ class PluginController extends Controller
 
             return $data;
         })
-            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['name']) > Str::upper($b['name'])))
+            ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['title']) > Str::upper($b['title'])))
             ->values();
 
         return ApiResource::collection($result)

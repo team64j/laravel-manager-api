@@ -310,10 +310,6 @@ class SnippetLayout extends Layout
                     ->setRoute('/snippets/:id')
                     ->setUrl('/snippets/tree')
                     ->isCategory()
-                    ->setAliases([
-                        'title' => 'name',
-                        'deleted' => 'disabled',
-                    ])
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => $this->icon(),

@@ -432,9 +432,6 @@ class TemplateLayout extends Layout
                     ->setRoute('/templates/:id')
                     ->setUrl('/templates/tree')
                     ->isCategory()
-                    ->setAliases([
-                        'title' => ['name', 'templatename'],
-                    ])
                     ->setAppends(['id'])
                     ->setIcons([
                         'default' => $this->icon(),
