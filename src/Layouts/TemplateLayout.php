@@ -115,7 +115,7 @@ class TemplateLayout extends Layout
                     __('global.settings_general'),
                     slot: [
                         Template::make(
-                            'flex flex-wrap grow md:basis-2/3 xl:basis-9/12 px-5 pt-5',
+                            'flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 p-5',
                             [
                                 Input::make(
                                     'data.attributes.templatename',
@@ -143,7 +143,7 @@ class TemplateLayout extends Layout
                         ),
 
                         Template::make(
-                            'flex flex-wrap grow md:basis-1/3 xl:basis-3/12 px-5 md:!pl-2 md:pt-5',
+                            'flex flex-wrap grow lg:basis-1/3 xl:basis-3/12 p-5',
                             [
                                 Select::make(
                                     'data.attributes.category',

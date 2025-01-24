@@ -442,12 +442,14 @@ class TemplateController extends Controller
      */
     public function select(TemplateRequest $request): ApiCollection
     {
+        $selected = $request->collect('selected');
+
         return ApiResource::collection(
             collect()
                 ->add([
                     'key' => 0,
                     'value' => 'blank (0)',
-                    'selected' => 0 == $request->integer('selected'),
+                    'selected' => $selected->contains(0),
                 ])
                 ->merge(
                     SiteTemplate::with('category')
@@ -461,7 +463,7 @@ class TemplateController extends Controller
                             'data' => $group->map(fn($item) => [
                                 'key' => $item->getKey(),
                                 'value' => $item->templatename . ' (' . $item->getKey() . ')',
-                                'selected' => $item->getKey() == $request->integer('selected'),
+                                'selected' => $selected->contains($item->getKey()),
                             ]),
                         ])
                         ->values()

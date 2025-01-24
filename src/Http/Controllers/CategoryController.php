@@ -255,7 +255,7 @@ class CategoryController extends Controller
      */
     public function select(CategoryRequest $request): ApiCollection
     {
-        $selected = $request->integer('selected');
+        $selected = $request->collect('selected');
 
         return ApiResource::collection(
             collect()
@@ -278,7 +278,7 @@ class CategoryController extends Controller
                         ->map(fn(Category $category) => [
                             'key' => $category->id ?: 0,
                             'value' => $category->category,
-                            'selected' => $selected == ($category->id ?: 0),
+                            'selected' => $selected->contains($category->id ?: 0),
                         ]),
                 ])
         );
