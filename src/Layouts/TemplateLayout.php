@@ -115,7 +115,7 @@ class TemplateLayout extends Layout
                     __('global.settings_general'),
                     slot: [
                         Template::make(
-                            'flex flex-wrap grow lg:basis-2/3 xl:basis-9/12 p-5',
+                            'flex flex-wrap grow p-5',
                             [
                                 Input::make(
                                     'data.attributes.templatename',
@@ -143,7 +143,7 @@ class TemplateLayout extends Layout
                         ),
 
                         Template::make(
-                            'flex flex-wrap grow lg:basis-1/3 xl:basis-3/12 p-5',
+                            'flex flex-wrap grow p-5 lg:max-w-96',
                             [
                                 Select::make(
                                     'data.attributes.category',
@@ -168,7 +168,7 @@ class TemplateLayout extends Layout
                         ),
 
                         Template::make(
-                            'flex flex-wrap grow px-5',
+                            'flex flex-wrap grow px-5 w-full',
                             [
                                 ($isBladeFile
                                     ? '<span class="text-green-600 mb-3">' .
