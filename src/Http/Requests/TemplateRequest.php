@@ -53,6 +53,7 @@ class TemplateRequest extends FormRequest
             'attributes.templatealias' => '"' . __('global.alias') . '"',
             'attributes.description' => '"' . __('global.template_desc') . '"',
             'attributes.content' => '"' . __('global.template_code') . '"',
+            'attributes.category' => '"' . __('global.existing_category') . '"',
         ];
     }
 }
