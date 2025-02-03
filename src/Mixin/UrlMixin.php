@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Mixin;
 
 use Closure;
-use EvolutionCMS\Models\SiteContent;
 use Illuminate\Support\Facades\URL;
+use Team64j\LaravelManagerApi\Models\SiteContent;
 
 /**
  * @mixin URL

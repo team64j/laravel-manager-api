@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use EvolutionCMS\Models\PermissionsGroups;
+use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;

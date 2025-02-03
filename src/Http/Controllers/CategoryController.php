@@ -2,13 +2,13 @@
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\Category;
 use Illuminate\Http\Response;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
+use Team64j\LaravelManagerApi\Models\Category;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class CategoryController extends Controller

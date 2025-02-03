@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Layouts;
 
-use EvolutionCMS\Models\Category;
-use EvolutionCMS\Models\SitePlugin;
+use Team64j\LaravelManagerApi\Models\Category;
+use Team64j\LaravelManagerApi\Models\SitePlugin;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;

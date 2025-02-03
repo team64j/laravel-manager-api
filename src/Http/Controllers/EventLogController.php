@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\EventLog;
 use Illuminate\Support\Collection;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\EventLogRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\EventLogLayout;
+use Team64j\LaravelManagerApi\Models\EventLog;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class EventLogController extends Controller

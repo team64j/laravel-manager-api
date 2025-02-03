@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\Category;
-use EvolutionCMS\Models\SiteSnippet;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OpenApi\Annotations as OA;
@@ -13,6 +11,8 @@ use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
+use Team64j\LaravelManagerApi\Models\Category;
+use Team64j\LaravelManagerApi\Models\SiteSnippet;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class SnippetController extends Controller

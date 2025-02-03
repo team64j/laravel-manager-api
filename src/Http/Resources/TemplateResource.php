@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Resources;
 
-use EvolutionCMS\Models\SiteTemplate;
 use Illuminate\Http\Request;
+use Team64j\LaravelManagerApi\Models\SiteTemplate;
 
 /**
  * @property SiteTemplate $resource

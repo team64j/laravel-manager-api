@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use DateTimeImmutable;
-use EvolutionCMS\Models\SiteTemplate;
 use Illuminate\Support\Facades\File;
+use Team64j\LaravelManagerApi\Models\SiteTemplate;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Number;

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\UserRole;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\RoleUserLayout;
+use Team64j\LaravelManagerApi\Models\UserRole;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class RoleUserController extends Controller

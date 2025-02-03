@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\SystemSetting;
 use Illuminate\Support\Facades\Artisan;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\ConfigurationLayout;
+use Team64j\LaravelManagerApi\Models\SystemSetting;
 
 class ConfigurationController extends Controller
 {

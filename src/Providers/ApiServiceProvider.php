@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Providers;
 
-use EvolutionCMS\Models\SystemSetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
@@ -13,6 +12,7 @@ use Illuminate\Support\Str;
 use Team64j\LaravelManagerApi\Http\Middleware\Authenticate;
 use Team64j\LaravelManagerApi\Mixin\UrlMixin;
 use Team64j\LaravelManagerApi\Models\Permissions;
+use Team64j\LaravelManagerApi\Models\SystemSetting;
 use Team64j\LaravelManagerApi\Models\User;
 
 class ApiServiceProvider extends ServiceProvider

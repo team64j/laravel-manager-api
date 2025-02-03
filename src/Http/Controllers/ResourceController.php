@@ -2,8 +2,6 @@
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\SiteContent;
-use EvolutionCMS\Models\SiteTmplvarContentvalue;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 use OpenApi\Annotations as OA;
@@ -12,6 +10,8 @@ use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\ResourceResource;
 use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
+use Team64j\LaravelManagerApi\Models\SiteContent;
+use Team64j\LaravelManagerApi\Models\SiteTmplvarContentvalue;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class ResourceController extends Controller

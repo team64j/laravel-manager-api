@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\Category;
-use EvolutionCMS\Models\SiteTemplate;
-use EvolutionCMS\Models\SiteTmplvar;
-use EvolutionCMS\Models\SiteTmplvarTemplate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -17,6 +13,10 @@ use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
+use Team64j\LaravelManagerApi\Models\Category;
+use Team64j\LaravelManagerApi\Models\SiteTemplate;
+use Team64j\LaravelManagerApi\Models\SiteTmplvar;
+use Team64j\LaravelManagerApi\Models\SiteTmplvarTemplate;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class TemplateController extends Controller

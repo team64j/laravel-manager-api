@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\Category;
-use EvolutionCMS\Models\SiteTmplvar;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OpenApi\Annotations as OA;
@@ -14,6 +12,8 @@ use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Http\Resources\TvResource;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
+use Team64j\LaravelManagerApi\Models\Category;
+use Team64j\LaravelManagerApi\Models\SiteTmplvar;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class TvController extends Controller

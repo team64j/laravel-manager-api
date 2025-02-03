@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\DocumentgroupName;
-use EvolutionCMS\Models\MembergroupName;
-use EvolutionCMS\Models\SiteContent;
-use EvolutionCMS\Models\User;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\PermissionRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
@@ -15,8 +11,12 @@ use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\PermissionGroupLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionRelationLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionResourceLayout;
+use Team64j\LaravelManagerApi\Models\DocumentgroupName;
+use Team64j\LaravelManagerApi\Models\MembergroupName;
 use Team64j\LaravelManagerApi\Models\Permissions;
 use Team64j\LaravelManagerApi\Models\PermissionsGroups;
+use Team64j\LaravelManagerApi\Models\SiteContent;
+use Team64j\LaravelManagerApi\Models\User;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class PermissionController extends Controller

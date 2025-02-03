@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\Category;
-use EvolutionCMS\Models\SitePlugin;
-use EvolutionCMS\Models\SystemEventname;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
@@ -15,6 +12,9 @@ use Team64j\LaravelManagerApi\Http\Requests\PluginRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\PluginLayout;
+use Team64j\LaravelManagerApi\Models\Category;
+use Team64j\LaravelManagerApi\Models\SitePlugin;
+use Team64j\LaravelManagerApi\Models\SystemEventname;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class PluginController extends Controller

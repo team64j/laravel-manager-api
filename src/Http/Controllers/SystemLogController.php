@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\ManagerLog;
 use Illuminate\Support\Collection;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemLogRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\SystemLogLayout;
+use Team64j\LaravelManagerApi\Models\ManagerLog;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class SystemLogController extends Controller

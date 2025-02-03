@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\SystemSetting;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\WorkspaceRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\WorkspaceLayout;
+use Team64j\LaravelManagerApi\Models\SystemSetting;
 
 class WorkspaceController extends Controller
 {

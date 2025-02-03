@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use EvolutionCMS\Models\SiteContent;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourcesRequest;
 use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
 use Team64j\LaravelManagerApi\Layouts\ResourcesLayout;
+use Team64j\LaravelManagerApi\Models\SiteContent;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class ResourcesController extends Controller
