@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'uri' => env('MANAGER_API', 'manager/api'),
+    'uri' => env('MANAGER_API', 'laravel-manager-api'),
 
     'guard' => [
         'driver' => 'jwt',
