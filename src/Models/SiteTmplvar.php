@@ -20,6 +20,7 @@ use Team64j\LaravelEvolution\Traits\LockedTrait;
  * @property int $category
  * @property int $locked
  * @property string $type
+ * @property string $value
  * @property string $default_text
  * @property string $display
  * @property string $display_params

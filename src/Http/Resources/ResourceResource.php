@@ -22,7 +22,7 @@ class ResourceResource extends ApiResource
         return [
             'id' => $this->resource->getKey(),
             'attributes' => $this->resource->attributesToArray(),
-            'tvs' => $this->resource->getTvs()->pluck('value', 'name'),
+            'tvs' => $this->resource->tvs->pluck('value', 'name'),
             $this->mergeWhen(
                 config('global.use_udperms'),
                 fn() => [

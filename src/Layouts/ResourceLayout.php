@@ -7,8 +7,10 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use Generator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\URL;
 use Team64j\LaravelManagerApi\Models\DocumentgroupName;
 use Team64j\LaravelManagerApi\Models\SiteContent;
+use Team64j\LaravelManagerApi\Models\SiteTmplvar;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
@@ -158,10 +160,10 @@ class ResourceLayout extends Layout
             $title = $this->title();
         }
 
-        $tvs = $model->getTvs();
+        $tvs = $model->tvs;
         $tabTvs = $this->tabTvs($tvs);
         $groupTv = $tvs->count() ? config('global.group_tvs') : '';
-        $route = url()->getRouteById($model->getKey());
+        $route = URL::getRouteById($model->getKey());
 
         return [
             GlobalTab::make(
@@ -597,12 +599,13 @@ class ResourceLayout extends Layout
             'image' => File::class,
         ];
 
+        /** @var SiteTmplvar $tv */
         foreach ($tvs as $tv) {
-            $categoryId = 'category-' . $tv['category'];
+            $categoryId = 'category-' . $tv->category;
 
             $tvTabs->addTab(
                 $categoryId,
-                $tv['category_name']
+                $tv->category ? $tv->category()->first()->category : __('global.no_category'),
             );
 
             $data = array_map(function ($item) {
@@ -616,44 +619,44 @@ class ResourceLayout extends Layout
                     'key' => $key,
                     'value' => $value,
                 ];
-            }, explode('||', (string) $tv['elements']));
+            }, explode('||', (string) $tv->elements));
 
-            if (str_starts_with($tv['type'], 'custom_tv:')) {
+            if (str_starts_with($tv->type, 'custom_tv:')) {
                 $tvTabs->putSlot(
                     $categoryId,
                     Textarea::make()
-                        ->setModel('data.tvs.' . $tv['name'])
+                        ->setModel('data.tvs.' . $tv->name)
                         ->setData($data)
-                        ->setLabel($tv['caption'])
+                        ->setLabel($tv->caption)
                         ->setDescription($tv['description'])
                         ->setHelp(
-                            '<b>[*' . $tv['name'] . '*]</b><i class="badge">' . $tv['id'] . '</i><br>' .
-                            $tv['description']
+                            '<b>[*' . $tv->name . '*]</b><i class="badge">' . $tv->id . '</i><br>' .
+                            $tv->description
                         )
                         ->setRows(5)
                         ->setClass('mb-3')
                 );
             } else {
                 /** @var Field $field */
-                $field = app($components[$tv['type']] ?? $components['text']);
+                $field = app($components[$tv->type] ?? $components['text']);
 
                 $tvTabs->putSlot(
                     $categoryId,
                     $field
-                        ->setModel('data.tvs.' . $tv['name'])
+                        ->setModel('data.tvs.' . $tv->name)
                         ->setData($data)
-                        ->setLabel($tv['caption'])
-                        ->setDescription($tv['description'])
+                        ->setLabel($tv->caption)
+                        ->setDescription($tv->description)
                         ->setHelp(
-                            '<b>[*' . $tv['name'] . '*]</b><i class="badge">' . $tv['id'] . '</i><br>' .
-                            $tv['description']
+                            '<b>[*' . $tv->name . '*]</b><i class="badge">' . $tv['id'] . '</i><br>' .
+                            $tv->description
                         )
                         ->setClass('mb-3')
                         ->when(
-                            in_array($tv['type'], ['file', 'image']),
+                            in_array($tv->type, ['file', 'image']),
                             fn(Field $field) => $field
                                 ->setEmitClick('modal:component')
-                                ->setUrl(route('manager.api.filemanager.index', ['type' => $tv['type']]))
+                                ->setUrl(route('manager.api.filemanager.index', ['type' => $tv->type]))
                         )
                 );
             }

@@ -9,9 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
 use Team64j\LaravelEvolution\Traits\SoftDeletes;
 use Team64j\LaravelEvolution\Traits\TimeMutatorTrait;
@@ -478,5 +481,38 @@ class SiteContent extends Model
         }
 
         return $query;
+    }
+
+    /**
+     * @return HasManyThrough
+     */
+    public function tvs(): HasManyThrough
+    {
+        $tvModel = new SiteTmplvar();
+        $tvValueModel = new SiteTmplvarContentvalue();
+
+        return $this
+            ->hasManyThrough(
+                SiteTmplvar::class,
+                SiteTmplvarTemplate::class,
+                'templateid',
+                'id',
+                'template',
+                'tmplvarid'
+            )
+            ->leftJoin(
+                $tvValueModel->getTable(),
+                fn(JoinClause $join) => $join
+                    ->on($tvValueModel->qualifyColumn('tmplvarid'), $tvModel->qualifyColumn('id'))
+                    ->on($tvValueModel->qualifyColumn('contentid'), DB::raw($this->getKey()))
+            )
+            ->select([
+                $tvModel->qualifyColumn('*'),
+                $tvValueModel->qualifyColumn('contentid'),
+                DB::raw(
+                    'ifnull(' . DB::getTablePrefix() . $tvValueModel->qualifyColumn('value') . ',' .
+                    DB::getTablePrefix() . $tvModel->qualifyColumn('default_text') . ') as value'
+                ),
+            ]);
     }
 }
