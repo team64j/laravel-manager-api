@@ -103,7 +103,7 @@ class SnippetLayout extends Layout
                     __('global.page_data_general'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap md:basis-2/3 xl:basis-9/12 p-5')
+                            ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
                                 Input::make('name', __('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
                                 Textarea::make('description', __('global.tmplvars_description'))
@@ -117,7 +117,7 @@ class SnippetLayout extends Layout
                                     ->setCheckedValue(1, 0),
                             ]),
                         Template::make()
-                            ->setClass('flex flex-wrap md:basis-1/3 xl:basis-3/12 w-full p-5 md:!pl-2')
+                            ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
                                 Select::make('category', __('global.existing_category'))
                                     ->setClass('mb-3')

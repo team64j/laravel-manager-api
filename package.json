@@ -1,6 +1,4 @@
 {
-    "dependencies": {
-    },
     "devDependencies": {
         "autoprefixer": "^10.4.13",
         "postcss": "^8.4.19",

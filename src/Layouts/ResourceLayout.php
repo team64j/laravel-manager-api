@@ -225,7 +225,7 @@ class ResourceLayout extends Layout
                     __('global.settings_general'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:basis-3/4')
+                            ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
                                 Input::make(
                                     'data.attributes.pagetitle',
@@ -271,7 +271,7 @@ class ResourceLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:basis-1/4')
+                            ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
                                 /*Select::make(
                                     'parent',
