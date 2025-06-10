@@ -459,11 +459,12 @@ class TvController extends Controller
 
             return JsonResource::collection(
                 $result->setCollection(
-                    $result->getCollection()->map(fn(SiteTmplvar $item) => [
-                        'id' => $item->id,
-                        'title' => $item->name,
-                        'attributes' => $item,
-                    ])
+                    $result->getCollection()
+                        ->map(fn(SiteTmplvar $item) => [
+                            'id' => $item->id,
+                            'title' => $item->name,
+                            'attributes' => $item,
+                        ])
                 )
             );
         }
@@ -488,10 +489,10 @@ class TvController extends Controller
                     'settings' => ['parent' => $data['id']] + $request->query('settings'),
                 ]);
 
-                $data += [
-                    'data' => $result = $this->tree($request),
-                    'pagination' => $result->additional['meta'],
-                ];
+                $result = $this->tree($request);
+
+                $data['data'] = $result->resource ?? [];
+                $data['meta'] = $result->additional['meta'] ?? [];
             }
 
             return $data;

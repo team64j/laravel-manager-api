@@ -3,21 +3,18 @@
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\ValidationException;
-use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourceRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\ResourceResource;
 use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Models\SiteContent;
 use Team64j\LaravelManagerApi\Models\SiteTmplvarContentvalue;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class ResourceController extends Controller
 {
-    use PaginationTrait;
-
     public function __construct(protected ResourceLayout $layout)
     {
     }
@@ -132,10 +129,9 @@ class ResourceController extends Controller
             ->paginate($limit, $fields)
             ->appends($request->all());
 
-        return JsonResource::collection($result->items())
+        return JsonResource::collection($result)
             ->meta([
                 'columns' => $columns,
-                'pagination' => $this->pagination($result),
             ]);
     }
 
@@ -418,47 +414,83 @@ class ResourceController extends Controller
                 fn($q) => $q->get($fields)
             );
 
+        $meta = [];
+
         if ($result->isEmpty()) {
-            $data = [];
             $meta = ['message' => __('global.no_results')];
         } else {
-            $data = $result->map(function (SiteContent $item) use ($request, $settings) {
-                $data = [
-                    'id' => $item->id,
-                    'title' => $item->{$settings['keyTitle']} ?? $item->pagetitle,
-                    'attributes' => $item,
-                ];
+            if ($result instanceof Collection) {
+                $result = $result->map(function (SiteContent $item) use ($request, $settings) {
+                    $data = [
+                        'id' => $item->id,
+                        'title' => $item->{$settings['keyTitle']} ?? $item->pagetitle,
+                        'attributes' => $item,
+                    ];
 
-                if ($item->isfolder) {
-                    if ($item->hide_from_tree) {
-                        $data['data'] = null;
-                    } else {
-                        $data['data'] = [];
+                    if ($item->isfolder) {
+                        if ($item->hide_from_tree) {
+                            $data['data'] = null;
+                        } else {
+                            $data['data'] = [];
 
-                        if (in_array($item->getKey(), $settings['opened'], true)) {
-                            $request->query->set(
-                                'settings',
-                                [
-                                    'parent' => $item->getKey(),
-                                    'page' => null,
-                                ] + $settings
-                            );
+                            if (in_array($item->getKey(), $settings['opened'], true)) {
+                                $request->query->set(
+                                    'settings',
+                                    [
+                                        'parent' => $item->getKey(),
+                                        'page' => null,
+                                    ] + $settings
+                                );
 
-                            $result = $this->tree($request);
+                                $result = $this->tree($request);
 
-                            $data['data'] = $result->resource ?? [];
-                            $data['meta'] = $result->additional['meta'] ?? [];
+                                $data['data'] = $result->resource ?? [];
+                                $data['meta'] = $result->additional['meta'] ?? [];
+                            }
                         }
                     }
-                }
 
-                return $data;
-            });
+                    return $data;
+                });
+            } else {
+                $result->setCollection(
+                    $result->map(function (SiteContent $item) use ($request, $settings) {
+                        $data = [
+                            'id' => $item->id,
+                            'title' => $item->{$settings['keyTitle']} ?? $item->pagetitle,
+                            'attributes' => $item,
+                        ];
 
-            $meta = $parent ? ['pagination' => $this->pagination($result)] : [];
+                        if ($item->isfolder) {
+                            if ($item->hide_from_tree) {
+                                $data['data'] = null;
+                            } else {
+                                $data['data'] = [];
+
+                                if (in_array($item->getKey(), $settings['opened'], true)) {
+                                    $request->query->set(
+                                        'settings',
+                                        [
+                                            'parent' => $item->getKey(),
+                                            'page' => null,
+                                        ] + $settings
+                                    );
+
+                                    $result = $this->tree($request);
+
+                                    $data['data'] = $result->resource ?? [];
+                                    $data['meta'] = $result->additional['meta'] ?? [];
+                                }
+                            }
+                        }
+
+                        return $data;
+                    })
+                );
+            }
         }
 
-        return JsonResource::collection($data)
+        return JsonResource::collection($result)
             ->meta($meta);
     }
 

@@ -383,10 +383,10 @@ class SnippetController extends Controller
                     'settings' => ['parent' => $data['id']] + $request->query('settings'),
                 ]);
 
-                $data += [
-                    'data' => $result = $this->tree($request),
-                    'pagination' => $result->additional['meta'],
-                ];
+                $result = $this->tree($request);
+
+                $data['data'] = $result->resource ?? [];
+                $data['meta'] = $result->additional['meta'] ?? [];
             }
 
             return $data;
