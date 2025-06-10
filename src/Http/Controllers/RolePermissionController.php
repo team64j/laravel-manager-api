@@ -6,8 +6,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RolePermissionRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\RolePermissionLayout;
 use Team64j\LaravelManagerApi\Models\Permissions;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -33,9 +33,9 @@ class RolePermissionController extends Controller
      * @param RolePermissionRequest $request
      * @param RolePermissionLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(RolePermissionRequest $request, RolePermissionLayout $layout): ApiCollection
+    public function index(RolePermissionRequest $request, RolePermissionLayout $layout): JsonResourceCollection
     {
         $data = collect();
         $filter = $request->get('filter');
@@ -69,7 +69,7 @@ class RolePermissionController extends Controller
             $data[$item->group_id]['data']->add($item->withoutRelations());
         }
 
-        return ApiResource::collection($data->values())
+        return JsonResource::collection($data->values())
             ->layout($layout->list())
             ->meta([
                 'title' => $layout->titleList(),
@@ -96,12 +96,12 @@ class RolePermissionController extends Controller
      * @param string $id
      * @param RolePermissionLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
     public function show(
         RolePermissionRequest $request,
         string $id,
-        RolePermissionLayout $layout): ApiResource
+        RolePermissionLayout $layout): JsonResource
     {
         /** @var Permissions $model */
         $model = Permissions::query()->findOrNew($id);
@@ -112,7 +112,7 @@ class RolePermissionController extends Controller
             ]);
         }
 
-        return ApiResource::make([])
+        return JsonResource::make([])
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title(

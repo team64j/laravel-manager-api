@@ -10,7 +10,7 @@ use Team64j\LaravelManagerApi\Models\SiteTmplvar;
 /**
  * @property SiteTmplvar $resource
  */
-class TvResource extends ApiResource
+class TvResource extends JsonResource
 {
     public function toArray(Request $request)
     {

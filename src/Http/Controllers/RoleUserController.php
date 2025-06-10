@@ -6,8 +6,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\RoleUserLayout;
 use Team64j\LaravelManagerApi\Models\UserRole;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -33,9 +33,9 @@ class RoleUserController extends Controller
      * @param RoleUserRequest $request
      * @param RoleUserLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(RoleUserRequest $request, RoleUserLayout $layout): ApiCollection
+    public function index(RoleUserRequest $request, RoleUserLayout $layout): JsonResourceCollection
     {
         $result = UserRole::query()
             ->when(
@@ -45,7 +45,7 @@ class RoleUserController extends Controller
             ->orderBy('id')
             ->paginate(config('global.number_of_results'));
 
-        return ApiResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->layout($layout->list())
             ->meta([
                 'title' => $layout->titleList(),
@@ -72,9 +72,9 @@ class RoleUserController extends Controller
      * @param string $id
      * @param RoleUserLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): ApiResource
+    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): JsonResource
     {
         /** @var UserRole $model */
         $model = UserRole::query()->findOrNew($id);
@@ -85,7 +85,7 @@ class RoleUserController extends Controller
             ]);
         }
 
-        return ApiResource::make([])
+        return JsonResource::make([])
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title($model->name),

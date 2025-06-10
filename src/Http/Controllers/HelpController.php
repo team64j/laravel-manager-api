@@ -6,7 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\HelpRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\HelpLayout;
 
 class HelpController extends Controller
@@ -28,11 +28,11 @@ class HelpController extends Controller
      * @param HelpRequest $request
      * @param HelpLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function index(HelpRequest $request, HelpLayout $layout): ApiResource
+    public function index(HelpRequest $request, HelpLayout $layout): JsonResource
     {
-        return ApiResource::make([])
+        return JsonResource::make([])
             ->layout($layout->default())
             ->meta([
                 'title' => $layout->title(),

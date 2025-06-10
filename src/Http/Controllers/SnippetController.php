@@ -6,19 +6,15 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Models\Category;
 use Team64j\LaravelManagerApi\Models\SiteSnippet;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class SnippetController extends Controller
 {
-    use PaginationTrait;
-
     /**
      * @param SnippetLayout $layout
      */
@@ -49,9 +45,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(SnippetRequest $request): ApiCollection
+    public function index(SnippetRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -89,20 +85,25 @@ class SnippetController extends Controller
                 ];
             };
 
-            $data = $result->groupBy('category')
-                ->map($callbackGroup)
-                ->values();
+            $result->setCollection(
+                $result->getCollection()
+                    ->groupBy('category')
+                    ->map($callbackGroup)
+                    ->values()
+            );
         } else {
-            $data = $result->map(fn($item) => $item->withoutRelations());
+            $result->setCollection(
+                $result->getCollection()
+                    ->map(fn($item) => $item->withoutRelations())
+            );
         }
 
-        return ApiResource::collection($data)
+        return JsonResource::collection($result)
             ->layout($this->layout->list())
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
                     'icon' => $this->layout->iconList(),
-                    'pagination' => $this->pagination($result),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
@@ -128,9 +129,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function store(SnippetRequest $request): ApiResource
+    public function store(SnippetRequest $request): JsonResource
     {
         $data = $request->validated();
 
@@ -158,9 +159,9 @@ class SnippetController extends Controller
      * @param SnippetRequest $request
      * @param int $id
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function show(SnippetRequest $request, int $id): ApiResource
+    public function show(SnippetRequest $request, int $id): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrNew($id);
@@ -169,7 +170,7 @@ class SnippetController extends Controller
         $model->setAttribute('snippet', "<?php\r\n" . $model->snippet);
         $model->setAttribute('analyze', (int) !$model->exists);
 
-        return ApiResource::make($model)
+        return JsonResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
@@ -199,9 +200,9 @@ class SnippetController extends Controller
      * @param SnippetRequest $request
      * @param int $id
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function update(SnippetRequest $request, int $id): ApiResource
+    public function update(SnippetRequest $request, int $id): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
@@ -263,9 +264,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function list(SnippetRequest $request): ApiCollection
+    public function list(SnippetRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -282,10 +283,9 @@ class SnippetController extends Controller
                 'category',
             ]);
 
-        return ApiResource::collection($result->items())
+        return JsonResource::collection($result)
             ->meta([
                 'route' => '/snippets/:id',
-                'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
                         'name' => __('global.new_snippet'),
@@ -319,9 +319,9 @@ class SnippetController extends Controller
      * )
      * @param SnippetRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function tree(SnippetRequest $request): ApiCollection
+    public function tree(SnippetRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -338,7 +338,7 @@ class SnippetController extends Controller
                 ->get()
                 ->map(fn(SiteSnippet $item) => $item->setHidden(['category']));
 
-            return ApiResource::collection($result)
+            return JsonResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
         }
 
@@ -351,14 +351,16 @@ class SnippetController extends Controller
                 ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
-            return ApiResource::collection($result->map(fn(SiteSnippet $item) => [
-                'id' => $item->id,
-                'title' => $item->name,
-                'attributes' => $item,
-            ]))
-                ->meta([
-                    'pagination' => $this->pagination($result),
-                ]);
+            return JsonResource::collection(
+                $result->setCollection(
+                    $result->getCollection()
+                        ->map(fn(SiteSnippet $item) => [
+                            'id' => $item->id,
+                            'title' => $item->name,
+                            'attributes' => $item,
+                        ])
+                )
+            );
         }
 
         $result = Category::query()
@@ -392,7 +394,7 @@ class SnippetController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 
-        return ApiResource::collection($result)
+        return JsonResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 }

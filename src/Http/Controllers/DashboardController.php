@@ -9,8 +9,8 @@ use Illuminate\Support\Str;
 use OpenApi\Annotations as OA;
 use SimpleXMLElement;
 use Team64j\LaravelManagerApi\Http\Requests\DashboardRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\DashboardLayout;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -35,11 +35,11 @@ class DashboardController extends Controller
      * @param DashboardRequest $request
      * @param DashboardLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(DashboardRequest $request, DashboardLayout $layout): ApiCollection
+    public function index(DashboardRequest $request, DashboardLayout $layout): JsonResourceCollection
     {
-        return ApiResource::collection([
+        return JsonResource::collection([
             //'widgetDocuments' => $this->getDocuments(),
         ])
             ->layout($layout->default());

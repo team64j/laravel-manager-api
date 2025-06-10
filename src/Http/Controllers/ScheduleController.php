@@ -6,8 +6,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ScheduleRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\ScheduleLayout;
 
 class ScheduleController extends Controller
@@ -29,11 +29,11 @@ class ScheduleController extends Controller
      * @param ScheduleRequest $request
      * @param ScheduleLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(ScheduleRequest $request, ScheduleLayout $layout): ApiCollection
+    public function index(ScheduleRequest $request, ScheduleLayout $layout): JsonResourceCollection
     {
-        return ApiResource::collection([])
+        return JsonResource::collection([])
             ->layout($layout->default())
             ->meta([
                 'title' => $layout->title(),

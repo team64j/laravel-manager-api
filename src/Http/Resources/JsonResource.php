@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource as BaseResource;
-use Team64j\LaravelManagerApi\Traits\ApiResourceTrait;
+use Team64j\LaravelManagerApi\Traits\JsonResourceTrait;
 
 /**
  * @property mixed $preserveKeys
  */
-class ApiResource extends BaseResource
+class JsonResource extends BaseResource
 {
-    use ApiResourceTrait;
+    use JsonResourceTrait;
 
     /**
      * @param $resource
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public static function collection($resource): ApiCollection
+    public static function collection($resource): JsonResourceCollection
     {
         return tap(static::newCollection($resource), function ($collection) {
             if (property_exists(static::class, 'preserveKeys')) {
@@ -31,10 +31,10 @@ class ApiResource extends BaseResource
     /**
      * @param $resource
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    protected static function newCollection($resource): ApiCollection
+    protected static function newCollection($resource): JsonResourceCollection
     {
-        return new ApiCollection($resource, static::class);
+        return new JsonResourceCollection($resource, static::class);
     }
 }

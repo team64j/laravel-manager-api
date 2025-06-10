@@ -6,8 +6,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleCategoryRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\RoleCategoryLayout;
 use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -36,9 +36,9 @@ class RoleCategoryController extends Controller
      * @param RoleCategoryRequest $request
      * @param RoleCategoryLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(RoleCategoryRequest $request, RoleCategoryLayout $layout): ApiCollection
+    public function index(RoleCategoryRequest $request, RoleCategoryLayout $layout): JsonResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -54,7 +54,7 @@ class RoleCategoryController extends Controller
                 return $item;
             });
 
-        return ApiResource::collection($data)
+        return JsonResource::collection($data)
             ->layout($layout->list())
             ->meta([
                 'title' => $layout->titleList(),
@@ -81,12 +81,12 @@ class RoleCategoryController extends Controller
      * @param string $id
      * @param RoleCategoryLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
     public function show(
         RoleCategoryRequest $request,
         string $id,
-        RoleCategoryLayout $layout): ApiResource
+        RoleCategoryLayout $layout): JsonResource
     {
         /** @var PermissionsGroups $model */
         $model = PermissionsGroups::query()->findOrNew($id);
@@ -97,7 +97,7 @@ class RoleCategoryController extends Controller
             ]);
         }
 
-        return ApiResource::make([])
+        return JsonResource::make([])
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title(

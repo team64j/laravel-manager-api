@@ -21,6 +21,22 @@ class TvRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return match ($this->route()->getActionMethod()) {
+            'update', 'store' => [
+                'attributes.name' => 'required|string',
+                'attributes.description' => 'string',
+                'attributes.caption' => 'string',
+                'attributes.editor_type' => 'int',
+                'attributes.category' => 'required|int',
+                'attributes.type' => 'required|string',
+                'attributes.elements' => 'string|nullable',
+                'attributes.default_text' => 'string|nullable',
+                'attributes.display_params' => 'string|nullable',
+                'attributes.display' => 'string|nullable',
+                'attributes.locked' => 'int',
+                'attributes.rank' => 'int',
+            ],
+            default => []
+        };
     }
 }

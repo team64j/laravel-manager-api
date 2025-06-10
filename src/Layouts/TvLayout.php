@@ -204,7 +204,7 @@ class TvLayout extends Layout
                                     ->setData([
                                         [
                                             'key' => $model->display,
-                                            'value' => $model->getDisplay($model->display),
+                                            'value' => $model->getDisplay($model->display) ?: __('global.no'),
                                         ],
                                     ])
                                     ->setEmitInput('inputChangeQuery', 'display'),

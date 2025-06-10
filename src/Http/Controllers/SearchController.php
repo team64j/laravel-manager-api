@@ -6,8 +6,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SearchRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Models\SiteContent;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
@@ -31,9 +31,9 @@ class SearchController extends Controller
      * )
      * @param SearchRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(SearchRequest $request): ApiCollection
+    public function index(SearchRequest $request): JsonResourceCollection
     {
         $data = [];
         $search = $request->input('search');
@@ -53,6 +53,6 @@ class SearchController extends Controller
             $data = array_merge($data, $result);
         }
 
-        return ApiResource::collection($data);
+        return JsonResource::collection($data);
     }
 }

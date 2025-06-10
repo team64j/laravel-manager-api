@@ -7,7 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Support\Facades\Artisan;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\ConfigurationLayout;
 use Team64j\LaravelManagerApi\Models\SystemSetting;
 
@@ -30,13 +30,13 @@ class ConfigurationController extends Controller
      * @param ConfigurationRequest $request
      * @param ConfigurationLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function index(ConfigurationRequest $request, ConfigurationLayout $layout): ApiResource
+    public function index(ConfigurationRequest $request, ConfigurationLayout $layout): JsonResource
     {
         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', app()->basePath()) . '/';
 
-        return ApiResource::make(
+        return JsonResource::make(
             SystemSetting::all()
                 ->pluck('setting_value', 'setting_name')
                 ->map(function ($value, $key) use ($basePath) {
@@ -88,9 +88,9 @@ class ConfigurationController extends Controller
      * @param ConfigurationRequest $request
      * @param SystemSetting $configuration
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function store(ConfigurationRequest $request, SystemSetting $configuration): ApiResource
+    public function store(ConfigurationRequest $request, SystemSetting $configuration): JsonResource
     {
         $data = [];
         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', app()->basePath()) . '/';
@@ -117,7 +117,7 @@ class ConfigurationController extends Controller
         Artisan::call('optimize:clear');
         Artisan::call('optimize');
 
-        return ApiResource::make([])
+        return JsonResource::make([])
             ->meta([
                 'reload' => true,
             ]);

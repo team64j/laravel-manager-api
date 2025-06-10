@@ -7,7 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Support\Facades\Vite;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
 use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
@@ -35,11 +35,11 @@ class BootstrapController extends Controller
      *      )
      * )
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function init(): ApiResource
+    public function init(): JsonResource
     {
-        return ApiResource::make([
+        return JsonResource::make([
             'languages' => $this->getLanguages(),
             'config' => [
                 'siteName' => config('global.site_name'),
@@ -65,13 +65,13 @@ class BootstrapController extends Controller
      *
      * @param BootstrapRequest $request
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function index(BootstrapRequest $request): ApiResource
+    public function index(BootstrapRequest $request): JsonResource
     {
         $sidebar = $this->getSidebar();
 
-        return ApiResource::make([
+        return JsonResource::make([
             'routes' => $this->getRoutes(),
             'assets' => $this->getAssets(),
             'config' => [

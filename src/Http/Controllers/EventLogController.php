@@ -7,8 +7,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Support\Collection;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\EventLogRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\EventLogLayout;
 use Team64j\LaravelManagerApi\Models\EventLog;
 use Team64j\LaravelManagerApi\Traits\PaginationTrait;
@@ -40,9 +40,9 @@ class EventLogController extends Controller
      * @param EventLogRequest $request
      * @param EventLogLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(EventLogRequest $request, EventLogLayout $layout): ApiCollection
+    public function index(EventLogRequest $request, EventLogLayout $layout): JsonResourceCollection
     {
         $filterType = $request->input('type', '');
         $filterUser = $request->input('user', '');
@@ -151,7 +151,7 @@ class EventLogController extends Controller
             ],
         ];
 
-        return ApiResource::collection($result->items())
+        return JsonResource::collection($result->items())
             ->layout($layout->list())
             ->meta([
                 'title' => $layout->titleList(),
@@ -179,16 +179,16 @@ class EventLogController extends Controller
      * @param string $eventlog
      * @param EventLogLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function show(EventLogRequest $request, string $eventlog, EventLogLayout $layout): ApiResource
+    public function show(EventLogRequest $request, string $eventlog, EventLogLayout $layout): JsonResource
     {
         /** @var EventLog $data */
         $data = EventLog::query()
             ->with('users', fn($query) => $query->select('id', 'username'))
             ->find($eventlog);
 
-        return ApiResource::make([])
+        return JsonResource::make([])
             ->layout($layout->default($data))
             ->meta([
                 'title' => $layout->title(),

@@ -10,7 +10,7 @@ use Team64j\LaravelManagerApi\Models\SiteTemplate;
 /**
  * @property SiteTemplate $resource
  */
-class TemplateResource extends ApiResource
+class TemplateResource extends JsonResource
 {
     /**
      * @param Request $request

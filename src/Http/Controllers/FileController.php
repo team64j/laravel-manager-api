@@ -8,8 +8,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FileRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\FileLayout;
 
 class FileController extends Controller
@@ -32,9 +32,9 @@ class FileController extends Controller
      * @param string $file
      * @param FileLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function show(FileRequest $request, string $file, FileLayout $layout): ApiResource
+    public function show(FileRequest $request, string $file, FileLayout $layout): JsonResource
     {
         $data = [];
         $root = realpath(config('global.filemanager_path', app()->basePath()));
@@ -87,7 +87,7 @@ class FileController extends Controller
             }
         }
 
-        return ApiResource::make($data)
+        return JsonResource::make($data)
             ->layout($layout->default($data));
     }
 
@@ -112,9 +112,9 @@ class FileController extends Controller
      * )
      * @param FileRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function tree(FileRequest $request): ApiCollection
+    public function tree(FileRequest $request): JsonResourceCollection
     {
         $data = [];
         $settings = $request->collect('settings')->toArray();
@@ -261,7 +261,7 @@ class FileController extends Controller
             $next = null;
         }
 
-        return ApiResource::collection($data)
+        return JsonResource::collection($data)
             ->meta([
                 'category' => true,
                 'pagination' => [

@@ -6,8 +6,8 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\PermissionRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\PermissionGroupLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionRelationLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionResourceLayout;
@@ -40,16 +40,16 @@ class PermissionController extends Controller
      * @param PermissionRequest $request
      * @param PermissionGroupLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function groups(PermissionRequest $request, PermissionGroupLayout $layout): ApiCollection
+    public function groups(PermissionRequest $request, PermissionGroupLayout $layout): JsonResourceCollection
     {
         $result = MembergroupName::query()
             ->with('users')
             ->orderBy('name')
             ->paginate(config('global.number_of_results'));
 
-        return ApiResource::collection(
+        return JsonResource::collection(
             $result
                 ->map(function (MembergroupName $group) {
                     if ($group->users->count()) {
@@ -99,16 +99,16 @@ class PermissionController extends Controller
      * @param string $id
      * @param PermissionGroupLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
     public function group(
         PermissionRequest $request,
         string $id,
-        PermissionGroupLayout $layout): ApiResource
+        PermissionGroupLayout $layout): JsonResource
     {
         $model = MembergroupName::query()->findOrNew($id);
 
-        return ApiResource::make($model)
+        return JsonResource::make($model)
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title($model->name),
@@ -133,11 +133,11 @@ class PermissionController extends Controller
      * @param PermissionRequest $request
      * @param PermissionResourceLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
     public function resources(
         PermissionRequest $request,
-        PermissionResourceLayout $layout): ApiCollection
+        PermissionResourceLayout $layout): JsonResourceCollection
     {
         $result = DocumentgroupName::query()
             ->with('documents')
@@ -145,7 +145,7 @@ class PermissionController extends Controller
             ->orderBy('name')
             ->paginate(config('global.number_of_results'));
 
-        return ApiResource::collection(
+        return JsonResource::collection(
             $result
                 ->map(function (DocumentgroupName $group) {
                     if ($group->documents->count()) {
@@ -195,16 +195,16 @@ class PermissionController extends Controller
      * @param string $id
      * @param PermissionResourceLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
     public function resource(
         PermissionRequest $request,
         string $id,
-        PermissionResourceLayout $layout): ApiResource
+        PermissionResourceLayout $layout): JsonResource
     {
         $model = DocumentgroupName::query()->findOrNew($id);
 
-        return ApiResource::make($model)
+        return JsonResource::make($model)
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title($model->name),
@@ -229,11 +229,11 @@ class PermissionController extends Controller
      * @param PermissionRequest $request
      * @param PermissionRelationLayout $layout
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
     public function relations(
         PermissionRequest $request,
-        PermissionRelationLayout $layout): ApiCollection
+        PermissionRelationLayout $layout): JsonResourceCollection
     {
         $result = MembergroupName::query()
             ->with('documentGroups')
@@ -245,7 +245,7 @@ class PermissionController extends Controller
             ->orderBy('name')
             ->get();
 
-        return ApiResource::collection(
+        return JsonResource::collection(
             $result
                 ->map(function (MembergroupName $group) {
                     if ($group->documentGroups->count()) {
@@ -293,16 +293,16 @@ class PermissionController extends Controller
      * @param string $id
      * @param PermissionRelationLayout $layout
      *
-     * @return ApiResource
+     * @return JsonResource
      */
     public function relation(
         PermissionRequest $request,
         string $id,
-        PermissionRelationLayout $layout): ApiResource
+        PermissionRelationLayout $layout): JsonResource
     {
         $data = MembergroupName::query()->findOrNew($id);
 
-        return ApiResource::make($data)
+        return JsonResource::make($data)
             ->layout($layout->default($data))
             ->meta([
                 'title' => $layout->title($data->name),
@@ -326,9 +326,9 @@ class PermissionController extends Controller
      * )
      * @param PermissionRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function select(PermissionRequest $request): ApiCollection
+    public function select(PermissionRequest $request): JsonResourceCollection
     {
         $selected = $request->input('selected') ?: [];
 
@@ -336,7 +336,7 @@ class PermissionController extends Controller
             $selected = explode(',', $selected);
         }
 
-        return ApiResource::collection(
+        return JsonResource::collection(
             PermissionsGroups::with('permissions')
                 ->get()
                 ->map(fn(PermissionsGroups $group) => [

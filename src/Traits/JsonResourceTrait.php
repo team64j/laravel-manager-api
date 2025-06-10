@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Traits;
 
-trait ApiResourceTrait
+trait JsonResourceTrait
 {
     /**
      * @param $data

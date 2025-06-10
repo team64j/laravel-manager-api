@@ -6,19 +6,15 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ChunkRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\ChunkLayout;
 use Team64j\LaravelManagerApi\Models\Category;
 use Team64j\LaravelManagerApi\Models\SiteHtmlSnippet;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class ChunkController extends Controller
 {
-    use PaginationTrait;
-
     /**
      * @param ChunkLayout $layout
      */
@@ -49,9 +45,9 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(ChunkRequest $request): ApiCollection
+    public function index(ChunkRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
         $category = $request->input('category', -1);
@@ -89,20 +85,25 @@ class ChunkController extends Controller
                 ];
             };
 
-            $data = $result->groupBy('category')
-                ->map($callbackGroup)
-                ->values();
+            $result->setCollection(
+                $result->getCollection()
+                    ->groupBy('category')
+                    ->map($callbackGroup)
+                    ->values()
+            );
         } else {
-            $data = $result->map(fn($item) => $item->withoutRelations());
+            $result->setCollection(
+                $result->getCollection()
+                    ->map(fn($item) => $item->withoutRelations())
+            );
         }
 
-        return ApiResource::collection($data)
+        return JsonResource::collection($result)
             ->layout($this->layout->list())
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
                     'icon' => $this->layout->icon(),
-                    'pagination' => $this->pagination($result),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
@@ -128,9 +129,9 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function store(ChunkRequest $request): ApiResource
+    public function store(ChunkRequest $request): JsonResource
     {
         $model = SiteHtmlSnippet::query()->create($request->validated());
 
@@ -154,9 +155,9 @@ class ChunkController extends Controller
      * @param ChunkRequest $request
      * @param int $id
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function show(ChunkRequest $request, int $id): ApiResource
+    public function show(ChunkRequest $request, int $id): JsonResource
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrNew($id);
@@ -167,7 +168,7 @@ class ChunkController extends Controller
             ]);
         }
 
-        return ApiResource::make($model)
+        return JsonResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $model->name ?? $this->layout->title(),
@@ -197,9 +198,9 @@ class ChunkController extends Controller
      * @param ChunkRequest $request
      * @param int $id
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function update(ChunkRequest $request, int $id): ApiResource
+    public function update(ChunkRequest $request, int $id): JsonResource
     {
         /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrFail($id);
@@ -257,9 +258,9 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function list(ChunkRequest $request): ApiCollection
+    public function list(ChunkRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -275,10 +276,9 @@ class ChunkController extends Controller
                 'category',
             ]);
 
-        return ApiResource::collection($result->items())
+        return JsonResource::collection($result)
             ->meta([
                 'route' => '/chunks/:id',
-                'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
                         'name' => __('global.new_htmlsnippet'),
@@ -312,9 +312,9 @@ class ChunkController extends Controller
      * )
      * @param ChunkRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function tree(ChunkRequest $request): ApiCollection
+    public function tree(ChunkRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -331,7 +331,7 @@ class ChunkController extends Controller
                 ->get()
                 ->map(fn(SiteHtmlSnippet $item) => $item->setHidden(['category']));
 
-            return ApiResource::collection($result)
+            return JsonResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
         }
 
@@ -344,14 +344,16 @@ class ChunkController extends Controller
                 ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
-            return ApiResource::collection($result->map(fn(SiteHtmlSnippet $item) => [
-                'id' => $item->id,
-                'title' => $item->name,
-                'attributes' => $item,
-            ]))
-                ->meta([
-                    'pagination' => $this->pagination($result),
-                ]);
+            return JsonResource::collection(
+                $result->setCollection(
+                    $result->getCollection()
+                        ->map(fn(SiteHtmlSnippet $item) => [
+                            'id' => $item->id,
+                            'title' => $item->name,
+                            'attributes' => $item,
+                        ])
+                )
+            );
         }
 
         $result = Category::query()
@@ -385,7 +387,7 @@ class ChunkController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 
-        return ApiResource::collection($result)
+        return JsonResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 }

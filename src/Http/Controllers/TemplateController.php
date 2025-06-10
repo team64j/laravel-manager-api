@@ -7,22 +7,18 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
-use OpenApi\Annotations as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
-use Team64j\LaravelManagerApi\Http\Resources\ApiCollection;
-use Team64j\LaravelManagerApi\Http\Resources\ApiResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\TemplateResource;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Models\Category;
 use Team64j\LaravelManagerApi\Models\SiteTemplate;
 use Team64j\LaravelManagerApi\Models\SiteTmplvar;
 use Team64j\LaravelManagerApi\Models\SiteTmplvarTemplate;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class TemplateController extends Controller
 {
-    use PaginationTrait;
-
     /**
      * @param TemplateLayout $layout
      */
@@ -53,9 +49,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function index(TemplateRequest $request): ApiCollection
+    public function index(TemplateRequest $request): JsonResourceCollection
     {
         $category = $request->input('category', -1);
         $name = $request->input('templatename');
@@ -106,20 +102,25 @@ class TemplateController extends Controller
                 ];
             };
 
-            $data = $result->groupBy('category')
-                ->map($callbackGroup)
-                ->values();
+            $result->setCollection(
+                $result->getCollection()
+                    ->groupBy('category')
+                    ->map($callbackGroup)
+                    ->values()
+            );
         } else {
-            $data = $result->map($callbackItem);
+            $result->setCollection(
+                $result->getCollection()
+                    ->map($callbackItem)
+            );
         }
 
-        return ApiResource::collection($data)
+        return JsonResource::collection($result)
             ->layout($this->layout->list())
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
                     'icon' => $this->layout->iconList(),
-                    'pagination' => $this->pagination($result),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
@@ -140,9 +141,9 @@ class TemplateController extends Controller
      * )
      * @param int $id
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function show(int $id): ApiResource
+    public function show(int $id): JsonResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
@@ -172,9 +173,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function store(TemplateRequest $request): ApiResource
+    public function store(TemplateRequest $request): JsonResource
     {
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->create($request->input('attributes'));
@@ -219,9 +220,9 @@ class TemplateController extends Controller
      * @param TemplateRequest $request
      * @param int $id
      *
-     * @return ApiResource
+     * @return JsonResource
      */
-    public function update(TemplateRequest $request, int $id): ApiResource
+    public function update(TemplateRequest $request, int $id): JsonResource
     {
         $model = SiteTemplate::query()->findOrFail($id);
 
@@ -300,9 +301,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function list(TemplateRequest $request): ApiCollection
+    public function list(TemplateRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -319,10 +320,9 @@ class TemplateController extends Controller
             ])
             ->appends($request->all());
 
-        return ApiResource::collection($result->items())
+        return JsonResource::collection($result)
             ->meta([
                 'route' => '/templates/:id',
-                'pagination' => $this->pagination($result),
                 'prepend' => [
                     [
                         'name' => __('global.new_template'),
@@ -357,9 +357,9 @@ class TemplateController extends Controller
      * @param TemplateRequest $request
      * @param string $template
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function tvs(TemplateRequest $request, string $template): ApiCollection
+    public function tvs(TemplateRequest $request, string $template): JsonResourceCollection
     {
         $filter = $request->input('filter');
         $order = $request->input('order', 'category');
@@ -396,26 +396,27 @@ class TemplateController extends Controller
             ->paginate(config('global.number_of_results'))
             ->appends($request->all());
 
-        return ApiResource::collection(
-            $result->groupBy('category')
-                ->map(fn($category) => [
-                    'id' => $category->first()->category,
-                    'name' => $category->first()->getRelation('category')->category ??
-                        __('global.no_category'),
-                    'data' => $category/*->map(function (SiteTmplvar $item) {
+        return JsonResource::collection(
+            $result->setCollection(
+                $result->getCollection()
+                    ->groupBy('category')
+                    ->map(fn($category) => [
+                        'id' => $category->first()->category,
+                        'name' => $category->first()->getRelation('category')->category ??
+                            __('global.no_category'),
+                        'data' => $category/*->map(function (SiteTmplvar $item) {
                         return $item->setAttribute(
                             'attach',
                             Checkbox::make('tvs')->setValue($item->id)
                         )
                             ->withoutRelations();
                     })*/,
-                ])
-                ->values()
+                    ])
+                    ->values()
+            )
         )
             ->meta(
-                [
-                    'pagination' => $this->pagination($result),
-                ] + ($result->isEmpty() ? ['message' => __('global.tmplvars_novars')] : [])
+                $result->isEmpty() ? ['message' => __('global.tmplvars_novars')] : []
             );
     }
 
@@ -438,13 +439,13 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function select(TemplateRequest $request): ApiCollection
+    public function select(TemplateRequest $request): JsonResourceCollection
     {
         $selected = $request->collect('selected');
 
-        return ApiResource::collection(
+        return JsonResource::collection(
             collect()
                 ->add([
                     'key' => 0,
@@ -492,9 +493,9 @@ class TemplateController extends Controller
      * )
      * @param TemplateRequest $request
      *
-     * @return ApiCollection
+     * @return JsonResourceCollection
      */
-    public function tree(TemplateRequest $request): ApiCollection
+    public function tree(TemplateRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
         $category = $settings['parent'] ?? -1;
@@ -511,7 +512,7 @@ class TemplateController extends Controller
                 ->get()
                 ->map(fn(SiteTemplate $item) => $item->setHidden(['category']));
 
-            return ApiResource::collection($result)
+            return JsonResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
         }
 
@@ -524,16 +525,16 @@ class TemplateController extends Controller
                 ->paginate(config('global.number_of_results'))
                 ->appends($request->all());
 
-            return ApiResource::collection(
-                $result->map(fn(SiteTemplate $item) => [
-                    'id' => $item->id,
-                    'title' => $item->templatename,
-                    'attributes' => $item,
-                ])
-            )
-                ->meta([
-                    'pagination' => $this->pagination($result),
-                ]);
+            return JsonResource::collection(
+                $result->setCollection(
+                    $result->getCollection()
+                        ->map(fn(SiteTemplate $item) => [
+                            'id' => $item->id,
+                            'title' => $item->templatename,
+                            'attributes' => $item,
+                        ])
+                )
+            );
         }
 
         $result = Category::query()
@@ -567,7 +568,7 @@ class TemplateController extends Controller
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 
-        return ApiResource::collection($result)
+        return JsonResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 }
