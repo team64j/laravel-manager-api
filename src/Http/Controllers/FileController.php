@@ -180,10 +180,10 @@ class FileController extends Controller
                     ] + $settings
                 );
 
-                $result = $this->tree($request);
+                $result = $this->tree($request)->toResponse($request)->getData();
 
-                $item['data'] = $result->resource ?? [];
-                $item['meta'] = $result->additional['meta'] ?? [];
+                $item['data'] = $result->data ?? [];
+                $item['meta'] = $result->meta ?? [];
             }
 
             $data[] = $item;

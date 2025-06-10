@@ -376,10 +376,10 @@ class ChunkController extends Controller
                     'settings' => ['parent' => $data['id']] + $request->query('settings'),
                 ]);
 
-                $result = $this->tree($request);
+                $result = $this->tree($request)->toResponse($request)->getData();
 
-                $data['data'] = $result->resource ?? [];
-                $data['meta'] = $result->additional['meta'] ?? [];
+                $data['data'] = $result->data ?? [];
+                $data['meta'] = $result->meta ?? [];
             }
 
             return $data;
