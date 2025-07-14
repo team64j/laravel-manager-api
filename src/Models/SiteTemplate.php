@@ -14,6 +14,7 @@ use Team64j\LaravelEvolution\Traits\TimeMutatorTrait;
 /**
  * @property int $id
  * @property int $category
+ * @property string $content
  * @property int $locked
  * @property string $templatename
  * @property string $templatealias

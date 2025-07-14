@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\File;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -81,31 +83,27 @@ class TemplateController extends Controller
         $viewPath = resource_path('views');
         $viewRelativePath = str_replace([base_path(), DIRECTORY_SEPARATOR], ['', '/'], $viewPath);
 
-        $callbackItem = function (SiteTemplate $item) use ($viewPath, $viewRelativePath) {
-            $file = '/' . $item->templatealias . '.blade.php';
+        $callbackItem = function (SiteTemplate $model) use ($viewPath, $viewRelativePath) {
+            $file = '/' . $model->templatealias . '.blade.php';
             if (file_exists($viewPath . $file)) {
-                $item->setAttribute(
+                $model->setAttribute(
                     'file.help',
                     __('global.template_assigned_blade_file') . '<br/>' . $viewRelativePath . $file
                 );
             }
 
-            return $item->withoutRelations();
+            return $model->withoutRelations();
         };
 
         if ($groupBy == 'category') {
-            $callbackGroup = function ($group) use ($callbackItem) {
-                return [
-                    'id' => $group->first()->category,
-                    'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
-                    'data' => $group->map($callbackItem),
-                ];
-            };
-
             $result->setCollection(
                 $result->getCollection()
                     ->groupBy('category')
-                    ->map($callbackGroup)
+                    ->map(fn($group) => [
+                        'id' => $group->first()->category,
+                        'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
+                        'data' => $group->map($callbackItem),
+                    ])
                     ->values()
             );
         } else {
@@ -180,18 +178,12 @@ class TemplateController extends Controller
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->create($request->input('attributes'));
 
-        SiteTmplvarTemplate::query()->upsert(
-            $request->collect('tvs')->map(fn($item) => [
-                'tmplvarid' => $item,
-                'templateid' => $model->getKey(),
-            ])->toArray(),
-            'tmplvarid'
-        );
+        $model->tvs()->sync($request->collect('tvs'));
 
         $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
 
-        if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
-            file_put_contents($bladeFile, $model->content);
+        if (($request->input('createbladefile') || File::exists($bladeFile)) && $model->templatealias) {
+            File::put($bladeFile, $model->content);
         }
 
         return TemplateResource::make($model)
@@ -224,26 +216,17 @@ class TemplateController extends Controller
      */
     public function update(TemplateRequest $request, int $id): JsonResource
     {
+        /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrFail($id);
 
         $model->update($request->input('attributes'));
 
-        SiteTmplvarTemplate::query()
-            ->where('templateid', $model->getKey())
-            ->delete();
-
-        SiteTmplvarTemplate::query()->upsert(
-            $request->collect('tvs')->map(fn($item) => [
-                'tmplvarid' => $item,
-                'templateid' => $model->getKey(),
-            ])->toArray(),
-            'tmplvarid'
-        );
+        $model->tvs()->sync($request->collect('tvs'));
 
         $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
 
-        if (($request->input('createbladefile') || file_exists($bladeFile)) && $model->templatealias) {
-            file_put_contents($bladeFile, $model->content);
+        if (($request->input('createbladefile') || File::exists($bladeFile)) && $model->templatealias) {
+            File::put($bladeFile, $model->content);
         }
 
         return TemplateResource::make($model)
@@ -307,20 +290,20 @@ class TemplateController extends Controller
     {
         $filter = $request->get('filter');
 
-        $result = SiteTemplate::withoutLocked()
-            ->where(fn($query) => $filter ? $query->where('templatename', 'like', '%' . $filter . '%') : null)
-            ->orderBy('templatename')
-            ->paginate(config('global.number_of_results'), [
-                'id',
-                'templatename as name',
-                'templatealias as alias',
-                'description',
-                'locked',
-                'category',
-            ])
-            ->appends($request->all());
-
-        return JsonResource::collection($result)
+        return JsonResource::collection(
+            SiteTemplate::withoutLocked()
+                ->where(fn($query) => $filter ? $query->where('templatename', 'like', '%' . $filter . '%') : null)
+                ->orderBy('templatename')
+                ->paginate(config('global.number_of_results'), [
+                    'id',
+                    'templatename as name',
+                    'templatealias as alias',
+                    'description',
+                    'locked',
+                    'category',
+                ])
+                ->appends($request->all())
+        )
             ->meta([
                 'route' => '/templates/:id',
                 'prepend' => [
@@ -400,7 +383,7 @@ class TemplateController extends Controller
             $result->setCollection(
                 $result->getCollection()
                     ->groupBy('category')
-                    ->map(fn($category) => [
+                    ->map(fn(Collection $category) => [
                         'id' => $category->first()->category,
                         'name' => $category->first()->getRelation('category')->category ??
                             __('global.no_category'),
@@ -457,11 +440,11 @@ class TemplateController extends Controller
                         ->select(['id', 'templatename', 'category'])
                         ->get()
                         ->groupBy('category')
-                        ->map(fn($group) => [
+                        ->map(fn(Collection $group) => [
                             'id' => $group->first()->category,
                             'name' => $group->first()->getRelation('category')->category ??
                                 __('global.no_category'),
-                            'data' => $group->map(fn($item) => [
+                            'data' => $group->map(fn(SiteTemplate $item) => [
                                 'key' => $item->getKey(),
                                 'value' => $item->templatename . ' (' . $item->getKey() . ')',
                                 'selected' => $selected->contains($item->getKey()),
@@ -510,7 +493,7 @@ class TemplateController extends Controller
                 ->where('templatename', 'like', '%' . $filter . '%')
                 ->orderBy('templatename')
                 ->get()
-                ->map(fn(SiteTemplate $item) => $item->setHidden(['category']));
+                ->map(fn(SiteTemplate $model) => $model->setHidden(['category']));
 
             return JsonResource::collection($result)
                 ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
@@ -528,10 +511,10 @@ class TemplateController extends Controller
             return JsonResource::collection(
                 $result->setCollection(
                     $result->getCollection()
-                        ->map(fn(SiteTemplate $item) => [
-                            'id' => $item->id,
-                            'title' => $item->templatename,
-                            'attributes' => $item,
+                        ->map(fn(SiteTemplate $model) => [
+                            'id' => $model->getKey(),
+                            'title' => $model->templatename,
+                            'attributes' => $model,
                         ])
                 )
             );
@@ -545,10 +528,10 @@ class TemplateController extends Controller
             $result->add(new Category());
         }
 
-        $result = $result->map(function ($category) use ($request, $settings) {
+        $result = $result->map(function (Category $model) use ($request, $settings) {
             $data = [
-                'id' => $category->getKey() ?? 0,
-                'title' => $category->category ?? __('global.no_category'),
+                'id' => $model->getKey() ?? 0,
+                'title' => $model->category ?? __('global.no_category'),
                 'category' => true,
             ];
 
