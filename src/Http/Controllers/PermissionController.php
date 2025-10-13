@@ -95,6 +95,10 @@ class PermissionController extends Controller
     ): JsonResource {
         $model = MembergroupName::query()->findOrNew($id);
 
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
+
         return JsonResource::make($model)
             ->layout($layout->default($model))
             ->meta([
@@ -180,6 +184,10 @@ class PermissionController extends Controller
         PermissionResourceLayout $layout
     ): JsonResource {
         $model = DocumentgroupName::query()->findOrNew($id);
+
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
 
         return JsonResource::make($model)
             ->layout($layout->default($model))
@@ -268,6 +276,10 @@ class PermissionController extends Controller
         PermissionRelationLayout $layout
     ): JsonResource {
         $data = MembergroupName::query()->findOrNew($id);
+
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
 
         return JsonResource::make($data)
             ->layout($layout->default($data))

@@ -199,6 +199,10 @@ class UserController extends Controller
         /** @var User $model */
         $model = User::query()->with('attributes')->findOrNew($id);
 
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
+
         return JsonResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([

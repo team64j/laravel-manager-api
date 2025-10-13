@@ -151,16 +151,20 @@ class ResourceController extends Controller
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrNew($id);
 
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
+
         if ($request->has('template')) {
-            $model->template = $request->input('template');
+            $model->setAttribute('template', $request->input('template'));
         }
 
         if ($request->has('parent')) {
-            $model->parent = $request->input('parent');
+            $model->setAttribute('parent', $request->input('parent'));
         }
 
         if ($request->has('type')) {
-            $model->type = $request->input('type');
+            $model->setAttribute('type', $request->input('type'));
         }
 
         return ResourceResource::make($model)

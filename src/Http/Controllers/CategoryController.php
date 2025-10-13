@@ -109,6 +109,10 @@ class CategoryController extends Controller
         /** @var Category $model */
         $model = Category::query()->findOrNew($id);
 
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
+
         return JsonResource::make($model)
             ->layout($this->layout->default($model))
             ->meta([

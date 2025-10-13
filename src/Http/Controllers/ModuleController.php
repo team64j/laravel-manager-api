@@ -146,7 +146,11 @@ class ModuleController extends Controller
         /** @var SiteModule $model */
         $model = SiteModule::query()->findOrNew($id);
 
-        $model->setAttribute('category', $model->category ?? 0);
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+            $model->setAttribute('category', 0);
+        }
+
         $model->setAttribute(
             'modulecode',
             "<?php\r\n" . str($model->modulecode ?? '')->replaceFirst('<?php', '')->trim()

@@ -119,8 +119,12 @@ class TvController extends Controller
         /** @var SiteTmplvar $model */
         $model = SiteTmplvar::query()->findOrNew($id);
 
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
+
         if ($request->has('display')) {
-            $model->display = $request->string('display')->toString();
+            $model->setAttribute('display', $request->string('display'));
         }
 
         return TvResource::make($model)

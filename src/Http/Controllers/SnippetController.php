@@ -146,7 +146,11 @@ class SnippetController extends Controller
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrNew($id);
 
-        $model->setAttribute('category', $model->category ?? 0);
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+            $model->setAttribute('category', 0);
+        }
+
         $model->setAttribute('snippet', "<?php\r\n" . $model->snippet);
         $model->setAttribute('analyze', (int) !$model->exists);
 

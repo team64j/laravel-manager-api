@@ -134,6 +134,10 @@ class TemplateController extends Controller
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
 
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+        }
+
         return TemplateResource::make($model)
             ->layout($this->layout->default($model));
     }

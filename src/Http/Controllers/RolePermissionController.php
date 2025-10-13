@@ -83,9 +83,8 @@ class RolePermissionController extends Controller
         $model = Permissions::query()->findOrNew($id);
 
         if (!$model->getKey()) {
-            $model->setRawAttributes([
-                'name' => '',
-            ]);
+            $model->setAttribute($model->getKeyName(), 0);
+            $model->setAttribute('name', '');
         }
 
         return JsonResource::make([])

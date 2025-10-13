@@ -148,7 +148,11 @@ class PluginController extends Controller
         /** @var SitePlugin $model */
         $model = SitePlugin::query()->with('events')->findOrNew($id);
 
-        $model->setAttribute('category', $model->category ?? 0);
+        if (!$model->getKey()) {
+            $model->setAttribute($model->getKeyName(), 0);
+            $model->setAttribute('category', 0);
+        }
+
         $model->setAttribute('plugincode', "<?php\r\n" . $model->plugincode);
         $model->setAttribute('analyze', (int) !$model->exists);
         $model->setAttribute('events', $model->events->pluck('id'));
