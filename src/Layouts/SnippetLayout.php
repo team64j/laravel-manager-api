@@ -27,7 +27,7 @@ class SnippetLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.new_snippet');
     }
@@ -61,7 +61,7 @@ class SnippetLayout extends Layout
      *
      * @return array
      */
-    public function default(SiteSnippet $model = null): array
+    public function default(?SiteSnippet $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
 

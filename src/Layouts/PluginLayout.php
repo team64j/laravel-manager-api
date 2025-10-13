@@ -27,7 +27,7 @@ class PluginLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.new_plugin');
     }
@@ -77,7 +77,7 @@ class PluginLayout extends Layout
      *
      * @return array
      */
-    public function default(SitePlugin $model = null): array
+    public function default(?SitePlugin $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
 

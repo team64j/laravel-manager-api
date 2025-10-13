@@ -6,7 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\WorkspaceRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\WorkspaceLayout;
@@ -14,28 +14,21 @@ use Team64j\LaravelManagerApi\Models\SystemSetting;
 
 class WorkspaceController extends Controller
 {
-    public function __construct(protected WorkspaceLayout $layout)
-    {
-    }
+    public function __construct(protected WorkspaceLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/workspace",
-     *     summary="Интерфейс и представление",
-     *     tags={"System"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param WorkspaceRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/workspace',
+        summary: 'Интерфейс и представление',
+        security: [['Api' => []]],
+        tags: ['System'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(WorkspaceRequest $request): JsonResource
     {
         $data = [];
@@ -71,39 +64,32 @@ class WorkspaceController extends Controller
             ->layout($this->layout->default())
             ->meta([
                 'title' => $this->layout->title(),
-                'icon' => $this->layout->icon(),
-                'lang' => [
-                    'save' => __('global.save'),
+                'icon'  => $this->layout->icon(),
+                'lang'  => [
+                    'save'     => __('global.save'),
                     'stay_new' => __('global.stay_new'),
                     'settings' => __('global.resource_setting'),
-                    'select' => __('global.element_selector_title'),
+                    'select'   => __('global.element_selector_title'),
                 ],
             ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/workspace",
-     *     summary="Сохранение Интерфейс и представление",
-     *     tags={"System"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param WorkspaceRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/workspace',
+        summary: 'Сохранение интерфейса и представления',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['System'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(WorkspaceRequest $request): JsonResource
     {
         $data = [];
@@ -129,7 +115,7 @@ class WorkspaceController extends Controller
 
         foreach ($collect as $key => $value) {
             $data[] = [
-                'setting_name' => $key,
+                'setting_name'  => $key,
                 'setting_value' => $value,
             ];
         }

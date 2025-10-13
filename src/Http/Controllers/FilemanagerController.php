@@ -6,61 +6,48 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FilesRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
 
 class FilemanagerController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/files",
-     *     summary="Получение списка файлов из корневой директории",
-     *     tags={"File"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param FilesRequest $request
-     * @param FilemanagerLayout $layout
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/files',
+        summary: 'Получение списка файлов из корневой директории',
+        security: [['Api' => []]],
+        tags: ['File'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(FilesRequest $request, FilemanagerLayout $layout): JsonResourceCollection
     {
         return $this->show($request, '', $layout);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/files/{files}",
-     *     summary="Получение списка файлов из директории",
-     *     tags={"File"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param FilesRequest $request
-     * @param string $files
-     * @param FilemanagerLayout $layout
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/files/{files}',
+        summary: 'Получение списка файлов из директории',
+        security: [['Api' => []]],
+        tags: ['File'],
+        parameters: [
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): JsonResourceCollection
     {
         $data = [];
@@ -68,10 +55,10 @@ class FilemanagerController extends Controller
         $parent = trim(base64_decode($files), './');
         $parentPath = realpath($root . ($parent ? DIRECTORY_SEPARATOR . $parent : ''));
         $extensions = array_merge(
-//            explode(',', config('global.upload_files', '')),
-//            explode(',', config('global.upload_flash', '')),
-//            explode(',', config('global.upload_images', '')),
-//            explode(',', config('global.upload_media', '')),
+        //            explode(',', config('global.upload_files', '')),
+        //            explode(',', config('global.upload_flash', '')),
+        //            explode(',', config('global.upload_images', '')),
+        //            explode(',', config('global.upload_media', '')),
         );
         $fullTitle = $layout->title();;
 
@@ -82,43 +69,43 @@ class FilemanagerController extends Controller
 
             if ($path) {
                 $data[] = [
-                    'key' => base64_encode(trim(dirname($path), DIRECTORY_SEPARATOR)),
-                    'folder' => true,
-                    'icon' => '<i class="fa fa-arrow-left !text-blue-500"></i>',
-                    'route' => [
+                    'key'         => base64_encode(trim(dirname($path), DIRECTORY_SEPARATOR)),
+                    'folder'      => true,
+                    'icon'        => '<i class="fa fa-arrow-left !text-blue-500"></i>',
+                    'route'       => [
                         'path' => '/filemanager/:key',
                     ],
                     'contextMenu' => null,
                 ];
             }
 
-//            foreach ($directories as $directory) {
-//                $title = basename($directory);
-//
-//                $key = base64_encode(
-//                    trim(
-//                        str_replace(
-//                            $root,
-//                            '',
-//                            $directory
-//                        ),
-//                        DIRECTORY_SEPARATOR
-//                    )
-//                );
-//
-//                $item = [
-//                    'key' => $key,
-//                    'title' => $title,
-//                    'folder' => true,
-//                    'size' => ''/*$this->getSize(File::size($directory))*/,
-//                    'date' => $this->getDate(filemtime($directory)),
-//                    'route' => [
-//                        'path' => '/filemanager/:key',
-//                    ],
-//                ];
-//
-//                $data[] = $item;
-//            }
+            //            foreach ($directories as $directory) {
+            //                $title = basename($directory);
+            //
+            //                $key = base64_encode(
+            //                    trim(
+            //                        str_replace(
+            //                            $root,
+            //                            '',
+            //                            $directory
+            //                        ),
+            //                        DIRECTORY_SEPARATOR
+            //                    )
+            //                );
+            //
+            //                $item = [
+            //                    'key' => $key,
+            //                    'title' => $title,
+            //                    'folder' => true,
+            //                    'size' => ''/*$this->getSize(File::size($directory))*/,
+            //                    'date' => $this->getDate(filemtime($directory)),
+            //                    'route' => [
+            //                        'path' => '/filemanager/:key',
+            //                    ],
+            //                ];
+            //
+            //                $data[] = $item;
+            //            }
 
             foreach ($files as $file) {
                 $type = $file->getExtension();
@@ -143,16 +130,16 @@ class FilemanagerController extends Controller
                 }
 
                 $item = [
-                    'key' => base64_encode($filePath),
-                    'title' => $file->getFilename(),
-                    'value' => '/' . $filePath,
-                    'folder' => false,
-                    'type' => $type,
+                    'key'         => base64_encode($filePath),
+                    'title'       => $file->getFilename(),
+                    'value'       => '/' . $filePath,
+                    'folder'      => false,
+                    'type'        => $type,
                     'unpublished' => !$file->isWritable() || !$file->isReadable(),
-                    'class' => 'f-ext-' . $file->getExtension(),
-                    'size' => $this->getSize($file->getSize()),
-                    'date' => $this->getDate($file->getATime()),
-                    'dbClick' => 'modal:select'
+                    'class'       => 'f-ext-' . $file->getExtension(),
+                    'size'        => $this->getSize($file->getSize()),
+                    'date'        => $this->getDate($file->getATime()),
+                    'dbClick'     => 'modal:select',
                 ];
 
                 $mimeType = File::mimeType($file->getPathname());
@@ -182,31 +169,26 @@ class FilemanagerController extends Controller
             ->layout($layout->default())
             ->meta([
                 'title' => $layout->title(),
-                'icon' => $layout->icon(),
+                'icon'  => $layout->icon(),
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/files/tree",
-     *     summary="Получение списка файлов для древовидного меню",
-     *     tags={"File"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="object")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param FilesRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/files/tree',
+        summary: 'Получение списка файлов для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['File'],
+        parameters: [
+            new OA\Parameter(name: 'settings', in: 'query', schema: new OA\Schema(type: 'object')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(FilesRequest $request): JsonResourceCollection
     {
         $data = [];
@@ -241,11 +223,11 @@ class FilemanagerController extends Controller
                 );
 
                 $item = [
-                    'key' => $key,
-                    'title' => $title,
-                    'path' => '',
-                    'data' => File::directories($directory) ? [] : null,
-                    'folder' => true,
+                    'key'      => $key,
+                    'title'    => $title,
+                    'path'     => '',
+                    'data'     => File::directories($directory) ? [] : null,
+                    'folder'   => true,
                     'category' => true,
                 ];
 
@@ -254,7 +236,7 @@ class FilemanagerController extends Controller
                         'settings',
                         [
                             'parent' => $key,
-                            'after' => null,
+                            'after'  => null,
                         ] + $settings
                     );
 
@@ -270,11 +252,6 @@ class FilemanagerController extends Controller
         return JsonResource::collection($data);
     }
 
-    /**
-     * @param int $size
-     *
-     * @return string
-     */
     protected function getSize(int $size = 0): string
     {
         $mb = 1000 * 1024;
@@ -286,11 +263,6 @@ class FilemanagerController extends Controller
         return round($size / 1000, 2) . ' KB';
     }
 
-    /**
-     * @param int $date
-     *
-     * @return string
-     */
     protected function getDate(int $date): string
     {
         return Carbon::createFromFormat('U', (string) $date)->format('d-m-Y H:i:s');

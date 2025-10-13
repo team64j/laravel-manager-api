@@ -8,17 +8,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DashboardRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return auth()->user()->can(['frames', 'home']);
     }
 
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [

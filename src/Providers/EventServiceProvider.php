@@ -9,9 +9,6 @@ use Team64j\LaravelManagerApi\Events\OnManagerMainFrameHeaderHTMLBlock;
 
 class EventServiceProvider extends ServiceProvider
 {
-    /**
-     * @var array[]
-     */
     protected $listen = [
         'OnManagerMainFrameHeaderHTMLBlock' => [
             OnManagerMainFrameHeaderHTMLBlock::class,

@@ -19,31 +19,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class DocumentgroupName extends Model
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'private_memgroup' => 'int',
         'private_webgroup' => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'private_memgroup',
         'private_webgroup',
     ];
 
-    /**
-     * @return BelongsToMany
-     */
     public function documents(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -54,9 +42,6 @@ class DocumentgroupName extends Model
         );
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function memberGroups(): BelongsToMany
     {
         return $this->belongsToMany(MembergroupName::class, 'membergroup_access', 'documentgroup', 'membergroup');

@@ -9,37 +9,22 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SiteTmplvarTemplate extends Model
 {
-    /**
-     * @var bool
-     */
     public $incrementing = false;
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
-        'tmplvarid' => 'int',
+        'tmplvarid'  => 'int',
         'templateid' => 'int',
-        'rank' => 'int',
+        'rank'       => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'tmplvarid',
         'templateid',
         'rank',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function tmplvar(): BelongsTo
     {
         return $this->belongsTo(SiteTmplvar::class, 'tmplvarid', 'id');

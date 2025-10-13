@@ -13,22 +13,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class DocumentGroup extends Model
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'document_group' => 'int',
-        'document' => 'int',
+        'document'       => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'document_group',
         'document',

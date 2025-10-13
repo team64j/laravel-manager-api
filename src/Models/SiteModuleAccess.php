@@ -13,27 +13,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SiteModuleAccess extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'site_module_access';
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var array
-     */
     protected $casts = [
-        'module' => 'int',
+        'module'    => 'int',
         'usergroup' => 'int',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'module',
         'usergroup',

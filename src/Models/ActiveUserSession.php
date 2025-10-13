@@ -12,32 +12,17 @@ class ActiveUserSession extends Model
 {
     use TimeMutatorTrait;
 
-    /**
-     * @var string
-     */
     protected $primaryKey = 'sid';
 
-    /**
-     * @var bool
-     */
     public $incrementing = false;
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'internalKey' => 'int',
-        'lasthit' => 'datetime',
+        'lasthit'     => 'datetime',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'sid',
         'internalKey',
@@ -45,9 +30,6 @@ class ActiveUserSession extends Model
         'ip',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'internalKey', 'id');

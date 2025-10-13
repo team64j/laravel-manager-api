@@ -27,7 +27,7 @@ class FileLayout extends Layout
      *
      * @return string
      */
-    public function icon(string $type = null): string
+    public function icon(?string $type = null): string
     {
         return match ($type) {
             'default' => 'fa fa-ban',

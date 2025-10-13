@@ -28,7 +28,7 @@ class TemplateLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.new_template');
     }
@@ -62,7 +62,7 @@ class TemplateLayout extends Layout
      *
      * @return array
      */
-    public function default(SiteTemplate $model = null): array
+    public function default(?SiteTemplate $model = null): array
     {
         $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
         $isBladeFile = file_exists($bladeFile);

@@ -4,35 +4,27 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SearchRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Models\SiteContent;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class SearchController extends Controller
 {
-    use PaginationTrait;
-
-    /**
-     * @OA\Get(
-     *     path="/search",
-     *     summary="Поиск",
-     *     tags={"System"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SearchRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/search',
+        summary: 'Поиск',
+        security: [['Api' => []]],
+        tags: ['System'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(SearchRequest $request): JsonResourceCollection
     {
         $data = [];

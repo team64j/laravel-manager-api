@@ -9,13 +9,7 @@ use Illuminate\Support\Facades\Config;
 
 trait TimeMutatorTrait
 {
-    /**
-     * @param int|string|null $value
-     * @param string|null $default
-     *
-     * @return string
-     */
-    protected function convertDateTime(int | string $value = null, string $default = null): string
+    protected function convertDateTime(int | string | null $value = null, ?string $default = null): string
     {
         if (!$value) {
             $value = $default;
@@ -28,13 +22,6 @@ trait TimeMutatorTrait
         return $this->asDateTime($value)->format('Y-m-d H:i:s');
     }
 
-    /**
-     * Prepare a date for array / JSON serialization.
-     *
-     * @param DateTimeInterface $date
-     *
-     * @return string
-     */
     protected function serializeDate(DateTimeInterface $date): string
     {
         $format = str_replace(

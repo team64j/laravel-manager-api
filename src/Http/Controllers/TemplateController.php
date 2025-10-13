@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\File;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TemplateRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -21,38 +22,28 @@ use Team64j\LaravelManagerApi\Models\SiteTmplvarTemplate;
 
 class TemplateController extends Controller
 {
-    /**
-     * @param TemplateLayout $layout
-     */
-    public function __construct(protected TemplateLayout $layout)
-    {
-    }
+    public function __construct(protected TemplateLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/templates",
-     *     summary="Получение списка шаблонов с пагинацией и фильтрацией",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="templatename", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="groupBy", in="query", @OA\Schema(type="string", default="category")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TemplateRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/templates',
+        summary: 'Получение списка шаблонов с пагинацией и фильтрацией',
+        security: [['Api' => []]],
+        tags: ['Templates'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'templatename', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'groupBy', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(TemplateRequest $request): JsonResourceCollection
     {
         $category = $request->input('category', -1);
@@ -97,10 +88,11 @@ class TemplateController extends Controller
 
         if ($groupBy == 'category') {
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->groupBy('category')
                     ->map(fn($group) => [
-                        'id' => $group->first()->category,
+                        'id'   => $group->first()->category,
                         'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                         'data' => $group->map($callbackItem),
                     ])
@@ -108,7 +100,8 @@ class TemplateController extends Controller
             );
         } else {
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->map($callbackItem)
             );
         }
@@ -118,29 +111,24 @@ class TemplateController extends Controller
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
-                    'icon' => $this->layout->iconList(),
+                    'icon'  => $this->layout->iconList(),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/templates/{id}",
-     *     summary="Чтение шаблона",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/templates/{id}',
+        summary: 'Чтение шаблона',
+        security: [['Api' => []]],
+        tags: ['Templates'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(int $id): JsonResource
     {
         /** @var SiteTemplate $model */
@@ -150,29 +138,22 @@ class TemplateController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Post(
-     *     path="/templates",
-     *     summary="Создание нового шаблона",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TemplateRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/templates',
+        summary: 'Создание нового шаблона',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Templates'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(TemplateRequest $request): JsonResource
     {
         /** @var SiteTemplate $model */
@@ -190,30 +171,22 @@ class TemplateController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Put(
-     *     path="/templates/{id}",
-     *     summary="Обновление шаблона",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TemplateRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Put(
+        path: '/templates/{id}',
+        summary: 'Обновление шаблона',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Templates'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function update(TemplateRequest $request, int $id): JsonResource
     {
         /** @var SiteTemplate $model */
@@ -233,59 +206,49 @@ class TemplateController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/templates/{id}",
-     *     summary="Удаление шаблона",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param int $id
-     *
-     * @return Response
-     */
+    #[OA\Delete(
+        path: '/templates/{id}',
+        summary: 'Удаление шаблона',
+        security: [['Api' => []]],
+        tags: ['Templates'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function destroy(int $id): Response
     {
-//        $model = SiteTemplate::query()->findOrFail($id);
-//        $model->delete();
-//
-//        $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
-//
-//        if (file_exists($bladeFile)) {
-//            unlink($bladeFile);
-//        }
+        //        $model = SiteTemplate::query()->findOrFail($id);
+        //        $model->delete();
+        //
+        //        $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
+        //
+        //        if (file_exists($bladeFile)) {
+        //            unlink($bladeFile);
+        //        }
 
         return response()->noContent();
     }
 
-    /**
-     * @OA\Get(
-     *     path="/templates/list",
-     *     summary="Получение списка шаблонов с пагинацией для меню",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TemplateRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/templates/list',
+        summary: 'Получение списка шаблонов с пагинацией для меню',
+        security: [['Api' => []]],
+        tags: ['Templates'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function list(TemplateRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
@@ -305,12 +268,12 @@ class TemplateController extends Controller
                 ->appends($request->all())
         )
             ->meta([
-                'route' => '/templates/:id',
+                'route'   => '/templates/:id',
                 'prepend' => [
                     [
                         'name' => __('global.new_template'),
                         'icon' => 'fa fa-plus-circle text-green-500',
-                        'to' => [
+                        'to'   => [
                             'path' => '/templates/0',
                         ],
                     ],
@@ -318,30 +281,24 @@ class TemplateController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/templates/{id}/tvs",
-     *     summary="Получение списка TV парметров с пагинацией для шаблона",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="attach")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TemplateRequest $request
-     * @param string $template
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/templates/{id}/tvs',
+        summary: 'Получение списка TV параметров с пагинацией для шаблона',
+        security: [['Api' => []]],
+        tags: ['Templates'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'attach')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tvs(TemplateRequest $request, string $template): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -381,10 +338,11 @@ class TemplateController extends Controller
 
         return JsonResource::collection(
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->groupBy('category')
                     ->map(fn(Collection $category) => [
-                        'id' => $category->first()->category,
+                        'id'   => $category->first()->category,
                         'name' => $category->first()->getRelation('category')->category ??
                             __('global.no_category'),
                         'data' => $category/*->map(function (SiteTmplvar $item) {
@@ -403,27 +361,22 @@ class TemplateController extends Controller
             );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/templates/select",
-     *     summary="Получение списка шаблонов для выбора",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="integer")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TemplateRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/templates/select',
+        summary: 'Получение списка шаблонов для выбора',
+        security: [['Api' => []]],
+        tags: ['Templates'],
+        parameters: [
+            new OA\Parameter(name: 'selected', in: 'query', schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function select(TemplateRequest $request): JsonResourceCollection
     {
         $selected = $request->collect('selected');
@@ -431,8 +384,8 @@ class TemplateController extends Controller
         return JsonResource::collection(
             collect()
                 ->add([
-                    'key' => 0,
-                    'value' => 'blank (0)',
+                    'key'      => 0,
+                    'value'    => 'blank (0)',
                     'selected' => $selected->contains(0),
                 ])
                 ->merge(
@@ -441,12 +394,12 @@ class TemplateController extends Controller
                         ->get()
                         ->groupBy('category')
                         ->map(fn(Collection $group) => [
-                            'id' => $group->first()->category,
+                            'id'   => $group->first()->category,
                             'name' => $group->first()->getRelation('category')->category ??
                                 __('global.no_category'),
                             'data' => $group->map(fn(SiteTemplate $item) => [
-                                'key' => $item->getKey(),
-                                'value' => $item->templatename . ' (' . $item->getKey() . ')',
+                                'key'      => $item->getKey(),
+                                'value'    => $item->templatename . ' (' . $item->getKey() . ')',
                                 'selected' => $selected->contains($item->getKey()),
                             ]),
                         ])
@@ -455,29 +408,24 @@ class TemplateController extends Controller
         );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/templates/tree",
-     *     summary="Получение списка шаблонов с пагинацией для древовидного меню",
-     *     tags={"Templates"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TemplateRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/templates/tree',
+        summary: 'Получение списка шаблонов с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['Templates'],
+        parameters: [
+            new OA\Parameter(name: 'category', in: 'query', schema: new OA\Schema(type: 'int', default: -1)),
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(TemplateRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
@@ -510,10 +458,11 @@ class TemplateController extends Controller
 
             return JsonResource::collection(
                 $result->setCollection(
-                    $result->getCollection()
+                    $result
+                        ->getCollection()
                         ->map(fn(SiteTemplate $model) => [
-                            'id' => $model->getKey(),
-                            'title' => $model->templatename,
+                            'id'         => $model->getKey(),
+                            'title'      => $model->templatename,
                             'attributes' => $model,
                         ])
                 )
@@ -528,26 +477,27 @@ class TemplateController extends Controller
             $result->add(new Category());
         }
 
-        $result = $result->map(function (Category $model) use ($request, $settings) {
-            $data = [
-                'id' => $model->getKey() ?? 0,
-                'title' => $model->category ?? __('global.no_category'),
-                'category' => true,
-            ];
+        $result = $result
+            ->map(function (Category $model) use ($request, $settings) {
+                $data = [
+                    'id'       => $model->getKey() ?? 0,
+                    'title'    => $model->category ?? __('global.no_category'),
+                    'category' => true,
+                ];
 
-            if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
-                $request->query->replace([
-                    'settings' => ['parent' => $data['id']] + $request->query('settings'),
-                ]);
+                if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
+                    $request->query->replace([
+                        'settings' => ['parent' => $data['id']] + $request->query('settings'),
+                    ]);
 
-                $result = $this->tree($request)->toResponse($request)->getData();
+                    $result = $this->tree($request)->toResponse($request)->getData();
 
-                $data['data'] = $result->data ?? [];
-                $data['meta'] = $result->meta ?? [];
-            }
+                    $data['data'] = $result->data ?? [];
+                    $data['meta'] = $result->meta ?? [];
+                }
 
-            return $data;
-        })
+                return $data;
+            })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 

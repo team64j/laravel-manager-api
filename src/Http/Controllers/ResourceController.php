@@ -4,7 +4,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Validation\ValidationException;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ResourceRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -15,37 +15,29 @@ use Team64j\LaravelManagerApi\Models\SiteTmplvarContentvalue;
 
 class ResourceController extends Controller
 {
-    public function __construct(protected ResourceLayout $layout)
-    {
-    }
+    public function __construct(protected ResourceLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/resource",
-     *     summary="Получение списка ресурсов с пагинацией и фильтрацией по основным полям",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="limit", in="query", @OA\Schema(type="integer")),
-     *         @OA\Parameter (name="columns", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="fields", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="additional", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ResourceRequest $request
-     *
-     * @return JsonResourceCollection
-     * @throws ValidationException
-     */
+    #[OA\Get(
+        path: '/resource',
+        summary: 'Получение списка ресурсов с пагинацией и фильтрацией по основным полям',
+        security: [['Api' => []]],
+        tags: ['Resource'],
+        parameters: [
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'id')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'limit', in: 'query', schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'columns', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'fields', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'additional', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(ResourceRequest $request): JsonResourceCollection
     {
         $fillable = ['id', ...(new SiteContent())->getFillable()];
@@ -91,7 +83,8 @@ class ResourceController extends Controller
             ->unique()
             ->toArray();
 
-        $this->getValidationFactory()
+        $this
+            ->getValidationFactory()
             ->make(['fields' => $fields], ['fields' => 'required'])
             ->validate();
 
@@ -116,7 +109,7 @@ class ResourceController extends Controller
             }
 
             $columns[$key] = [
-                'name' => $column,
+                'name'  => $column,
                 'label' => __('global.' . $lang),
             ];
         }
@@ -135,30 +128,24 @@ class ResourceController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/resource/{id}",
-     *     summary="Чтение ресурса",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="template", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="type", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ResourceRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/resource/{id}',
+        summary: 'Чтение ресурса',
+        security: [['Api' => []]],
+        tags: ['Resource'],
+        parameters: [
+            new OA\Parameter(name: 'template', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'parent', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'type', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(ResourceRequest $request, int $id): JsonResource
     {
         /** @var SiteContent $model */
@@ -180,29 +167,22 @@ class ResourceController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Post(
-     *     path="/resource",
-     *     summary="Создание нового ресурса",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ResourceRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/resource',
+        summary: 'Создание нового ресурса',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Resource'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(ResourceRequest $request): JsonResource
     {
         /** @var SiteContent $model */
@@ -212,30 +192,22 @@ class ResourceController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Patch(
-     *     path="/resource/{id}",
-     *     summary="Обновление ресурса",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ResourceRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Patch(
+        path: '/resource/{id}',
+        summary: 'Обновление ресурса',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Resource'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function update(ResourceRequest $request, int $id): JsonResource
     {
         /** @var SiteContent $model */
@@ -284,24 +256,19 @@ class ResourceController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/resource/{id}",
-     *     summary="Удаление ресурса",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param int $id
-     *
-     * @return ResourceResource
-     */
+    #[OA\Delete(
+        path: '/resource/{id}',
+        summary: 'Удаление ресурса',
+        security: [['Api' => []]],
+        tags: ['Resource'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function destroy(int $id)
     {
         $model = SiteContent::withTrashed()->findOrFail($id);
@@ -314,33 +281,27 @@ class ResourceController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Get(
-     *     path="/resource/tree",
-     *     summary="Получение списка ресурсов с пагинацией для древовидного меню",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="int", default="0")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     *
-     * @param ResourceRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/resource/tree',
+        summary: 'Получение списка ресурсов с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['Resource'],
+        parameters: [
+            new OA\Parameter(name: 'parent', in: 'query', schema: new OA\Schema(type: 'int', default: 0)),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'id')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'settings', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(ResourceRequest $request)
     {
         $settings = $request->collect('settings')->toArray();
@@ -356,11 +317,11 @@ class ResourceController extends Controller
             foreach ([0] as $id) {
                 $request->query->set('settings', array_merge($settings, ['parent' => $id]));
                 $data[] = [
-                    'id' => $id,
-                    'title' => 'root',
-                    'category' => true,
-                    'data' => $this->tree($request),
-                    'templates' => [
+                    'id'          => $id,
+                    'title'       => 'root',
+                    'category'    => true,
+                    'data'        => $this->tree($request),
+                    'templates'   => [
                         'title' => 'root',
                     ],
                     'contextMenu' => null,
@@ -422,8 +383,8 @@ class ResourceController extends Controller
             if ($result instanceof Collection) {
                 $result = $result->map(function (SiteContent $item) use ($request, $settings) {
                     $data = [
-                        'id' => $item->id,
-                        'title' => $item->{$settings['keyTitle']} ?? $item->pagetitle,
+                        'id'         => $item->id,
+                        'title'      => $item->{$settings['keyTitle']} ?? $item->pagetitle,
                         'attributes' => $item,
                     ];
 
@@ -438,7 +399,7 @@ class ResourceController extends Controller
                                     'settings',
                                     [
                                         'parent' => $item->getKey(),
-                                        'page' => null,
+                                        'page'   => null,
                                     ] + $settings
                                 );
 
@@ -456,8 +417,8 @@ class ResourceController extends Controller
                 $result->setCollection(
                     $result->map(function (SiteContent $item) use ($request, $settings) {
                         $data = [
-                            'id' => $item->id,
-                            'title' => $item->{$settings['keyTitle']} ?? $item->pagetitle,
+                            'id'         => $item->id,
+                            'title'      => $item->{$settings['keyTitle']} ?? $item->pagetitle,
                             'attributes' => $item,
                         ];
 
@@ -472,7 +433,7 @@ class ResourceController extends Controller
                                         'settings',
                                         [
                                             'parent' => $item->getKey(),
-                                            'page' => null,
+                                            'page'   => null,
                                         ] + $settings
                                     );
 
@@ -494,50 +455,37 @@ class ResourceController extends Controller
             ->meta($meta);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/resource/parents/{id}",
-     *     summary="Получение списка родителей для ресурса",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ResourceRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/resource/parents/{id}',
+        summary: 'Получение списка родителей для ресурса',
+        security: [['Api' => []]],
+        tags: ['Resource'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function parents(ResourceRequest $request, int $id): JsonResource
     {
         return JsonResource::make(url()->getParentsById($id));
     }
 
-    /**
-     * @OA\Get(
-     *     path="/resource/parents/{parent}/{id}",
-     *     summary="Получение данных при смене родителя",
-     *     tags={"Resource"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ResourceRequest $request
-     * @param int $parent
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/resource/parents/{parent}/{id}',
+        summary: 'Получение данных при смене родителя',
+        security: [['Api' => []]],
+        tags: ['Resource'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function setParent(ResourceRequest $request, int $parent, int $id): JsonResource
     {
         if ($parent == $id) {
@@ -555,14 +503,14 @@ class ResourceController extends Controller
             $result = SiteContent::withTrashed()->find($id);
 
             $data = [
-                'id' => $result->getKey(),
-                'title' => $result->pagetitle,
+                'id'     => $result->getKey(),
+                'title'  => $result->pagetitle,
                 'parent' => $result->parent,
             ];
         } else {
             $data = [
-                'id' => 0,
-                'title' => 'root',
+                'id'     => 0,
+                'title'  => 'root',
                 'parent' => null,
             ];
         }

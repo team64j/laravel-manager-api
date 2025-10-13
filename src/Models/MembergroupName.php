@@ -16,37 +16,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class MembergroupName extends Model
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'name',
     ];
 
-    /**
-     * @return BelongsToMany
-     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'member_groups', 'user_group', 'member');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function documentGroups(): BelongsToMany
     {
-        return $this->belongsToMany(
-            DocumentgroupName::class,
-            'membergroup_access',
-            'membergroup',
-            'documentgroup'
-        )
+        return $this
+            ->belongsToMany(
+                DocumentgroupName::class,
+                'membergroup_access',
+                'membergroup',
+                'documentgroup'
+            )
             ->withPivot(['id', 'context']);
     }
 }

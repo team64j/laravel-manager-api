@@ -8,87 +8,66 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\AuthRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\LoginLayout;
+use Tymon\JWTAuth\JWTGuard;
 
 class AuthController extends Controller
 {
-    /**
-     * @OA\Post(
-     *     path="/auth",
-     *     summary="Авторизация",
-     *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *             required={"username", "password"},
-     *             properties={
-     *                 @OA\Property(
-     *                     property="username",
-     *                     type="string",
-     *                 ),
-     *                 @OA\Property(
-     *                     property="password",
-     *                     type="string",
-     *                 ),
-     *                 @OA\Property(
-     *                     property="remember",
-     *                     type="boolean",
-     *                     nullable=true,
-     *                 ),
-     *             }
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param AuthRequest $request
-     *
-     * @return JsonResource|JsonResponse
-     */
+    #[OA\Post(
+        path: '/auth',
+        summary: 'Авторизация',
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(
+                required: ['username', 'password'],
+                properties: [
+                    new OA\Property(property: 'username', type: 'string'),
+                    new OA\Property(property: 'password', type: 'string'),
+                    new OA\Property(property: 'remember', type: 'boolean', nullable: true),
+                ]
+            )
+        ),
+        tags: ['Auth'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function login(AuthRequest $request): JsonResource | JsonResponse
     {
-        /** @var Guard $guard */
+        /** @var Guard | JWTGuard $guard */
         $guard = auth(config('manager-api.guard.provider'));
 
         if (!$token = $guard->attempt($request->validated())) {
             throw ValidationException::withMessages([__('global.login_processor_unknown_user')]);
         }
 
-        $guard->login($guard->user(), $request->boolean('remember'));
+        $guard->login($guard->user());
 
         return JsonResource::make([
-            'token_type' => 'bearer',
-            'expires_in' => $guard->factory()->getTTL() * 60,
+            'token_type'   => 'bearer',
+            'expires_in'   => $request->boolean('remember') ? null : $guard->factory()->getTTL() * 60,
             'access_token' => $token,
         ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/auth",
-     *     summary="Форма авторизации",
-     *     tags={"Auth"},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param Request $request
-     * @param LoginLayout $layout
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/auth',
+        summary: 'Форма авторизации',
+        tags: ['Auth'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     protected function loginForm(Request $request, LoginLayout $layout): JsonResource
     {
         $languages = $this->getLanguages();
@@ -102,102 +81,80 @@ class AuthController extends Controller
         ])
             ->meta([
                 'site_name' => config('global.site_name'),
-                'version' => config('global.settings_version'),
-                'language' => $language,
+                'version'   => config('global.settings_version'),
+                'language'  => $language,
                 'languages' => $languages,
             ])
             ->layout($layout->default());
     }
 
-    /**
-     * @OA\Post(
-     *     path="/auth/refresh",
-     *     summary="Обновление токена",
-     *     tags={"Auth"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/auth/refresh',
+        summary: 'Обновление токена',
+        security: [['Api' => []]],
+        tags: ['Auth'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function refresh(): JsonResource
     {
-        /** @var Guard $guard */
+        /** @var Guard | JWTGuard $guard */
         $guard = auth(config('manager-api.guard.provider'));
 
         return JsonResource::make([
-            'token_type' => 'bearer',
-            'expires_in' => $guard->factory()->getTTL() * 60,
+            'token_type'   => 'bearer',
+            'expires_in'   => $guard->factory()->getTTL() * 60,
             'access_token' => $guard->refresh(),
         ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/auth/forgot",
-     *     summary="Восстановление пароля",
-     *     tags={"Auth"},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *             required={"email"},
-     *             properties={
-     *                 @OA\Property(
-     *                     property="email",
-     *                     type="string",
-     *                 ),
-     *             }
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param Request $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/auth/forgot',
+        summary: 'Восстановление пароля',
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(
+                required: ['email'],
+                properties: [
+                    new OA\Property(property: 'email', type: 'string'),
+                ]
+            )
+        ),
+        tags: ['Auth'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function forgot(Request $request): JsonResource
     {
         return JsonResource::make([]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/auth/forgot",
-     *     summary="Форма Восстановление пароля",
-     *     tags={"Auth"},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param Request $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/auth/forgot',
+        summary: 'Форма Восстановление пароля',
+        tags: ['Auth'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function forgotForm(Request $request): JsonResource
     {
         return JsonResource::make([]);
     }
 
-    /**
-     * load languages and keys
-     *
-     * @return array
-     */
     protected function getLanguages(): array
     {
         $languages = [

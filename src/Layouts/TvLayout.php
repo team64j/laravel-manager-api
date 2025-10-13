@@ -54,7 +54,7 @@ class TvLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.new_tmplvars');
     }
@@ -80,7 +80,7 @@ class TvLayout extends Layout
      *
      * @return array
      */
-    public function default(SiteTmplvar $model = null): array
+    public function default(?SiteTmplvar $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\TvRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -16,38 +16,28 @@ use Team64j\LaravelManagerApi\Models\SiteTmplvar;
 
 class TvController extends Controller
 {
-    /**
-     * @param TvLayout $layout
-     */
-    public function __construct(protected TvLayout $layout)
-    {
-    }
+    public function __construct(protected TvLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/tvs",
-     *     summary="Получение списка TV параметров с пагинацией и фильтрацией",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="groupBy", in="query", @OA\Schema(type="string", default="category")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/tvs',
+        summary: 'Получение списка TV параметров с пагинацией и фильтрацией',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'name', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'groupBy', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(TvRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -80,21 +70,23 @@ class TvController extends Controller
         if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
-                    'id' => $group->first()->category,
+                    'id'   => $group->first()->category,
                     'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map->withoutRelations(),
                 ];
             };
 
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->groupBy('category')
                     ->map($callbackGroup)
                     ->values()
             );
         } else {
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->map(fn($item) => $item->withoutRelations())
             );
         }
@@ -104,30 +96,24 @@ class TvController extends Controller
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
-                    'icon' => $this->layout->iconList(),
+                    'icon'  => $this->layout->iconList(),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tvs/{id}",
-     *     summary="Чтение TV параметра",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/tvs/{id}',
+        summary: 'Чтение TV параметра',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(TvRequest $request, int $id): JsonResource
     {
         /** @var SiteTmplvar $model */
@@ -141,29 +127,22 @@ class TvController extends Controller
             ->layout($this->layout->default($model));
     }
 
-    /**
-     * @OA\Post(
-     *     path="/tvs",
-     *     summary="Создание нового TV параметра",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/tvs',
+        summary: 'Создание нового TV параметра',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Tvs'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(TvRequest $request): JsonResource
     {
         $data = $request->all();
@@ -180,30 +159,22 @@ class TvController extends Controller
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Put(
-     *     path="/tvs/{id}",
-     *     summary="Обновление TV параметра",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Put(
+        path: '/tvs/{id}',
+        summary: 'Обновление TV параметра',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Tvs'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function update(TvRequest $request, int $id): JsonResource
     {
         $model = SiteTmplvar::query()->findOrFail($id);
@@ -216,25 +187,19 @@ class TvController extends Controller
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/tvs/{id}",
-     *     summary="Удаление TV параметра",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     * @param int $id
-     *
-     * @return Response
-     */
+    #[OA\Delete(
+        path: '/tvs/{id}',
+        summary: 'Удаление TV параметра',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function destroy(TvRequest $request, int $id)
     {
         SiteTmplvar::query()->findOrFail($id)->delete();
@@ -242,27 +207,22 @@ class TvController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tvs/list",
-     *     summary="Получение списка TV параметров с пагинацией для меню",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/tvs/list',
+        summary: 'Получение списка TV параметров с пагинацией для меню',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function list(TvRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
@@ -281,12 +241,12 @@ class TvController extends Controller
 
         return JsonResource::collection($result)
             ->meta([
-                'route' => '/tvs/:id',
+                'route'   => '/tvs/:id',
                 'prepend' => [
                     [
                         'name' => __('global.new_tmplvars'),
                         'icon' => 'fa fa-plus-circle text-green-500',
-                        'to' => [
+                        'to'   => [
                             'path' => '/tvs/0',
                         ],
                     ],
@@ -294,27 +254,22 @@ class TvController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tvs/sort",
-     *     summary="Получение списка TV параметров с пагинацией для сортировки",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/tvs/sort',
+        summary: 'Получение списка TV параметров с пагинацией для сортировки',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function sort(TvRequest $request): JsonResourceCollection
     {
         $result = SiteTmplvar::query()
@@ -326,31 +281,26 @@ class TvController extends Controller
             ->layout($this->layout->sort())
             ->meta([
                 'title' => $this->layout->titleSort(),
-                'icon' => $this->layout->iconSort(),
+                'icon'  => $this->layout->iconSort(),
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tvs/types",
-     *     summary="Получение списка типов TV параметров для выбора",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/tvs/types',
+        summary: 'Получение списка типов TV параметров для выбора',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        parameters: [
+            new OA\Parameter(name: 'selected', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function types(TvRequest $request): JsonResourceCollection
     {
         $types = (new SiteTmplvar())->parameterTypes();
@@ -367,34 +317,29 @@ class TvController extends Controller
         return JsonResource::collection($types);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tvs/display",
-     *     summary="Получение списка виджетов для TV",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/tvs/display',
+        summary: 'Получение списка виджетов для TV',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        parameters: [
+            new OA\Parameter(name: 'selected', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function display(TvRequest $request)
     {
         return JsonResource::make(
             array_merge(
                 [
                     [
-                        'key' => '',
+                        'key'   => '',
                         'value' => __('global.no'),
                     ],
                 ],
@@ -403,30 +348,24 @@ class TvController extends Controller
         );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/tvs/tree",
-     *     summary="Получение списка TV параметров с пагинацией для древовидного меню",
-     *     tags={"Tvs"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param TvRequest $request
-     *ф
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/tvs/tree',
+        summary: 'Получение списка TV параметров с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['Tvs'],
+        parameters: [
+            new OA\Parameter(name: 'category', in: 'query', schema: new OA\Schema(type: 'int', default: -1)),
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(TvRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
@@ -459,10 +398,11 @@ class TvController extends Controller
 
             return JsonResource::collection(
                 $result->setCollection(
-                    $result->getCollection()
+                    $result
+                        ->getCollection()
                         ->map(fn(SiteTmplvar $item) => [
-                            'id' => $item->id,
-                            'title' => $item->name,
+                            'id'         => $item->id,
+                            'title'      => $item->name,
                             'attributes' => $item,
                         ])
                 )
@@ -477,26 +417,27 @@ class TvController extends Controller
             $result->add(new Category());
         }
 
-        $result = $result->map(function ($category) use ($request, $settings) {
-            $data = [
-                'id' => $category->getKey() ?? 0,
-                'title' => $category->category ?? __('global.no_category'),
-                'category' => true,
-            ];
+        $result = $result
+            ->map(function ($category) use ($request, $settings) {
+                $data = [
+                    'id'       => $category->getKey() ?? 0,
+                    'title'    => $category->category ?? __('global.no_category'),
+                    'category' => true,
+                ];
 
-            if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
-                $request->query->replace([
-                    'settings' => ['parent' => $data['id']] + $request->query('settings'),
-                ]);
+                if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
+                    $request->query->replace([
+                        'settings' => ['parent' => $data['id']] + $request->query('settings'),
+                    ]);
 
-                $result = $this->tree($request)->toResponse($request)->getData();
+                    $result = $this->tree($request)->toResponse($request)->getData();
 
-                $data['data'] = $result->data ?? [];
-                $data['meta'] = $result->meta ?? [];
-            }
+                    $data['data'] = $result->data ?? [];
+                    $data['meta'] = $result->meta ?? [];
+                }
 
-            return $data;
-        })
+                return $data;
+            })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 

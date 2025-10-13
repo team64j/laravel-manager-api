@@ -14,11 +14,6 @@ class JsonResource extends BaseResource
 {
     use JsonResourceTrait;
 
-    /**
-     * @param $resource
-     *
-     * @return JsonResourceCollection
-     */
     public static function collection($resource): JsonResourceCollection
     {
         return tap(static::newCollection($resource), function ($collection) {

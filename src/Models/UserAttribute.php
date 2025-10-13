@@ -58,50 +58,35 @@ class UserAttribute extends Model
     public const CREATED_AT = 'createdon';
     public const UPDATED_AT = 'editedon';
 
-    /**
-     * @var string
-     */
     protected $dateFormat = 'U';
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
-        'internalKey' => 'int',
-        'role' => 'int',
-        'verified' => 'int',
-        'blocked' => 'int',
-        'blockeduntil' => 'int',
-        'blockedafter' => 'int',
-        'logincount' => 'int',
-        'lastlogin' => 'int',
+        'internalKey'      => 'int',
+        'role'             => 'int',
+        'verified'         => 'int',
+        'blocked'          => 'int',
+        'blockeduntil'     => 'int',
+        'blockedafter'     => 'int',
+        'logincount'       => 'int',
+        'lastlogin'        => 'int',
         //'lastlogin' => 'datetime',
-        'thislogin' => 'int',
+        'thislogin'        => 'int',
         'failedlogincount' => 'int',
-        'dob' => 'int',
-        'gender' => 'int',
-        'createdon' => 'int',
-        'editedon' => 'int',
+        'dob'              => 'int',
+        'gender'           => 'int',
+        'createdon'        => 'int',
+        'editedon'         => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $hidden = [
         'role',
     ];
 
-    /**
-     * @var int[]
-     */
     protected $attributes = [
-        'role' => 0,
+        'role'     => 0,
         'verified' => 1,
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'internalKey',
         'fullname',
@@ -132,35 +117,21 @@ class UserAttribute extends Model
         'comment',
     ];
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getLastloginAttribute($value): string
     {
         return $this->convertDateTime($value);
     }
 
-    /**
-     * @return HasMany
-     */
     public function rolePermissions(): HasMany
     {
         return $this->hasMany(RolePermissions::class, 'role_id', 'role');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'internalKey', 'id');
     }
 
-    /**
-     * @return HasOne
-     */
     public function userRole(): HasOne
     {
         return $this->hasOne(UserRole::class, 'id', 'role');

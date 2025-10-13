@@ -59,7 +59,7 @@ class ChunkLayout extends Layout
      *
      * @return array
      */
-    public function default(SiteHtmlSnippet $model = null): array
+    public function default(?SiteHtmlSnippet $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
 

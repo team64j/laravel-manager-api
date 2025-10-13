@@ -47,7 +47,7 @@ class ResourceLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.new_resource');
     }
@@ -62,10 +62,10 @@ class ResourceLayout extends Layout
     {
         if (!$parents) {
             $parents[] = [
-                'id' => 0,
+                'id'     => 0,
                 'parent' => null,
-                'title' => 'root',
-                'to' => [
+                'title'  => 'root',
+                'to'     => [
                     'path' => '/resources/0',
                 ],
             ];
@@ -78,10 +78,10 @@ class ResourceLayout extends Layout
                 }
 
                 $parents[] = [
-                    'id' => $item['id'],
+                    'id'     => $item['id'],
                     'parent' => $item['parent'],
-                    'title' => $item['pagetitle'],
-                    'to' => [
+                    'title'  => $item['pagetitle'],
+                    'to'     => [
                         'path' => '/resource/' . $item['id'],
                     ],
                 ];
@@ -95,7 +95,7 @@ class ResourceLayout extends Layout
      *
      * @return array
      */
-    public function default(SiteContent $model = null): array
+    public function default(?SiteContent $model = null): array
     {
         /**
          * @param $items
@@ -118,20 +118,20 @@ class ResourceLayout extends Layout
             array_merge(
                 array_map(
                     fn(SiteContent $item) => [
-                        'id' => $item->getKey(),
-                        'parent' => $item->parent,
-                        'name' => $item->pagetitle,
-                        'to' => '/resource/' . $item->getKey(),
+                        'id'      => $item->getKey(),
+                        'parent'  => $item->parent,
+                        'name'    => $item->pagetitle,
+                        'to'      => '/resource/' . $item->getKey(),
                         'tooltip' => 'ID: ' . $item->getKey() . '<br>' . $item->pagetitle,
                     ],
                     $model->parents ? iterator_to_array(flatten([$model->parents])) : []
                 ),
                 [
                     [
-                        'id' => 0,
-                        'parent' => null,
-                        'name' => 'root',
-                        'to' => '/resources/0',
+                        'id'      => 0,
+                        'parent'  => null,
+                        'name'    => 'root',
+                        'to'      => '/resources/0',
                         'tooltip' => 'ID: 0<br>root',
                     ],
                 ]
@@ -173,7 +173,7 @@ class ResourceLayout extends Layout
 
             Actions::make()
                 ->setCancelTo([
-                    'path' => '/resources/' . $model->parent,
+                    'path'  => '/resources/' . $model->parent,
                     'close' => true,
                 ])
                 ->when(
@@ -313,8 +313,8 @@ class ResourceLayout extends Layout
                                     ->setUrl('/templates/select')
                                     ->setData([
                                         [
-                                            'key' => $model->template ?? 0,
-                                            'value' => ($model->tpl->templatename ?? 'blank') . ' (' .
+                                            'key'      => $model->template ?? 0,
+                                            'value'    => ($model->tpl->templatename ?? 'blank') . ' (' .
                                                 ($model->template ?? 0) . ')',
                                             'selected' => true,
                                         ],
@@ -422,11 +422,11 @@ class ResourceLayout extends Layout
                                 )
                                     ->setData([
                                         [
-                                            'key' => 'document',
+                                            'key'   => 'document',
                                             'value' => __('global.resource_type_webpage'),
                                         ],
                                         [
-                                            'key' => 'reference',
+                                            'key'   => 'reference',
                                             'value' => __('global.resource_type_weblink'),
                                         ],
                                     ])
@@ -440,7 +440,7 @@ class ResourceLayout extends Layout
                                 )
                                     ->setData(
                                         array_map(fn($k) => [
-                                            'key' => $k,
+                                            'key'   => $k,
                                             'value' => $k,
                                         ], explode(',', config('global.custom_contenttype', 'text/html')))
                                     ),
@@ -453,11 +453,11 @@ class ResourceLayout extends Layout
                                 )
                                     ->setData([
                                         [
-                                            'key' => 0,
+                                            'key'   => 0,
                                             'value' => __('global.inline'),
                                         ],
                                         [
-                                            'key' => 1,
+                                            'key'   => 1,
                                             'value' => __('global.attachment'),
                                         ],
                                     ]),
@@ -552,15 +552,19 @@ class ResourceLayout extends Layout
                 )
                 ->when(
                     $groupTv == 5,
-                    fn(Tabs $tabs) => array_map(
-                        fn($tab) => $tabs->addTab(
-                            $tab['id'],
-                            $tab['name'],
-                            class: 'p-5',
-                            slot: $tabTvs['slots'][$tab['id']],
-                        ),
-                        $tabTvs['attrs']['data']
-                    ),
+                    function ($tabs) use ($tabTvs) {
+                        array_map(
+                            fn($tab) => $tabs->addTab(
+                                $tab['id'],
+                                $tab['name'],
+                                class: 'p-5',
+                                slot: $tabTvs['slots'][$tab['id']],
+                            ),
+                            $tabTvs['attrs']['data']
+                        );
+
+                        return $tabs;
+                    }
                 )
                 ->when(
                     config('global.use_udperms'),
@@ -585,18 +589,18 @@ class ResourceLayout extends Layout
             ->isVertical();
 
         $components = [
-            'text' => Input::class,
-            'number' => Number::class,
-            'email' => Email::class,
-            'date' => DateTime::class,
-            'dropdown' => Select::class,
-            'checkbox' => Checkbox::class,
-            'option' => Radio::class,
-            'textarea' => Textarea::class,
+            'text'         => Input::class,
+            'number'       => Number::class,
+            'email'        => Email::class,
+            'date'         => DateTime::class,
+            'dropdown'     => Select::class,
+            'checkbox'     => Checkbox::class,
+            'option'       => Radio::class,
+            'textarea'     => Textarea::class,
             'textareamini' => Textarea::class,
-            'richtext' => CodeEditor::class,
-            'file' => File::class,
-            'image' => File::class,
+            'richtext'     => CodeEditor::class,
+            'file'         => File::class,
+            'image'        => File::class,
         ];
 
         /** @var SiteTmplvar $tv */
@@ -616,7 +620,7 @@ class ResourceLayout extends Layout
                 }
 
                 return [
-                    'key' => $key,
+                    'key'   => $key,
                     'value' => $value,
                 ];
             }, explode('||', (string) $tv->elements));
@@ -693,7 +697,7 @@ class ResourceLayout extends Layout
                         ->setData(
                             DocumentgroupName::all()
                                 ->map(fn(DocumentgroupName $group) => [
-                                    'key' => $group->getKey(),
+                                    'key'   => $group->getKey(),
                                     'value' => $group->name,
                                 ])
                                 ->toArray()
@@ -724,16 +728,16 @@ class ResourceLayout extends Layout
                     ->setAppends(['id'])
                     ->setAliases([
                         'selected' => 'hidemenu:0',
-                        'deleted' => 'deleted:1',
-                        'muted' => 'published:0',
+                        'deleted'  => 'deleted:1',
+                        'muted'    => 'published:0',
                     ])
                     ->setIcons([
-                        'default' => 'far fa-file',
-                        config('global.unauthorized_page') => 'fa fa-lock text-rose-600',
-                        config('global.site_start') => 'fa fa-home text-blue-500',
+                        'default'                              => 'far fa-file',
+                        config('global.unauthorized_page')     => 'fa fa-lock text-rose-600',
+                        config('global.site_start')            => 'fa fa-home text-blue-500',
                         config('global.site_unavailable_page') => 'fa fa-ban text-amber-400',
-                        config('global.error_page') => 'fa fa-exclamation-triangle text-rose-600',
-                        'reference' => 'fa fa-link',
+                        config('global.error_page')            => 'fa fa-exclamation-triangle text-rose-600',
+                        'reference'                            => 'fa fa-link',
                     ])
                     ->setTemplates([
                         'title' =>
@@ -748,72 +752,72 @@ class ResourceLayout extends Layout
                             __('global.page_data_cacheable') . ': {attributes.cacheable}' . PHP_EOL,
                     ])
                     ->setContextMenu([
-                        'class' => 'text-base',
+                        'class'   => 'text-base',
                         'actions' => [
                             [
                                 'title' => __('global.create_resource_here'),
-                                'icon' => 'fa fa-file',
-                                'to' => [
-                                    'path' => '/resource/0',
+                                'icon'  => 'fa fa-file',
+                                'to'    => [
+                                    'path'  => '/resource/0',
                                     'query' => [
-                                        'type' => 'resource',
+                                        'type'   => 'resource',
                                         'parent' => ':id',
                                     ],
                                 ],
                             ],
                             [
                                 'title' => __('global.create_weblink_here'),
-                                'icon' => 'fa fa-link',
-                                'to' => [
-                                    'path' => '/resource/0',
+                                'icon'  => 'fa fa-link',
+                                'to'    => [
+                                    'path'  => '/resource/0',
                                     'query' => [
-                                        'type' => 'reference',
+                                        'type'   => 'reference',
                                         'parent' => ':id',
                                     ],
                                 ],
                             ],
                             [
                                 'title' => __('global.edit'),
-                                'icon' => 'fa fa-edit',
-                                'to' => [
+                                'icon'  => 'fa fa-edit',
+                                'to'    => [
                                     'path' => '/resource/:id',
                                 ],
                             ],
                             [
                                 'title' => __('global.move'),
-                                'icon' => 'fa fa-arrows',
+                                'icon'  => 'fa fa-arrows',
                             ],
                             [
                                 'title' => __('global.duplicate'),
-                                'icon' => 'fa fa-clone',
+                                'icon'  => 'fa fa-clone',
                             ],
                             [
                                 'split' => true,
                             ],
                             [
-                                'title' => __('global.sort_menuindex'),
-                                'icon' => 'fa fa-sort-numeric-asc',
+                                'title'  => __('global.sort_menuindex'),
+                                'icon'   => 'fa fa-sort-numeric-asc',
                                 'hidden' => [
                                     'isfolder' => 0,
                                 ],
                             ],
                             [
-                                'title' => __('global.unpublish_resource'),
-                                'icon' => 'fa fa-close',
+                                'title'  => __('global.unpublish_resource'),
+                                'icon'   => 'fa fa-close',
                                 'hidden' => [
                                     'published' => 0,
                                 ],
                             ],
                             [
-                                'title' => __('global.publish_resource'),
-                                'icon' => 'fa fa-rotate-left',
+                                'title'  => __('global.publish_resource'),
+                                'icon'   => 'fa fa-rotate-left',
                                 'hidden' => [
                                     'published' => 1,
                                 ],
                             ],
                             [
-                                'title' => __('global.delete'),
-                                'icon' => 'fa fa-trash',
+                                'title'  => __('global.delete'),
+                                'icon'   => 'fa fa-trash',
                                 'hidden' => [
                                     'deleted' => 1,
                                 ],
@@ -822,24 +826,24 @@ class ResourceLayout extends Layout
                                 'split' => true,
                             ],
                             [
-                                'title' => __('global.undelete_resource'),
-                                'icon' => 'fa fa-undo',
+                                'title'  => __('global.undelete_resource'),
+                                'icon'   => 'fa fa-undo',
                                 'hidden' => [
                                     'deleted' => 0,
                                 ],
                             ],
                             [
                                 'title' => __('global.resource_overview'),
-                                'icon' => 'fa fa-info',
-                                'to' => [
+                                'icon'  => 'fa fa-info',
+                                'to'    => [
                                     'path' => '/resources/:id',
                                 ],
                             ],
                             [
                                 'title' => __('global.preview'),
-                                'icon' => 'fa fa-eye',
-                                'to' => [
-                                    'path' => '/preview/:id',
+                                'icon'  => 'fa fa-eye',
+                                'to'    => [
+                                    'path'   => '/preview/:id',
                                     'target' => '_blank',
                                 ],
                             ],
@@ -848,164 +852,164 @@ class ResourceLayout extends Layout
                     ->setMenu([
                         'actions' => [
                             [
-                                'icon' => 'fa fa-refresh',
-                                'click' => 'update',
+                                'icon'   => 'fa fa-refresh',
+                                'click'  => 'update',
                                 'loader' => true,
                             ],
                             [
-                                'icon' => 'fa fa-file-circle-plus',
+                                'icon'  => 'fa fa-file-circle-plus',
                                 'title' => __('global.new_resource'),
-                                'to' => [
-                                    'path' => '/resource/0',
+                                'to'    => [
+                                    'path'  => '/resource/0',
                                     'query' => [
                                         'type' => 'document',
                                     ],
                                 ],
                             ],
                             [
-                                'icon' => 'fa fa-link',
+                                'icon'  => 'fa fa-link',
                                 'title' => __('global.add_weblink'),
-                                'to' => [
-                                    'path' => '/resource/0',
+                                'to'    => [
+                                    'path'  => '/resource/0',
                                     'query' => [
                                         'type' => 'reference',
                                     ],
                                 ],
                             ],
                             [
-                                'icon' => 'fa fa-sort',
-                                'title' => __('global.sort_tree'),
+                                'icon'     => 'fa fa-sort',
+                                'title'    => __('global.sort_tree'),
                                 'position' => 'right',
-                                'actions' => [
+                                'actions'  => [
                                     [
                                         'title' => __('global.sort_tree'),
                                     ],
                                     [
-                                        'key' => 'dir',
-                                        'value' => 'asc',
-                                        'title' => __('global.sort_asc'),
+                                        'key'    => 'dir',
+                                        'value'  => 'asc',
+                                        'title'  => __('global.sort_asc'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'dir',
-                                        'value' => 'desc',
-                                        'title' => __('global.sort_desc'),
+                                        'key'    => 'dir',
+                                        'value'  => 'desc',
+                                        'title'  => __('global.sort_desc'),
                                         'toggle' => true,
                                     ],
                                     [
                                         'split' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'id',
-                                        'title' => 'ID',
+                                        'key'    => 'order',
+                                        'value'  => 'id',
+                                        'title'  => 'ID',
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'menuindex',
-                                        'title' => __('global.resource_opt_menu_index'),
+                                        'key'    => 'order',
+                                        'value'  => 'menuindex',
+                                        'title'  => __('global.resource_opt_menu_index'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'isfolder',
-                                        'title' => __('global.folder'),
+                                        'key'    => 'order',
+                                        'value'  => 'isfolder',
+                                        'title'  => __('global.folder'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'pagetitle',
-                                        'title' => __('global.pagetitle'),
+                                        'key'    => 'order',
+                                        'value'  => 'pagetitle',
+                                        'title'  => __('global.pagetitle'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'longtitle',
-                                        'title' => __('global.long_title'),
+                                        'key'    => 'order',
+                                        'value'  => 'longtitle',
+                                        'title'  => __('global.long_title'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'alias',
-                                        'title' => __('global.alias'),
+                                        'key'    => 'order',
+                                        'value'  => 'alias',
+                                        'title'  => __('global.alias'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'createdon',
-                                        'title' => __('global.createdon'),
+                                        'key'    => 'order',
+                                        'value'  => 'createdon',
+                                        'title'  => __('global.createdon'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'editedon',
-                                        'title' => __('global.editedon'),
+                                        'key'    => 'order',
+                                        'value'  => 'editedon',
+                                        'title'  => __('global.editedon'),
                                         'toggle' => true,
                                     ],
                                     [
-                                        'key' => 'order',
-                                        'value' => 'publishedon',
-                                        'title' => __('global.publish_date'),
+                                        'key'    => 'order',
+                                        'value'  => 'publishedon',
+                                        'title'  => __('global.publish_date'),
                                         'toggle' => true,
                                     ],
                                 ],
                             ],
                             [
-                                'icon' => 'fa fa-eye',
+                                'icon'     => 'fa fa-eye',
                                 'position' => 'right',
-                                'actions' => [
+                                'actions'  => [
                                     [
                                         'title' => __('global.setting_resource_tree_node_name'),
                                     ],
                                     [
-                                        'key' => 'keyTitle',
-                                        'value' => 'pagetitle',
-                                        'title' => __('global.pagetitle'),
+                                        'key'    => 'keyTitle',
+                                        'value'  => 'pagetitle',
+                                        'title'  => __('global.pagetitle'),
                                         'toggle' => true,
-                                        'click' => 'changeKeyTitle',
+                                        'click'  => 'changeKeyTitle',
                                     ],
                                     [
-                                        'key' => 'keyTitle',
-                                        'value' => 'longtitle',
-                                        'title' => __('global.long_title'),
+                                        'key'    => 'keyTitle',
+                                        'value'  => 'longtitle',
+                                        'title'  => __('global.long_title'),
                                         'toggle' => true,
-                                        'click' => 'changeKeyTitle',
+                                        'click'  => 'changeKeyTitle',
                                     ],
                                     [
-                                        'key' => 'keyTitle',
-                                        'value' => 'menutitle',
-                                        'title' => __('global.resource_opt_menu_title'),
+                                        'key'    => 'keyTitle',
+                                        'value'  => 'menutitle',
+                                        'title'  => __('global.resource_opt_menu_title'),
                                         'toggle' => true,
-                                        'click' => 'changeKeyTitle',
+                                        'click'  => 'changeKeyTitle',
                                     ],
                                     [
-                                        'key' => 'keyTitle',
-                                        'value' => 'alias',
-                                        'title' => __('global.alias'),
+                                        'key'    => 'keyTitle',
+                                        'value'  => 'alias',
+                                        'title'  => __('global.alias'),
                                         'toggle' => true,
-                                        'click' => 'changeKeyTitle',
+                                        'click'  => 'changeKeyTitle',
                                     ],
                                     [
-                                        'key' => 'keyTitle',
-                                        'value' => 'createdon',
-                                        'title' => __('global.createdon'),
+                                        'key'    => 'keyTitle',
+                                        'value'  => 'createdon',
+                                        'title'  => __('global.createdon'),
                                         'toggle' => true,
-                                        'click' => 'changeKeyTitle',
+                                        'click'  => 'changeKeyTitle',
                                     ],
                                     [
-                                        'key' => 'keyTitle',
-                                        'value' => 'editedon',
-                                        'title' => __('global.editedon'),
+                                        'key'    => 'keyTitle',
+                                        'value'  => 'editedon',
+                                        'title'  => __('global.editedon'),
                                         'toggle' => true,
-                                        'click' => 'changeKeyTitle',
+                                        'click'  => 'changeKeyTitle',
                                     ],
                                     [
-                                        'key' => 'keyTitle',
-                                        'value' => 'publishedon',
-                                        'title' => __('global.publish_date'),
+                                        'key'    => 'keyTitle',
+                                        'value'  => 'publishedon',
+                                        'title'  => __('global.publish_date'),
                                         'toggle' => true,
-                                        'click' => 'changeKeyTitle',
+                                        'click'  => 'changeKeyTitle',
                                     ],
                                 ],
                             ],
@@ -1015,9 +1019,9 @@ class ResourceLayout extends Layout
                         ],
                     ])
                     ->setSettings([
-                        'parent' => -1,
-                        'dir' => 'asc',
-                        'order' => 'menuindex',
+                        'parent'   => -1,
+                        'dir'      => 'asc',
+                        'order'    => 'menuindex',
                         'keyTitle' => 'pagetitle',
                     ])
             )

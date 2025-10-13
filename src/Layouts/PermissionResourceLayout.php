@@ -24,7 +24,7 @@ class PermissionResourceLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.manage_permission');
     }

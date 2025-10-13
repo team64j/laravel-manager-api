@@ -29,27 +29,18 @@ class SiteTemplate extends Model
     public const CREATED_AT = 'createdon';
     public const UPDATED_AT = 'editedon';
 
-    /**
-     * @var string
-     */
     protected $dateFormat = 'U';
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
-        'editor_type' => 'int',
-        'category' => 'int',
+        'editor_type'   => 'int',
+        'category'      => 'int',
         'template_type' => 'int',
-        'locked' => 'int',
-        'selectable' => 'int',
-        'createdon' => 'int',
-        'editedon' => 'int',
+        'locked'        => 'int',
+        'selectable'    => 'int',
+        'createdon'     => 'int',
+        'editedon'      => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'templatename',
         'templatealias',
@@ -63,45 +54,30 @@ class SiteTemplate extends Model
         'selectable',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getCreatedonAttribute($value): string
     {
-        return  $this->convertDateTime($value);
+        return $this->convertDateTime($value);
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getEditedonAttribute($value): string
     {
-        return  $this->convertDateTime($value);
+        return $this->convertDateTime($value);
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function tvs(): BelongsToMany
     {
-        return $this->belongsToMany(
-            SiteTmplvar::class,
-            (new SiteTmplvarTemplate())->getTable(),
-            'templateid',
-            'tmplvarid'
-        )
+        return $this
+            ->belongsToMany(
+                SiteTmplvar::class,
+                (new SiteTmplvarTemplate())->getTable(),
+                'templateid',
+                'tmplvarid'
+            )
             ->withPivot('rank')
             ->orderBy('pivot_rank');
     }

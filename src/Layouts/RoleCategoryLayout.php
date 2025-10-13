@@ -33,7 +33,7 @@ class RoleCategoryLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.new_category');
     }
@@ -104,7 +104,7 @@ class RoleCategoryLayout extends Layout
      *
      * @return array
      */
-    public function default(PermissionsGroups $model = null): array
+    public function default(?PermissionsGroups $model = null): array
     {
         return [
             Title::make()

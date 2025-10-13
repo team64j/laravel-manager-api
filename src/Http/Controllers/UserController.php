@@ -5,50 +5,40 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Collection;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\UserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\UserLayout;
 use Team64j\LaravelManagerApi\Models\ActiveUserSession;
 use Team64j\LaravelManagerApi\Models\User;
 use Team64j\LaravelManagerApi\Models\UserAttribute;
 use Team64j\LaravelManagerApi\Models\UserRole;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class UserController extends Controller
 {
-    use PaginationTrait;
+    public function __construct(protected UserLayout $layout) {}
 
-    public function __construct(protected UserLayout $layout)
-    {
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/users",
-     *     summary="Получение списка пользователей с пагинацией и фильтрацией",
-     *     tags={"Users"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="role", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="blocked", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param UserRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/users',
+        summary: 'Получение списка пользователей с пагинацией и фильтрацией',
+        security: [['Api' => []]],
+        tags: ['Users'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'id')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'role', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'blocked', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(UserRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
@@ -84,7 +74,8 @@ class UserController extends Controller
         $u = new User();
         $r = new UserRole();
 
-        $result = $a->query()
+        $result = $a
+            ->query()
             ->select([
                 $u->qualifyColumn('id'),
                 $u->qualifyColumn('username'),
@@ -99,7 +90,8 @@ class UserController extends Controller
             ->join($r->getTable(), $r->qualifyColumn('id'), $a->qualifyColumn('role'))
             ->when(
                 $filterUsername,
-                fn($query) => $query->where($u->qualifyColumn('username'), $filterUsername)
+                fn($query) => $query
+                    ->where($u->qualifyColumn('username'), $filterUsername)
                     ->orWhere($u->qualifyColumn('username'), 'like', '%' . $filterUsername . '%')
             )
             ->when(in_array($order, $orderFields), fn($q) => $q->orderBy($order, $dir))
@@ -132,15 +124,16 @@ class UserController extends Controller
             'username',
             [
                 'name' => 'role',
-                'data' => $distinct->keyBy('name')
+                'data' => $distinct
+                    ->keyBy('name')
                     ->sortBy('name')
                     ->map(fn(UserAttribute $item) => [
-                        'key' => $item->role,
-                        'value' => $item->name,
+                        'key'      => $item->role,
+                        'value'    => $item->name,
                         'selected' => $item->role == $filterRole,
                     ])
                     ->prepend([
-                        'key' => '',
+                        'key'   => '',
                         'value' => __('global.mgrlog_anyall'),
                     ], '')
                     ->values(),
@@ -150,21 +143,22 @@ class UserController extends Controller
                 'type' => 'date',
                 'data' => [
                     'from' => date('Y-m-d', $filterDatetime->first() ?: $datetimeMin),
-                    'to' => date('Y-m-d', $filterDatetime->last() ?: $datetimeMax),
-                    'min' => date('Y-m-d', $datetimeMin),
-                    'max' => date('Y-m-d', $datetimeMax),
+                    'to'   => date('Y-m-d', $filterDatetime->last() ?: $datetimeMax),
+                    'min'  => date('Y-m-d', $datetimeMin),
+                    'max'  => date('Y-m-d', $datetimeMax),
                 ],
             ],
             [
                 'name' => 'blocked',
-                'data' => $distinct->keyBy('blocked')
+                'data' => $distinct
+                    ->keyBy('blocked')
                     ->map(fn(UserAttribute $item) => [
-                        'key' => $item->blocked,
-                        'value' => $item->blocked ? __('global.yes') : __('global.no'),
+                        'key'      => $item->blocked,
+                        'value'    => $item->blocked ? __('global.yes') : __('global.no'),
                         'selected' => $item->blocked == $filterBlocked,
                     ])
                     ->prepend([
-                        'key' => '',
+                        'key'   => '',
                         'value' => __('global.mgrlog_anyall'),
                     ], '')
                     ->sortBy('blocked')
@@ -176,37 +170,30 @@ class UserController extends Controller
             ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => $this->layout->titleList(),
-                    'icon' => $this->layout->iconList(),
-                    'pagination' => $this->pagination($result),
+                    'title'   => $this->layout->titleList(),
+                    'icon'    => $this->layout->iconList(),
                     'sorting' => [
                         'order' => $order,
-                        'dir' => $dir,
+                        'dir'   => $dir,
                     ],
                     'filters' => $filters,
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/users/{id}",
-     *     summary="Чтение пользователя",
-     *     tags={"Users"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param UserRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/users/{id}',
+        summary: 'Чтение пользователя',
+        security: [['Api' => []]],
+        tags: ['Users'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(UserRequest $request, int $id): JsonResource
     {
         /** @var User $model */
@@ -216,31 +203,26 @@ class UserController extends Controller
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->username),
-                'icon' => $this->layout->icon(),
+                'icon'  => $this->layout->icon(),
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/users/list",
-     *     summary="Получение списка пользователей с пагинацией для меню",
-     *     tags={"Users"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param UserRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/users/list',
+        summary: 'Получение списка пользователей с пагинацией для меню',
+        security: [['Api' => []]],
+        tags: ['Users'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function list(UserRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
@@ -254,13 +236,12 @@ class UserController extends Controller
 
         return JsonResource::collection($result)
             ->meta([
-                'route' => '/users/:id',
-                'pagination' => $this->pagination($result),
+                'route'   => '/users/:id',
                 'prepend' => [
                     [
                         'name' => __('global.new_user'),
                         'icon' => 'fa fa-plus-circle',
-                        'to' => [
+                        'to'   => [
                             'path' => '/users/0',
                         ],
                     ],
@@ -268,24 +249,19 @@ class UserController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/users/active",
-     *     summary="Получение списка активных пользователей с пагинацией",
-     *     tags={"Users"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param UserRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/users/active',
+        summary: 'Получение списка активных пользователей с пагинацией',
+        security: [['Api' => []]],
+        tags: ['Users'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function active(UserRequest $request): JsonResourceCollection
     {
         $result = ActiveUserSession::query()
@@ -298,32 +274,31 @@ class UserController extends Controller
             ->meta([
                 'columns' => [
                     [
-                        'key' => 'id',
+                        'key'   => 'id',
                         'label' => 'ID',
                         'style' => [
                             'textAlign' => 'right',
                         ],
                     ],
                     [
-                        'name' => 'user.username',
+                        'name'  => 'user.username',
                         'label' => __('global.user'),
                     ],
                     [
-                        'name' => 'ip',
+                        'name'  => 'ip',
                         'label' => 'IP',
                         'style' => [
                             'textAlign' => 'center',
                         ],
                     ],
                     [
-                        'name' => 'lasthit',
+                        'name'  => 'lasthit',
                         'label' => __('global.onlineusers_lasthit'),
                         'style' => [
                             'textAlign' => 'center',
                         ],
                     ],
                 ],
-                'pagination' => $this->pagination($result),
             ]);
     }
 }

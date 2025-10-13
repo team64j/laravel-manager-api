@@ -21,7 +21,7 @@ class ScheduleLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.site_schedule');
     }

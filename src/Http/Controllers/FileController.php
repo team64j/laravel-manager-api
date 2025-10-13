@@ -6,34 +6,27 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\FileRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\FileLayout;
 
 class FileController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/file/{file}",
-     *     summary="Получение файла по адресу на сервере",
-     *     tags={"File"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param FileRequest $request
-     * @param string $file
-     * @param FileLayout $layout
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/file/{file}',
+        summary: 'Получение файла по адресу на сервере',
+        security: [['Api' => []]],
+        tags: ['File'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(FileRequest $request, string $file, FileLayout $layout): JsonResource
     {
         $data = [];
@@ -78,9 +71,9 @@ class FileController extends Controller
 
             if (!in_array($data['ext'], $ignoreExtensions, true)) {
                 if (
-                    in_array($data['type'], $types) ||
-                    str($data['type'])->startsWith('text/') ||
-                    in_array($data['ext'], $extensions)
+                    in_array($data['type'], $types)
+                    || str($data['type'])->startsWith('text/')
+                    || in_array($data['ext'], $extensions)
                 ) {
                     $data['content'] = $content;
                 }
@@ -91,29 +84,24 @@ class FileController extends Controller
             ->layout($layout->default($data));
     }
 
-    /**
-     * @OA\Get(
-     *     path="/file/tree",
-     *     summary="Получение списка файлов с пагинацией для древовидного меню",
-     *     tags={"File"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="after", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="settings", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param FileRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/file/tree',
+        summary: 'Получение списка файлов с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['File'],
+        parameters: [
+            new OA\Parameter(name: 'after', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'settings', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(FileRequest $request): JsonResourceCollection
     {
         $data = [];
@@ -160,11 +148,11 @@ class FileController extends Controller
             $date = $this->getDate(filemtime($directory));
 
             $item = [
-                'id' => $key,
-                'title' => $title,
+                'id'       => $key,
+                'title'    => $title,
                 'category' => true,
-                'size' => '',
-                'date' => $date,
+                'size'     => '',
+                'date'     => $date,
             ];
 
             if (in_array('_date', $show)) {
@@ -176,7 +164,7 @@ class FileController extends Controller
                     'settings',
                     [
                         'parent' => $key,
-                        'after' => null,
+                        'after'  => null,
                     ] + $settings
                 );
 
@@ -232,13 +220,13 @@ class FileController extends Controller
             $size = $this->getSize($file->getSize());
 
             $item = [
-                'id' => $key,
-                'title' => $title,
-                'type' => $type,
+                'id'          => $key,
+                'title'       => $title,
+                'type'        => $type,
                 'unpublished' => !$file->isWritable() || !$file->isReadable(),
-                'class' => 'f-ext-' . $file->getExtension(),
-                'date' => $date,
-                'size' => $size,
+                'class'       => 'f-ext-' . $file->getExtension(),
+                'date'        => $date,
+                'size'        => $size,
             ];
 
             if (in_array('_date', $show)) {
@@ -263,7 +251,7 @@ class FileController extends Controller
 
         return JsonResource::collection($data)
             ->meta([
-                'category' => true,
+                'category'   => true,
                 'pagination' => [
                     'next' => $next,
                     'lang' => [
@@ -274,11 +262,6 @@ class FileController extends Controller
             ]);
     }
 
-    /**
-     * @param int $size
-     *
-     * @return string
-     */
     protected function getSize(int $size = 0): string
     {
         $mb = 1000 * 1024;
@@ -290,22 +273,11 @@ class FileController extends Controller
         return round($size / 1000, 2) . ' KB';
     }
 
-    /**
-     * @param int $date
-     *
-     * @return string
-     */
     protected function getDate(int $date): string
     {
         return Carbon::createFromFormat('U', (string) $date)->format('d-m-Y H:i:s');
     }
 
-    /**
-     * @param string $ext
-     * @param string $type
-     *
-     * @return string
-     */
     protected function getLang(string $ext, string $type = ''): string
     {
         $lang = '';

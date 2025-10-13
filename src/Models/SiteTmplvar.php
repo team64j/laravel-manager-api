@@ -36,27 +36,18 @@ class SiteTmplvar extends Model
     public const CREATED_AT = 'createdon';
     public const UPDATED_AT = 'editedon';
 
-    /**
-     * @var string
-     */
     protected $dateFormat = 'U';
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'editor_type' => 'int',
-        'category' => 'int',
-        'locked' => 'int',
-        'rank' => 'int',
-        'createdon' => 'int',
-        'editedon' => 'int',
-        'properties' => 'array',
+        'category'    => 'int',
+        'locked'      => 'int',
+        'rank'        => 'int',
+        'createdon'   => 'int',
+        'editedon'    => 'int',
+        'properties'  => 'array',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'type',
         'name',
@@ -73,56 +64,44 @@ class SiteTmplvar extends Model
         'properties',
     ];
 
-    /**
-     * @var array|string[]
-     */
     protected array $standardTypes = [
-        'text' => 'Text',
-        'rawtext' => 'Raw Text (deprecated)',
-        'textarea' => 'Textarea',
-        'rawtextarea' => 'Raw Textarea (deprecated)',
-        'textareamini' => 'Textarea (Mini)',
-        'richtext' => 'RichText',
-        'dropdown' => 'DropDown List Menu',
-        'listbox' => 'Listbox (Single-Select)',
+        'text'             => 'Text',
+        'rawtext'          => 'Raw Text (deprecated)',
+        'textarea'         => 'Textarea',
+        'rawtextarea'      => 'Raw Textarea (deprecated)',
+        'textareamini'     => 'Textarea (Mini)',
+        'richtext'         => 'RichText',
+        'dropdown'         => 'DropDown List Menu',
+        'listbox'          => 'Listbox (Single-Select)',
         'listbox-multiple' => 'Listbox (Multi-Select)',
-        'option' => 'Radio Options',
-        'checkbox' => 'Check Box',
-        'image' => 'Image',
-        'file' => 'File',
-        'url' => 'URL',
-        'email' => 'Email',
-        'number' => 'Number',
-        'date' => 'Date',
+        'option'           => 'Radio Options',
+        'checkbox'         => 'Check Box',
+        'image'            => 'Image',
+        'file'             => 'File',
+        'url'              => 'URL',
+        'email'            => 'Email',
+        'number'           => 'Number',
+        'date'             => 'Date',
     ];
 
-    /**
-     * @var array
-     */
     protected array $displayWidgets = [
-        'datagrid' => 'Data Grid',
-        'richtext' => 'RichText',
-        'viewport' => 'View Port',
+        'datagrid'      => 'Data Grid',
+        'richtext'      => 'RichText',
+        'viewport'      => 'View Port',
         'custom_widget' => 'Custom Widget',
     ];
 
-    /**
-     * @var array
-     */
     protected array $displayFormats = [
         'htmlentities' => 'HTML Entities',
-        'date' => 'Date Formatter',
-        'unixtime' => 'Unixtime',
-        'delim' => 'Delimited List',
-        'htmltag' => 'HTML Generic Tag',
-        'hyperlink' => 'Hyperlink',
-        'image' => 'Image',
-        'string' => 'String Formatter',
+        'date'         => 'Date Formatter',
+        'unixtime'     => 'Unixtime',
+        'delim'        => 'Delimited List',
+        'htmltag'      => 'HTML Generic Tag',
+        'hyperlink'    => 'Hyperlink',
+        'image'        => 'Image',
+        'string'       => 'String Formatter',
     ];
 
-    /**
-     * @return bool|null
-     */
     public function delete(): ?bool
     {
         $this->tmplvarContentvalue()->delete();
@@ -132,55 +111,42 @@ class SiteTmplvar extends Model
         return parent::delete();
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function tmplvarUserRole(): HasMany
     {
         return $this->hasMany(UserRoleVar::class, 'tmplvarid', 'id');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function templates(): BelongsToMany
     {
-        return $this->belongsToMany(
-            SiteTemplate::class,
-            (new SiteTmplvarTemplate())->getTable(),
-            'tmplvarid',
-            'templateid'
-        )
+        return $this
+            ->belongsToMany(
+                SiteTemplate::class,
+                (new SiteTmplvarTemplate())->getTable(),
+                'tmplvarid',
+                'templateid'
+            )
             ->withPivot('rank')
             ->orderBy('pivot_rank', 'ASC');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(
-            UserRole::class,
-            (new UserRoleVar())->getTable(),
-            'tmplvarid',
-            'roleid'
-        )
+        return $this
+            ->belongsToMany(
+                UserRole::class,
+                (new UserRoleVar())->getTable(),
+                'tmplvarid',
+                'roleid'
+            )
             ->withPivot('rank')
             ->orderBy('pivot_rank', 'ASC');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -191,35 +157,21 @@ class SiteTmplvar extends Model
         );
     }
 
-    /**
-     * @return HasMany
-     */
     public function tmplvarContentvalue(): HasMany
     {
         return $this->hasMany(SiteTmplvarContentvalue::class, 'tmplvarid', 'id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function tmplvarAccess(): HasMany
     {
         return $this->hasMany(SiteTmplvarAccess::class, 'tmplvarid', 'id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function tmplvarTemplate(): HasMany
     {
         return $this->hasMany(SiteTmplvarTemplate::class, 'tmplvarid', 'id');
     }
 
-    /**
-     * @param string $key
-     *
-     * @return array|null
-     */
     public function parameterType(string $key): ?array
     {
         return array_map(function ($group) use ($key) {
@@ -233,9 +185,6 @@ class SiteTmplvar extends Model
         }, $this->parameterTypes());
     }
 
-    /**
-     * @return array
-     */
     public function parameterTypes(): array
     {
         $data = [
@@ -255,16 +204,13 @@ class SiteTmplvar extends Model
         return $data;
     }
 
-    /**
-     * @return array
-     */
     protected function parameterStandardTypes(): array
     {
         $standardTypes = [];
 
         foreach ($this->standardTypes as $key => $type) {
             $standardTypes[] = [
-                'key' => $key,
+                'key'   => $key,
                 'value' => $type,
             ];
         }
@@ -272,9 +218,6 @@ class SiteTmplvar extends Model
         return $standardTypes;
     }
 
-    /**
-     * @return array
-     */
     protected function parameterCustomTypes(): array
     {
         $customTvs = [];
@@ -294,7 +237,7 @@ class SiteTmplvar extends Model
         foreach ($finder as $ctv) {
             $filename = $ctv->getFilename();
             $customTvs[] = [
-                'key' => 'custom_tv:' . $filename,
+                'key'   => 'custom_tv:' . $filename,
                 'value' => $filename,
             ];
         }
@@ -302,36 +245,22 @@ class SiteTmplvar extends Model
         return $customTvs;
     }
 
-    /**
-     * @return array
-     */
     public function getStandardTypes(): array
     {
         return $this->standardTypes;
     }
 
-    /**
-     * @return array
-     */
     public function getDisplayFormats(): array
     {
         return $this->displayFormats;
     }
 
-    /**
-     * @return array
-     */
     public function getDisplayWidgets(): array
     {
         return $this->displayWidgets;
     }
 
-    /**
-     * @param string|null $key
-     *
-     * @return array|string
-     */
-    public function getDisplay(string $key = null): array|string
+    public function getDisplay(?string $key = null): array | string
     {
         if (!is_null($key)) {
             return ($this->displayWidgets + $this->displayFormats)[$key] ?? '';
@@ -341,14 +270,14 @@ class SiteTmplvar extends Model
             [
                 'name' => 'Widgets',
                 'data' => array_map(fn($key, $value) => [
-                    'key' => $key,
+                    'key'   => $key,
                     'value' => $value,
                 ], array_keys($this->displayWidgets), $this->displayWidgets),
             ],
             [
                 'name' => 'Formats',
                 'data' => array_map(fn($key, $value) => [
-                    'key' => $key,
+                    'key'   => $key,
                     'value' => $value,
                 ], array_keys($this->displayFormats), $this->displayFormats),
             ],

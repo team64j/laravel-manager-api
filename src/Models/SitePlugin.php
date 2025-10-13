@@ -30,32 +30,20 @@ class SitePlugin extends Model
     public const CREATED_AT = 'createdon';
     public const UPDATED_AT = 'editedon';
 
-    /**
-     * @var string
-     */
     protected $table = 'site_plugins';
 
-    /**
-     * @var string
-     */
     protected $dateFormat = 'U';
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'editor_type' => 'int',
-        'category' => 'int',
-        'cache_type' => 'bool',
-        'locked' => 'int',
-        'disabled' => 'int',
-        'createdon' => 'int',
-        'editedon' => 'int',
+        'category'    => 'int',
+        'cache_type'  => 'bool',
+        'locked'      => 'int',
+        'disabled'    => 'int',
+        'createdon'   => 'int',
+        'editedon'    => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'description',
@@ -69,28 +57,18 @@ class SitePlugin extends Model
         'moduleguid',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');
     }
 
-    /**
-     * @param Builder $builder
-     *
-     * @return Builder
-     */
     public function scopeActivePhx(Builder $builder): Builder
     {
-        return $builder->where('disabled', '!=', 1)
+        return $builder
+            ->where('disabled', '!=', 1)
             ->where('plugincode', 'LIKE', "%phx.parser.class.inc.php%OnParseDocument();%");
     }
 
-    /**
-     * @return HasManyThrough
-     */
     public function events(): HasManyThrough
     {
         return $this->hasManyThrough(

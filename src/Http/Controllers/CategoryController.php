@@ -3,6 +3,7 @@
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Response;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -11,34 +12,27 @@ use Team64j\LaravelManagerApi\Models\Category;
 
 class CategoryController extends Controller
 {
-    public function __construct(protected CategoryLayout $layout)
-    {
-    }
+    public function __construct(protected CategoryLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/categories",
-     *     summary="Получение списка категорий с пагинацией",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/categories',
+        summary: 'Получение списка категорий с пагинацией',
+        security: [['Api' => []]],
+        tags: ['Category'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'category', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'id')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(CategoryRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -67,35 +61,28 @@ class CategoryController extends Controller
             ->meta(
                 [
                     'title' => __('global.category_management'),
-                    'icon' => $this->layout->icon(),
+                    'icon'  => $this->layout->icon(),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             )
             ->layout($this->layout->list());
     }
 
-    /**
-     * @OA\Post(
-     *     path="/categories",
-     *     summary="Создание новой категории",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/categories',
+        summary: 'Создание новой категории',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Category'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(CategoryRequest $request): JsonResource
     {
         return $this->show(
@@ -104,25 +91,19 @@ class CategoryController extends Controller
         );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/categories/{id}",
-     *     summary="Чтение категории",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/categories/{id}',
+        summary: 'Чтение категории',
+        security: [['Api' => []]],
+        tags: ['Category'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(CategoryRequest $request, int $id): JsonResource
     {
         /** @var Category $model */
@@ -132,34 +113,26 @@ class CategoryController extends Controller
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $model->category ?? $this->layout->title(),
-                'icon' => $this->layout->icon(),
+                'icon'  => $this->layout->icon(),
             ]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/categories/{id}",
-     *     summary="Обновление категории",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Put(
+        path: '/categories/{id}',
+        summary: 'Обновление категории',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Category'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function update(CategoryRequest $request, int $id): JsonResource
     {
         /** @var Category $model */
@@ -169,25 +142,19 @@ class CategoryController extends Controller
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/categories/{id}",
-     *     summary="Удаление категории",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     * @param int $id
-     *
-     * @return Response
-     */
+    #[OA\Delete(
+        path: '/categories/{id}',
+        summary: 'Удаление категории',
+        security: [['Api' => []]],
+        tags: ['Category'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function destroy(CategoryRequest $request, int $id): Response
     {
         Category::query()->findOrFail($id)->delete();
@@ -195,24 +162,19 @@ class CategoryController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * @OA\Get(
-     *     path="/categories/sort",
-     *     summary="Получение списка категорий для сортировки",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/categories/sort',
+        summary: 'Получение списка категорий для сортировки',
+        security: [['Api' => []]],
+        tags: ['Category'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function sort(CategoryRequest $request): JsonResourceCollection
     {
         return JsonResource::collection(
@@ -223,32 +185,29 @@ class CategoryController extends Controller
             ->layout($this->layout->sort())
             ->meta([
                 'title' => __('global.cm_sort_categories'),
-                'icon' => $this->layout->iconSort(),
+                'icon'  => $this->layout->iconSort(),
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/categories/select",
-     *     summary="Получение списка категорий для выбора",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="selected", in="query", @OA\Schema(type="integer")),
-     *         @OA\Parameter (name="itemNew", in="query", @OA\Schema(type="string", default="newcategory")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/categories/select',
+        summary: 'Получение списка категорий для выбора',
+        security: [['Api' => []]],
+        tags: ['Category'],
+        parameters: [
+            new OA\Parameter(name: 'selected', in: 'query', schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(
+                name: 'itemNew', in: 'query', schema: new OA\Schema(type: 'string', default: 'newcategory')
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function select(CategoryRequest $request): JsonResourceCollection
     {
         $selected = $request->collect('selected');
@@ -256,7 +215,7 @@ class CategoryController extends Controller
         return JsonResource::collection(
             collect()
                 ->add([
-                    'key' => (string) $request->input('itemNew', 'newcategory'),
+                    'key'   => (string) $request->input('itemNew', 'newcategory'),
                     'value' => __('global.cm_create_new_category'),
                 ])
                 ->add([
@@ -264,7 +223,7 @@ class CategoryController extends Controller
                     'data' => collect()
                         ->add(
                             new Category([
-                                'key' => 0,
+                                'key'      => 0,
                                 'category' => __('global.no_category'),
                             ])
                         )
@@ -272,37 +231,32 @@ class CategoryController extends Controller
                             Category::all()
                         )
                         ->map(fn(Category $category) => [
-                            'key' => $category->id ?: 0,
-                            'value' => $category->category,
+                            'key'      => $category->id ?: 0,
+                            'value'    => $category->category,
                             'selected' => $selected->contains($category->id ?: 0),
                         ]),
                 ])
         );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/categories/tree",
-     *     summary="Получение списка категорий с пагинацией для древовидного меню",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/categories/tree',
+        summary: 'Получение списка категорий с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['Category'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'id')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(CategoryRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
@@ -324,7 +278,7 @@ class CategoryController extends Controller
             ->orderByRaw('upper(' . $order . ') ' . $dir)
             ->get()
             ->map(fn(Category $item) => [
-                'id' => $item->getKey(),
+                'id'    => $item->getKey(),
                 'title' => $item->category,
             ]);
 
@@ -332,27 +286,22 @@ class CategoryController extends Controller
             ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/categories/list",
-     *     summary="Получение списка категорий с пагинацией для меню",
-     *     tags={"Category"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param CategoryRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/categories/list',
+        summary: 'Получение списка категорий с пагинацией для меню',
+        security: [['Api' => []]],
+        tags: ['Category'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function list(CategoryRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -367,12 +316,12 @@ class CategoryController extends Controller
                 ])
         )
             ->meta([
-                'route' => '/categories/:id',
+                'route'   => '/categories/:id',
                 'prepend' => [
                     [
                         'name' => __('global.new_category'),
                         'icon' => 'fa fa-plus-circle text-green-500',
-                        'to' => [
+                        'to'   => [
                             'path' => '/categories/0',
                         ],
                     ],

@@ -8,9 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class EventLogRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
@@ -19,9 +16,6 @@ class EventLogRequest extends FormRequest
         };
     }
 
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [

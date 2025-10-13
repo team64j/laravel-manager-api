@@ -21,30 +21,18 @@ use Illuminate\Support\Facades\Config;
  */
 class Category extends Model
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
-        'rank' => 'int',
+        'rank'     => 'int',
         'category' => 'string',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'category',
         'rank',
     ];
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public static function templatesNoCategory(): \Illuminate\Support\Collection
     {
         $data = SiteTemplate::query()
@@ -60,19 +48,13 @@ class Category extends Model
             ->paginate(Config::get('global.number_of_results'));
 
         return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id' => 0,
+            'id'   => 0,
             'name' => __('global.no_category'),
             'rank' => 0,
         ])
             ->merge($data) : collect();
     }
 
-    /**
-     * @param array $ids
-     * @param bool $not
-     *
-     * @return \Illuminate\Support\Collection
-     */
     public static function tvsNoCategory(array $ids = [], bool $not = false): \Illuminate\Support\Collection
     {
         $data = SiteTmplvar::query()
@@ -88,16 +70,13 @@ class Category extends Model
             ->paginate(Config::get('global.number_of_results'));
 
         return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id' => 0,
+            'id'   => 0,
             'name' => __('global.no_category'),
             'rank' => 0,
         ])
             ->merge($data) : collect();
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public static function chunksNoCategory(): \Illuminate\Support\Collection
     {
         $data = SiteHtmlSnippet::query()
@@ -113,16 +92,13 @@ class Category extends Model
             ->paginate(Config::get('global.number_of_results'));
 
         return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id' => 0,
+            'id'   => 0,
             'name' => __('global.no_category'),
             'rank' => 0,
         ])
             ->merge($data) : collect();
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public static function snippetsNoCategory(): \Illuminate\Support\Collection
     {
         $data = SiteSnippet::query()
@@ -138,16 +114,13 @@ class Category extends Model
             ->paginate(Config::get('global.number_of_results'));
 
         return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id' => 0,
+            'id'   => 0,
             'name' => __('global.no_category'),
             'rank' => 0,
         ])
             ->merge($data) : collect();
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public static function pluginsNoCategory(): \Illuminate\Support\Collection
     {
         $data = SitePlugin::query()
@@ -163,16 +136,13 @@ class Category extends Model
             ->paginate(Config::get('global.number_of_results'));
 
         return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id' => 0,
+            'id'   => 0,
             'name' => __('global.no_category'),
             'rank' => 0,
         ])
             ->merge($data) : collect();
     }
 
-    /**
-     * @return \Illuminate\Support\Collection
-     */
     public static function modulesNoCategory(): \Illuminate\Support\Collection
     {
         $data = SiteModule::query()
@@ -188,19 +158,17 @@ class Category extends Model
             ->paginate(Config::get('global.number_of_results'));
 
         return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id' => 0,
+            'id'   => 0,
             'name' => __('global.no_category'),
             'rank' => 0,
         ])
             ->merge($data) : collect();
     }
 
-    /**
-     * @return HasMany
-     */
     public function templates(): HasMany
     {
-        return $this->hasMany(SiteTemplate::class, 'category', 'id')
+        return $this
+            ->hasMany(SiteTemplate::class, 'category', 'id')
             ->select([
                 'id',
                 'templatename as name',
@@ -211,12 +179,10 @@ class Category extends Model
             ]);
     }
 
-    /**
-     * @return HasMany
-     */
     public function tvs(): HasMany
     {
-        return $this->hasMany(SiteTmplvar::class, 'category', 'id')
+        return $this
+            ->hasMany(SiteTmplvar::class, 'category', 'id')
             ->select([
                 'id',
                 'name',
@@ -227,12 +193,10 @@ class Category extends Model
             ]);
     }
 
-    /**
-     * @return HasMany
-     */
     public function chunks(): HasMany
     {
-        return $this->hasMany(SiteHtmlSnippet::class, 'category', 'id')
+        return $this
+            ->hasMany(SiteHtmlSnippet::class, 'category', 'id')
             ->select([
                 'id',
                 'name',
@@ -243,12 +207,10 @@ class Category extends Model
             ]);
     }
 
-    /**
-     * @return HasMany
-     */
     public function snippets(): HasMany
     {
-        return $this->hasMany(SiteSnippet::class, 'category', 'id')
+        return $this
+            ->hasMany(SiteSnippet::class, 'category', 'id')
             ->select([
                 'id',
                 'name',
@@ -259,12 +221,10 @@ class Category extends Model
             ]);
     }
 
-    /**
-     * @return HasMany
-     */
     public function plugins(): HasMany
     {
-        return $this->hasMany(SitePlugin::class, 'category', 'id')
+        return $this
+            ->hasMany(SitePlugin::class, 'category', 'id')
             ->select([
                 'id',
                 'name',
@@ -275,12 +235,10 @@ class Category extends Model
             ]);
     }
 
-    /**
-     * @return HasMany
-     */
     public function modules(): HasMany
     {
-        return $this->hasMany(SiteModule::class, 'category', 'id')
+        return $this
+            ->hasMany(SiteModule::class, 'category', 'id')
             ->select([
                 'id',
                 'name',

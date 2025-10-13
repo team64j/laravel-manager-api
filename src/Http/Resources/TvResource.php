@@ -12,13 +12,13 @@ use Team64j\LaravelManagerApi\Models\SiteTmplvar;
  */
 class TvResource extends JsonResource
 {
-    public function toArray(Request $request)
+    public function toArray(Request $request): array
     {
         if (!$this->resource->exists) {
             $this->resource->setRawAttributes([
-                'type' => 'text',
+                'type'     => 'text',
                 'category' => 0,
-                'rank' => 0,
+                'rank'     => 0,
             ]);
         }
 
@@ -36,12 +36,12 @@ class TvResource extends JsonResource
         }
 
         return [
-            'id' => $this->resource->getKey(),
-            'attributes' => $this->resource->attributesToArray(),
-            'permissions' => $this->resource->permissions->pluck('id'),
-            'templates' => $this->resource->templates->pluck('id'),
-            'roles' => $this->resource->roles->pluck('id'),
-            'display_params_data' => $displayParamsData
+            'id'                  => $this->resource->getKey(),
+            'attributes'          => $this->resource->attributesToArray(),
+            'permissions'         => $this->resource->permissions->pluck('id'),
+            'templates'           => $this->resource->templates->pluck('id'),
+            'roles'               => $this->resource->roles->pluck('id'),
+            'display_params_data' => $displayParamsData,
         ];
     }
 }

@@ -7,6 +7,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\PluginRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -17,35 +18,28 @@ use Team64j\LaravelManagerApi\Models\SystemEventname;
 
 class PluginController extends Controller
 {
-    public function __construct(protected PluginLayout $layout)
-    {
-    }
+    public function __construct(protected PluginLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/plugins",
-     *     summary="Получение списка плагинов с пагинацией и фильтрацией",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="groupBy", in="query", @OA\Schema(type="string", default="category")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/plugins',
+        summary: 'Получение списка плагинов с пагинацией и фильтрацией',
+        security: [['Api' => []]],
+        tags: ['Plugins'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'name', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'groupBy', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(PluginRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -78,21 +72,23 @@ class PluginController extends Controller
         if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
-                    'id' => $group->first()->category,
+                    'id'   => $group->first()->category,
                     'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map->withoutRelations(),
                 ];
             };
 
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->groupBy('category')
                     ->map($callbackGroup)
                     ->values()
             );
         } else {
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->map(fn($item) => $item->withoutRelations())
             );
         }
@@ -102,34 +98,27 @@ class PluginController extends Controller
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
-                    'icon' => $this->layout->iconList(),
+                    'icon'  => $this->layout->iconList(),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
-    /**
-     * @OA\Post(
-     *     path="/plugins",
-     *     summary="Создание нового плагина",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/plugins',
+        summary: 'Создание нового плагина',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Plugins'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(PluginRequest $request): JsonResource
     {
         $data = $request->validated();
@@ -141,25 +130,19 @@ class PluginController extends Controller
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Get(
-     *     path="/plugins/{id}",
-     *     summary="Чтение плагина",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/plugins/{id}',
+        summary: 'Чтение плагина',
+        security: [['Api' => []]],
+        tags: ['Plugins'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(PluginRequest $request, int $id): JsonResource
     {
         /** @var SitePlugin $model */
@@ -174,34 +157,26 @@ class PluginController extends Controller
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
-                'icon' => $this->layout->icon(),
+                'icon'  => $this->layout->icon(),
             ]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/plugins/{id}",
-     *     summary="Обновление плагина",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Put(
+        path: '/plugins/{id}',
+        summary: 'Обновление плагина',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Plugins'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function update(PluginRequest $request, int $id): JsonResource
     {
         /** @var SitePlugin $model */
@@ -216,25 +191,19 @@ class PluginController extends Controller
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/plugins/{id}",
-     *     summary="Удаление плагина",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     * @param int $id
-     *
-     * @return Response
-     */
+    #[OA\Delete(
+        path: '/plugins/{id}',
+        summary: 'Удаление плагина',
+        security: [['Api' => []]],
+        tags: ['Plugins'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function destroy(PluginRequest $request, int $id): Response
     {
         /** @var SitePlugin $model */
@@ -245,27 +214,22 @@ class PluginController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * @OA\Get(
-     *     path="/plugins/list",
-     *     summary="Получение списка плагинов с пагинацией для меню",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/plugins/list',
+        summary: 'Получение списка плагинов с пагинацией для меню',
+        security: [['Api' => []]],
+        tags: ['Plugins'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function list(PluginRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
@@ -285,12 +249,12 @@ class PluginController extends Controller
 
         return JsonResource::collection($result)
             ->meta([
-                'route' => '/plugins/:id',
+                'route'   => '/plugins/:id',
                 'prepend' => [
                     [
                         'name' => __('global.new_plugin'),
                         'icon' => 'fa fa-plus-circle text-green-500',
-                        'to' => [
+                        'to'   => [
                             'path' => '/plugins/0',
                         ],
                     ],
@@ -298,27 +262,22 @@ class PluginController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/plugins/sort",
-     *     summary="Получение списка всех плагинов для сортировки",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/plugins/sort',
+        summary: 'Получение списка всех плагинов для сортировки',
+        security: [['Api' => []]],
+        tags: ['Plugins'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function sort(PluginRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -335,7 +294,8 @@ class PluginController extends Controller
                 ->whereHas('plugins')
                 ->orderBy('name')
                 ->get()
-                ->map(fn(SystemEventname $item) => $item->withoutRelations()
+                ->map(fn(SystemEventname $item) => $item
+                    ->withoutRelations()
                     ->setAttribute('data', $item->plugins)
                 //->setAttribute('draggable', 'priority')
                 )
@@ -343,28 +303,23 @@ class PluginController extends Controller
             ->layout($this->layout->sort())
             ->meta([
                 'title' => $this->layout->titleSort(),
-                'icon' => $this->layout->iconSort(),
+                'icon'  => $this->layout->iconSort(),
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/plugins/events",
-     *     summary="Получение списка событий плагинов с пагинацией",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/plugins/events',
+        summary: 'Получение списка событий плагинов с пагинацией',
+        security: [['Api' => []]],
+        tags: ['Plugins'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function events(PluginRequest $request)
     {
         $services = [
@@ -384,7 +339,7 @@ class PluginController extends Controller
                 ->get()
                 ->groupBy(fn($item) => $item->groupname ?: $services[$item->service])
                 ->map(fn($item, $key) => [
-                    'key' => md5($key),
+                    'key'  => md5($key),
                     'name' => $key,
                     'data' => $item,
                 ])
@@ -393,29 +348,24 @@ class PluginController extends Controller
         );
     }
 
-    /**
-     * @OA\Get(
-     *     path="/plugins/tree",
-     *     summary="Получение списка плагинов с пагинацией для древовидного меню",
-     *     tags={"Plugins"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param PluginRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/plugins/tree',
+        summary: 'Получение списка плагинов с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['Plugins'],
+        parameters: [
+            new OA\Parameter(name: 'category', in: 'query', schema: new OA\Schema(type: 'int', default: -1)),
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(PluginRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
@@ -448,10 +398,11 @@ class PluginController extends Controller
 
             return JsonResource::collection(
                 $result->setCollection(
-                    $result->getCollection()
+                    $result
+                        ->getCollection()
                         ->map(fn(SitePlugin $item) => [
-                            'id' => $item->id,
-                            'title' => $item->name,
+                            'id'         => $item->id,
+                            'title'      => $item->name,
                             'attributes' => $item,
                         ])
                 )
@@ -466,26 +417,27 @@ class PluginController extends Controller
             $result->add(new Category());
         }
 
-        $result = $result->map(function ($category) use ($request, $settings) {
-            $data = [
-                'id' => $category->getKey() ?? 0,
-                'title' => $category->category ?? __('global.no_category'),
-                'category' => true,
-            ];
+        $result = $result
+            ->map(function ($category) use ($request, $settings) {
+                $data = [
+                    'id'       => $category->getKey() ?? 0,
+                    'title'    => $category->category ?? __('global.no_category'),
+                    'category' => true,
+                ];
 
-            if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
-                $request->query->replace([
-                    'settings' => ['parent' => $data['id']] + $request->query('settings'),
-                ]);
+                if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
+                    $request->query->replace([
+                        'settings' => ['parent' => $data['id']] + $request->query('settings'),
+                    ]);
 
-                $result = $this->tree($request)->toResponse($request)->getData();
+                    $result = $this->tree($request)->toResponse($request)->getData();
 
-                $data['data'] = $result->data ?? [];
-                $data['meta'] = $result->meta ?? [];
-            }
+                    $data['data'] = $result->data ?? [];
+                    $data['meta'] = $result->meta ?? [];
+                }
 
-            return $data;
-        })
+                return $data;
+            })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (Str::upper($a['title']) > Str::upper($b['title'])))
             ->values();
 

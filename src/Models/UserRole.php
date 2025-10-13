@@ -9,38 +9,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class UserRole extends Model
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'frames' => 'int',
-        'home' => 'int',
+        'home'   => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'description',
     ];
 
-    /**
-     * @return BelongsToMany
-     */
     public function tvs(): BelongsToMany
     {
-        return $this->belongsToMany(
-            SiteTmplvar::class,
-            (new UserRoleVar())->getTable(),
-            'roleid',
-            'tmplvarid'
-        )->withPivot('rank')
+        return $this
+            ->belongsToMany(
+                SiteTmplvar::class,
+                (new UserRoleVar())->getTable(),
+                'roleid',
+                'tmplvarid'
+            )->withPivot('rank')
             ->orderBy('pivot_rank', 'ASC');
     }
 }

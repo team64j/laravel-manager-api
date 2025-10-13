@@ -6,37 +6,28 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use SimpleXMLElement;
 use Team64j\LaravelManagerApi\Http\Requests\DashboardRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\DashboardLayout;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class DashboardController extends Controller
 {
-    use PaginationTrait;
-
-    /**
-     * @OA\Get(
-     *     path="/dashboard",
-     *     summary="Получение шаблона для стартовой панели",
-     *     tags={"Dashboard"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param DashboardRequest $request
-     * @param DashboardLayout $layout
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/dashboard',
+        summary: 'Получение шаблона для стартовой панели',
+        security: [['Api' => []]],
+        tags: ['Dashboard'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(DashboardRequest $request, DashboardLayout $layout): JsonResourceCollection
     {
         return JsonResource::collection([
@@ -45,24 +36,19 @@ class DashboardController extends Controller
             ->layout($layout->default());
     }
 
-    /**
-     * @OA\Get(
-     *     path="/dashboard/news",
-     *     summary="Получение списка новостей для дашборда",
-     *     tags={"Dashboard"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param DashboardRequest $request
-     *
-     * @return array[]
-     */
+    #[OA\Get(
+        path: '/dashboard/news',
+        summary: 'Получение списка новостей для дашборда',
+        security: [['Api' => []]],
+        tags: ['Dashboard'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function news(DashboardRequest $request): array
     {
         $data = cache()->remember('cms.dashboard.news', 86400, function () {
@@ -102,24 +88,19 @@ class DashboardController extends Controller
         ];
     }
 
-    /**
-     * @OA\Get(
-     *     path="/dashboard/news-security",
-     *     summary="Получение списка новостей по безопасности для дашборда",
-     *     tags={"Dashboard"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param DashboardRequest $request
-     *
-     * @return array[]
-     */
+    #[OA\Get(
+        path: '/dashboard/news-security',
+        summary: 'Получение списка новостей по безопасности для дашборда',
+        security: [['Api' => []]],
+        tags: ['Dashboard'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function newsSecurity(DashboardRequest $request): array
     {
         $data = cache()->remember('cms.dashboard.news-security', 86400, function () {

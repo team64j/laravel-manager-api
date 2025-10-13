@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use ReflectionException;
 use Team64j\LaravelManagerApi\Http\Middleware\Authenticate;
 use Team64j\LaravelManagerApi\Mixin\UrlMixin;
 use Team64j\LaravelManagerApi\Models\Permissions;
@@ -18,7 +19,7 @@ use Team64j\LaravelManagerApi\Models\User;
 class ApiServiceProvider extends ServiceProvider
 {
     /**
-     * @return void
+     * @throws ReflectionException
      */
     public function boot(): void
     {
@@ -35,9 +36,6 @@ class ApiServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * @return void
-     */
     public function register(): void
     {
         $this->mergeConfig();
@@ -45,9 +43,6 @@ class ApiServiceProvider extends ServiceProvider
         $this->registerMiddlewares();
     }
 
-    /**
-     * @return void
-     */
     protected function registerMiddlewares(): void
     {
         $router = $this->app['router'];
@@ -58,17 +53,11 @@ class ApiServiceProvider extends ServiceProvider
         //$router->$method('manager-api.permissions', PermissionsMiddleware::class);
     }
 
-    /**
-     * @return void
-     */
     protected function registerRoutes(): void
     {
         $this->loadRoutesFrom(dirname(__DIR__, 2) . '/routes/api.php');
     }
 
-    /**
-     * @return void
-     */
     protected function mergeConfig(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../../config/manager-api.php', 'manager-api');
@@ -82,9 +71,6 @@ class ApiServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * @return void
-     */
     protected function registerConfig(): void
     {
         if (!Config::has('global')) {
@@ -97,9 +83,6 @@ class ApiServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * @return void
-     */
     protected function registerLang(): void
     {
         $this->app->useLangPath(__DIR__ . '/../../lang');
@@ -111,9 +94,6 @@ class ApiServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * @return void
-     */
     protected function registerPermissions(): void
     {
         Permissions::all()->map(function ($permission) {
@@ -122,7 +102,7 @@ class ApiServiceProvider extends ServiceProvider
     }
 
     /**
-     * @return void
+     * @throws ReflectionException
      */
     protected function bootMixin(): void
     {

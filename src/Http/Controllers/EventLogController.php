@@ -5,43 +5,34 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Collection;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\EventLogRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\EventLogLayout;
 use Team64j\LaravelManagerApi\Models\EventLog;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class EventLogController extends Controller
 {
-    use PaginationTrait;
-
-    /**
-     * @OA\Get(
-     *     path="/event-log",
-     *     summary="Получение списка лога событий с фильтрацией",
-     *     tags={"System"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="type", in="query", @OA\Schema(type="string", default="")),
-     *         @OA\Parameter (name="user", in="query", @OA\Schema(type="string", default="")),
-     *         @OA\Parameter (name="eventid", in="query", @OA\Schema(type="string", default="")),
-     *         @OA\Parameter (name="createdon", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param EventLogRequest $request
-     * @param EventLogLayout $layout
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/event-log',
+        summary: 'Получение списка лога событий с фильтрацией',
+        security: [['Api' => []]],
+        tags: ['System'],
+        parameters: [
+            new OA\Parameter(name: 'type', in: 'query', schema: new OA\Schema(type: 'string', default: '')),
+            new OA\Parameter(name: 'user', in: 'query', schema: new OA\Schema(type: 'string', default: '')),
+            new OA\Parameter(name: 'eventid', in: 'query', schema: new OA\Schema(type: 'string', default: '')),
+            new OA\Parameter(name: 'createdon', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(EventLogRequest $request, EventLogLayout $layout): JsonResourceCollection
     {
         $filterType = $request->input('type', '');
@@ -87,41 +78,44 @@ class EventLogController extends Controller
             ->distinct()
             ->get();
 
-        $filterType = $distinct->keyBy('type')
+        $filterType = $distinct
+            ->keyBy('type')
             ->sortBy('type')
             ->map(fn(EventLog $item) => [
-                'key' => $item->type,
-                'value' => $logTypes[$item->type] ?? 1,
+                'key'      => $item->type,
+                'value'    => $logTypes[$item->type] ?? 1,
                 'selected' => $item->type == $filterType,
             ])
             ->prepend([
-                'key' => '',
+                'key'   => '',
                 'value' => __('global.mgrlog_anyall'),
             ])
             ->values();
 
-        $filterUser = $distinct->keyBy('user')
+        $filterUser = $distinct
+            ->keyBy('user')
             ->sortBy('user')
             ->map(fn(EventLog $item) => [
-                'key' => $item->user,
-                'value' => $item->users ? $item->users->username : '-',
+                'key'      => $item->user,
+                'value'    => $item->users ? $item->users->username : '-',
                 'selected' => $item->user == $filterUser,
             ])
             ->prepend([
-                'key' => '',
+                'key'   => '',
                 'value' => __('global.mgrlog_anyall'),
             ])
             ->values();
 
-        $filterEventId = $distinct->keyBy('eventid')
+        $filterEventId = $distinct
+            ->keyBy('eventid')
             ->sortBy('eventid')
             ->map(fn(EventLog $item) => [
-                'key' => $item->eventid,
-                'value' => $item->eventid,
+                'key'      => $item->eventid,
+                'value'    => $item->eventid,
                 'selected' => $item->eventid == $filterEventId,
             ])
             ->prepend([
-                'key' => '',
+                'key'   => '',
                 'value' => __('global.mgrlog_anyall'),
             ])
             ->values();
@@ -136,9 +130,9 @@ class EventLogController extends Controller
                 'type' => 'date',
                 'data' => [
                     'from' => date('Y-m-d', $filterDatetime->first() ?: $datetime->timestamp_from),
-                    'to' => date('Y-m-d', $filterDatetime->last() ?: $datetime->timestamp_to),
-                    'min' => date('Y-m-d', $datetime->timestamp_from),
-                    'max' => date('Y-m-d', $datetime->timestamp_to),
+                    'to'   => date('Y-m-d', $filterDatetime->last() ?: $datetime->timestamp_to),
+                    'min'  => date('Y-m-d', $datetime->timestamp_from),
+                    'max'  => date('Y-m-d', $datetime->timestamp_to),
                 ],
             ],
             [
@@ -151,36 +145,28 @@ class EventLogController extends Controller
             ],
         ];
 
-        return JsonResource::collection($result->items())
+        return JsonResource::collection($result)
             ->layout($layout->list())
             ->meta([
-                'title' => $layout->titleList(),
-                'icon' => $layout->icon(),
-                'pagination' => $this->pagination($result),
+                'title'   => $layout->titleList(),
+                'icon'    => $layout->icon(),
                 'filters' => $filters,
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/event-log/{id}",
-     *     summary="Чтение лога события",
-     *     tags={"System"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param EventLogRequest $request
-     * @param string $eventlog
-     * @param EventLogLayout $layout
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/event-log/{id}',
+        summary: 'Чтение лога события',
+        security: [['Api' => []]],
+        tags: ['System'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(EventLogRequest $request, string $eventlog, EventLogLayout $layout): JsonResource
     {
         /** @var EventLog $data */
@@ -192,7 +178,7 @@ class EventLogController extends Controller
             ->layout($layout->default($data))
             ->meta([
                 'title' => $layout->title(),
-                'icon' => $layout->icon(),
+                'icon'  => $layout->icon(),
             ]);
     }
 }

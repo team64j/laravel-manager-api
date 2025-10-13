@@ -5,49 +5,39 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Collection;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SystemLogRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\SystemLogLayout;
 use Team64j\LaravelManagerApi\Models\ManagerLog;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class SystemLogController extends Controller
 {
-    use PaginationTrait;
+    public function __construct(protected SystemLogLayout $layout) {}
 
-    public function __construct(protected SystemLogLayout $layout)
-    {
-    }
-
-    /**
-     * @OA\Get(
-     *     path="/system-log",
-     *     summary="Получение списка лога системных событий с фильтрацией",
-     *     tags={"System"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="id")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="desc")),
-     *         @OA\Parameter (name="username", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="action", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="itemid", in="query", @OA\Schema(type="string", default="")),
-     *         @OA\Parameter (name="itemname", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="timestamp", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SystemLogRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/system-log',
+        summary: 'Получение списка лога системных событий с фильтрацией',
+        security: [['Api' => []]],
+        tags: ['System'],
+        parameters: [
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'id')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'desc')),
+            new OA\Parameter(name: 'username', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'action', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'itemid', in: 'query', schema: new OA\Schema(type: 'string', default: '')),
+            new OA\Parameter(name: 'itemname', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'timestamp', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(SystemLogRequest $request): JsonResourceCollection
     {
         $order = $request->input('order', 'id');
@@ -99,56 +89,60 @@ class SystemLogController extends Controller
             ->distinct()
             ->get();
 
-        $filterUsername = $distinct->keyBy('username')
+        $filterUsername = $distinct
+            ->keyBy('username')
             ->sortBy('username')
             ->map(fn(ManagerLog $item) => [
-                'key' => $item->username,
-                'value' => $item->username,
+                'key'      => $item->username,
+                'value'    => $item->username,
                 'selected' => $item->username == $filterUsername,
             ])
             ->prepend([
-                'key' => '',
+                'key'   => '',
                 'value' => __('global.mgrlog_anyall'),
             ], '')
             ->filter(fn($item) => $item['value'])
             ->values();
 
-        $filterAction = $distinct->keyBy('action')
+        $filterAction = $distinct
+            ->keyBy('action')
             ->sortBy('action')
             ->map(fn(ManagerLog $item) => [
-                'key' => $item->action,
-                'value' => $item->action . ' - ' . $item->message,
+                'key'      => $item->action,
+                'value'    => $item->action . ' - ' . $item->message,
                 'selected' => $item->action == $filterAction,
             ])
             ->prepend([
-                'key' => '',
+                'key'   => '',
                 'value' => __('global.mgrlog_anyall'),
             ], 0)
             ->filter(fn($item) => $item['value'])
             ->values();
 
-        $filterItemId = $distinct->keyBy('itemid')
+        $filterItemId = $distinct
+            ->keyBy('itemid')
             ->sortBy('itemid')
             ->map(fn(ManagerLog $item) => [
-                'key' => $item->itemid,
-                'value' => $item->itemid,
+                'key'      => $item->itemid,
+                'value'    => $item->itemid,
                 'selected' => $item->itemid == $filterItemId,
             ])
             ->prepend([
-                'key' => '',
+                'key'   => '',
                 'value' => __('global.mgrlog_anyall'),
             ], '')
             ->values();
 
-        $filterItemName = $distinct->keyBy('itemname')
+        $filterItemName = $distinct
+            ->keyBy('itemname')
             ->sortBy('itemname', SORT_FLAG_CASE | SORT_NATURAL)
             ->map(fn(ManagerLog $item) => [
-                'key' => $item->itemname,
-                'value' => $item->itemname,
+                'key'      => $item->itemname,
+                'value'    => $item->itemname,
                 'selected' => $item->itemname == $filterItemName,
             ])
             ->prepend([
-                'key' => '',
+                'key'   => '',
                 'value' => __('global.mgrlog_anyall'),
             ], 0)
             ->filter(fn($item) => $item['value'])
@@ -160,8 +154,8 @@ class SystemLogController extends Controller
                 'data' => $filterUsername,
             ],
             [
-                'name' => 'action',
-                'data' => $filterAction,
+                'name'        => 'action',
+                'data'        => $filterAction,
                 'placeholder' => __('global.mgrlog_action'),
             ],
             [
@@ -177,24 +171,23 @@ class SystemLogController extends Controller
                 'type' => 'date',
                 'data' => [
                     'from' => date('Y-m-d', $filterDatetime->first() ?: $datetime->timestamp_from),
-                    'to' => date('Y-m-d', $filterDatetime->last() ?: $datetime->timestamp_to),
-                    'min' => date('Y-m-d', $datetime->timestamp_from),
-                    'max' => date('Y-m-d', $datetime->timestamp_to),
+                    'to'   => date('Y-m-d', $filterDatetime->last() ?: $datetime->timestamp_to),
+                    'min'  => date('Y-m-d', $datetime->timestamp_from),
+                    'max'  => date('Y-m-d', $datetime->timestamp_to),
                 ],
             ],
         ];
 
-        return JsonResource::collection($result->items())
+        return JsonResource::collection($result)
             ->layout($this->layout->default())
             ->meta([
-                'title' => $this->layout->title(),
-                'icon' => $this->layout->icon(),
+                'title'   => $this->layout->title(),
+                'icon'    => $this->layout->icon(),
                 'sorting' => [
                     'order' => $order,
-                    'dir' => $dir,
+                    'dir'   => $dir,
                 ],
                 'filters' => $filters,
-                'pagination' => $this->pagination($result),
             ]);
     }
 }

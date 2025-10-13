@@ -20,35 +20,23 @@ class SiteHtmlSnippet extends Model
 {
     use LockedTrait;
 
-    /**
-     * @var string
-     */
     protected $table = 'site_htmlsnippets';
 
     const CREATED_AT = 'createdon';
     const UPDATED_AT = 'editedon';
 
-    /**
-     * @var string
-     */
     protected $dateFormat = 'U';
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'editor_type' => 'int',
-        'category' => 'int',
-        'cache_type' => 'bool',
-        'locked' => 'int',
-        'createdon' => 'int',
-        'editedon' => 'int',
-        'disabled' => 'int',
+        'category'    => 'int',
+        'cache_type'  => 'bool',
+        'locked'      => 'int',
+        'createdon'   => 'int',
+        'editedon'    => 'int',
+        'disabled'    => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'description',
@@ -61,9 +49,6 @@ class SiteHtmlSnippet extends Model
         'disabled',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');

@@ -9,17 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class RolePermissions extends Model
 {
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'permission',
         'role_id',
     ];
 
-    /**
-     * @return HasOne
-     */
     public function permissions(): HasOne
     {
         return $this->hasOne(Permissions::class, 'key', 'permission');

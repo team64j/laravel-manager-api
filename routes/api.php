@@ -2,37 +2,37 @@
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
-use Team64j\LaravelManagerApi\Http\Controllers\AuthController;
-use Team64j\LaravelManagerApi\Http\Controllers\BootstrapController;
-use Team64j\LaravelManagerApi\Http\Controllers\CacheController;
-use Team64j\LaravelManagerApi\Http\Controllers\CategoryController;
-use Team64j\LaravelManagerApi\Http\Controllers\ChunkController;
-use Team64j\LaravelManagerApi\Http\Controllers\ConfigurationController;
-use Team64j\LaravelManagerApi\Http\Controllers\DashboardController;
-use Team64j\LaravelManagerApi\Http\Controllers\EventLogController;
-use Team64j\LaravelManagerApi\Http\Controllers\FileController;
-use Team64j\LaravelManagerApi\Http\Controllers\FilemanagerController;
-use Team64j\LaravelManagerApi\Http\Controllers\HelpController;
-use Team64j\LaravelManagerApi\Http\Controllers\ModuleController;
-use Team64j\LaravelManagerApi\Http\Controllers\OpenApiController;
-use Team64j\LaravelManagerApi\Http\Controllers\PasswordController;
-use Team64j\LaravelManagerApi\Http\Controllers\PermissionController;
-use Team64j\LaravelManagerApi\Http\Controllers\PluginController;
-use Team64j\LaravelManagerApi\Http\Controllers\PreviewController;
-use Team64j\LaravelManagerApi\Http\Controllers\ResourceController;
-use Team64j\LaravelManagerApi\Http\Controllers\ResourcesController;
-use Team64j\LaravelManagerApi\Http\Controllers\RoleCategoryController;
-use Team64j\LaravelManagerApi\Http\Controllers\RolePermissionController;
-use Team64j\LaravelManagerApi\Http\Controllers\RoleUserController;
-use Team64j\LaravelManagerApi\Http\Controllers\ScheduleController;
-use Team64j\LaravelManagerApi\Http\Controllers\SearchController;
-use Team64j\LaravelManagerApi\Http\Controllers\SnippetController;
-use Team64j\LaravelManagerApi\Http\Controllers\SystemInfoController;
-use Team64j\LaravelManagerApi\Http\Controllers\SystemLogController;
-use Team64j\LaravelManagerApi\Http\Controllers\TemplateController;
-use Team64j\LaravelManagerApi\Http\Controllers\TvController;
-use Team64j\LaravelManagerApi\Http\Controllers\UserController;
-use Team64j\LaravelManagerApi\Http\Controllers\WorkspaceController;
+use Team64j\LaravelManagerApi\Http\Controllers\{AuthController,
+    BootstrapController,
+    CacheController,
+    CategoryController,
+    ChunkController,
+    ConfigurationController,
+    DashboardController,
+    EventLogController,
+    FileController,
+    FilemanagerController,
+    HelpController,
+    ModuleController,
+    OpenApiController,
+    PasswordController,
+    PermissionController,
+    PluginController,
+    PreviewController,
+    ResourceController,
+    ResourcesController,
+    RoleCategoryController,
+    RolePermissionController,
+    RoleUserController,
+    ScheduleController,
+    SearchController,
+    SnippetController,
+    SystemInfoController,
+    SystemLogController,
+    TemplateController,
+    TvController,
+    UserController,
+    WorkspaceController};
 
 $apiPath = Config::get('manager-api.uri', 'manager/api');
 $authMiddleware = Config::get('manager-api.guard.provider') . '.auth:' . Config::get('manager-api.guard.provider');
@@ -112,7 +112,9 @@ Route::prefix($apiPath)
             ->group(fn() => [
                 //Route::get('sidebar', [DashboardController::class, 'sidebar']),
                 Route::get('news', [DashboardController::class, 'news'])->name('dashboard.news'),
-                Route::get('news-security', [DashboardController::class, 'newsSecurity'])->name('dashboard.news-security'),
+                Route::get('news-security', [DashboardController::class, 'newsSecurity'])->name(
+                    'dashboard.news-security'
+                ),
             ])
             ->apiResource('dashboard', DashboardController::class)->only(['index']),
 
@@ -186,7 +188,9 @@ Route::prefix($apiPath)
             ->group(fn() => [
                 Route::get('tree', [ResourceController::class, 'tree'])->name('resource.tree'),
                 Route::get('parents/{id}', [ResourceController::class, 'parents'])->name('resource.parents'),
-                Route::get('parents/{parent}/{id}', [ResourceController::class, 'setParent'])->name('resource.set-parent'),
+                Route::get('parents/{parent}/{id}', [ResourceController::class, 'setParent'])->name(
+                    'resource.set-parent'
+                ),
             ])
             ->apiResource('resource', ResourceController::class),
 

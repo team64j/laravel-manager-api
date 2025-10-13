@@ -12,24 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SystemSetting extends Model
 {
-    /**
-     * @var string
-     */
     protected $primaryKey = 'setting_name';
 
-    /**
-     * @var bool
-     */
     public $incrementing = false;
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'setting_name',
         'setting_value',

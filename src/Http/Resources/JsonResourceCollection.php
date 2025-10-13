@@ -29,18 +29,19 @@ class JsonResourceCollection extends AnonymousResourceCollection
         return [
             'meta' => [
                 'pagination' => [
-                    'total' => $default['meta']['total'],
+                    'total'   => $default['meta']['total'],
                     //'prev' => str_replace(route('manager.api'), '', $result->previousPageUrl()),
                     //'next' => str_replace(route('manager.api'), '', $result->nextPageUrl()),
-                    'prev' => $default['links']['prev'],
-                    'next' => $default['links']['next'],
-                    'lang' => [
+                    'prev'    => $default['links']['prev'],
+                    'next'    => $default['links']['next'],
+                    'lang'    => [
                         'prev' => Lang::get('global.paging_prev'),
                         'next' => Lang::get('global.paging_next'),
                     ],
                     'current' => $current,
-                    'per' => $default['meta']['per_page'],
-                    'info' => Lang::get('global.showing') . ' ' . $from . '-' . $to . '/' . $default['meta']['total'],
+                    'per'     => $default['meta']['per_page'],
+                    'info'    => Lang::get('global.showing') . ' ' . $from . '-' . $to . '/'
+                        . $default['meta']['total'],
                 ],
             ],
         ];

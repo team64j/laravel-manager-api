@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ModuleRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -15,38 +16,28 @@ use Team64j\LaravelManagerApi\Models\SiteModule;
 
 class ModuleController extends Controller
 {
-    /**
-     * @param ModuleLayout $layout
-     */
-    public function __construct(protected ModuleLayout $layout)
-    {
-    }
+    public function __construct(protected ModuleLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/modules",
-     *     summary="Получение списка модулей с пагинацией и фильтрацией",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="groupBy", in="query", @OA\Schema(type="string", default="category")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/modules',
+        summary: 'Получение списка модулей с пагинацией и фильтрацией',
+        security: [['Api' => []]],
+        tags: ['Module'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'name', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'groupBy', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(ModuleRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -79,21 +70,23 @@ class ModuleController extends Controller
         if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
-                    'id' => $group->first()->category,
+                    'id'   => $group->first()->category,
                     'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map->withoutRelations(),
                 ];
             };
 
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->groupBy('category')
                     ->map($callbackGroup)
                     ->values()
             );
         } else {
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->map(fn($item) => $item->withoutRelations())
             );
         }
@@ -103,64 +96,51 @@ class ModuleController extends Controller
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
-                    'icon' => $this->layout->iconList(),
+                    'icon'  => $this->layout->iconList(),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
-    /**
-     * @OA\Post(
-     *     path="/modules",
-     *     summary="Создание нового модуля",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/modules',
+        summary: 'Создание нового модуля',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Module'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(ModuleRequest $request): JsonResource
     {
         $data = $request->validated();
 
-        $data['modulecode'] = trim(str($data['modulecode'] ?? '')->replaceFirst('<?php', ''));
+        $data['modulecode'] = str($data['modulecode'] ?? '')->replaceFirst('<?php', '')->trim();
 
         $model = SiteModule::query()->create($data);
 
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Get(
-     *     path="/modules/{id}",
-     *     summary="Чтение модуля",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/modules/{id}',
+        summary: 'Чтение модуля',
+        security: [['Api' => []]],
+        tags: ['Module'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(ModuleRequest $request, int $id): JsonResource
     {
         /** @var SiteModule $model */
@@ -176,34 +156,26 @@ class ModuleController extends Controller
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
-                'icon' => $this->layout->icon(),
+                'icon'  => $this->layout->icon(),
             ]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/modules/{id}",
-     *     summary="Обновление модуля",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Put(
+        path: '/modules/{id}',
+        summary: 'Обновление модуля',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Module'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function update(ModuleRequest $request, int $id): JsonResource
     {
         /** @var SiteModule $model */
@@ -218,25 +190,19 @@ class ModuleController extends Controller
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/modules/{id}",
-     *     summary="Удаление модуля",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     * @param int $id
-     *
-     * @return Response
-     */
+    #[OA\Delete(
+        path: '/modules/{id}',
+        summary: 'Удаление модуля',
+        security: [['Api' => []]],
+        tags: ['Module'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function destroy(ModuleRequest $request, int $id): Response
     {
         /** @var SiteModule $model */
@@ -247,27 +213,22 @@ class ModuleController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * @OA\Get(
-     *     path="/modules/list",
-     *     summary="Получение списка модулей с пагинацией для меню",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/modules/list',
+        summary: 'Получение списка модулей с пагинацией для меню',
+        security: [['Api' => []]],
+        tags: ['Module'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function list(ModuleRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
@@ -285,12 +246,12 @@ class ModuleController extends Controller
 
         return JsonResource::collection($result)
             ->meta([
-                'route' => '/modules/:id',
+                'route'   => '/modules/:id',
                 'prepend' => [
                     [
                         'name' => __('global.new_module'),
                         'icon' => 'fa fa-plus-circle text-green-500',
-                        'to' => [
+                        'to'   => [
                             'path' => '/modules/0',
                         ],
                     ],
@@ -298,29 +259,24 @@ class ModuleController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/modules/exec",
-     *     summary="Получение списка модулей для запуска",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="parent", in="query", @OA\Schema(type="integer", default="-1")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/modules/exec',
+        summary: 'Получение списка модулей для запуска',
+        security: [['Api' => []]],
+        tags: ['Module'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'parent', in: 'query', schema: new OA\Schema(type: 'integer', default: -1)),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function exec(ModuleRequest $request): JsonResourceCollection
     {
         return JsonResource::collection(
@@ -338,73 +294,64 @@ class ModuleController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/modules/exec/{id}",
-     *     summary="Запуск модуля",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *     )
-     * )
-     * @param ModuleRequest $request
-     * @param string $module
-     *
-     * @return mixed|string
-     */
+    #[OA\Get(
+        path: '/modules/exec/{id}',
+        summary: 'Запуск модуля',
+        security: [['Api' => []]],
+        tags: ['Module'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok'
+            ),
+        ]
+    )]
     public function run(ModuleRequest $request, string $module): mixed
     {
         /** @var SiteModule $module */
         $module = SiteModule::query()->findOrFail($module);
 
-//        try {
-            $code = str_starts_with($module->modulecode, '<?php') ? '//' : '';
+        //        try {
+        $code = str_starts_with($module->modulecode, '<?php') ? '//' : '';
 
-            chdir(app()->path());
+        chdir(app()->path());
 
-            $modx = evo();
+        $modx = evo();
 
-            if (!defined('IN_MANAGER_MODE')) {
-                define('IN_MANAGER_MODE', true);
-            }
+        if (!defined('IN_MANAGER_MODE')) {
+            define('IN_MANAGER_MODE', true);
+        }
 
-            if (!session()->token()) {
-                session()->put('_token', $request->input('token', ''));
-            }
+        if (!session()->token()) {
+            session()->put('_token', $request->input('token', ''));
+        }
 
-            $result = eval($code . $module->modulecode);
-//        } catch (Throwable $exception) {
-//            $result = $exception->getMessage();
-//        }
+        $result = eval($code . $module->modulecode);
+        //        } catch (Throwable $exception) {
+        //            $result = $exception->getMessage();
+        //        }
 
         return $result;
     }
 
-    /**
-     * @OA\Get(
-     *     path="/modules/tree",
-     *     summary="Получение списка модулей с пагинацией для древовидного меню",
-     *     tags={"Module"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ModuleRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/modules/tree',
+        summary: 'Получение списка модулей с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['Module'],
+        parameters: [
+            new OA\Parameter(name: 'category', in: 'query', schema: new OA\Schema(type: 'int', default: -1)),
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(ModuleRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
@@ -437,10 +384,11 @@ class ModuleController extends Controller
 
             return JsonResource::collection(
                 $result->setCollection(
-                    $result->getCollection()
+                    $result
+                        ->getCollection()
                         ->map(fn(SiteModule $item) => [
-                            'id' => $item->id,
-                            'title' => $item->name,
+                            'id'         => $item->id,
+                            'title'      => $item->name,
                             'attributes' => $item,
                         ])
                 )
@@ -455,26 +403,27 @@ class ModuleController extends Controller
             $result->add(new Category());
         }
 
-        $result = $result->map(function ($category) use ($request, $settings) {
-            $data = [
-                'id' => $category->getKey() ?? 0,
-                'title' => $category->category ?? __('global.no_category'),
-                'category' => true,
-            ];
+        $result = $result
+            ->map(function ($category) use ($request, $settings) {
+                $data = [
+                    'id'       => $category->getKey() ?? 0,
+                    'title'    => $category->category ?? __('global.no_category'),
+                    'category' => true,
+                ];
 
-            if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
-                $request->query->replace([
-                    'settings' => ['parent' => $data['id']] + $request->query('settings'),
-                ]);
+                if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
+                    $request->query->replace([
+                        'settings' => ['parent' => $data['id']] + $request->query('settings'),
+                    ]);
 
-                $result = $this->tree($request)->toResponse($request)->getData();
+                    $result = $this->tree($request)->toResponse($request)->getData();
 
-                $data['data'] = $result->data ?? [];
-                $data['meta'] = $result->meta ?? [];
-            }
+                    $data['data'] = $result->data ?? [];
+                    $data['meta'] = $result->meta ?? [];
+                }
 
-            return $data;
-        })
+                return $data;
+            })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 

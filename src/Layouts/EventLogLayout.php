@@ -78,7 +78,7 @@ class EventLogLayout extends Layout
      *
      * @return array
      */
-    public function default(EventLog $model = null): array
+    public function default(?EventLog $model = null): array
     {
         return [
             Actions::make()

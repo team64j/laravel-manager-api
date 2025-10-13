@@ -8,9 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ChunkRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
@@ -22,19 +19,16 @@ class ChunkRequest extends FormRequest
         };
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return match ($this->route()->getActionMethod()) {
             'store', 'update' => [
-                'name' => 'string|required',
-                'snippet' => 'string|nullable',
+                'name'        => 'string|required',
+                'snippet'     => 'string|nullable',
                 'description' => 'string|nullable',
-                'locked' => 'int',
-                'category' => 'int',
-                'disabled' => 'int',
+                'locked'      => 'int',
+                'category'    => 'int',
+                'disabled'    => 'int',
             ],
             default => []
         };

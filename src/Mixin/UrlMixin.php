@@ -15,21 +15,14 @@ use Team64j\LaravelManagerApi\Models\SiteContent;
  */
 class UrlMixin
 {
-    /**
-     * @return Closure
-     */
     public function getCurrentRoute(): Closure
     {
         return fn() => URL::getRouteByPath(request()->getPathInfo());
     }
 
-    /**
-     * @return Closure
-     */
     public function pathToUrl(): Closure
     {
-        return function (string $path): string
-        {
+        return function (string $path): string {
             $prefix = config('global.friendly_url_prefix', '');
             $suffix = config('global.friendly_url_suffix', '');
             $secure = config('global.server_protocol') == 'https';
@@ -38,18 +31,15 @@ class UrlMixin
         };
     }
 
-    /**
-     * @return Closure
-     */
     public function getRouteById(): Closure
     {
-        return function (int $id = null): ?array
-        {
+        return function (?int $id = null): ?array {
             if (!$id) {
                 return null;
             }
 
-            return cache()->store('file')
+            return cache()
+                ->store('file')
                 ->rememberForever('cms.routes.' . $id, function () use ($id) {
                     $routes = URL::getParentsById($id, true);
 
@@ -80,13 +70,9 @@ class UrlMixin
         };
     }
 
-    /**
-     * @return Closure
-     */
     public function getRouteByPath(): Closure
     {
-        return function (string $path): ?array
-        {
+        return function (string $path): ?array {
             $path = trim($path, '/');
 
             if (cache()->has('cms.routes.' . $path)) {
@@ -130,13 +116,13 @@ class UrlMixin
 
                 if ($path == $paths) {
                     $route = [
-                        'id' => $item->id,
-                        'parent' => $item->parent,
-                        'alias' => $item->alias,
-                        'isfolder' => $item->isfolder,
+                        'id'            => $item->id,
+                        'parent'        => $item->parent,
+                        'alias'         => $item->alias,
+                        'isfolder'      => $item->isfolder,
                         'alias_visible' => $item->alias_visible,
-                        'path' => '/' . $path,
-                        'url' => URL::pathToUrl($path),
+                        'path'          => '/' . $path,
+                        'url'           => URL::pathToUrl($path),
                     ];
 
                     break;
@@ -153,13 +139,9 @@ class UrlMixin
         };
     }
 
-    /**
-     * @return Closure
-     */
     public function getParentsById(): Closure
     {
-        return function (int $id, bool $current = false): array
-        {
+        return function (int $id, bool $current = false): array {
             $parents = [];
 
             $fields = ['id', 'parent', 'alias', 'isfolder', 'alias_visible'];
@@ -176,10 +158,10 @@ class UrlMixin
 
             if ($current || $item->parent == 0) {
                 $parents[$item->id] = [
-                    'id' => $item->id,
-                    'parent' => $item->parent,
-                    'alias' => $item->alias,
-                    'isfolder' => $item->isfolder,
+                    'id'            => $item->id,
+                    'parent'        => $item->parent,
+                    'alias'         => $item->alias,
+                    'isfolder'      => $item->isfolder,
                     'alias_visible' => $item->alias_visible,
                 ];
             }
@@ -188,10 +170,10 @@ class UrlMixin
 
             while ($parent) {
                 $parents[$parent->id] = [
-                    'id' => $parent->id,
-                    'parent' => $parent->parent,
-                    'alias' => $parent->alias,
-                    'isfolder' => $parent->isfolder,
+                    'id'            => $parent->id,
+                    'parent'        => $parent->parent,
+                    'alias'         => $parent->alias,
+                    'isfolder'      => $parent->isfolder,
                     'alias_visible' => $parent->alias_visible,
                 ];
 

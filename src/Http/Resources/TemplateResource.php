@@ -12,17 +12,12 @@ use Team64j\LaravelManagerApi\Models\SiteTemplate;
  */
 class TemplateResource extends JsonResource
 {
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
     public function toArray(Request $request): array
     {
         if (!$this->resource->exists) {
             $this->resource->setRawAttributes([
-                'icon' => '',
-                'category' => 0,
+                'icon'       => '',
+                'category'   => 0,
                 'selectable' => 1,
             ]);
         }
@@ -34,10 +29,10 @@ class TemplateResource extends JsonResource
         }
 
         return [
-            'id' => $this->resource->getKey(),
-            'attributes' => $this->resource->attributesToArray(),
-            'tvs' => $this->resource->tvs->pluck('id'),
-            'createbladefile' => 0
+            'id'              => $this->resource->getKey(),
+            'attributes'      => $this->resource->attributesToArray(),
+            'tvs'             => $this->resource->tvs->pluck('id'),
+            'createbladefile' => 0,
         ];
     }
 }

@@ -18,30 +18,18 @@ class ManagerLog extends Model
 {
     use TimeMutatorTrait;
 
-    /**
-     * @var string
-     */
     protected $table = 'manager_log';
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
-        'timestamp' => 'datetime',
+        'timestamp'   => 'datetime',
         'internalKey' => 'int',
-        'action' => 'int',
-        'itemid' => 'int',
-        'itemname' => 'string',
+        'action'      => 'int',
+        'itemid'      => 'int',
+        'itemname'    => 'string',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'timestamp',
         'internalKey',

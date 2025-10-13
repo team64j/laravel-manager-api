@@ -14,38 +14,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class MemberGroup extends Model
 {
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'user_group' => 'int',
-        'member' => 'int',
+        'member'     => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'user_group',
         'member',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'member', 'id');
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function group(): BelongsTo
     {
         return $this->belongsTo(MembergroupName::class, 'user_group', 'id');

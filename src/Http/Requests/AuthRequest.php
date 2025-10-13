@@ -10,17 +10,11 @@ class AuthRequest extends FormRequest
 {
     public ?string $token = null;
 
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [

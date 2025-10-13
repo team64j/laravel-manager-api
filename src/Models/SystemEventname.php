@@ -19,26 +19,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class SystemEventname extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'system_eventnames';
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
         'service' => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'service',

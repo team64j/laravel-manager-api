@@ -4,35 +4,25 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use OpenApi\Generator;
 
-/**
- * @OA\Info(
- *     title="OpenAPI Schema",
- *     version="1.1.1",
- * )
- * @OA\SecurityScheme(
- *     securityScheme="Api",
- *     scheme="bearer",
- *     type="http",
- *     in="header"
- * )
- */
+#[OA\Info(
+    version: '1.1.1',
+    title: 'OpenAPI Schema'
+)]
+#[OA\SecurityScheme(
+    securityScheme: 'Api',
+    type: 'http',
+    in: 'header',
+    scheme: 'bearer'
+)]
 class OpenApiController extends Controller
 {
-    /**
-     * @return string
-     */
-    public function index()
+    public function index(): string
     {
         return cache()->rememberForever(__METHOD__, function () {
-            $openapi = Generator::scan(
-                [__DIR__],
-                [
-                    'validate' => true,
-                ]
-            );
+            $openapi = (new Generator)->generate([__DIR__]);
 
             $openapi->servers = [
                 [

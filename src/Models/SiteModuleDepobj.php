@@ -14,28 +14,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SiteModuleDepobj extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'site_module_depobj';
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var array
-     */
     protected $casts = [
-        'module' => 'int',
+        'module'   => 'int',
         'resource' => 'int',
-        'type' => 'int',
+        'type'     => 'int',
     ];
 
-    /**
-     * @var array
-     */
     protected $fillable = [
         'module',
         'resource',

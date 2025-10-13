@@ -23,19 +23,10 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
     use HasFactory;
     use Notifiable;
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string
-     */
     protected $rememberTokenName = 'access_token';
 
-    /**
-     * @var string[]
-     */
     protected $hidden = [
         'password',
         'cachepwd',
@@ -45,9 +36,6 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
         'valid_to',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'username',
         'password',
@@ -58,29 +46,16 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
         'valid_to',
     ];
 
-    /**
-     * @return HasOne
-     */
     public function attributes(): HasOne
     {
         return $this->hasOne(UserAttribute::class, 'internalKey', 'id');
     }
 
-    /**
-     * @return HasMany
-     */
     public function settings(): HasMany
     {
         return $this->hasMany(UserSetting::class, 'user', 'id');
     }
 
-    /**
-     * Send a password reset notification to the user.
-     *
-     * @param string $token
-     *
-     * @return void
-     */
     public function sendPasswordResetNotification($token): void
     {
         $url = 'https://example.com/reset-password?token=' . $token;
@@ -89,12 +64,6 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
         //Notification::send($this, new ResetPasswordNotification());
     }
 
-    /**
-     * @param $driver
-     * @param $notification
-     *
-     * @return string[]
-     */
     public function routeNotificationForMail($driver, $notification = null): array
     {
         /** @var UserAttribute $attributes */
@@ -104,11 +73,6 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
         return [$attributes->email => $this->username];
     }
 
-    /**
-     * @param $permissions
-     *
-     * @return bool
-     */
     public function hasPermissions($permissions): bool
     {
         return $this['attributes']
@@ -118,9 +82,6 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
     }
 
     /**
-     * @param $permissions
-     *
-     * @return bool
      * @throws Throwable
      */
     public function hasPermissionsOrFail($permissions): bool
@@ -128,11 +89,6 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
         return throw_unless($this->hasPermissions($permissions), Lang::get('global.error_no_privileges'));
     }
 
-    /**
-     * @param Permissions $permission
-     *
-     * @return bool
-     */
     public function hasPermission(Permissions $permission): bool
     {
         return (bool) $this['attributes']
@@ -142,9 +98,6 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
     }
 
     /**
-     * @param Permissions $permission
-     *
-     * @return bool
      * @throws Throwable
      */
     public function hasPermissionOrFail(Permissions $permission): bool
@@ -152,29 +105,16 @@ class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
         return throw_unless($this->hasPermission($permission), Lang::get('global.error_no_privileges'));
     }
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
     public function getJWTIdentifier(): mixed
     {
         return $this->getKey();
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
     public function getJWTCustomClaims(): array
     {
         return [];
     }
 
-    /**
-     * @return bool
-     */
     public function isAdmin(): bool
     {
         return Auth::check() && $this['attributes']->userRole->name === 'Administrator';

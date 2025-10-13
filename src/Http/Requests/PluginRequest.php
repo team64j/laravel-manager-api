@@ -8,9 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PluginRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
@@ -22,22 +19,19 @@ class PluginRequest extends FormRequest
         };
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return match ($this->route()->getActionMethod()) {
             'store', 'update' => [
-                'name' => 'required|string',
+                'name'        => 'required|string',
                 //'description' => 'string',
                 'editor_type' => 'int',
-                'category' => 'required|int',
-                'plugincode' => 'string|nullable',
-                'locked' => 'int',
-                'disabled' => 'int',
+                'category'    => 'required|int',
+                'plugincode'  => 'string|nullable',
+                'locked'      => 'int',
+                'disabled'    => 'int',
                 //'cache_type' => 'int',
-                'properties' => 'string|nullable',
+                'properties'  => 'string|nullable',
             ],
             default => []
         };

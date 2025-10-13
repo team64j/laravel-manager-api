@@ -8,17 +8,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PermissionRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return auth()->user()->canAny(['access_permissions']);
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [];

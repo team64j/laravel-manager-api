@@ -60,7 +60,7 @@ class CategoryLayout extends Layout
      *
      * @return array
      */
-    public function default(Category $model = null): array
+    public function default(?Category $model = null): array
     {
         return [
             Actions::make()

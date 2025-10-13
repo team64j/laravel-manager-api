@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Facades\Vite;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\BootstrapRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\CategoryLayout;
@@ -21,22 +21,18 @@ use Team64j\LaravelManagerComponents\Tabs;
 
 class BootstrapController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/bootstrap",
-     *     summary="Стартовые данные",
-     *     tags={"Bootstrap"},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/bootstrap',
+        summary: 'Стартовые данные',
+        tags: ['Bootstrap'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            )
+        ]
+    )]
     public function init(): JsonResource
     {
         return JsonResource::make([
@@ -48,25 +44,19 @@ class BootstrapController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/bootstrap",
-     *     summary="Глобальные данные для формирования админ панели",
-     *     tags={"Bootstrap"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     *
-     * @param BootstrapRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/bootstrap',
+        summary: 'Глобальные данные для формирования админ панели',
+        security: [['Api' => []]],
+        tags: ['Bootstrap'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            )
+        ]
+    )]
     public function index(BootstrapRequest $request): JsonResource
     {
         $sidebar = $this->getSidebar();
@@ -124,9 +114,6 @@ class BootstrapController extends Controller
             ]);
     }
 
-    /**
-     * @return array
-     */
     protected function getRoutes(): array
     {
         return [
@@ -377,9 +364,6 @@ class BootstrapController extends Controller
                 ];*/
     }
 
-    /**
-     * @return array
-     */
     protected function getAssets(): array
     {
         $packageFolder = trim(
@@ -412,11 +396,6 @@ class BootstrapController extends Controller
         );
     }
 
-    /**
-     * @param bool $edit
-     *
-     * @return array
-     */
     public function getMenu(bool $edit = false): array
     {
         if (!$edit && config()->has('global.workspace_topmenu_data') &&
@@ -762,11 +741,6 @@ class BootstrapController extends Controller
         return $this->checkMenuPermissions($data);
     }
 
-    /**
-     * @param string $data
-     *
-     * @return string
-     */
     protected function replaceVariables(string $data): string
     {
         $data = $this->replaceUserVariables($data);
@@ -776,11 +750,6 @@ class BootstrapController extends Controller
         return $this->replaceUrlVariables($data);
     }
 
-    /**
-     * @param string $item
-     *
-     * @return string
-     */
     protected function replaceConfigVariables(string $item): string
     {
         preg_match_all('!\[\((.*)\)]!U', $item, $matches);
@@ -798,11 +767,6 @@ class BootstrapController extends Controller
         return $item;
     }
 
-    /**
-     * @param string $item
-     *
-     * @return string
-     */
     protected function replaceLangVariables(string $item): string
     {
         preg_match_all('!\[%(.*)%]!U', $item, $matches);
@@ -820,11 +784,6 @@ class BootstrapController extends Controller
         return $item;
     }
 
-    /**
-     * @param string $item
-     *
-     * @return string
-     */
     protected function replaceUrlVariables(string $item): string
     {
         preg_match_all('!\[~(.*)~]!U', $item, $matches);
@@ -842,11 +801,6 @@ class BootstrapController extends Controller
         return $item;
     }
 
-    /**
-     * @param string $item
-     *
-     * @return string
-     */
     protected function replaceUserVariables(string $item): string
     {
         preg_match_all('!\[\+user\.(.*)\+]!U', $item, $matches);
@@ -872,11 +826,6 @@ class BootstrapController extends Controller
         return $item;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     protected function checkMenuPermissions(array $data): array
     {
         foreach ($data as $k => &$item) {
@@ -901,23 +850,19 @@ class BootstrapController extends Controller
         return $data;
     }
 
-    /**
-     * @OA\Get(
-     *     path="/bootstrap/select-pages",
-     *     summary="Список доступных страниц-компонентов",
-     *     tags={"Bootstrap"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     *
-     * @return array
-     */
+    #[OA\Get(
+        path: '/bootstrap/select-pages',
+        summary: 'Список доступных страниц-компонентов',
+        security: [['Api' => []]],
+        tags: ['Bootstrap'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            )
+        ]
+    )]
     public function selectPages(): array
     {
         $data = [
@@ -976,11 +921,6 @@ class BootstrapController extends Controller
         ];
     }
 
-    /**
-     * @param bool $edit
-     *
-     * @return array
-     */
     public function getSidebar(bool $edit = false): array
     {
         $tabs = Tabs::make()
@@ -1077,11 +1017,6 @@ class BootstrapController extends Controller
         return $tabs->toArray();
     }
 
-    /**
-     * get languages
-     *
-     * @return array
-     */
     protected function getLanguages(): array
     {
         $data = [];

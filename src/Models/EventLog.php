@@ -21,33 +21,21 @@ class EventLog extends Model
 {
     use TimeMutatorTrait;
 
-    /**
-     * @var string
-     */
     protected $table = 'event_log';
 
     public const CREATED_AT = 'createdon';
 
     public const UPDATED_AT = null;
 
-    /**
-     * @var string
-     */
     protected $dateFormat = 'U';
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
-        'eventid' => 'int',
-        'type' => 'int',
-        'user' => 'int',
+        'eventid'  => 'int',
+        'type'     => 'int',
+        'user'     => 'int',
         'usertype' => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'eventid',
         'type',
@@ -57,9 +45,6 @@ class EventLog extends Model
         'description',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function users(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user', 'id');

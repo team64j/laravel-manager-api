@@ -4,37 +4,28 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\RoleUserRequest;
-use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
+use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\RoleUserLayout;
 use Team64j\LaravelManagerApi\Models\UserRole;
-use Team64j\LaravelManagerApi\Traits\PaginationTrait;
 
 class RoleUserController extends Controller
 {
-    use PaginationTrait;
-
-    /**
-     * @OA\Get(
-     *     path="/roles/users",
-     *     summary="Получение списка ролей для юзеров",
-     *     tags={"Users"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param RoleUserRequest $request
-     * @param RoleUserLayout $layout
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/roles/users',
+        summary: 'Получение списка ролей для юзеров',
+        security: [['Api' => []]],
+        tags: ['Users'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(RoleUserRequest $request, RoleUserLayout $layout): JsonResourceCollection
     {
         $result = UserRole::query()
@@ -45,35 +36,27 @@ class RoleUserController extends Controller
             ->orderBy('id')
             ->paginate(config('global.number_of_results'));
 
-        return JsonResource::collection($result->items())
+        return JsonResource::collection($result)
             ->layout($layout->list())
             ->meta([
                 'title' => $layout->titleList(),
-                'icon' => $layout->iconList(),
-                'pagination' => $this->pagination($result),
+                'icon'  => $layout->iconList(),
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/roles/users/{id}",
-     *     summary="Получение роли для юзеров",
-     *     tags={"Users"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param RoleUserRequest $request
-     * @param string $id
-     * @param RoleUserLayout $layout
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/roles/users/{id}',
+        summary: 'Получение роли для юзеров',
+        security: [['Api' => []]],
+        tags: ['Users'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): JsonResource
     {
         /** @var UserRole $model */
@@ -89,7 +72,7 @@ class RoleUserController extends Controller
             ->layout($layout->default($model))
             ->meta([
                 'title' => $layout->title($model->name),
-                'icon' => $layout->icon(),
+                'icon'  => $layout->icon(),
             ]);
     }
 }

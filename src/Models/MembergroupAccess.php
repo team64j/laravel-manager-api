@@ -13,28 +13,16 @@ use Illuminate\Database\Eloquent\Model;
  */
 class MembergroupAccess extends Model
 {
-    /**
-     * @var string
-     */
     protected $table = 'membergroup_access';
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @var string[]
-     */
     protected $casts = [
-        'membergroup' => 'int',
+        'membergroup'   => 'int',
         'documentgroup' => 'int',
-        'context' => 'int',
+        'context'       => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'membergroup',
         'documentgroup',

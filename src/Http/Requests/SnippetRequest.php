@@ -8,9 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SnippetRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
@@ -22,9 +19,6 @@ class SnippetRequest extends FormRequest
         };
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [];

@@ -8,9 +8,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return match ($this->route()->getActionMethod()) {
@@ -19,15 +16,12 @@ class CategoryRequest extends FormRequest
         };
     }
 
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return match ($this->route()->getActionMethod()) {
             'store', 'update' => [
                 'category' => 'required|string',
-                'rank' => 'integer|nullable',
+                'rank'     => 'integer|nullable',
             ],
             default => []
         };

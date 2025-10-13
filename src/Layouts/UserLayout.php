@@ -33,7 +33,7 @@ class UserLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.new_user');
     }
@@ -51,7 +51,7 @@ class UserLayout extends Layout
      *
      * @return array
      */
-    public function default(User $model = null): array
+    public function default(?User $model = null): array
     {
         return [
             Actions::make()

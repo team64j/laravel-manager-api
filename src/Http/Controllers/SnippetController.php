@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
@@ -15,38 +16,28 @@ use Team64j\LaravelManagerApi\Models\SiteSnippet;
 
 class SnippetController extends Controller
 {
-    /**
-     * @param SnippetLayout $layout
-     */
-    public function __construct(protected SnippetLayout $layout)
-    {
-    }
+    public function __construct(protected SnippetLayout $layout) {}
 
-    /**
-     * @OA\Get(
-     *     path="/snippets",
-     *     summary="Получение списка сниппетов с пагинацией и фильтрацией",
-     *     tags={"Snippets"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="name", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="order", in="query", @OA\Schema(type="string", default="category")),
-     *         @OA\Parameter (name="dir", in="query", @OA\Schema(type="string", default="asc")),
-     *         @OA\Parameter (name="groupBy", in="query", @OA\Schema(type="string", default="category")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SnippetRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/snippets',
+        summary: 'Получение списка сниппетов с пагинацией и фильтрацией',
+        security: [['Api' => []]],
+        tags: ['Snippets'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'name', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'order', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+            new OA\Parameter(name: 'dir', in: 'query', schema: new OA\Schema(type: 'string', default: 'asc')),
+            new OA\Parameter(name: 'groupBy', in: 'query', schema: new OA\Schema(type: 'string', default: 'category')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function index(SnippetRequest $request): JsonResourceCollection
     {
         $filter = $request->input('filter');
@@ -79,21 +70,23 @@ class SnippetController extends Controller
         if ($groupBy == 'category') {
             $callbackGroup = function ($group) {
                 return [
-                    'id' => $group->first()->category,
+                    'id'   => $group->first()->category,
                     'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
                     'data' => $group->map->withoutRelations(),
                 ];
             };
 
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->groupBy('category')
                     ->map($callbackGroup)
                     ->values()
             );
         } else {
             $result->setCollection(
-                $result->getCollection()
+                $result
+                    ->getCollection()
                     ->map(fn($item) => $item->withoutRelations())
             );
         }
@@ -103,64 +96,51 @@ class SnippetController extends Controller
             ->meta(
                 [
                     'title' => $this->layout->titleList(),
-                    'icon' => $this->layout->iconList(),
+                    'icon'  => $this->layout->iconList(),
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
 
-    /**
-     * @OA\Post(
-     *     path="/snippets",
-     *     summary="Создание нового сниппета",
-     *     tags={"Snippets"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SnippetRequest $request
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/snippets',
+        summary: 'Создание нового сниппета',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Snippets'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function store(SnippetRequest $request): JsonResource
     {
         $data = $request->validated();
 
         $data['snippet'] = str($data['snippet'] ?? '')->replaceFirst('<?php', '');
-        
+
         $model = SiteSnippet::query()->create($data);
 
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Get(
-     *     path="/snippets/{id}",
-     *     summary="Чтение сниппета",
-     *     tags={"Snippets"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SnippetRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/snippets/{id}',
+        summary: 'Чтение сниппета',
+        security: [['Api' => []]],
+        tags: ['Snippets'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function show(SnippetRequest $request, int $id): JsonResource
     {
         /** @var SiteSnippet $model */
@@ -174,39 +154,31 @@ class SnippetController extends Controller
             ->layout($this->layout->default($model))
             ->meta([
                 'title' => $this->layout->title($model->name),
-                'icon' => $this->layout->icon(),
+                'icon'  => $this->layout->icon(),
             ]);
     }
 
-    /**
-     * @OA\Put(
-     *     path="/snippets/{id}",
-     *     summary="Обновление сниппета",
-     *     tags={"Snippets"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SnippetRequest $request
-     * @param int $id
-     *
-     * @return JsonResource
-     */
+    #[OA\Put(
+        path: '/snippets/{id}',
+        summary: 'Обновление сниппета',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Snippets'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function update(SnippetRequest $request, int $id): JsonResource
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
-        
+
         $data = $request->validated();
 
         $data['snippet'] = str($data['snippet'] ?? '')->replaceFirst('<?php', '');
@@ -216,25 +188,19 @@ class SnippetController extends Controller
         return $this->show($request, $model->getKey());
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/snippets/{id}",
-     *     summary="Удаление сниппета",
-     *     tags={"Snippets"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SnippetRequest $request
-     * @param int $id
-     *
-     * @return Response
-     */
+    #[OA\Delete(
+        path: '/snippets/{id}',
+        summary: 'Удаление сниппета',
+        security: [['Api' => []]],
+        tags: ['Snippets'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function destroy(SnippetRequest $request, int $id): Response
     {
         /** @var SiteSnippet $model */
@@ -245,27 +211,22 @@ class SnippetController extends Controller
         return response()->noContent();
     }
 
-    /**
-     * @OA\Get(
-     *     path="/snippets/list",
-     *     summary="Получение списка сниппетов с пагинацией для меню",
-     *     tags={"Snippets"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SnippetRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/snippets/list',
+        summary: 'Получение списка сниппетов с пагинацией для меню',
+        security: [['Api' => []]],
+        tags: ['Snippets'],
+        parameters: [
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function list(SnippetRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
@@ -285,12 +246,12 @@ class SnippetController extends Controller
 
         return JsonResource::collection($result)
             ->meta([
-                'route' => '/snippets/:id',
+                'route'   => '/snippets/:id',
                 'prepend' => [
                     [
                         'name' => __('global.new_snippet'),
                         'icon' => 'fa fa-plus-circle text-green-500',
-                        'to' => [
+                        'to'   => [
                             'path' => '/snippets/0',
                         ],
                     ],
@@ -298,29 +259,24 @@ class SnippetController extends Controller
             ]);
     }
 
-    /**
-     * @OA\Get(
-     *     path="/snippets/tree",
-     *     summary="Получение списка сниппетов с пагинацией для древовидного меню",
-     *     tags={"Snippets"},
-     *     security={{"Api":{}}},
-     *     parameters={
-     *         @OA\Parameter (name="category", in="query", @OA\Schema(type="int", default="-1")),
-     *         @OA\Parameter (name="filter", in="query", @OA\Schema(type="string")),
-     *         @OA\Parameter (name="opened", in="query", @OA\Schema(type="string")),
-     *     },
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param SnippetRequest $request
-     *
-     * @return JsonResourceCollection
-     */
+    #[OA\Get(
+        path: '/snippets/tree',
+        summary: 'Получение списка сниппетов с пагинацией для древовидного меню',
+        security: [['Api' => []]],
+        tags: ['Snippets'],
+        parameters: [
+            new OA\Parameter(name: 'category', in: 'query', schema: new OA\Schema(type: 'int', default: -1)),
+            new OA\Parameter(name: 'filter', in: 'query', schema: new OA\Schema(type: 'string')),
+            new OA\Parameter(name: 'opened', in: 'query', schema: new OA\Schema(type: 'string')),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            ),
+        ]
+    )]
     public function tree(SnippetRequest $request): JsonResourceCollection
     {
         $settings = $request->collect('settings');
@@ -353,10 +309,11 @@ class SnippetController extends Controller
 
             return JsonResource::collection(
                 $result->setCollection(
-                    $result->getCollection()
+                    $result
+                        ->getCollection()
                         ->map(fn(SiteSnippet $item) => [
-                            'id' => $item->id,
-                            'title' => $item->name,
+                            'id'         => $item->id,
+                            'title'      => $item->name,
                             'attributes' => $item,
                         ])
                 )
@@ -371,26 +328,27 @@ class SnippetController extends Controller
             $result->add(new Category());
         }
 
-        $result = $result->map(function ($category) use ($request, $settings) {
-            $data = [
-                'id' => $category->getKey() ?? 0,
-                'title' => $category->category ?? __('global.no_category'),
-                'category' => true,
-            ];
+        $result = $result
+            ->map(function ($category) use ($request, $settings) {
+                $data = [
+                    'id'       => $category->getKey() ?? 0,
+                    'title'    => $category->category ?? __('global.no_category'),
+                    'category' => true,
+                ];
 
-            if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
-                $request->query->replace([
-                    'settings' => ['parent' => $data['id']] + $request->query('settings'),
-                ]);
+                if (in_array((string) $data['id'], ($settings['opened'] ?? []), true)) {
+                    $request->query->replace([
+                        'settings' => ['parent' => $data['id']] + $request->query('settings'),
+                    ]);
 
-                $result = $this->tree($request)->toResponse($request)->getData();
+                    $result = $this->tree($request)->toResponse($request)->getData();
 
-                $data['data'] = $result->data ?? [];
-                $data['meta'] = $result->meta ?? [];
-            }
+                    $data['data'] = $result->data ?? [];
+                    $data['meta'] = $result->meta ?? [];
+                }
 
-            return $data;
-        })
+                return $data;
+            })
             ->sort(fn($a, $b) => $a['id'] == 0 ? -1 : (str($a['title'])->upper() > str($b['title'])->upper()))
             ->values();
 

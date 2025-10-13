@@ -31,7 +31,7 @@ class ResourcesLayout extends Layout
      *
      * @return array
      */
-    public function default(SiteContent $model = null): array
+    public function default(?SiteContent $model = null): array
     {
         return [
             Title::make()

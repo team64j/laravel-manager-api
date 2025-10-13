@@ -17,7 +17,7 @@ class PermissionRelationLayout extends Layout
      *
      * @return string
      */
-    public function title(string $value = null): string
+    public function title(?string $value = null): string
     {
         return $value ?? __('global.manage_permission');
     }
@@ -44,7 +44,7 @@ class PermissionRelationLayout extends Layout
      *
      * @return array
      */
-    public function list(Collection $groups = null, Collection $documents = null): array
+    public function list(?Collection $groups = null, ?Collection $documents = null): array
     {
         return [
             Actions::make()

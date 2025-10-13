@@ -16,9 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Permissions extends Model
 {
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'name',
         'key',
@@ -27,17 +24,11 @@ class Permissions extends Model
         'disabled',
     ];
 
-    /**
-     * @return HasOne
-     */
     public function groups(): HasOne
     {
         return $this->hasOne(PermissionsGroups::class, 'id', 'group_id');
     }
 
-    /**
-     * @return HasOne
-     */
     public function rolePermissions(): HasOne
     {
         return $this->hasOne(RolePermissions::class, 'permission', 'key');

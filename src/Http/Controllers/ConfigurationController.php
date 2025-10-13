@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
 use Illuminate\Support\Facades\Artisan;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ConfigurationRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\ConfigurationLayout;
@@ -13,31 +13,25 @@ use Team64j\LaravelManagerApi\Models\SystemSetting;
 
 class ConfigurationController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/configuration",
-     *     summary="Чтение конфигурации",
-     *     tags={"Configuration"},
-     *     security={{"Api":{}}},
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ConfigurationRequest $request
-     * @param ConfigurationLayout $layout
-     *
-     * @return JsonResource
-     */
+    #[OA\Get(
+        path: '/configuration',
+        summary: 'Чтение конфигурации',
+        security: [['Api' => []]],
+        tags: ['Configuration'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            )
+        ]
+    )]
     public function index(ConfigurationRequest $request, ConfigurationLayout $layout): JsonResource
     {
         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', app()->basePath()) . '/';
 
-        return JsonResource::make(
-            SystemSetting::all()
+        return JsonResource::make([
+            'data' => SystemSetting::all()
                 ->pluck('setting_value', 'setting_name')
                 ->map(function ($value, $key) use ($basePath) {
                     if ($key == 'filemanager_path') {
@@ -57,39 +51,31 @@ class ConfigurationController extends Controller
                     }
 
                     return $value;
-                })
-        )
+                }),
+        ])
             ->layout($layout->default())
             ->meta([
                 'title' => $layout->title(),
-                'icon' => $layout->icon(),
+                'icon'  => $layout->icon(),
             ]);
     }
 
-    /**
-     * @OA\Post(
-     *     path="/configuration",
-     *     summary="Сохранение конфигурации",
-     *     tags={"Configuration"},
-     *     security={{"Api":{}}},
-     *     @OA\RequestBody(
-     *         @OA\JsonContent(
-     *             type="object",
-     *         )
-     *     ),
-     *     @OA\Response(
-     *          response="200",
-     *          description="ok",
-     *          @OA\JsonContent(
-     *              type="object"
-     *          )
-     *      )
-     * )
-     * @param ConfigurationRequest $request
-     * @param SystemSetting $configuration
-     *
-     * @return JsonResource
-     */
+    #[OA\Post(
+        path: '/configuration',
+        summary: 'Сохранение конфигурации',
+        security: [['Api' => []]],
+        requestBody: new OA\RequestBody(
+            content: new OA\JsonContent(type: 'object')
+        ),
+        tags: ['Configuration'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'ok',
+                content: new OA\JsonContent(type: 'object')
+            )
+        ]
+    )]
     public function store(ConfigurationRequest $request, SystemSetting $configuration): JsonResource
     {
         $data = [];

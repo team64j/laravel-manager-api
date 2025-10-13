@@ -51,77 +51,59 @@ class SiteContent extends Model
     const DELETED_AT = 'deletedon';
     const DELETED = 'deleted';
 
-    /**
-     * @var string
-     */
     protected $table = 'site_content';
 
-    /**
-     * @var string
-     */
     protected $dateFormat = 'U';
 
-    /**
-     * @var bool
-     */
     public $timestamps = false;
 
-    /**
-     * @param array $attributes
-     */
     public function __construct(array $attributes = [])
     {
         $this->setRawAttributes([
-            'published' => Config::get('global.publish_default'),
-            'template' => Config::get('global.default_template'),
+            'published'      => Config::get('global.publish_default'),
+            'template'       => Config::get('global.default_template'),
             'hide_from_tree' => 0,
-            'alias_visible' => 1,
-            'richtext' => 1,
-            'menuindex' => 0,
-            'searchable' => Config::get('global.search_default'),
-            'cacheable' => Config::get('global.cache_default'),
-            'type' => 'document',
-            'contentType' => 'text/html',
-            'parent' => 0,
-            'content_dispo' => 0,
+            'alias_visible'  => 1,
+            'richtext'       => 1,
+            'menuindex'      => 0,
+            'searchable'     => Config::get('global.search_default'),
+            'cacheable'      => Config::get('global.cache_default'),
+            'type'           => 'document',
+            'contentType'    => 'text/html',
+            'parent'         => 0,
+            'content_dispo'  => 0,
         ], true);
 
         parent::__construct($attributes);
     }
 
-    /**
-     * @var array|string[]
-     */
     protected $casts = [
-        'published' => 'int',
-        'pub_date' => 'int',
-        'unpub_date' => 'int',
-        'parent' => 'int',
-        'isfolder' => 'int',
-        'richtext' => 'int',
-        'template' => 'int',
-        'menuindex' => 'int',
-        'searchable' => 'int',
-        'cacheable' => 'int',
-        'createdby' => 'int',
-        'createdon' => 'datetime',
-        'editedby' => 'int',
-        'editedon' => 'datetime',
-        'deleted' => 'int',
-        'deletedby' => 'int',
-        'publishedon' => 'int',
-        'publishedby' => 'int',
+        'published'      => 'int',
+        'pub_date'       => 'int',
+        'unpub_date'     => 'int',
+        'parent'         => 'int',
+        'isfolder'       => 'int',
+        'richtext'       => 'int',
+        'template'       => 'int',
+        'menuindex'      => 'int',
+        'searchable'     => 'int',
+        'cacheable'      => 'int',
+        'createdby'      => 'int',
+        'createdon'      => 'datetime',
+        'editedby'       => 'int',
+        'editedon'       => 'datetime',
+        'deleted'        => 'int',
+        'deletedby'      => 'int',
+        'publishedon'    => 'int',
+        'publishedby'    => 'int',
         'hide_from_tree' => 'int',
-        'privateweb' => 'int',
-        'privatemgr' => 'int',
-        'content_dispo' => 'int',
-        'hidemenu' => 'int',
-        'alias_visible' => 'int',
+        'privateweb'     => 'int',
+        'privatemgr'     => 'int',
+        'content_dispo'  => 'int',
+        'hidemenu'       => 'int',
+        'alias_visible'  => 'int',
     ];
 
-    /**
-     * @var string[]
-     */
     protected $fillable = [
         'type',
         'contentType',
@@ -157,142 +139,111 @@ class SiteContent extends Model
         'alias_visible',
     ];
 
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setDescriptionAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
-//
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setIntrotextAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
-//
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setMenutitleAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
-//
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setLongtitleAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
-//
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setLinkAttributesAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
-//
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setCreatedonAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
-//
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setEditedonAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
-//
-//    /**
-//     * @param $value
-//     *
-//     * @return string
-//     */
-//    public function setPublishedonAttribute($value): string
-//    {
-//        return (string) $value;
-//    }
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setDescriptionAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
+    //
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setIntrotextAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
+    //
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setMenutitleAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
+    //
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setLongtitleAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
+    //
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setLinkAttributesAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
+    //
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setCreatedonAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
+    //
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setEditedonAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
+    //
+    //    /**
+    //     * @param $value
+    //     *
+    //     * @return string
+    //     */
+    //    public function setPublishedonAttribute($value): string
+    //    {
+    //        return (string) $value;
+    //    }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getCreatedonAttribute($value): string
     {
         return $this->convertDateTime($value);
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getEditedonAttribute($value): string
     {
         return $this->convertDateTime($value);
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getPubDateAttribute($value): string
     {
         return $this->serializeDate(Carbon::parse($value));
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getUnpubDateAttribute($value): string
     {
         return $this->serializeDate(Carbon::parse($value));
     }
 
-    /**
-     * @param $value
-     *
-     * @return string
-     */
     public function getPublishedonAttribute($value): string
     {
         return $this->serializeDate(Carbon::parse($value));
     }
 
-    /**
-     * @param array $attributes
-     * @param array $options
-     *
-     * @return bool
-     */
     public function update(array $attributes = [], array $options = []): bool
     {
         if (isset($attributes['pub_date']) && is_string($attributes['pub_date'])) {
@@ -310,9 +261,6 @@ class SiteContent extends Model
         return parent::update($attributes, $options);
     }
 
-    /**
-     * @return Collection
-     */
     public function getTvs(): Collection
     {
         /** @var Collection $docTv */
@@ -346,49 +294,34 @@ class SiteContent extends Model
             return array_merge(
                 $tmplvar->withoutRelations()->toArray(),
                 [
-                    'value' => $value,
+                    'value'         => $value,
                     'category_name' => $category->category ?? Lang::get('global.no_category'),
-                    'pivot_rank' => $tmplvar->pivot->rank,
+                    'pivot_rank'    => $tmplvar->pivot->rank,
                 ]
             );
         });
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function tpl(): BelongsTo
     {
         return $this->belongsTo(SiteTemplate::class, 'template', 'id')->withDefault();
     }
 
-    /**
-     * @return HasMany
-     */
     public function templateValues(): HasMany
     {
         return $this->hasMany(SiteTmplvarContentvalue::class, 'contentid', 'id');
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function documentGroups(): BelongsToMany
     {
         return $this->belongsToMany(DocumentgroupName::class, 'document_groups', 'document', 'document_group');
     }
 
-    /**
-     * @return Builder|BelongsTo
-     */
-    public function parents(): BelongsTo|Builder
+    public function parents(): BelongsTo | Builder
     {
         return $this->belongsTo(SiteContent::class, 'parent', 'id')->with('parents');
     }
 
-    /**
-     * @return HasMany
-     */
     public function children(): HasMany
     {
         return $this->hasMany(SiteContent::class, 'parent', 'id')->with('children');
@@ -413,34 +346,16 @@ class SiteContent extends Model
         return $query;
     }
 
-    /**
-     * Get the name of the "deleted" column.
-     *
-     * @return string
-     */
     public function getDeletedColumn(): string
     {
         return defined('static::DELETED') ? static::DELETED : 'deleted';
     }
 
-    /**
-     * Get the fully qualified "deleted" column.
-     *
-     * @return string
-     */
     public function getQualifiedDeletedColumn(): string
     {
         return $this->qualifyColumn($this->getDeletedColumn());
     }
 
-    /**
-     * @param $query
-     * @param array $tvList
-     * @param string $sep
-     * @param bool $tree
-     *
-     * @return mixed
-     */
     public function scopeWithTVs($query, array $tvList = [], string $sep = ':', bool $tree = false)
     {
         $main_table = 'site_content';
@@ -483,9 +398,6 @@ class SiteContent extends Model
         return $query;
     }
 
-    /**
-     * @return HasManyThrough
-     */
     public function tvs(): HasManyThrough
     {
         $tvModel = new SiteTmplvar();

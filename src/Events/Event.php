@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Events;
 
 use Illuminate\Support\Facades\Cache;
+use Psr\SimpleCache\InvalidArgumentException;
 use Team64j\LaravelManagerApi\Models\SystemEventname;
 
 class Event
 {
-    /**
-     * @var array
-     */
     public array $plugins = [];
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function __construct()
     {
         $eventName = basename(static::class);
@@ -40,11 +41,6 @@ class Event
         }
     }
 
-    /**
-     * @param array $params
-     *
-     * @return array|null
-     */
     public function handle(array $params = []): ?array
     {
         extract($params);
@@ -63,11 +59,6 @@ class Event
         return $this->render($responses) ?: null;
     }
 
-    /**
-     * @param array $value
-     *
-     * @return array
-     */
     public function render(array $value): array
     {
         return $value;

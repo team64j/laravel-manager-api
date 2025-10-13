@@ -8,17 +8,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class FilesRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
-        return auth()->user()->can('file_manager');;
+        return auth()->user()->can('file_manager');
     }
 
-    /**
-     * @return array<string, mixed>
-     */
     public function rules(): array
     {
         return [

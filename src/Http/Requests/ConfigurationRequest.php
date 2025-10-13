@@ -8,17 +8,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ConfigurationRequest extends FormRequest
 {
-    /**
-     * @return bool
-     */
     public function authorize(): bool
     {
         return auth()->user()->can('settings');
     }
 
-    /**
-     * @return array
-     */
     public function rules(): array
     {
         return [];
