@@ -1010,7 +1010,17 @@ class BootstrapController extends Controller
             $tab = app()->call($v['class']);
 
             if ($tab) {
-                $tabs->addTab(...$tab);
+                $tabs->addTab(
+                    $tab['id'],
+                    $tab['name'] ?? null,
+                    $tab['icon'] ?? null,
+                    $tab['class'] ?? null,
+                    $tab['permissions'] ?? null,
+                    $tab['route'] ?? null,
+                    $tab['title'] ?? null,
+                    $tab['slot'] ?? null,
+                    $tab['needUpdate'] ?? false,
+                );
             }
         }
 

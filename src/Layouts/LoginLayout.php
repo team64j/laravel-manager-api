@@ -17,13 +17,15 @@ class LoginLayout extends Layout
     public function default(): array
     {
         return [
-            Input::make('username')
+            Input::make()
+                ->setModel('username')
                 ->setId('username')
                 ->setLabel(__('global.username'))
                 ->setInputClass('!bg-transparent input-lg')
                 ->setErrorClass('hidden'),
 
-            Input::make('password')
+            Input::make()
+                ->setModel('password')
                 ->setId('password')
                 ->setType('password')
                 ->setLabel(__('global.password'))
@@ -33,7 +35,8 @@ class LoginLayout extends Layout
             Template::make()
                 ->setClass('flex justify-between items-center')
                 ->setSlot([
-                    Checkbox::make('remember')
+                    Checkbox::make()
+                        ->setModel('remember')
                         ->setId('remember')
                         ->setLabel(__('global.remember_username'))
                         ->setClass('inline-flex')
@@ -42,7 +45,7 @@ class LoginLayout extends Layout
                     Button::make()
                         ->setValue(__('global.login_button'))
                         ->setInputClass('btn-green btn-lg whitespace-nowrap'),
-                ])
+                ]),
         ];
     }
 

@@ -72,113 +72,122 @@ class DashboardLayout extends Layout
     protected function getWidgets(): array
     {
         $user = auth()->user();
-        
-        return Template::make(
-            'flex flex-wrap pt-6 px-4',
-            [
-                Template::make(
-                    'grow w-full xl:max-w-[50%] xl:pr-2 pb-4',
-                    Section::make(
-                        'fa fa-home',
-                        __('global.welcome_title'),
-                        'h-full hover:shadow-lg bg-white dark:bg-gray-700 transition',
-                        Panel::make()
-                            ->setClass('!mt-0 !-mx-4 !-mb-4')
-                            ->addColumn('name', style: ['width' => '1%', 'white-space' => 'nowrap'])
-                            ->addColumn('value', style: ['font-weight' => 'bold'])
-                            ->setData([
-                                [
-                                    'name' => __('global.yourinfo_username'),
-                                    'value' => $user->username,
-                                ],
-                                [
-                                    'name' => __('global.yourinfo_role'),
-                                    'value' => $user->attributes->userRole->name,
-                                ],
-                                [
-                                    'name' => __('global.yourinfo_previous_login'),
-                                    'value' => $user->attributes->lastlogin,
-                                ],
-                                [
-                                    'name' => __('global.yourinfo_total_logins'),
-                                    'value' => $user->attributes->logincount,
-                                ],
-                            ])
-                    )
-                ),
 
-                Template::make(
-                    'grow w-full xl:max-w-[50%] xl:pl-2 pb-4',
-                    Section::make(
-                        'fa fa-user',
-                        __('global.onlineusers_title'),
-                        'h-full hover:shadow-lg bg-white dark:bg-gray-700 transition',
-                        [
-                            '<div class="mb-4">' . __('global.onlineusers_message') . '<b>' .
-                            date('H:i:s') . '</b>)</div>',
+        return Template::make()
+            ->setClass('flex flex-wrap pt-6 px-4')
+            ->setSlot([
+                Template::make()
+                    ->setClass('grow w-full xl:max-w-[50%] xl:pr-2 pb-4')
+                    ->setSlot(
+                        Section::make()
+                            ->setIcon('fa fa-home')
+                            ->setLabel(__('global.welcome_title'))
+                            ->setClass('h-full hover:shadow-lg bg-white dark:bg-gray-700 transition')
+                            ->setSlot(
+                                Panel::make()
+                                    ->setClass('!mt-0 !-mx-4 !-mb-4')
+                                    ->addColumn('name', style: ['width' => '1%', 'white-space' => 'nowrap'])
+                                    ->addColumn('value', style: ['font-weight' => 'bold'])
+                                    ->setData([
+                                        [
+                                            'name'  => __('global.yourinfo_username'),
+                                            'value' => $user->username,
+                                        ],
+                                        [
+                                            'name'  => __('global.yourinfo_role'),
+                                            'value' => $user->attributes->userRole->name,
+                                        ],
+                                        [
+                                            'name'  => __('global.yourinfo_previous_login'),
+                                            'value' => $user->attributes->lastlogin,
+                                        ],
+                                        [
+                                            'name'  => __('global.yourinfo_total_logins'),
+                                            'value' => $user->attributes->logincount,
+                                        ],
+                                    ])
+                            )
+                    ),
 
-                            Panel::make()
-                                ->setId('widgetUsers')
-                                ->setClass('!mt-0 !-mx-4 !-mb-4')
-                                ->setRoute('/users/:id')
-                                ->setUrl('/users/active'),
-                        ]
-                    )
-                ),
-            ]
-        )
+                Template::make()
+                    ->setClass('grow w-full xl:max-w-[50%] xl:pl-2 pb-4')
+                    ->setSlot(
+                        Section::make()
+                            ->setIcon('fa fa-user')
+                            ->setLabel(__('global.onlineusers_title'))
+                            ->setClass('h-full hover:shadow-lg bg-white dark:bg-gray-700 transition')
+                            ->setSlot(
+                                [
+                                    '<div class="mb-4">' . __('global.onlineusers_message') . '<b>' .
+                                    date('H:i:s') . '</b>)</div>',
+
+                                    Panel::make()
+                                        ->setId('widgetUsers')
+                                        ->setClass('!mt-0 !-mx-4 !-mb-4')
+                                        ->setRoute('/users/:id')
+                                        ->setUrl('/users/active'),
+                                ]
+                            )
+                    ),
+            ])
             ->when(
                 auth()->user()->can(['view_document']),
                 fn(Template $template) => $template->putSlot(
-                    Template::make(
-                        'grow w-full pb-4',
-                        Section::make(
-                            'fa fa-pencil',
-                            __('global.activity_title'),
-                            'hover:shadow-lg bg-white dark:bg-gray-700 overflow-hidden transition',
-                            Panel::make()
-                                ->setId('widgetResources')
-                                ->setClass('!mt-0 !-mx-4 !-mb-4')
-                                ->setRoute('/resource/:id')
-                                ->setUrl(
-                                    '/resource?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
+                    Template::make()
+                        ->setClass('grow w-full pb-4')
+                        ->setSlot(
+                            Section::make()
+                                ->setIcon('fa fa-pencil')
+                                ->setLabel(__('global.activity_title'))
+                                ->setClass('hover:shadow-lg bg-white dark:bg-gray-700 overflow-hidden transition')
+                                ->setSlot(
+                                    Panel::make()
+                                        ->setId('widgetResources')
+                                        ->setClass('!mt-0 !-mx-4 !-mb-4')
+                                        ->setRoute('/resource/:id')
+                                        ->setUrl(
+                                            '/resource?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
+                                        )
                                 )
                         )
-                    )
                 )
             )
             ->when(
                 config('global.rss_url_news'),
                 fn(Template $template) => $template->putSlot(
-                    Template::make(
-                        'grow w-full xl:max-w-[50%] xl:pr-2 pb-4',
-                        Section::make(
-                            'fa fa-rss',
-                            __('global.modx_news'),
-                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
-                            Panel::make()
-                                ->setId('widgetNews')
-                                ->setClass('h-40 !mt-0 !-mx-4 !-mb-4')
-                                ->setUrl('/dashboard/news')
+                    Template::make()
+                        ->setClass('grow w-full xl:max-w-[50%] xl:pr-2 pb-4')
+                        ->setSlot(
+                            Section::make()
+                                ->setIcon('fa fa-rss')
+                                ->setLabel(__('global.modx_news'))
+                                ->setClass('overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition')
+                                ->setSlot(
+                                    Panel::make()
+                                        ->setId('widgetNews')
+                                        ->setClass('h-40 !mt-0 !-mx-4 !-mb-4')
+                                        ->setUrl('/dashboard/news')
+                                )
                         )
-                    )
                 )
             )
             ->when(
                 config('global.rss_url_security'),
                 fn(Template $template) => $template->putSlot(
-                    Template::make(
-                        'grow w-full xl:max-w-[50%] xl:pl-2 pb-4',
-                        Section::make(
-                            'fa fa-exclamation-triangle',
-                            __('global.modx_security_notices'),
-                            'overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition',
-                            Panel::make()
-                                ->setId('widgetNewsSecurity')
-                                ->setClass('h-40 !mt-0 !-mx-4 !-mb-4 !rounded-none')
-                                ->setUrl('/dashboard/news-security')
+                    Template::make()
+                        ->setClass('grow w-full xl:max-w-[50%] xl:pl-2 pb-4')
+                        ->setSlot(
+                            Section::make()
+                                ->setIcon('fa fa-exclamation-triangle')
+                                ->setLabel(__('global.modx_security_notices'))
+                                ->setClass('overflow-hidden bg-white dark:bg-gray-700 hover:shadow-lg transition')
+                                ->setSlot(
+                                    Panel::make()
+                                        ->setId('widgetNewsSecurity')
+                                        ->setClass('h-40 !mt-0 !-mx-4 !-mb-4 !rounded-none')
+                                        ->setUrl('/dashboard/news-security')
+                                )
                         )
-                    )
                 )
             )
             ->toArray();

@@ -86,23 +86,22 @@ class TvLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id' => $category->getKey() ?? 0,
+                'id'    => $category->getKey() ?? 0,
                 'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
-                'to' => '/elements/tvs?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'to'    => '/elements/tvs?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
 
         return [
-            GlobalTab::make(
-                $this->icon(),
-                $this->title($model->name)
-            ),
+            GlobalTab::make()
+                ->setIcon($this->icon())
+                ->setTitle($this->title($model->name)),
 
             Actions::make()
                 ->setCancel(
                     __('global.cancel'),
                     [
-                        'path' => '/elements/tvs',
+                        'path'  => '/elements/tvs',
                         'close' => true,
                     ]
                 )
@@ -167,14 +166,16 @@ class TvLayout extends Layout
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
 
-                                Select::make('data.attributes.category', __('global.existing_category'))
+                                Select::make()
+                                    ->setModel('data.attributes.category')
+                                    ->setLabel(__('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
                                     ->setData([
                                         [
-                                            'key' => $model->category,
-                                            'value' => $model->categories
+                                            'key'      => $model->category,
+                                            'value'    => $model->categories
                                                 ? $model->categories->category
                                                 : __(
                                                     'global.no_category'
@@ -183,27 +184,36 @@ class TvLayout extends Layout
                                         ],
                                     ]),
 
-                                Select::make('data.attributes.type', __('global.tmplvars_type'))
+                                Select::make()
+                                    ->setModel('data.attributes.type')
+                                    ->setLabel(__('global.tmplvars_type'))
                                     ->setClass('mb-3')
                                     ->setUrl('/tvs/types')
                                     ->setData([
                                         [
-                                            'key' => $model->type,
+                                            'key'   => $model->type,
                                             'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
                                         ],
                                     ]),
 
-                                Input::make('data.attributes.rank', __('global.tmplvars_rank'))->setClass('mb-3'),
+                                Input::make()
+                                    ->setModel('data.attributes.rank')
+                                    ->setLabel(__('global.tmplvars_rank'))
+                                    ->setClass('mb-3'),
 
-                                Checkbox::make('data.attributes.locked', __('global.lock_tmplvars_msg'))
+                                Checkbox::make()
+                                    ->setModel('data.attributes.locked')
+                                    ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Select::make('data.attributes.display', __('global.tmplvars_widget'))
+                                Select::make()
+                                    ->setModel('data.attributes.display')
+                                    ->setLabel(__('global.tmplvars_widget'))
                                     ->setUrl('/tvs/display')
                                     ->setData([
                                         [
-                                            'key' => $model->display,
+                                            'key'   => $model->display,
                                             'value' => $model->getDisplay($model->display) ?: __('global.no'),
                                         ],
                                     ])
@@ -232,7 +242,7 @@ class TvLayout extends Layout
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make('templates')->setKeyValue('id')
+                            component: Checkbox::make()->setModel('templates')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -267,7 +277,7 @@ class TvLayout extends Layout
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make('roles')->setKeyValue('id')
+                            component: Checkbox::make()->setModel('roles')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -312,7 +322,7 @@ class TvLayout extends Layout
                                     ->setData(
                                         DocumentgroupName::all()
                                             ->map(fn(DocumentgroupName $group) => [
-                                                'key' => $group->getKey(),
+                                                'key'   => $group->getKey(),
                                                 'value' => $group->name,
                                             ])
                                             ->toArray()
@@ -324,7 +334,8 @@ class TvLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make('data.attributes.properties')
+                    slot: CodeEditor::make()
+                        ->setModel('data.attributes.properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -469,7 +480,7 @@ class TvLayout extends Layout
         return [
             Actions::make()
                 ->setCancelTo([
-                    'path' => '/elements/tvs',
+                    'path'  => '/elements/tvs',
                     'close' => true,
                 ])
                 ->setSave(),
@@ -535,14 +546,14 @@ class TvLayout extends Layout
                     ->setMenu([
                         'actions' => [
                             [
-                                'icon' => 'fa fa-refresh',
-                                'click' => 'update',
+                                'icon'   => 'fa fa-refresh',
+                                'click'  => 'update',
                                 'loader' => true,
                             ],
                             [
-                                'icon' => 'fa fa-circle-plus',
+                                'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_tmplvars'),
-                                'to' => [
+                                'to'    => [
                                     'path' => '/tvs/0',
                                 ],
                             ],
@@ -588,11 +599,11 @@ class TvLayout extends Layout
                 ->setModel('data')
                 ->setColumns([
                     [
-                        'name' => 'title',
+                        'name'  => 'title',
                         'label' => __('global.name'),
                     ],
                     [
-                        'name' => 'value',
+                        'name'  => 'value',
                         'label' => __('global.value'),
                     ],
                 ])
@@ -623,18 +634,18 @@ class TvLayout extends Layout
             $model = 'display_params_data.' . $key;
 
             $component = match ($values[1]) {
-                'int' => Number::make($model)->setValue($values[2]),
-                'list' => Select::make($model)->setData(
+                'int' => Number::make()->setModel($model)->setValue($values[2]),
+                'list' => Select::make()->setModel($model)->setData(
                     array_map(
                         fn($i) => [
-                            'key' => $i,
+                            'key'   => $i,
                             'value' => $i,
                         ],
                         explode(',', $values[2])
                     )
                 ),
-                'textarea' => Textarea::make($model)->setValue($values[2]),
-                default => Input::make($model)->setValue($values[2]),
+                'textarea' => Textarea::make()->setModel($model)->setValue($values[2]),
+                default => Input::make()->setModel($model)->setValue($values[2]),
             };
 
             $data[] = [

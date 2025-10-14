@@ -74,23 +74,22 @@ class TemplateLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id' => $category->getKey(),
+                'id'    => $category->getKey(),
                 'title' => $this->titleList() . ': ' . $category->category,
-                'to' => '/elements/templates?groupBy=none&category=' . $category->getKey(),
+                'to'    => '/elements/templates?groupBy=none&category=' . $category->getKey(),
             ],
         ];
 
         return [
-            GlobalTab::make(
-                $this->icon(),
-                $this->title($model->templatename)
-            ),
+            GlobalTab::make()
+                ->setIcon($this->icon())
+                ->setTitle($this->title($model->templatename)),
 
             Actions::make()
                 ->setCancel(
                     __('global.cancel'),
                     [
-                        'path' => '/elements/templates',
+                        'path'  => '/elements/templates',
                         'close' => true,
                     ]
                 )
@@ -114,82 +113,88 @@ class TemplateLayout extends Layout
                     'default',
                     __('global.settings_general'),
                     slot: [
-                        Template::make(
-                            'flex flex-wrap grow p-5 lg:w-0',
-                            [
-                                Input::make(
-                                    'data.attributes.templatename',
-                                    __('global.template_name')
-                                )
-                                    ->setClass('mb-3')
-                                    ->isRequired()
-                                    ->setRequired(
-                                        config('global.default_template') == $model->getKey() ?
-                                            __('global.defaulttemplate_title') : ''
-                                    ),
-
-                                Input::make(
-                                    'data.attributes.templatealias',
-                                    __('global.alias')
-                                )
-                                    ->setClass('mb-3'),
-
-                                Textarea::make(
-                                    'data.attributes.description',
-                                    __('global.template_desc')
-                                )
-                                    ->setClass('mb-3'),
-                            ]
-                        ),
-
-                        Template::make(
-                            'flex flex-wrap grow p-5 lg:max-w-96',
-                            [
-                                Select::make(
-                                    'data.attributes.category',
-                                    __('global.existing_category')
-                                )
-                                    ->setClass('mb-3')
-                                    ->setUrl('/categories/select')
-                                    ->addOption(
-                                        $category->getKey(),
-                                        $category->category
-                                    )
-                                    ->setNew(''),
-
-                                Checkbox::make('data.attributes.selectable', __('global.template_selectable'))
-                                    ->setClass('mb-3')
-                                    ->setCheckedValue(1, 0),
-
-                                Checkbox::make('data.attributes.locked', __('global.lock_template_msg'))
-                                    ->setClass('mb-3')
-                                    ->setCheckedValue(1, 0),
-                            ]
-                        ),
-
-                        Template::make(
-                            'flex flex-wrap grow px-5 w-full',
-                            [
-                                ($isBladeFile
-                                    ? '<span class="text-green-600 mb-3">' .
-                                    __('global.template_assigned_blade_file') .
-                                    ': ' .
-                                    $relativeBladeFile . '</span>'
-                                    :
-                                    Checkbox::make(
-                                        'data.attributes.createbladefile',
-                                        __('global.template_create_blade_file')
+                        Template::make()
+                            ->setClass('flex flex-wrap grow p-5 lg:w-0')
+                            ->setSlot(
+                                [
+                                    Input::make(
+                                        'data.attributes.templatename',
+                                        __('global.template_name')
                                     )
                                         ->setClass('mb-3')
-                                        ->setCheckedValue(1, 0)),
+                                        ->isRequired()
+                                        ->setRequired(
+                                            config('global.default_template') == $model->getKey() ?
+                                                __('global.defaulttemplate_title') : ''
+                                        ),
 
-                                CodeEditor::make('data.attributes.content', __('global.template_code'))
-                                    ->setClass('')
-                                    ->setLanguage('html')
-                                    ->setRows(20),
-                            ]
-                        ),
+                                    Input::make(
+                                        'data.attributes.templatealias',
+                                        __('global.alias')
+                                    )
+                                        ->setClass('mb-3'),
 
+                                    Textarea::make(
+                                        'data.attributes.description',
+                                        __('global.template_desc')
+                                    )
+                                        ->setClass('mb-3'),
+                                ]
+                            ),
+
+                        Template::make()
+                            ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
+                            ->setSlot(
+                                [
+                                    Select::make()
+                                        ->setModel('data.attributes.category')
+                                        ->setLabel(__('global.existing_category'))
+                                        ->setClass('mb-3')
+                                        ->setUrl('/categories/select')
+                                        ->addOption(
+                                            $category->getKey(),
+                                            $category->category
+                                        )
+                                        ->setNew(''),
+
+                                    Checkbox::make()
+                                        ->setModel('data.attributes.selectable')
+                                        ->setLabel(__('global.template_selectable'))
+                                        ->setClass('mb-3')
+                                        ->setCheckedValue(1, 0),
+
+                                    Checkbox::make()
+                                        ->setModel('data.attributes.locked')
+                                        ->setLabel(__('global.lock_template_msg'))
+                                        ->setClass('mb-3')
+                                        ->setCheckedValue(1, 0),
+                                ]
+                            ),
+
+                        Template::make()
+                            ->setClass('flex flex-wrap grow px-5 w-full')
+                            ->setSlot(
+                                [
+                                    ($isBladeFile
+                                        ? '<span class="text-green-600 mb-3">' .
+                                        __('global.template_assigned_blade_file') .
+                                        ': ' .
+                                        $relativeBladeFile . '</span>'
+                                        :
+                                        Checkbox::make()
+                                            ->setModel('data.attributes.createbladefile')
+                                            ->setLabel(__('global.template_create_blade_file'))
+                                            ->setClass('mb-3')
+                                            ->setCheckedValue(1, 0)),
+
+                                    CodeEditor::make()
+                                        ->setModel('data.attributes.content')
+                                        ->setLabel(__('global.template_code'))
+                                        ->setClass('')
+                                        ->setLanguage('html')
+                                        ->setRows(20),
+                                ]
+                            ),
                     ]
                 )
                 ->addTab(
@@ -205,7 +210,7 @@ class TemplateLayout extends Layout
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make('tvs')->setKeyValue('id')
+                            component: Checkbox::make()->setModel('tvs')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -244,7 +249,7 @@ class TemplateLayout extends Layout
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make('tvs')->setKeyValue('id')
+                            component: Checkbox::make()->setModel('tvs')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -273,7 +278,8 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make('data.attributes.properties')
+                    slot: CodeEditor::make()
+                        ->setModel('data.attributes.properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -375,7 +381,7 @@ class TemplateLayout extends Layout
                             ['width' => '3rem'],
                             false,
                             [
-                                'id' => [
+                                'id'     => [
                                     config(
                                         'global.default_template'
                                     ) => '<i class="fa fa-home fa-fw text-blue-500" data-tooltip="' .
@@ -437,20 +443,20 @@ class TemplateLayout extends Layout
                         'locked' => 'locked:1',
                     ])
                     ->setIcons([
-                        'default' => $this->icon(),
+                        'default'                         => $this->icon(),
                         config('global.default_template') => 'fa fa-home fa-fw text-blue-500',
                     ])
                     ->setMenu([
                         'actions' => [
                             [
-                                'icon' => 'fa fa-refresh',
-                                'click' => 'update',
+                                'icon'   => 'fa fa-refresh',
+                                'click'  => 'update',
                                 'loader' => true,
                             ],
                             [
-                                'icon' => 'fa fa-circle-plus',
+                                'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_template'),
-                                'to' => [
+                                'to'    => [
                                     'path' => '/templates/0',
                                 ],
                             ],

@@ -50,10 +50,9 @@ class FileLayout extends Layout
     public function default(array $data = []): array
     {
         return [
-            GlobalTab::make(
-                $this->icon($data['ext'] ?? 'default'),
-                $data['basename'] ?? $this->title()
-            ),
+            GlobalTab::make()
+                ->setIcon($this->icon($data['ext'] ?? 'default'))
+                ->setTitle($data['basename'] ?? $this->title()),
 
             Actions::make()
                 ->setCancel(__('global.close'))
@@ -73,9 +72,12 @@ class FileLayout extends Layout
                     'default',
                     class: 'h-full',
                     slot: [
-                        stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data)
+                        stripos($data['type'], 'image/') !== false ? Media::make()
+                            ->setModel('path')
+                            ->setData($data)
                             ->setClass('mb-4') : null,
-                        isset($data['content']) ? CodeEditor::make('content')
+                        isset($data['content']) ? CodeEditor::make()
+                            ->setModel('content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
                             ->setClass('p-5 h-full')

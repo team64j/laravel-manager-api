@@ -139,21 +139,19 @@ class ResourceLayout extends Layout
         );
 
         if (request()->input('type') == 'reference') {
-            $filedContent = Input::make(
-                'data.attributes.content',
-                __('global.weblink'),
-                '<b>[*content*]</b><br>' . __('global.resource_weblink_help'),
-                'mb-0'
-            );
+            $filedContent = Input::make()
+                ->setModel('data.attributes.content')
+                ->setLabel(__('global.weblink'))
+                ->setHelp('<b>[*content*]</b><br>' . __('global.resource_weblink_help'))
+                ->setClass('mb-0');
 
             $title = __('global.untitled_weblink');
         } else {
-            $filedContent = CodeEditor::make(
-                'data.attributes.content',
-                __('global.resource_content'),
-                '<b>[*content*]</b>',
-                'mb-0'
-            )
+            $filedContent = CodeEditor::make()
+                ->setModel('data.attributes.content')
+                ->setLabel(__('global.resource_content'))
+                ->setHelp('<b>[*content*]</b>')
+                ->setClass('mb-0')
                 ->setRows(20)
                 ->setLanguage('html');
 
@@ -166,10 +164,9 @@ class ResourceLayout extends Layout
         $route = URL::getRouteById($model->getKey());
 
         return [
-            GlobalTab::make(
-                $this->icon(),
-                $this->title($model->pagetitle),
-            ),
+            GlobalTab::make()
+                ->setIcon($this->icon())
+                ->setTitle($this->title($model->pagetitle)),
 
             Actions::make()
                 ->setCancelTo([
@@ -552,7 +549,7 @@ class ResourceLayout extends Layout
                 )
                 ->when(
                     $groupTv == 5,
-                    function ($tabs) use ($tabTvs) {
+                    function (Tabs $tabs) use ($tabTvs) {
                         array_map(
                             fn($tab) => $tabs->addTab(
                                 $tab['id'],

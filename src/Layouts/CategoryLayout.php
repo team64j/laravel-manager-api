@@ -67,7 +67,7 @@ class CategoryLayout extends Layout
                 ->setCancel(
                     __('global.cancel'),
                     [
-                        'path' => '/elements/categories',
+                        'path'  => '/elements/categories',
                         'close' => true,
                     ]
                 )
@@ -91,8 +91,14 @@ class CategoryLayout extends Layout
                     icon: self::icon(),
                     class: 'p-5',
                     slot: [
-                        Input::make('category', __('global.cm_category_name'))->setClass('mb-3')->isRequired(),
-                        Input::make('rank', __('global.cm_category_position')),
+                        Input::make()
+                            ->setModel('category')
+                            ->setLabel(__('global.cm_category_name'))
+                            ->setClass('mb-3')
+                            ->isRequired(),
+                        Input::make()
+                            ->setModel('rank')
+                            ->setLabel(__('global.cm_category_position')),
                     ]
                 ),
         ];
@@ -193,7 +199,7 @@ class CategoryLayout extends Layout
                             [],
                             [
                                 [
-                                    'icon' => 'fa fa-object-group fa-fw pointer-events-none',
+                                    'icon'      => 'fa fa-object-group fa-fw pointer-events-none',
                                     'noOpacity' => true,
                                 ],
                             ]
@@ -229,7 +235,7 @@ class CategoryLayout extends Layout
         return [
             Actions::make()
                 ->setCancelTo([
-                    'path' => '/elements/categories',
+                    'path'  => '/elements/categories',
                     'close' => true,
                 ])
                 ->setSave(),
@@ -292,14 +298,14 @@ class CategoryLayout extends Layout
                     ->setMenu([
                         'actions' => [
                             [
-                                'icon' => 'fa fa-refresh',
-                                'click' => 'update',
+                                'icon'   => 'fa fa-refresh',
+                                'click'  => 'update',
                                 'loader' => true,
                             ],
                             [
-                                'icon' => 'fa fa-circle-plus',
+                                'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_category'),
-                                'to' => [
+                                'to'    => [
                                     'path' => '/categories/0',
                                 ],
                             ],

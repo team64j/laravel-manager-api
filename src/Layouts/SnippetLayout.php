@@ -67,9 +67,9 @@ class SnippetLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id' => $category->getKey() ?? 0,
+                'id'    => $category->getKey() ?? 0,
                 'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
-                'to' => '/elements/snippets?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'to'    => '/elements/snippets?groupBy=none&category=' . ($category->getKey() ?? 0),
             ],
         ];
 
@@ -78,7 +78,7 @@ class SnippetLayout extends Layout
                 ->setCancel(
                     __('global.cancel'),
                     [
-                        'path' => '/elements/snippets',
+                        'path'  => '/elements/snippets',
                         'close' => true,
                     ]
                 )
@@ -105,28 +105,35 @@ class SnippetLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
-                                Input::make('name', __('global.tmplvars_name'))->setClass('mb-3')->isRequired(),
-                                Textarea::make('description', __('global.tmplvars_description'))
+                                Input::make()
+                                    ->setModel('name')
+                                    ->setLabel(__('global.tmplvars_name'))
+                                    ->setClass('mb-3')
+                                    ->isRequired(),
+                                Textarea::make()
+                                    ->setModel('description')
+                                    ->setLabel(__('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
-                                Checkbox::make(
-                                    'analyze',
-                                    __('global.parse_docblock'),
-                                    __('global.parse_docblock_msg')
-                                )
+                                Checkbox::make()
+                                    ->setModel('analyze')
+                                    ->setLabel(__('global.parse_docblock'))
+                                    ->setHelp(__('global.parse_docblock_msg'))
                                     ->setCheckedValue(1, 0),
                             ]),
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
-                                Select::make('category', __('global.existing_category'))
+                                Select::make()
+                                    ->setModel('category')
+                                    ->setLabel(__('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
                                     ->setData([
                                         [
-                                            'key' => $model->category,
-                                            'value' => $model->categories
+                                            'key'      => $model->category,
+                                            'value'    => $model->categories
                                                 ? $model->categories->category
                                                 : __(
                                                     'global.no_category'
@@ -134,19 +141,21 @@ class SnippetLayout extends Layout
                                             'selected' => true,
                                         ],
                                     ]),
-                                Checkbox::make('disabled', __('global.disabled'))
+                                Checkbox::make()
+                                    ->setModel('disabled')
+                                    ->setLabel(__('global.disabled'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Checkbox::make('locked', __('global.lock_tmplvars_msg'))
+                                Checkbox::make()
+                                    ->setModel('locked')
+                                    ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
-                        CodeEditor::make(
-                            'snippet',
-                            __('global.chunk_code'),
-                            null,
-                            'mx-5'
-                        )
+                        CodeEditor::make()
+                            ->setModel('snippet')
+                            ->setLabel(__('global.chunk_code'))
+                            ->setClass('mx-5')
                             ->setRows(25)
                             ->setLanguage('php'),
                     ],
@@ -154,7 +163,8 @@ class SnippetLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make('properties')
+                    slot: CodeEditor::make()
+                        ->setModel('properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -313,7 +323,7 @@ class SnippetLayout extends Layout
                     ->setAppends(['id'])
                     ->setAliases([
                         'locked' => 'locked:1',
-                        'muted' => 'disabled:1',
+                        'muted'  => 'disabled:1',
                     ])
                     ->setIcons([
                         'default' => $this->icon(),
@@ -321,14 +331,14 @@ class SnippetLayout extends Layout
                     ->setMenu([
                         'actions' => [
                             [
-                                'icon' => 'fa fa-refresh',
-                                'click' => 'update',
+                                'icon'   => 'fa fa-refresh',
+                                'click'  => 'update',
                                 'loader' => true,
                             ],
                             [
-                                'icon' => 'fa fa-circle-plus',
+                                'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_snippet'),
-                                'to' => [
+                                'to'    => [
                                     'path' => '/snippets/0',
                                 ],
                             ],

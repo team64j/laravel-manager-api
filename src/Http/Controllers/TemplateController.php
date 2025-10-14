@@ -352,7 +352,7 @@ class TemplateController extends Controller
                         'data' => $category/*->map(function (SiteTmplvar $item) {
                         return $item->setAttribute(
                             'attach',
-                            Checkbox::make('tvs')->setValue($item->id)
+                            Checkbox::make()->setModel('tvs')->setValue($item->id)
                         )
                             ->withoutRelations();
                     })*/,
