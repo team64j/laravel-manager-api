@@ -77,8 +77,7 @@ class CategoryLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('category')
+            Title::make('category')
                 ->setTitle(__('global.new_category'))
                 ->setIcon(self::icon())
                 ->setId($model->getKey()),
@@ -91,13 +90,11 @@ class CategoryLayout extends Layout
                     icon: self::icon(),
                     class: 'p-5',
                     slot: [
-                        Input::make()
-                            ->setModel('category')
+                        Input::make('category')
                             ->setLabel(__('global.cm_category_name'))
                             ->setClass('mb-3')
                             ->isRequired(),
-                        Input::make()
-                            ->setModel('rank')
+                        Input::make('rank')
                             ->setLabel(__('global.cm_category_position')),
                     ]
                 ),
@@ -186,9 +183,8 @@ class CategoryLayout extends Layout
                 )
                 ->addSlot(
                     'categories',
-                    Panel::make()
+                    Panel::make('data')
                         ->setId('categories')
-                        ->setModel('data')
                         ->setRoute('/categories/:id')
                         ->setHistory(true)
                         ->addColumn(
@@ -244,8 +240,7 @@ class CategoryLayout extends Layout
                 ->setTitle(__('global.cm_sort_categories'))
                 ->setIcon('fa fa-sort-numeric-asc'),
 
-            Panel::make()
-                ->setModel('data')
+            Panel::make('data')
                 ->setId('categories')
                 ->isDraggable('priority')
                 ->addColumn(

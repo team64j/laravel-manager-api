@@ -39,8 +39,7 @@ class SystemLogLayout extends Layout
                 ->setTitle($this->title())
                 ->setIcon($this->icon()),
 
-            Panel::make()
-                ->setModel('data')
+            Panel::make('data')
                 ->setId('system-log')
                 ->setClass('mx-4 mb-4')
                 ->setHistory(!0)

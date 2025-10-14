@@ -73,9 +73,8 @@ class RoleUserLayout extends Layout
                     __('global.role_role_management'),
                     $this->iconList(),
                     route: route('manager.api.roles.users.index'),
-                    slot: Panel::make()
+                    slot: Panel::make('data')
                         ->setId('users')
-                        ->setModel('data')
                         ->setRoute('/roles/users/:id')
                         ->setHistory(true)
                         ->addColumn(

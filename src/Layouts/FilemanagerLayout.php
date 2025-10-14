@@ -57,9 +57,8 @@ class FilemanagerLayout extends Layout
                 ],
 
                 'main' => [
-                    Panel::make()
+                    Panel::make('data')
                         ->setId('filemanagerPanel')
-                        ->setModel('data')
                         //->setUrl('/filemanager/:key')
                         ->setHistory('key')
                         ->setView('list')

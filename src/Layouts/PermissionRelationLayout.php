@@ -77,8 +77,7 @@ class PermissionRelationLayout extends Layout
                     'relations',
                     __('global.access_permissions_links'),
                     route: route('manager.api.permissions.relations'),
-                    slot: Panel::make()
-                    ->setModel('data')
+                    slot: Panel::make('data')
                     ->setId('relations')
                     ->setHistory(true)
                     ->setRoute('/permissions/relations/:id')

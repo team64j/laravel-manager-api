@@ -86,8 +86,7 @@ class ChunkLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('name')
+            Title::make('name')
                 ->setTitle($this->title())
                 ->setHelp(__('global.htmlsnippet_msg'))
                 ->setIcon($this->icon())
@@ -103,13 +102,11 @@ class ChunkLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
-                                Input::make()
-                                    ->setModel('name')
+                                Input::make('name')
                                     ->setLabel(__('global.tmplvars_name'))
                                     ->setClass('mb-3')
                                     ->isRequired(),
-                                Textarea::make()
-                                    ->setModel('description')
+                                Textarea::make('description')
                                     ->setLabel(__('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
@@ -117,8 +114,7 @@ class ChunkLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
-                                Select::make()
-                                    ->setModel('category')
+                                Select::make('category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
@@ -134,19 +130,16 @@ class ChunkLayout extends Layout
                                             'selected' => true,
                                         ],
                                     ]),
-                                Checkbox::make()
-                                    ->setModel('disabled')
+                                Checkbox::make('disabled')
                                     ->setLabel(__('global.disabled'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Checkbox::make()
-                                    ->setModel('locked')
+                                Checkbox::make('locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
-                        CodeEditor::make()
-                            ->setModel('snippet')
+                        CodeEditor::make('snippet')
                             ->setLabel(__('global.chunk_code'))
                             ->setClass('mx-5')
                             ->setRows(25)
@@ -240,9 +233,8 @@ class ChunkLayout extends Layout
                 )
                 ->addSlot(
                     'chunks',
-                    Panel::make()
+                    Panel::make('data')
                         ->setId('chunks')
-                        ->setModel('data')
                         ->setRoute('/chunks/:id')
                         ->setHistory(true)
                         ->addColumn(

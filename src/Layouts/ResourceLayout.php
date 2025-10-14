@@ -139,16 +139,14 @@ class ResourceLayout extends Layout
         );
 
         if (request()->input('type') == 'reference') {
-            $filedContent = Input::make()
-                ->setModel('data.attributes.content')
+            $filedContent = Input::make('data.attributes.content')
                 ->setLabel(__('global.weblink'))
                 ->setHelp('<b>[*content*]</b><br>' . __('global.resource_weblink_help'))
                 ->setClass('mb-0');
 
             $title = __('global.untitled_weblink');
         } else {
-            $filedContent = CodeEditor::make()
-                ->setModel('data.attributes.content')
+            $filedContent = CodeEditor::make('data.attributes.content')
                 ->setLabel(__('global.resource_content'))
                 ->setHelp('<b>[*content*]</b>')
                 ->setClass('mb-0')
@@ -208,8 +206,7 @@ class ResourceLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('data.attributes.pagetitle')
+            Title::make('data.attributes.pagetitle')
                 ->setTitle($title)
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -625,8 +622,7 @@ class ResourceLayout extends Layout
             if (str_starts_with($tv->type, 'custom_tv:')) {
                 $tvTabs->putSlot(
                     $categoryId,
-                    Textarea::make()
-                        ->setModel('data.tvs.' . $tv->name)
+                    Textarea::make('data.tvs.' . $tv->name)
                         ->setData($data)
                         ->setLabel($tv->caption)
                         ->setDescription($tv['description'])
@@ -681,15 +677,13 @@ class ResourceLayout extends Layout
                 slot: [
                     __('global.access_permissions_docs_message') . '<br/><br/>',
 
-                    Checkbox::make()
-                        ->setModel('data.is_document_group')
+                    Checkbox::make('data.is_document_group')
                         ->setLabel(__('global.all_doc_groups'))
                         ->setCheckedValue(true, false)
                         ->setRelation('data.document_groups', [], [], true)
                         ->setClass('mb-3'),
 
-                    Checkbox::make()
-                        ->setModel('data.document_groups')
+                    Checkbox::make('data.document_groups')
                         ->setLabel(__('global.access_permissions_resource_groups'))
                         ->setData(
                             DocumentgroupName::all()

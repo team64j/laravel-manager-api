@@ -78,9 +78,8 @@ class RoleCategoryLayout extends Layout
                     __('global.category_heading'),
                     $this->icon(),
                     route: route('manager.api.roles.categories.index'),
-                    slot: Panel::make()
+                    slot: Panel::make('data')
                         ->setId('categories')
-                        ->setModel('data')
                         ->setRoute('/roles/categories/:id')
                         ->setHistory(true)
                         ->addColumn(

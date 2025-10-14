@@ -99,8 +99,7 @@ class TemplateLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('data.attributes.templatename')
+            Title::make('data.attributes.templatename')
                 ->setHelp(__('global.template_msg'))
                 ->setId($model->getKey())
                 ->setIcon($this->icon())
@@ -146,8 +145,7 @@ class TemplateLayout extends Layout
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot(
                                 [
-                                    Select::make()
-                                        ->setModel('data.attributes.category')
+                                    Select::make('data.attributes.category')
                                         ->setLabel(__('global.existing_category'))
                                         ->setClass('mb-3')
                                         ->setUrl('/categories/select')
@@ -157,14 +155,12 @@ class TemplateLayout extends Layout
                                         )
                                         ->setNew(''),
 
-                                    Checkbox::make()
-                                        ->setModel('data.attributes.selectable')
+                                    Checkbox::make('data.attributes.selectable')
                                         ->setLabel(__('global.template_selectable'))
                                         ->setClass('mb-3')
                                         ->setCheckedValue(1, 0),
 
-                                    Checkbox::make()
-                                        ->setModel('data.attributes.locked')
+                                    Checkbox::make('data.attributes.locked')
                                         ->setLabel(__('global.lock_template_msg'))
                                         ->setClass('mb-3')
                                         ->setCheckedValue(1, 0),
@@ -181,14 +177,12 @@ class TemplateLayout extends Layout
                                         ': ' .
                                         $relativeBladeFile . '</span>'
                                         :
-                                        Checkbox::make()
-                                            ->setModel('data.attributes.createbladefile')
+                                        Checkbox::make('data.attributes.createbladefile')
                                             ->setLabel(__('global.template_create_blade_file'))
                                             ->setClass('mb-3')
                                             ->setCheckedValue(1, 0)),
 
-                                    CodeEditor::make()
-                                        ->setModel('data.attributes.content')
+                                    CodeEditor::make('data.attributes.content')
                                         ->setLabel(__('global.template_code'))
                                         ->setClass('')
                                         ->setLanguage('html')
@@ -200,17 +194,16 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'tvs',
                     __('global.template_assignedtv_tab'),
-                    slot: Panel::make()
+                    slot: Panel::make('tvs')
                         ->setId('tvs')
                         ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=true')
-                        ->setModel('tvs')
                         ->addColumn(
                             'attach',
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make()->setModel('tvs')->setKeyValue('id')
+                            component: Checkbox::make('tvs')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -239,9 +232,8 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'available',
                     __('global.template_notassigned_tv'),
-                    slot: Panel::make()
+                    slot: Panel::make('tvs')
                         ->setId('available')
-                        ->setModel('tvs')
                         ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=false')
                         ->addColumn(
                             'attach',
@@ -249,7 +241,7 @@ class TemplateLayout extends Layout
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make()->setModel('tvs')->setKeyValue('id')
+                            component: Checkbox::make('tvs')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -278,8 +270,7 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make()
-                        ->setModel('data.attributes.properties')
+                    slot: CodeEditor::make('data.attributes.properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -370,9 +361,8 @@ class TemplateLayout extends Layout
                 )
                 ->addSlot(
                     'templates',
-                    Panel::make()
+                    Panel::make('data')
                         ->setId('templates')
-                        ->setModel('data')
                         ->setRoute('/templates/:id')
                         ->setHistory(true)
                         ->addColumn(

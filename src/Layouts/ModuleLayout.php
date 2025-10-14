@@ -90,8 +90,7 @@ class ModuleLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('name')
+            Title::make('name')
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -106,18 +105,15 @@ class ModuleLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
-                                Input::make()
-                                    ->setModel('name')
+                                Input::make('name')
                                     ->setLabel(__('global.module_name'))
                                     ->setClass('mb-3')
                                     ->isRequired(),
-                                Textarea::make()
-                                    ->setModel('description')
+                                Textarea::make('description')
                                     ->setLabel(__('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
-                                Checkbox::make()
-                                    ->setModel('analyze')
+                                Checkbox::make('analyze')
                                     ->setLabel(__('global.parse_docblock'))
                                     ->setHelp(__('global.parse_docblock_msg'))
                                     ->setCheckedValue(1, 0),
@@ -125,8 +121,7 @@ class ModuleLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
-                                Select::make()
-                                    ->setModel('category')
+                                Select::make('category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
@@ -142,19 +137,16 @@ class ModuleLayout extends Layout
                                             'selected' => true,
                                         ],
                                     ]),
-                                Checkbox::make()
-                                    ->setModel('disabled')
+                                Checkbox::make('disabled')
                                     ->setLabel(__('global.disabled'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Checkbox::make()
-                                    ->setModel('locked')
+                                Checkbox::make('locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
-                        CodeEditor::make()
-                            ->setModel('modulecode')
+                        CodeEditor::make('modulecode')
                             ->setLabel(__('global.module_code'))
                             ->setClass('mx-5')
                             ->setRows(25)
@@ -166,18 +158,15 @@ class ModuleLayout extends Layout
                     __('global.settings_properties'),
                     class: 'p-5',
                     slot: [
-                        Input::make()
-                            ->setModel('guid')
+                        Input::make('guid')
                             ->setLabel('GUID')
                             ->setHelp(__('global.import_params_msg'))
                             ->setClass('mb-3'),
-                        Checkbox::make()
-                            ->setModel('enable_sharedparams')
+                        Checkbox::make('enable_sharedparams')
                             ->setLabel(__('global.enable_sharedparams'))
                             ->setHelp(__('global.enable_sharedparams_msg'))
                             ->setClass('mb-5'),
-                        CodeEditor::make()
-                            ->setModel('properties')
+                        CodeEditor::make('properties')
                             ->setRows(25)
                             ->setLanguage('json'),
                     ]
@@ -192,15 +181,13 @@ class ModuleLayout extends Layout
                             slot: [
                                 __('global.access_permissions_docs_message') . '<br/><br/>',
 
-                                Checkbox::make()
-                                    ->setModel('data.is_module_group')
+                                Checkbox::make('data.is_module_group')
                                     ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
                                     ->setRelation('data.document_groups', [], [], true)
                                     ->setClass('mb-3'),
 
-                                Checkbox::make()
-                                    ->setModel('data.module_groups')
+                                Checkbox::make('data.module_groups')
                                     ->setLabel(__('global.access_permissions_resource_groups'))
                                     ->setData(
                                         DocumentgroupName::all()
@@ -302,9 +289,8 @@ class ModuleLayout extends Layout
                 )
                 ->addSlot(
                     'modules',
-                    Panel::make()
+                    Panel::make('data')
                         ->setId('modules')
-                        ->setModel('data')
                         ->setRoute('/modules/:id')
                         ->setHistory(true)
                         ->addColumn(

@@ -38,8 +38,7 @@ class ResourcesLayout extends Layout
                 ->setTitle($model->pagetitle)
                 ->setIcon($this->icon()),
 
-            Panel::make()
-                ->setModel('data')
+            Panel::make('data')
                 ->setId('resources')
                 ->setClass('mx-4 mb-4')
                 ->setRoute('/resource/:id')

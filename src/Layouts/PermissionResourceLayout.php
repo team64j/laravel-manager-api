@@ -60,8 +60,7 @@ class PermissionResourceLayout extends Layout
                     'resources',
                     __('global.access_permissions_resource_groups'),
                     route: route('manager.api.permissions.resources'),
-                    slot: Panel::make()
-                        ->setModel('data')
+                    slot: Panel::make('data')
                         ->setId('resources')
                         ->setHistory(true)
                         ->setRoute('/permissions/resources/:id')

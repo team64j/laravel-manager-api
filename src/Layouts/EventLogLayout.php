@@ -48,8 +48,7 @@ class EventLogLayout extends Layout
                 ->setTitle($this->titleList())
                 ->setIcon($this->icon()),
 
-            Panel::make()
-                ->setModel('data')
+            Panel::make('data')
                 ->setRoute('/event-log/:id')
                 ->setHistory(true)
                 ->setClass('mx-4 mb-4')

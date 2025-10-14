@@ -111,8 +111,7 @@ class TvLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('data.attributes.name')
+            Title::make('data.attributes.name')
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -166,8 +165,7 @@ class TvLayout extends Layout
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
 
-                                Select::make()
-                                    ->setModel('data.attributes.category')
+                                Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
@@ -184,8 +182,7 @@ class TvLayout extends Layout
                                         ],
                                     ]),
 
-                                Select::make()
-                                    ->setModel('data.attributes.type')
+                                Select::make('data.attributes.type')
                                     ->setLabel(__('global.tmplvars_type'))
                                     ->setClass('mb-3')
                                     ->setUrl('/tvs/types')
@@ -196,19 +193,16 @@ class TvLayout extends Layout
                                         ],
                                     ]),
 
-                                Input::make()
-                                    ->setModel('data.attributes.rank')
+                                Input::make('data.attributes.rank')
                                     ->setLabel(__('global.tmplvars_rank'))
                                     ->setClass('mb-3'),
 
-                                Checkbox::make()
-                                    ->setModel('data.attributes.locked')
+                                Checkbox::make('data.attributes.locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Select::make()
-                                    ->setModel('data.attributes.display')
+                                Select::make('data.attributes.display')
                                     ->setLabel(__('global.tmplvars_widget'))
                                     ->setUrl('/tvs/display')
                                     ->setData([
@@ -231,9 +225,8 @@ class TvLayout extends Layout
                 ->addTab(
                     'templates',
                     __('global.templates'),
-                    slot: Panel::make()
+                    slot: Panel::make('data.templates')
                         ->setId('templates')
-                        ->setModel('data.templates')
                         ->setUrl('/templates?groupBy=category')
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_tmpl_access_msg') . '</p>')
                         ->addColumn(
@@ -242,7 +235,7 @@ class TvLayout extends Layout
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make()->setModel('templates')->setKeyValue('id')
+                            component: Checkbox::make('templates')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -266,9 +259,8 @@ class TvLayout extends Layout
                 ->addTab(
                     'roles',
                     __('global.role_management_title'),
-                    slot: Panel::make()
+                    slot: Panel::make('data.roles')
                         ->setId('roles')
-                        ->setModel('data.roles')
                         ->setUrl('/roles/users')
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
@@ -277,7 +269,7 @@ class TvLayout extends Layout
                             ['width' => '4rem', 'textAlign' => 'center'],
                             true,
                             selectable: true,
-                            component: Checkbox::make()->setModel('roles')->setKeyValue('id')
+                            component: Checkbox::make('roles')->setKeyValue('id')
                         )
                         ->addColumn(
                             'id',
@@ -308,16 +300,14 @@ class TvLayout extends Layout
                             slot: [
                                 __('global.access_permissions_docs_message') . '<br/><br/>',
 
-                                Checkbox::make()
+                                Checkbox::make('data.attributes.is_document_group')
                                     ->setClass('mb-3')
-                                    ->setModel('data.attributes.is_document_group')
                                     ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
                                     ->setRelation('data.attributes.document_groups', [], [], true),
 
-                                Checkbox::make()
+                                Checkbox::make('data.attributes.document_groups')
                                     ->setClass('mb-3')
-                                    ->setModel('data.attributes.document_groups')
                                     ->setLabel(__('global.access_permissions_resource_groups'))
                                     ->setData(
                                         DocumentgroupName::all()
@@ -334,8 +324,7 @@ class TvLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make()
-                        ->setModel('data.attributes.properties')
+                    slot: CodeEditor::make('data.attributes.properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -427,9 +416,8 @@ class TvLayout extends Layout
                 )
                 ->addSlot(
                     'tvs',
-                    Panel::make()
+                    Panel::make('data')
                         ->setId('tvs')
-                        ->setModel('data')
                         ->setRoute('/tvs/:id')
                         ->setHistory(true)
                         ->addColumn(
@@ -489,8 +477,7 @@ class TvLayout extends Layout
                 ->setTitle($this->titleSort())
                 ->setIcon($this->iconSort()),
 
-            Panel::make()
-                ->setModel('data')
+            Panel::make('data')
                 ->setId('plugins')
                 ->isDraggable('rank')
                 ->addColumn(
@@ -594,9 +581,8 @@ class TvLayout extends Layout
         $widgetParams['custom_widget'] = '&output=Output;textarea;[+value+]';
 
         if (!empty($widgetParams[$name])) {
-            $data[] = Panel::make()
+            $data[] = Panel::make('data')
                 ->setClass('!h-auto mt-5 !mx-5 w-full')
-                ->setModel('data')
                 ->setColumns([
                     [
                         'name'  => 'title',
@@ -634,8 +620,8 @@ class TvLayout extends Layout
             $model = 'display_params_data.' . $key;
 
             $component = match ($values[1]) {
-                'int' => Number::make()->setModel($model)->setValue($values[2]),
-                'list' => Select::make()->setModel($model)->setData(
+                'int' => Number::make($model)->setValue($values[2]),
+                'list' => Select::make($model)->setData(
                     array_map(
                         fn($i) => [
                             'key'   => $i,
@@ -644,8 +630,8 @@ class TvLayout extends Layout
                         explode(',', $values[2])
                     )
                 ),
-                'textarea' => Textarea::make()->setModel($model)->setValue($values[2]),
-                default => Input::make()->setModel($model)->setValue($values[2]),
+                'textarea' => Textarea::make($model)->setValue($values[2]),
+                default => Input::make($model)->setValue($values[2]),
             };
 
             $data[] = [

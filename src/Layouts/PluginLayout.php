@@ -104,8 +104,7 @@ class PluginLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('name')
+            Title::make('name')
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -120,18 +119,15 @@ class PluginLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
-                                Input::make()
-                                    ->setModel('name')
+                                Input::make('name')
                                     ->setLabel(__('global.tmplvars_name'))
                                     ->setClass('mb-3')
                                     ->isRequired(),
-                                Textarea::make()
-                                    ->setModel('description')
+                                Textarea::make('description')
                                     ->setLabel(__('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
-                                Checkbox::make()
-                                    ->setModel('analyze')
+                                Checkbox::make('analyze')
                                     ->setLabel(__('global.parse_docblock'))
                                     ->setHelp(__('global.parse_docblock_msg'))
                                     ->setCheckedValue(1, 0),
@@ -139,8 +135,7 @@ class PluginLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
-                                Select::make()
-                                    ->setModel('category')
+                                Select::make('category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setClass('mb-3')
                                     ->setUrl('/categories/select')
@@ -156,19 +151,16 @@ class PluginLayout extends Layout
                                             'selected' => true,
                                         ],
                                     ]),
-                                Checkbox::make()
-                                    ->setModel('disabled')
+                                Checkbox::make('disabled')
                                     ->setLabel(__('global.disabled'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
-                                Checkbox::make()
-                                    ->setModel('locked')
+                                Checkbox::make('locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
-                        CodeEditor::make()
-                            ->setModel('plugincode')
+                        CodeEditor::make('plugincode')
                             ->setLabel(__('global.plugin_code'))
                             ->setClass('mx-5')
                             ->setRows(25)
@@ -179,15 +171,14 @@ class PluginLayout extends Layout
                     'events',
                     __('global.settings_events'),
                     slot: [
-                        Panel::make()
+                        Panel::make('events')
                             ->setSlotTop('<div class="p-5 w-full">' . __('global.plugin_event_msg') . '</div>')
                             ->setUrl('/plugins/events')
-                            ->setModel('events')
                             ->addColumn(
                                 'checked',
                                 style: ['width' => '1%'],
                                 selectable: true,
-                                component: Checkbox::make()->setModel('tvs')->setKeyValue('id')
+                                component: Checkbox::make('tvs')->setKeyValue('id')
                             )
                             ->addColumn(
                                 'name'
@@ -197,8 +188,7 @@ class PluginLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make()
-                        ->setModel('properties')
+                    slot: CodeEditor::make('properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),
@@ -290,9 +280,8 @@ class PluginLayout extends Layout
                 )
                 ->addSlot(
                     'plugins',
-                    Panel::make()
+                    Panel::make('data')
                         ->setId('plugins')
-                        ->setModel('data')
                         ->setRoute('/plugins/:id')
                         ->setHistory(true)
                         ->addColumn(
@@ -354,8 +343,7 @@ class PluginLayout extends Layout
                 ->setTitle($this->titleSort())
                 ->setIcon($this->iconSort()),
 
-            Panel::make()
-                ->setModel('data')
+            Panel::make('data')
                 ->setId('plugins')
                 ->isDraggable('priority')
                 ->addColumn(

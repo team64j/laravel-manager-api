@@ -81,9 +81,8 @@ class RolePermissionLayout extends Layout
                     __('global.manage_permission'),
                     $this->icon(),
                     route: route('manager.api.roles.permissions.index'),
-                    slot: Panel::make()
+                    slot: Panel::make('data')
                         ->setId('permissions')
-                        ->setModel('data')
                         ->setRoute('/roles/permissions/:id')
                         ->setHistory(true)
                         ->addColumn(

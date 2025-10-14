@@ -68,8 +68,7 @@ class UserLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make()
-                ->setModel('username')
+            Title::make('username')
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -98,9 +97,8 @@ class UserLayout extends Layout
                 ->setClass('px-4 pb-4')
                 ->addTab(
                     'users',
-                    slot: Panel::make()
+                    slot: Panel::make('data')
                         ->setId('users')
-                        ->setModel('data')
                         ->setRoute('/users/:id')
                         ->setHistory(true)
                         ->addColumn(

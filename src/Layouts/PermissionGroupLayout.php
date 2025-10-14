@@ -55,8 +55,7 @@ class PermissionGroupLayout extends Layout
                     'groups',
                     __('global.web_access_permissions_user_groups'),
                     route: route('manager.api.permissions.groups'),
-                    slot: Panel::make()
-                    ->setModel('data')
+                    slot: Panel::make('data')
                     ->setId('groups')
                     ->setHistory(true)
                     ->setRoute('/permissions/groups/:id')
