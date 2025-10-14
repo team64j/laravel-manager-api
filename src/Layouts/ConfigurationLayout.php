@@ -42,7 +42,7 @@ class ConfigurationLayout extends Layout
         return [
             Actions::make()
                 ->setCancel()
-                ->setSave(class: 'btn-green'),
+                ->setSaveAnd(states: [0, 2]),
 
             Title::make()
                 ->setTitle($this->title())
@@ -50,7 +50,6 @@ class ConfigurationLayout extends Layout
 
             Tabs::make()
                 ->setId('configuration')
-                ->setClass('px-4 pb-4')
                 ->addTab('tab1', __('global.settings_site'), slot: $this->tab1())
                 ->addTab('tab2', __('global.settings_furls'), slot: $this->tab2())
                 ->addTab('tab3', __('global.settings_ui'), slot: $this->tab3())

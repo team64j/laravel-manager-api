@@ -97,7 +97,6 @@ class ModuleLayout extends Layout
 
             Tabs::make()
                 ->setId('module')
-                ->setClass('px-4 pb-4')
                 ->addTab(
                     'general',
                     __('global.page_data_general'),
@@ -156,7 +155,6 @@ class ModuleLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    class: 'p-5',
                     slot: [
                         Input::make('guid')
                             ->setLabel('GUID')
@@ -177,7 +175,6 @@ class ModuleLayout extends Layout
                         ->addTab(
                             'permissions',
                             __('global.access_permissions'),
-                            class: 'flex-col p-5',
                             slot: [
                                 __('global.access_permissions_docs_message') . '<br/><br/>',
 
@@ -228,7 +225,6 @@ class ModuleLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
-                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

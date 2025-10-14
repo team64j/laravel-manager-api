@@ -213,7 +213,6 @@ class ResourceLayout extends Layout
 
             Tabs::make()
                 ->setId('resource')
-                ->setClass('px-4 pb-4')
                 ->addTab(
                     'general',
                     __('global.settings_general'),
@@ -477,7 +476,6 @@ class ResourceLayout extends Layout
                     fn(Tabs $tabs) => $tabs->addTab(
                         'tvs',
                         __('global.settings_templvars'),
-                        class: 'flex flex-wrap p-5',
                         slot: array_map(
                             fn($slot) => Section::make()
                                 ->setClass('!p-0')
@@ -503,7 +501,6 @@ class ResourceLayout extends Layout
                             fn($tab) => $tabs->addTab(
                                 $tab['id'],
                                 $tab['name'],
-                                class: 'p-5',
                                 slot: $tabTvs['slots'][$tab['id']],
                             ),
                             $tabTvs['attrs']['data']
@@ -530,7 +527,6 @@ class ResourceLayout extends Layout
     {
         $tvTabs = Tabs::make()
             ->setId('tvs')
-            ->setClass('p-5')
             ->setData([])
             ->isVertical();
 
@@ -625,7 +621,6 @@ class ResourceLayout extends Layout
             ->addTab(
                 'permissions',
                 __('global.access_permissions'),
-                class: 'flex-col p-5',
                 slot: [
                     __('global.access_permissions_docs_message') . '<br/><br/>',
 

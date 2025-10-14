@@ -69,7 +69,6 @@ class FileLayout extends Layout
             Tabs::make()
                 ->addTab(
                     'default',
-                    class: 'h-full',
                     slot: [
                         stripos($data['type'], 'image/') !== false ? Media::make('path')
                             ->setData($data)

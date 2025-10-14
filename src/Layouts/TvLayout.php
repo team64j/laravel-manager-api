@@ -118,7 +118,6 @@ class TvLayout extends Layout
 
             Tabs::make()
                 ->setId('tv')
-                ->setClass('px-4 pb-4')
                 ->addTab(
                     'default',
                     __('global.page_data_general'),
@@ -165,9 +164,7 @@ class TvLayout extends Layout
                                             'key'      => $model->category,
                                             'value'    => $model->categories
                                                 ? $model->categories->category
-                                                : __(
-                                                    'global.no_category'
-                                                ),
+                                                : __('global.no_category'),
                                             'selected' => true,
                                         ],
                                     ]),
@@ -286,7 +283,6 @@ class TvLayout extends Layout
                         ->addTab(
                             'permissions',
                             __('global.access_permissions'),
-                            class: 'p-5',
                             slot: [
                                 __('global.access_permissions_docs_message') . '<br/><br/>',
 
@@ -345,7 +341,6 @@ class TvLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
-                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

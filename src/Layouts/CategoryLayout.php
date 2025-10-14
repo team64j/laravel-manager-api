@@ -84,11 +84,9 @@ class CategoryLayout extends Layout
 
             Tabs::make()
                 ->setId('category')
-                ->setClass('px-4 pb-4')
                 ->addTab(
                     'general',
                     icon: self::icon(),
-                    class: 'p-5',
                     slot: [
                         Input::make('category')
                             ->setLabel(__('global.cm_category_name'))
@@ -122,7 +120,6 @@ class CategoryLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
-                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

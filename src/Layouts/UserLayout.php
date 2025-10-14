@@ -94,7 +94,6 @@ class UserLayout extends Layout
 
             Tabs::make()
                 ->setId('users')
-                ->setClass('px-4 pb-4')
                 ->addTab(
                     'users',
                     slot: Panel::make('data')

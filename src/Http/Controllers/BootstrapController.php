@@ -926,7 +926,6 @@ class BootstrapController extends Controller
         $tabs = Tabs::make()
             ->setId('tree')
             ->setUid('TREE')
-            ->setClass('h-full')
             ->isVertical()
             ->setNavigation(false)
             ->isHiddenTabs()

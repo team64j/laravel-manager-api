@@ -94,7 +94,6 @@ class ChunkLayout extends Layout
 
             Tabs::make()
                 ->setId('chunk')
-                ->setClass('px-4 pb-4')
                 ->addTab(
                     'general',
                     __('global.page_data_general'),
@@ -172,7 +171,6 @@ class ChunkLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
-                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(

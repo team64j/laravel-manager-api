@@ -107,7 +107,6 @@ class TemplateLayout extends Layout
 
             Tabs::make()
                 ->setId('template')
-                ->setClass('px-4 pb-4')
                 ->addTab(
                     'default',
                     __('global.settings_general'),
@@ -294,7 +293,6 @@ class TemplateLayout extends Layout
 
             Tabs::make()
                 ->setId('elements')
-                ->setClass('px-4 pb-4')
                 ->setHistory(true)
                 ->isWatch()
                 ->addTab(
