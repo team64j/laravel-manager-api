@@ -45,22 +45,22 @@ class DashboardLayout extends Layout
         $data = [];
 
         if (!config('global.site_status')) {
-            $data[] = Template::make(
-                'block app-alert__warning p-4 mt-4 mx-4 rounded',
-                __('global.siteunavailable_message_default') .
-                ' ' . __('global.update_settings_from_language') .
-                '<a href="/configuration" class="btn-sm btn-green ml-2">' . __('global.online') . '</a>'
-            );
+            $data[] = Template::make()
+                ->setClass('block app-alert__warning p-4 mt-4 mx-4 rounded')
+                ->setSlot(
+                    __('global.siteunavailable_message_default') .
+                    ' ' . __('global.update_settings_from_language') .
+                    '<a href="/configuration" class="btn-sm btn-green ml-2">' . __('global.online') . '</a>'
+                );
         }
 
         if (is_dir(base_path('install'))) {
-            $data[] = Template::make(
-                'block app-alert__warning p-4 mt-4 mx-4 rounded',
-                '<strong>' . __('global.configcheck_warning') . '</strong>' .
+            $data[] = Template::make()
+            ->setClass('block app-alert__warning p-4 mt-4 mx-4 rounded')
+            ->setSlot('<strong>' . __('global.configcheck_warning') . '</strong>' .
                 '<br>' . __('global.configcheck_installer') .
                 '<br><br><i>' . __('global.configcheck_what') . '</i>' .
-                '<br>' . __('global.configcheck_installer_msg')
-            );
+                '<br>' . __('global.configcheck_installer_msg'));
         }
 
         return $data;

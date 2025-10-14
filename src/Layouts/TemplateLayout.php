@@ -116,10 +116,8 @@ class TemplateLayout extends Layout
                             ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot(
                                 [
-                                    Input::make(
-                                        'data.attributes.templatename',
-                                        __('global.template_name')
-                                    )
+                                    Input::make('data.attributes.templatename')
+                                        ->setLabel(__('global.template_name'))
                                         ->setClass('mb-3')
                                         ->isRequired()
                                         ->setRequired(
@@ -127,16 +125,12 @@ class TemplateLayout extends Layout
                                                 __('global.defaulttemplate_title') : ''
                                         ),
 
-                                    Input::make(
-                                        'data.attributes.templatealias',
-                                        __('global.alias')
-                                    )
+                                    Input::make('data.attributes.templatealias')
+                                        ->setLabel(__('global.alias'))
                                         ->setClass('mb-3'),
 
-                                    Textarea::make(
-                                        'data.attributes.description',
-                                        __('global.template_desc')
-                                    )
+                                    Textarea::make('data.attributes.description')
+                                        ->setLabel(__('global.template_desc'))
                                         ->setClass('mb-3'),
                                 ]
                             ),

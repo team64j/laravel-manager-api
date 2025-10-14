@@ -126,39 +126,29 @@ class TvLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
-                                Input::make(
-                                    'data.attributes.name',
-                                    __('global.tmplvars_name')
-                                )
+                                Input::make('data.attributes.name')
+                                    ->setLabel(__('global.tmplvars_name'))
                                     ->setClass('mb-3')
                                     ->isRequired(),
 
-                                Input::make(
-                                    'data.attributes.caption',
-                                    __('global.tmplvars_caption')
-                                )
+                                Input::make('data.attributes.caption')
+                                    ->setLabel(__('global.tmplvars_caption'))
                                     ->setClass('mb-3'),
 
-                                Textarea::make(
-                                    'data.attributes.description',
-                                    __('global.tmplvars_description')
-                                )
+                                Textarea::make('data.attributes.description')
+                                    ->setLabel(__('global.tmplvars_description'))
                                     ->setClass('mb-3')
                                     ->setRows(2),
 
-                                CodeEditor::make(
-                                    'data.attributes.elements',
-                                    __('global.tmplvars_elements'),
-                                    __('global.tmplvars_binding_msg'),
-                                    'mb-3'
-                                )
+                                CodeEditor::make('data.attributes.elements')
+                                    ->setLabel(__('global.tmplvars_elements'))
+                                    ->setHelp(__('global.tmplvars_binding_msg'))
+                                    ->setClass('mb-3')
                                     ->setRows(2),
 
-                                CodeEditor::make(
-                                    'data.attributes.default_text',
-                                    __('global.tmplvars_default'),
-                                    __('global.tmplvars_binding_msg')
-                                )
+                                CodeEditor::make('data.attributes.default_text')
+                                    ->setLabel(__('global.tmplvars_default'))
+                                    ->setHelp(__('global.tmplvars_binding_msg'))
                                     ->setRows(2),
                             ]),
                         Template::make()

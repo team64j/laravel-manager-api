@@ -221,43 +221,33 @@ class ResourceLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
-                                Input::make(
-                                    'data.attributes.pagetitle',
-                                    __('global.resource_title'),
-                                    '<b>[*pagetitle*]</b><br>' . __('global.resource_title_help'),
-                                    'mb-3 lg:pr-2 lg:basis-2/3'
-                                )
+                                Input::make('data.attributes.pagetitle')
+                                    ->setLabel(__('global.resource_title'))
+                                    ->setHelp('<b>[*pagetitle*]</b><br>' . __('global.resource_title_help'))
+                                    ->setClass('mb-3 lg:pr-2 lg:basis-2/3')
                                     ->isRequired(),
 
-                                Input::make(
-                                    'data.attributes.alias',
-                                    __('global.resource_alias'),
-                                    '<b>[*alias*]</b><br>' . __('global.resource_alias_help'),
-                                    'mb-3 lg:pl-2 lg:basis-1/3'
-                                )
+                                Input::make('data.attributes.alias')
+                                    ->setLabel(__('global.resource_alias'))
+                                    ->setHelp('<b>[*alias*]</b><br>' . __('global.resource_alias_help'))
+                                    ->setClass('mb-3 lg:pl-2 lg:basis-1/3')
                                     ->isRequired(),
 
-                                Input::make(
-                                    'data.attributes.longtitle',
-                                    __('global.long_title'),
-                                    '<b>[*longtitle*]</b><br>' . __('global.resource_long_title_help'),
-                                    'mb-3'
-                                ),
+                                Input::make('data.attributes.longtitle')
+                                    ->setLabel(__('global.long_title'))
+                                    ->setHelp('<b>[*longtitle*]</b><br>' . __('global.resource_long_title_help'))
+                                    ->setClass('mb-3'),
 
-                                Textarea::make(
-                                    'data.attributes.description',
-                                    __('global.resource_description'),
-                                    '<b>[*description*]</b><br>' . __('global.resource_description_help'),
-                                    'mb-3 lg:pr-2 lg:basis-1/2'
-                                )
+                                Textarea::make('data.attributes.description')
+                                    ->setLabel(__('global.resource_description'))
+                                    ->setHelp('<b>[*description*]</b><br>' . __('global.resource_description_help'))
+                                    ->setClass('mb-3 lg:pr-2 lg:basis-1/2')
                                     ->setRows(3),
 
-                                CodeEditor::make(
-                                    'data.attributes.introtext',
-                                    __('global.resource_summary'),
-                                    '<b>[*introtext*]</b><br>' . __('global.resource_summary_help'),
-                                    'mb-3 lg:pl-2 lg:basis-1/2'
-                                )
+                                CodeEditor::make('data.attributes.introtext')
+                                    ->setLabel(__('global.resource_summary'))
+                                    ->setHelp('<b>[*introtext*]</b><br>' . __('global.resource_summary_help'))
+                                    ->setClass('mb-3 lg:pl-2 lg:basis-1/2')
                                     ->setRows(3)
                                     ->setLanguage('html'),
 
@@ -267,11 +257,9 @@ class ResourceLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
-                                /*Select::make(
-                                    'parent',
-                                    __('global.import_parent_resource'),
-                                    '<b>[*parent*]</b><br>' . __('global.resource_parent_help')
-                                )
+                                /*Select::make('parent')
+                                    ->setLabel(__('global.import_parent_resource'))
+                                    ->setHelp('<b>[*parent*]</b><br>' . __('global.resource_parent_help'))
                                     ->setUrl('/resource/select')
                                     ->setData([
                                         [
@@ -283,12 +271,10 @@ class ResourceLayout extends Layout
                                     ])
                                     ->setEmitInput('inputChangeQuery'),*/
 
-                                Input::make(
-                                    'data.attributes.parent',
-                                    __('global.import_parent_resource'),
-                                    '<b>[*parent*]</b><br>' . __('global.resource_parent_help'),
-                                    'mb-3'
-                                )
+                                Input::make('data.attributes.parent')
+                                    ->setLabel(__('global.import_parent_resource'))
+                                    ->setHelp('<b>[*parent*]</b><br>' . __('global.resource_parent_help'))
+                                    ->setClass('mb-3')
                                     ->setInputClass('cursor-pointer')
                                     ->setValue(
                                         $model->parent ? $model->parent . ' - ' . $model->parents->pagetitle
@@ -298,12 +284,10 @@ class ResourceLayout extends Layout
                                     ->isRequired()
                                     ->isReadonly(),
 
-                                Select::make(
-                                    'data.attributes.template',
-                                    __('global.page_data_template'),
-                                    '<b>[*template*]</b><br>' . __('global.page_data_template_help'),
-                                    'mb-3'
-                                )
+                                Select::make('data.attributes.template')
+                                    ->setLabel(__('global.page_data_template'))
+                                    ->setHelp('<b>[*template*]</b><br>' . __('global.page_data_template_help'))
+                                    ->setClass('mb-3')
                                     ->setUrl('/templates/select')
                                     ->setData([
                                         [
@@ -315,62 +299,48 @@ class ResourceLayout extends Layout
                                     ])
                                     ->setEmitInput('inputChangeQuery', 'template'),
 
-                                Checkbox::make(
-                                    'data.attributes.hidemenu',
-                                    __('global.resource_opt_show_menu'),
-                                    '<b>[*hidemenu*]</b><br>' . __('global.resource_opt_show_menu_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.hidemenu')
+                                    ->setLabel(__('global.resource_opt_show_menu'))
+                                    ->setHelp('<b>[*hidemenu*]</b><br>' . __('global.resource_opt_show_menu_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(0, 1),
 
-                                Number::make(
-                                    'data.attributes.menuindex',
-                                    __('global.resource_opt_menu_index'),
-                                    '<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help'),
-                                    'mb-3'
-                                ),
+                                Number::make('data.attributes.menuindex')
+                                    ->setLabel(__('global.resource_opt_menu_index'))
+                                    ->setHelp('<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help'))
+                                    ->setClass('mb-3'),
 
-                                Input::make(
-                                    'data.attributes.menutitle',
-                                    __('global.resource_opt_menu_title'),
-                                    '<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help'),
-                                    'mb-3'
-                                ),
+                                Input::make('data.attributes.menutitle')
+                                    ->setLabel(__('global.resource_opt_menu_title'))
+                                    ->setHelp('<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help'))
+                                    ->setClass('mb-3'),
 
-                                Input::make(
-                                    'data.attributes.link_attributes',
-                                    __('global.link_attributes'),
-                                    '<b>[*link_attributes*]</b><br>' . __('global.link_attributes_help'),
-                                    'mb-3'
-                                ),
+                                Input::make('data.attributes.link_attributes')
+                                    ->setLabel(__('global.link_attributes'))
+                                    ->setHelp('<b>[*link_attributes*]</b><br>' . __('global.link_attributes_help'))
+                                    ->setClass('mb-3'),
 
-                                Checkbox::make(
-                                    'data.attributes.published',
-                                    __('global.resource_opt_published'),
-                                    '<b>[*published*]</b><br>' . __('global.resource_opt_published_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.published')
+                                    ->setLabel(__('global.resource_opt_published'))
+                                    ->setHelp('<b>[*published*]</b><br>' . __('global.resource_opt_published_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                DateTime::make(
-                                    'data.attributes.publishedon',
-                                    __('global.page_data_published'),
-                                    '',
-                                    'mb-3'
-                                )->isClear(),
+                                DateTime::make('data.attributes.publishedon')
+                                    ->setLabel(__('global.page_data_published'))
+                                    ->setClass('mb-3')
+                                    ->isClear(),
 
-                                DateTime::make(
-                                    'data.attributes.pub_date',
-                                    __('global.page_data_publishdate'),
-                                    '<b>[*pub_date*]</b><br>' . __('global.page_data_publishdate_help'),
-                                    'mb-3'
-                                )->isClear(),
+                                DateTime::make('data.attributes.pub_date')
+                                    ->setLabel(__('global.page_data_publishdate'))
+                                    ->setHelp('<b>[*pub_date*]</b><br>' . __('global.page_data_publishdate_help'))
+                                    ->setClass('mb-3')
+                                    ->isClear(),
 
-                                DateTime::make(
-                                    'data.attributes.unpub_date',
-                                    __('global.page_data_unpublishdate'),
-                                    '<b>[*unpub_date*]</b><br>' . __('global.page_data_unpublishdate_help')
-                                )->isClear(),
+                                DateTime::make('data.attributes.unpub_date')
+                                    ->setLabel(__('global.page_data_unpublishdate'))
+                                    ->setHelp('<b>[*unpub_date*]</b><br>' . __('global.page_data_unpublishdate_help'))
+                                    ->isClear(),
                             ]),
                     ]
                 )
@@ -408,12 +378,10 @@ class ResourceLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
-                                Select::make(
-                                    'data.attributes.type',
-                                    __('global.resource_type'),
-                                    '<b>[*type*]</b><br>' . __('global.resource_type_message'),
-                                    'mb-3'
-                                )
+                                Select::make('data.attributes.type')
+                                    ->setLabel(__('global.resource_type'))
+                                    ->setHelp('<b>[*type*]</b><br>' . __('global.resource_type_message'))
+                                    ->setClass('mb-3')
                                     ->setData([
                                         [
                                             'key'   => 'document',
@@ -426,12 +394,10 @@ class ResourceLayout extends Layout
                                     ])
                                     ->setEmitInput('inputChangeQuery', 'type'),
 
-                                Select::make(
-                                    'data.attributes.contentType',
-                                    __('global.page_data_contentType'),
-                                    '<b>[*contentType*]</b><br>' . __('global.page_data_contentType_help'),
-                                    'mb-3'
-                                )
+                                Select::make('data.attributes.contentType')
+                                    ->setLabel(__('global.page_data_contentType'))
+                                    ->setHelp('<b>[*contentType*]</b><br>' . __('global.page_data_contentType_help'))
+                                    ->setClass('mb-3')
                                     ->setData(
                                         array_map(fn($k) => [
                                             'key'   => $k,
@@ -439,12 +405,12 @@ class ResourceLayout extends Layout
                                         ], explode(',', config('global.custom_contenttype', 'text/html')))
                                     ),
 
-                                Select::make(
-                                    'data.attributes.content_dispo',
-                                    __('global.resource_opt_contentdispo'),
-                                    '<b>[*content_dispo*]</b><br>' .
-                                    __('global.resource_opt_contentdispo_help')
-                                )
+                                Select::make('data.attributes.content_dispo')
+                                    ->setLabel(__('global.resource_opt_contentdispo'))
+                                    ->setHelp(
+                                        '<b>[*content_dispo*]</b><br>' . __('global.resource_opt_contentdispo_help')
+                                    )
+                                    ->setClass()
                                     ->setData([
                                         [
                                             'key'   => 0,
@@ -460,61 +426,47 @@ class ResourceLayout extends Layout
                         Template::make()
                             ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
-                                Checkbox::make(
-                                    'data.attributes.isfolder',
-                                    __('global.resource_opt_folder'),
-                                    '<b>[*isfolder*]</b><br>' . __('global.resource_opt_folder_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.isfolder')
+                                    ->setLabel(__('global.resource_opt_folder'))
+                                    ->setHelp('<b>[*isfolder*]</b><br>' . __('global.resource_opt_folder_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Checkbox::make(
-                                    'data.attributes.hide_from_tree',
-                                    __('global.track_visitors_title'),
-                                    '<b>[*hide_from_tree*]</b><br>' .
-                                    __('global.resource_opt_trackvisit_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.hide_from_tree')
+                                    ->setLabel(__('global.track_visitors_title'))
+                                    ->setHelp('<b>[*hide_from_tree*]</b><br>' .
+                                        __('global.resource_opt_trackvisit_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(0, 1),
 
-                                Checkbox::make(
-                                    'data.attributes.alias_visible',
-                                    __('global.resource_opt_alvisibled'),
-                                    '<b>[*alias_visible*]</b><br>' .
-                                    __('global.resource_opt_alvisibled_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.alias_visible')
+                                    ->setLabel(__('global.resource_opt_alvisibled'))
+                                    ->setHelp('<b>[*alias_visible*]</b><br>' .
+                                        __('global.resource_opt_alvisibled_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Checkbox::make(
-                                    'data.attributes.richtext',
-                                    __('global.resource_opt_richtext'),
-                                    '<b>[*richtext*]</b><br>' . __('global.resource_opt_richtext_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.richtext')
+                                    ->setLabel(__('global.resource_opt_richtext'))
+                                    ->setHelp('<b>[*richtext*]</b><br>' . __('global.resource_opt_richtext_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Checkbox::make(
-                                    'data.attributes.searchable',
-                                    __('global.page_data_searchable'),
-                                    '<b>[*searchable*]</b><br>' . __('global.page_data_searchable_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.searchable')
+                                    ->setLabel(__('global.page_data_searchable'))
+                                    ->setHelp('<b>[*searchable*]</b><br>' . __('global.page_data_searchable_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Checkbox::make(
-                                    'data.attributes.cacheable',
-                                    __('global.page_data_cacheable'),
-                                    '<b>[*cacheable*]</b><br>' . __('global.page_data_cacheable_help'),
-                                    'mb-3'
-                                )
+                                Checkbox::make('data.attributes.cacheable')
+                                    ->setLabel(__('global.page_data_cacheable'))
+                                    ->setHelp('<b>[*cacheable*]</b><br>' . __('global.page_data_cacheable_help'))
+                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
-                                Checkbox::make(
-                                    'data.attributes.empty_cache',
-                                    __('global.resource_opt_emptycache'),
-                                    __('global.resource_opt_emptycache_help')
-                                )
+                                Checkbox::make('data.attributes.empty_cache')
+                                    ->setLabel(__('global.resource_opt_emptycache'))
+                                    ->setHelp(__('global.resource_opt_emptycache_help'))
                                     ->setCheckedValue(1, 0)
                                     ->setValue(1),
                             ]),
