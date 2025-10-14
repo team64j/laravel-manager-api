@@ -41,7 +41,6 @@ class SystemLogLayout extends Layout
 
             Panel::make('data')
                 ->setId('system-log')
-                ->setClass('mx-4 mb-4')
                 ->setHistory(!0)
                 ->addColumn('username', __('global.mgrlog_user'), sort: !0)
                 ->addColumn(['action', 'message'], __('global.mgrlog_actionid'), sort: !0)

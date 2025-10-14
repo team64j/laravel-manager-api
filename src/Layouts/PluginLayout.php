@@ -116,15 +116,12 @@ class PluginLayout extends Layout
                     __('global.page_data_general'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
                                 Input::make('name')
                                     ->setLabel(__('global.tmplvars_name'))
-                                    ->setClass('mb-3')
                                     ->isRequired(),
                                 Textarea::make('description')
                                     ->setLabel(__('global.tmplvars_description'))
-                                    ->setClass('mb-3')
                                     ->setRows(2),
                                 Checkbox::make('analyze')
                                     ->setLabel(__('global.parse_docblock'))
@@ -132,11 +129,9 @@ class PluginLayout extends Layout
                                     ->setCheckedValue(1, 0),
                             ]),
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
                                     ->setData([
@@ -152,16 +147,13 @@ class PluginLayout extends Layout
                                     ]),
                                 Checkbox::make('disabled')
                                     ->setLabel(__('global.disabled'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                                 Checkbox::make('locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
                             ]),
                         CodeEditor::make('plugincode')
                             ->setLabel(__('global.plugin_code'))
-                            ->setClass('mx-5')
                             ->setRows(25)
                             ->setLanguage('php'),
                     ],
@@ -316,8 +308,8 @@ class PluginLayout extends Layout
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
+                                0 => '<span class="text-success">' . __('global.no') . '</span>',
+                                1 => '<span class="text-error">' . __('global.yes') . '</span>',
                             ]
                         )
                 ),

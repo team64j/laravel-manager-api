@@ -38,7 +38,6 @@ class SystemInfoLayout extends Layout
 
             Panel::make('data')
                 ->setId('system-info')
-                ->setClass('mx-4 mb-4')
                 ->addColumn('name')
                 ->addColumn('value'),
         ];

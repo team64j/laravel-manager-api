@@ -31,12 +31,10 @@ class LoginLayout extends Layout
                 ->setErrorClass('hidden'),
 
             Template::make()
-                ->setClass('flex justify-between items-center')
                 ->setSlot([
                     Checkbox::make('remember')
                         ->setId('remember')
                         ->setLabel(__('global.remember_username'))
-                        ->setClass('inline-flex')
                         ->setInputClass('input-lg'),
 
                     Button::make()

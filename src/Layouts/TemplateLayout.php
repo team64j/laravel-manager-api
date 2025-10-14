@@ -112,12 +112,10 @@ class TemplateLayout extends Layout
                     __('global.settings_general'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot(
                                 [
                                     Input::make('data.attributes.templatename')
                                         ->setLabel(__('global.template_name'))
-                                        ->setClass('mb-3')
                                         ->isRequired()
                                         ->setRequired(
                                             config('global.default_template') == $model->getKey() ?
@@ -125,22 +123,18 @@ class TemplateLayout extends Layout
                                         ),
 
                                     Input::make('data.attributes.templatealias')
-                                        ->setLabel(__('global.alias'))
-                                        ->setClass('mb-3'),
+                                        ->setLabel(__('global.alias')),
 
                                     Textarea::make('data.attributes.description')
-                                        ->setLabel(__('global.template_desc'))
-                                        ->setClass('mb-3'),
+                                        ->setLabel(__('global.template_desc')),
                                 ]
                             ),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot(
                                 [
                                     Select::make('data.attributes.category')
                                         ->setLabel(__('global.existing_category'))
-                                        ->setClass('mb-3')
                                         ->setUrl('/categories/select')
                                         ->addOption(
                                             $category->getKey(),
@@ -150,34 +144,29 @@ class TemplateLayout extends Layout
 
                                     Checkbox::make('data.attributes.selectable')
                                         ->setLabel(__('global.template_selectable'))
-                                        ->setClass('mb-3')
                                         ->setCheckedValue(1, 0),
 
                                     Checkbox::make('data.attributes.locked')
                                         ->setLabel(__('global.lock_template_msg'))
-                                        ->setClass('mb-3')
                                         ->setCheckedValue(1, 0),
                                 ]
                             ),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow px-5 w-full')
                             ->setSlot(
                                 [
                                     ($isBladeFile
-                                        ? '<span class="text-green-600 mb-3">' .
+                                        ? '<p class="text-success">' .
                                         __('global.template_assigned_blade_file') .
                                         ': ' .
-                                        $relativeBladeFile . '</span>'
+                                        $relativeBladeFile . '</p>'
                                         :
                                         Checkbox::make('data.attributes.createbladefile')
                                             ->setLabel(__('global.template_create_blade_file'))
-                                            ->setClass('mb-3')
                                             ->setCheckedValue(1, 0)),
 
                                     CodeEditor::make('data.attributes.content')
                                         ->setLabel(__('global.template_code'))
-                                        ->setClass('')
                                         ->setLanguage('html')
                                         ->setRows(20),
                                 ]

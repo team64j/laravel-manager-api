@@ -70,13 +70,10 @@ class FileLayout extends Layout
                 ->addTab(
                     'default',
                     slot: [
-                        stripos($data['type'], 'image/') !== false ? Media::make('path')
-                            ->setData($data)
-                            ->setClass('mb-4') : null,
+                        stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data) : null,
                         isset($data['content']) ? CodeEditor::make('content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
-                            ->setClass('p-5 h-full')
                             ->setInputClass('h-full') : null,
                     ],
                 ),

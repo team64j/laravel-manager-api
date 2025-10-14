@@ -141,15 +141,13 @@ class ResourceLayout extends Layout
         if (request()->input('type') == 'reference') {
             $filedContent = Input::make('data.attributes.content')
                 ->setLabel(__('global.weblink'))
-                ->setHelp('<b>[*content*]</b><br>' . __('global.resource_weblink_help'))
-                ->setClass('mb-0');
+                ->setHelp('<b>[*content*]</b><br>' . __('global.resource_weblink_help'));
 
             $title = __('global.untitled_weblink');
         } else {
             $filedContent = CodeEditor::make('data.attributes.content')
                 ->setLabel(__('global.resource_content'))
                 ->setHelp('<b>[*content*]</b>')
-                ->setClass('mb-0')
                 ->setRows(20)
                 ->setLanguage('html');
 
@@ -218,35 +216,29 @@ class ResourceLayout extends Layout
                     __('global.settings_general'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
                                 Input::make('data.attributes.pagetitle')
                                     ->setLabel(__('global.resource_title'))
                                     ->setHelp('<b>[*pagetitle*]</b><br>' . __('global.resource_title_help'))
-                                    ->setClass('mb-3 lg:pr-2 lg:basis-2/3')
                                     ->isRequired(),
 
                                 Input::make('data.attributes.alias')
                                     ->setLabel(__('global.resource_alias'))
                                     ->setHelp('<b>[*alias*]</b><br>' . __('global.resource_alias_help'))
-                                    ->setClass('mb-3 lg:pl-2 lg:basis-1/3')
                                     ->isRequired(),
 
                                 Input::make('data.attributes.longtitle')
                                     ->setLabel(__('global.long_title'))
-                                    ->setHelp('<b>[*longtitle*]</b><br>' . __('global.resource_long_title_help'))
-                                    ->setClass('mb-3'),
+                                    ->setHelp('<b>[*longtitle*]</b><br>' . __('global.resource_long_title_help')),
 
                                 Textarea::make('data.attributes.description')
                                     ->setLabel(__('global.resource_description'))
                                     ->setHelp('<b>[*description*]</b><br>' . __('global.resource_description_help'))
-                                    ->setClass('mb-3 lg:pr-2 lg:basis-1/2')
                                     ->setRows(3),
 
                                 CodeEditor::make('data.attributes.introtext')
                                     ->setLabel(__('global.resource_summary'))
                                     ->setHelp('<b>[*introtext*]</b><br>' . __('global.resource_summary_help'))
-                                    ->setClass('mb-3 lg:pl-2 lg:basis-1/2')
                                     ->setRows(3)
                                     ->setLanguage('html'),
 
@@ -254,7 +246,6 @@ class ResourceLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
                                 /*Select::make('parent')
                                     ->setLabel(__('global.import_parent_resource'))
@@ -273,7 +264,6 @@ class ResourceLayout extends Layout
                                 Input::make('data.attributes.parent')
                                     ->setLabel(__('global.import_parent_resource'))
                                     ->setHelp('<b>[*parent*]</b><br>' . __('global.resource_parent_help'))
-                                    ->setClass('mb-3')
                                     ->setInputClass('cursor-pointer')
                                     ->setValue(
                                         $model->parent ? $model->parent . ' - ' . $model->parents->pagetitle
@@ -286,7 +276,6 @@ class ResourceLayout extends Layout
                                 Select::make('data.attributes.template')
                                     ->setLabel(__('global.page_data_template'))
                                     ->setHelp('<b>[*template*]</b><br>' . __('global.page_data_template_help'))
-                                    ->setClass('mb-3')
                                     ->setUrl('/templates/select')
                                     ->setData([
                                         [
@@ -301,39 +290,32 @@ class ResourceLayout extends Layout
                                 Checkbox::make('data.attributes.hidemenu')
                                     ->setLabel(__('global.resource_opt_show_menu'))
                                     ->setHelp('<b>[*hidemenu*]</b><br>' . __('global.resource_opt_show_menu_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(0, 1),
 
                                 Number::make('data.attributes.menuindex')
                                     ->setLabel(__('global.resource_opt_menu_index'))
-                                    ->setHelp('<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help'))
-                                    ->setClass('mb-3'),
+                                    ->setHelp('<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help')),
 
                                 Input::make('data.attributes.menutitle')
                                     ->setLabel(__('global.resource_opt_menu_title'))
-                                    ->setHelp('<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help'))
-                                    ->setClass('mb-3'),
+                                    ->setHelp('<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help')),
 
                                 Input::make('data.attributes.link_attributes')
                                     ->setLabel(__('global.link_attributes'))
-                                    ->setHelp('<b>[*link_attributes*]</b><br>' . __('global.link_attributes_help'))
-                                    ->setClass('mb-3'),
+                                    ->setHelp('<b>[*link_attributes*]</b><br>' . __('global.link_attributes_help')),
 
                                 Checkbox::make('data.attributes.published')
                                     ->setLabel(__('global.resource_opt_published'))
                                     ->setHelp('<b>[*published*]</b><br>' . __('global.resource_opt_published_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 DateTime::make('data.attributes.publishedon')
                                     ->setLabel(__('global.page_data_published'))
-                                    ->setClass('mb-3')
                                     ->isClear(),
 
                                 DateTime::make('data.attributes.pub_date')
                                     ->setLabel(__('global.page_data_publishdate'))
                                     ->setHelp('<b>[*pub_date*]</b><br>' . __('global.page_data_publishdate_help'))
-                                    ->setClass('mb-3')
                                     ->isClear(),
 
                                 DateTime::make('data.attributes.unpub_date')
@@ -348,7 +330,6 @@ class ResourceLayout extends Layout
                     fn(Tabs $tabs) => $tabs->putSlot(
                         'general',
                         Template::make()
-                            ->setClass('grow p-5')
                             ->setSlot(Arr::flatten($tabTvs['slots']))
                     )
                 )
@@ -358,7 +339,6 @@ class ResourceLayout extends Layout
                         'general',
                         array_map(
                             fn($slot) => Section::make()
-                                ->setClass('p-5')
                                 ->setLabel($slot['name'])
                                 ->setSlot($tabTvs['slots'][$slot['id']])
                                 ->isExpanded(),
@@ -375,12 +355,10 @@ class ResourceLayout extends Layout
                     __('global.settings_page_settings'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
                                 Select::make('data.attributes.type')
                                     ->setLabel(__('global.resource_type'))
                                     ->setHelp('<b>[*type*]</b><br>' . __('global.resource_type_message'))
-                                    ->setClass('mb-3')
                                     ->setData([
                                         [
                                             'key'   => 'document',
@@ -396,7 +374,6 @@ class ResourceLayout extends Layout
                                 Select::make('data.attributes.contentType')
                                     ->setLabel(__('global.page_data_contentType'))
                                     ->setHelp('<b>[*contentType*]</b><br>' . __('global.page_data_contentType_help'))
-                                    ->setClass('mb-3')
                                     ->setData(
                                         array_map(fn($k) => [
                                             'key'   => $k,
@@ -409,7 +386,6 @@ class ResourceLayout extends Layout
                                     ->setHelp(
                                         '<b>[*content_dispo*]</b><br>' . __('global.resource_opt_contentdispo_help')
                                     )
-                                    ->setClass()
                                     ->setData([
                                         [
                                             'key'   => 0,
@@ -423,44 +399,37 @@ class ResourceLayout extends Layout
                             ]),
 
                         Template::make()
-                            ->setClass('flex flex-wrap grow lg:basis-1/2 p-5')
                             ->setSlot([
                                 Checkbox::make('data.attributes.isfolder')
                                     ->setLabel(__('global.resource_opt_folder'))
                                     ->setHelp('<b>[*isfolder*]</b><br>' . __('global.resource_opt_folder_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make('data.attributes.hide_from_tree')
                                     ->setLabel(__('global.track_visitors_title'))
                                     ->setHelp('<b>[*hide_from_tree*]</b><br>' .
                                         __('global.resource_opt_trackvisit_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(0, 1),
 
                                 Checkbox::make('data.attributes.alias_visible')
                                     ->setLabel(__('global.resource_opt_alvisibled'))
                                     ->setHelp('<b>[*alias_visible*]</b><br>' .
                                         __('global.resource_opt_alvisibled_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make('data.attributes.richtext')
                                     ->setLabel(__('global.resource_opt_richtext'))
                                     ->setHelp('<b>[*richtext*]</b><br>' . __('global.resource_opt_richtext_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make('data.attributes.searchable')
                                     ->setLabel(__('global.page_data_searchable'))
                                     ->setHelp('<b>[*searchable*]</b><br>' . __('global.page_data_searchable_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make('data.attributes.cacheable')
                                     ->setLabel(__('global.page_data_cacheable'))
                                     ->setHelp('<b>[*cacheable*]</b><br>' . __('global.page_data_cacheable_help'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make('data.attributes.empty_cache')
@@ -478,7 +447,6 @@ class ResourceLayout extends Layout
                         __('global.settings_templvars'),
                         slot: array_map(
                             fn($slot) => Section::make()
-                                ->setClass('!p-0')
                                 ->setLabel($slot['name'])
                                 ->setSlot($tabTvs['slots'][$slot['id']])
                                 ->isExpanded(),
@@ -579,7 +547,6 @@ class ResourceLayout extends Layout
                             $tv->description
                         )
                         ->setRows(5)
-                        ->setClass('mb-3')
                 );
             } else {
                 /** @var Field $field */
@@ -596,7 +563,6 @@ class ResourceLayout extends Layout
                             '<b>[*' . $tv->name . '*]</b><i class="badge">' . $tv['id'] . '</i><br>' .
                             $tv->description
                         )
-                        ->setClass('mb-3')
                         ->when(
                             in_array($tv->type, ['file', 'image']),
                             fn(Field $field) => $field
@@ -627,8 +593,7 @@ class ResourceLayout extends Layout
                     Checkbox::make('data.is_document_group')
                         ->setLabel(__('global.all_doc_groups'))
                         ->setCheckedValue(true, false)
-                        ->setRelation('data.document_groups', [], [], true)
-                        ->setClass('mb-3'),
+                        ->setRelation('data.document_groups', [], [], true),
 
                     Checkbox::make('data.document_groups')
                         ->setLabel(__('global.access_permissions_resource_groups'))
@@ -640,8 +605,7 @@ class ResourceLayout extends Layout
                                 ])
                                 ->toArray()
                         )
-                        ->setRelation('data.is_document_group', false, true)
-                        ->setClass('mb-3'),
+                        ->setRelation('data.is_document_group', false, true),
                 ]
             );
     }

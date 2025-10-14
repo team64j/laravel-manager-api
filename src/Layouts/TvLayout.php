@@ -123,26 +123,21 @@ class TvLayout extends Layout
                     __('global.page_data_general'),
                     slot: [
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:w-0')
                             ->setSlot([
                                 Input::make('data.attributes.name')
                                     ->setLabel(__('global.tmplvars_name'))
-                                    ->setClass('mb-3')
                                     ->isRequired(),
 
                                 Input::make('data.attributes.caption')
-                                    ->setLabel(__('global.tmplvars_caption'))
-                                    ->setClass('mb-3'),
+                                    ->setLabel(__('global.tmplvars_caption')),
 
                                 Textarea::make('data.attributes.description')
                                     ->setLabel(__('global.tmplvars_description'))
-                                    ->setClass('mb-3')
                                     ->setRows(2),
 
                                 CodeEditor::make('data.attributes.elements')
                                     ->setLabel(__('global.tmplvars_elements'))
                                     ->setHelp(__('global.tmplvars_binding_msg'))
-                                    ->setClass('mb-3')
                                     ->setRows(2),
 
                                 CodeEditor::make('data.attributes.default_text')
@@ -151,12 +146,10 @@ class TvLayout extends Layout
                                     ->setRows(2),
                             ]),
                         Template::make()
-                            ->setClass('flex flex-wrap grow p-5 lg:max-w-96')
                             ->setSlot([
 
                                 Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setClass('mb-3')
                                     ->setUrl('/categories/select')
                                     ->setNew('')
                                     ->setData([
@@ -171,7 +164,6 @@ class TvLayout extends Layout
 
                                 Select::make('data.attributes.type')
                                     ->setLabel(__('global.tmplvars_type'))
-                                    ->setClass('mb-3')
                                     ->setUrl('/tvs/types')
                                     ->setData([
                                         [
@@ -181,12 +173,10 @@ class TvLayout extends Layout
                                     ]),
 
                                 Input::make('data.attributes.rank')
-                                    ->setLabel(__('global.tmplvars_rank'))
-                                    ->setClass('mb-3'),
+                                    ->setLabel(__('global.tmplvars_rank')),
 
                                 Checkbox::make('data.attributes.locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
-                                    ->setClass('mb-3')
                                     ->setCheckedValue(1, 0),
 
                                 Select::make('data.attributes.display')
@@ -287,13 +277,11 @@ class TvLayout extends Layout
                                 __('global.access_permissions_docs_message') . '<br/><br/>',
 
                                 Checkbox::make('data.attributes.is_document_group')
-                                    ->setClass('mb-3')
                                     ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
                                     ->setRelation('data.attributes.document_groups', [], [], true),
 
                                 Checkbox::make('data.attributes.document_groups')
-                                    ->setClass('mb-3')
                                     ->setLabel(__('global.access_permissions_resource_groups'))
                                     ->setData(
                                         DocumentgroupName::all()
@@ -567,7 +555,6 @@ class TvLayout extends Layout
 
         if (!empty($widgetParams[$name])) {
             $data[] = Panel::make('data')
-                ->setClass('!h-auto mt-5 !mx-5 w-full')
                 ->setColumns([
                     [
                         'name'  => 'title',

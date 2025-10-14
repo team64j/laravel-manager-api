@@ -128,8 +128,8 @@ class UserLayout extends Layout
                             ['width' => '10rem', 'textAlign' => 'center'],
                             true,
                             [
-                                0 => '<span class="text-green-600">' . __('global.no') . '</span>',
-                                1 => '<span class="text-rose-600">' . __('global.yes') . '</span>',
+                                0 => '<span class="text-success">' . __('global.no') . '</span>',
+                                1 => '<span class="text-error">' . __('global.yes') . '</span>',
                             ]
                         ),
                 ),

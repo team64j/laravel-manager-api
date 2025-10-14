@@ -40,7 +40,6 @@ class ResourcesLayout extends Layout
 
             Panel::make('data')
                 ->setId('resources')
-                ->setClass('mx-4 mb-4')
                 ->setRoute('/resource/:id')
                 ->setHistory(true)
                 ->addColumn('id', __('global.id'), ['width' => '4rem', 'textAlign' => 'right'], true)
@@ -67,8 +66,8 @@ class ResourcesLayout extends Layout
                     ['width' => '12rem', 'textAlign' => 'right'],
                     true,
                     [
-                        0 => '<span class="text-rose-600">' . __('global.page_data_unpublished') . '</span>',
-                        1 => '<span class="text-green-600">' . __('global.page_data_published') . '</span>',
+                        0 => '<span class="text-success">' . __('global.page_data_unpublished') . '</span>',
+                        1 => '<span class="text-error">' . __('global.page_data_published') . '</span>',
                     ]
                 ),
         ];
