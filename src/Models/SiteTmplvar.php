@@ -22,6 +22,7 @@ use Team64j\LaravelEvolution\Traits\LockedTrait;
  * @property string $type
  * @property string $value
  * @property string $default_text
+ * @property string $elements
  * @property string $display
  * @property string $display_params
  * @property Category $categories

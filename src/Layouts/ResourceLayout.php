@@ -543,7 +543,7 @@ class ResourceLayout extends Layout
                         ->setLabel($tv->caption)
                         ->setDescription($tv['description'])
                         ->setHelp(
-                            '<b>[*' . $tv->name . '*]</b><i class="badge">' . $tv->id . '</i><br>' .
+                            '<b>[*' . $tv->name . '*]</b> <sup>' . $tv->id . '</sup><br>' .
                             $tv->description
                         )
                         ->setRows(5)
@@ -560,7 +560,7 @@ class ResourceLayout extends Layout
                         ->setLabel($tv->caption)
                         ->setDescription($tv->description)
                         ->setHelp(
-                            '<b>[*' . $tv->name . '*]</b><i class="badge">' . $tv['id'] . '</i><br>' .
+                            '<b>[*' . $tv->name . '*]</b> <sup>' . $tv['id'] . '</sup><br>' .
                             $tv->description
                         )
                         ->when(
