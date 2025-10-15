@@ -20,6 +20,7 @@ use Team64j\LaravelManagerComponents\Email;
 use Team64j\LaravelManagerComponents\Field;
 use Team64j\LaravelManagerComponents\File;
 use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Radio;
@@ -27,7 +28,6 @@ use Team64j\LaravelManagerComponents\Section;
 use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
-use Team64j\LaravelManagerComponents\Template;
 use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
@@ -215,8 +215,9 @@ class ResourceLayout extends Layout
                     'general',
                     __('global.settings_general'),
                     slot: [
-                        Template::make()
-                            ->setSlot([
+                        Grid::make()
+                            ->setGap('1.25em')
+                            ->addArea([
                                 Input::make('data.attributes.pagetitle')
                                     ->setLabel(__('global.resource_title'))
                                     ->setHelp('<b>[*pagetitle*]</b><br>' . __('global.resource_title_help'))
@@ -241,12 +242,8 @@ class ResourceLayout extends Layout
                                     ->setHelp('<b>[*introtext*]</b><br>' . __('global.resource_summary_help'))
                                     ->setRows(3)
                                     ->setLanguage('html'),
-
-                                $filedContent,
-                            ]),
-
-                        Template::make()
-                            ->setSlot([
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 8'])
+                            ->addArea([
                                 /*Select::make('parent')
                                     ->setLabel(__('global.import_parent_resource'))
                                     ->setHelp('<b>[*parent*]</b><br>' . __('global.resource_parent_help'))
@@ -322,40 +319,46 @@ class ResourceLayout extends Layout
                                     ->setLabel(__('global.page_data_unpublishdate'))
                                     ->setHelp('<b>[*unpub_date*]</b><br>' . __('global.page_data_unpublishdate_help'))
                                     ->isClear(),
-                            ]),
+                            ], ['sm' => '3', 'xl' => '1 / 8 / 1 / 8'])
+                            ->addArea([
+                                $filedContent,
+                            ], ['sm' => '2', 'xl' => '2 / 1 / 2 / 9'])
+                            ->when(
+                                $groupTv == 0,
+                                fn(Grid $grid) => $grid->addArea(
+                                    Arr::flatten($tabTvs['slots']),
+                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 9']
+                                )
+                            )
+                            ->when(
+                                $groupTv == 1,
+                                fn(Grid $grid) => $grid->addArea(
+                                    array_map(
+                                        fn($slot) => Section::make()
+                                            ->setLabel($slot['name'])
+                                            ->setSlot($tabTvs['slots'][$slot['id']])
+                                            ->isExpanded(),
+                                        $tabTvs['attrs']['data']
+                                    ),
+                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 9']
+                                )
+                            )
+                            ->when(
+                                $groupTv == 2,
+                                fn(Grid $grid) => $grid->addArea(
+                                    $tabTvs,
+                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 9']
+                                )
+                            ),
                     ]
-                )
-                ->when(
-                    $groupTv == 0,
-                    fn(Tabs $tabs) => $tabs->putSlot(
-                        'general',
-                        Template::make()
-                            ->setSlot(Arr::flatten($tabTvs['slots']))
-                    )
-                )
-                ->when(
-                    $groupTv == 1,
-                    fn(Tabs $tabs) => $tabs->putSlot(
-                        'general',
-                        array_map(
-                            fn($slot) => Section::make()
-                                ->setLabel($slot['name'])
-                                ->setSlot($tabTvs['slots'][$slot['id']])
-                                ->isExpanded(),
-                            $tabTvs['attrs']['data']
-                        )
-                    )
-                )
-                ->when(
-                    $groupTv == 2,
-                    fn(Tabs $tabs) => $tabs->putSlot('general', $tabTvs)
                 )
                 ->addTab(
                     'settings',
                     __('global.settings_page_settings'),
                     slot: [
-                        Template::make()
-                            ->setSlot([
+                        Grid::make()
+                            ->setGap('1.25rem')
+                            ->addArea([
                                 Select::make('data.attributes.type')
                                     ->setLabel(__('global.resource_type'))
                                     ->setHelp('<b>[*type*]</b><br>' . __('global.resource_type_message'))
@@ -396,10 +399,8 @@ class ResourceLayout extends Layout
                                             'value' => __('global.attachment'),
                                         ],
                                     ]),
-                            ]),
-
-                        Template::make()
-                            ->setSlot([
+                            ], ['sm' => '1', 'xl' => '1 / 1'])
+                            ->addArea([
                                 Checkbox::make('data.attributes.isfolder')
                                     ->setLabel(__('global.resource_opt_folder'))
                                     ->setHelp('<b>[*isfolder*]</b><br>' . __('global.resource_opt_folder_help'))
@@ -407,14 +408,18 @@ class ResourceLayout extends Layout
 
                                 Checkbox::make('data.attributes.hide_from_tree')
                                     ->setLabel(__('global.track_visitors_title'))
-                                    ->setHelp('<b>[*hide_from_tree*]</b><br>' .
-                                        __('global.resource_opt_trackvisit_help'))
+                                    ->setHelp(
+                                        '<b>[*hide_from_tree*]</b><br>' .
+                                        __('global.resource_opt_trackvisit_help')
+                                    )
                                     ->setCheckedValue(0, 1),
 
                                 Checkbox::make('data.attributes.alias_visible')
                                     ->setLabel(__('global.resource_opt_alvisibled'))
-                                    ->setHelp('<b>[*alias_visible*]</b><br>' .
-                                        __('global.resource_opt_alvisibled_help'))
+                                    ->setHelp(
+                                        '<b>[*alias_visible*]</b><br>' .
+                                        __('global.resource_opt_alvisibled_help')
+                                    )
                                     ->setCheckedValue(1, 0),
 
                                 Checkbox::make('data.attributes.richtext')
@@ -437,7 +442,7 @@ class ResourceLayout extends Layout
                                     ->setHelp(__('global.resource_opt_emptycache_help'))
                                     ->setCheckedValue(1, 0)
                                     ->setValue(1),
-                            ]),
+                            ], ['sm' => '2', 'xl' => '1 / 2']),
                     ]
                 )
                 ->when(
