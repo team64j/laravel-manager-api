@@ -10,12 +10,12 @@ use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
-use Team64j\LaravelManagerComponents\Template;
 use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
@@ -98,17 +98,18 @@ class ChunkLayout extends Layout
                     'general',
                     __('global.page_data_general'),
                     slot: [
-                        Template::make()
-                            ->setSlot([
+                        Grid::make()
+                            ->setGap('1.25rem')
+                            ->addArea([
                                 Input::make('name')
                                     ->setLabel(__('global.tmplvars_name'))
-                                    ->isRequired(),
+                                    ->isRequired()
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
                                 Textarea::make('description')
                                     ->setLabel(__('global.tmplvars_description'))
                                     ->setRows(2),
-                            ]),
-                        Template::make()
-                            ->setSlot([
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 2'])
+                            ->addArea([
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setUrl('/categories/select')
@@ -123,18 +124,24 @@ class ChunkLayout extends Layout
                                                 ),
                                             'selected' => true,
                                         ],
-                                    ]),
+                                    ])
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
                                 Checkbox::make('disabled')
                                     ->setLabel(__('global.disabled'))
-                                    ->setCheckedValue(1, 0),
+                                    ->setCheckedValue(1, 0)
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
                                 Checkbox::make('locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setCheckedValue(1, 0),
-                            ]),
-                        CodeEditor::make('snippet')
-                            ->setLabel(__('global.chunk_code'))
-                            ->setRows(25)
-                            ->setLanguage('html'),
+                            ], ['sm' => '2', 'xl' => '1 / 2 / 1 / 2'])
+                            ->addArea([
+                                CodeEditor::make('snippet')
+                                    ->setLabel(__('global.chunk_code'))
+                                    ->setRows(25)
+                                    ->setLanguage('html'),
+                            ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 3']),
                     ],
                 ),
 

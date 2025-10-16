@@ -12,13 +12,13 @@ use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
-use Team64j\LaravelManagerComponents\Template;
 use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
@@ -122,32 +122,35 @@ class TvLayout extends Layout
                     'default',
                     __('global.page_data_general'),
                     slot: [
-                        Template::make()
-                            ->setSlot([
+                        Grid::make()
+                            ->setGap('1.25rem')
+                            ->addArea([
                                 Input::make('data.attributes.name')
                                     ->setLabel(__('global.tmplvars_name'))
-                                    ->isRequired(),
+                                    ->isRequired()
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Input::make('data.attributes.caption')
-                                    ->setLabel(__('global.tmplvars_caption')),
+                                    ->setLabel(__('global.tmplvars_caption'))
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Textarea::make('data.attributes.description')
                                     ->setLabel(__('global.tmplvars_description'))
-                                    ->setRows(2),
+                                    ->setRows(2)
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 CodeEditor::make('data.attributes.elements')
                                     ->setLabel(__('global.tmplvars_elements'))
                                     ->setHelp(__('global.tmplvars_binding_msg'))
-                                    ->setRows(2),
+                                    ->setRows(2)
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 CodeEditor::make('data.attributes.default_text')
                                     ->setLabel(__('global.tmplvars_default'))
                                     ->setHelp(__('global.tmplvars_binding_msg'))
                                     ->setRows(2),
-                            ]),
-                        Template::make()
-                            ->setSlot([
-
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 2'])
+                            ->addArea([
                                 Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setUrl('/categories/select')
@@ -160,7 +163,8 @@ class TvLayout extends Layout
                                                 : __('global.no_category'),
                                             'selected' => true,
                                         ],
-                                    ]),
+                                    ])
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Select::make('data.attributes.type')
                                     ->setLabel(__('global.tmplvars_type'))
@@ -170,14 +174,17 @@ class TvLayout extends Layout
                                             'key'   => $model->type,
                                             'value' => $model->getStandardTypes()[$model->type] ?? $model->type,
                                         ],
-                                    ]),
+                                    ])
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Input::make('data.attributes.rank')
-                                    ->setLabel(__('global.tmplvars_rank')),
+                                    ->setLabel(__('global.tmplvars_rank'))
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Checkbox::make('data.attributes.locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
-                                    ->setCheckedValue(1, 0),
+                                    ->setCheckedValue(1, 0)
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Select::make('data.attributes.display')
                                     ->setLabel(__('global.tmplvars_widget'))
@@ -189,15 +196,13 @@ class TvLayout extends Layout
                                         ],
                                     ])
                                     ->setEmitInput('inputChangeQuery', 'display'),
-                            ]),
+                            ], ['sm' => '2', 'xl' => '1 / 2 / 1 / 2'])
+                            ->when(
+                                $model->display,
+                                fn(Grid $grid) => $grid
+                                    ->addArea($this->display($model->display), ['sm' => '3', 'xl' => '2 / 1 / 2 / 3'])
+                            ),
                     ]
-                )
-                ->when(
-                    $model->display,
-                    fn(Tabs $component) => $component->putSlot(
-                        'default',
-                        $this->display($model->display)
-                    )
                 )
                 ->addTab(
                     'templates',
@@ -279,7 +284,8 @@ class TvLayout extends Layout
                                 Checkbox::make('data.attributes.is_document_group')
                                     ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
-                                    ->setRelation('data.attributes.document_groups', [], [], true),
+                                    ->setRelation('data.attributes.document_groups', [], [], true)
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Checkbox::make('data.attributes.document_groups')
                                     ->setLabel(__('global.access_permissions_resource_groups'))

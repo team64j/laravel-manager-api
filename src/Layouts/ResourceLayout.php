@@ -247,7 +247,7 @@ class ResourceLayout extends Layout
                                     ->setRows(3)
                                     ->setLanguage('html')
                                     ->setAttribute('style', ['height' => '10rem']),
-                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 8'])
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 4'])
                             ->addArea([
                                 /*Select::make('parent')
                                     ->setLabel(__('global.import_parent_resource'))
@@ -333,15 +333,15 @@ class ResourceLayout extends Layout
                                     ->setLabel(__('global.page_data_unpublishdate'))
                                     ->setHelp('<b>[*unpub_date*]</b><br>' . __('global.page_data_unpublishdate_help'))
                                     ->isClear(),
-                            ], ['sm' => '3', 'xl' => '1 / 8 / 1 / 8'])
+                            ], ['sm' => '3', 'xl' => '1 / 4 / 1 / 4'])
                             ->addArea([
                                 $filedContent,
-                            ], ['sm' => '2', 'xl' => '2 / 1 / 2 / 9'])
+                            ], ['sm' => '2', 'xl' => '2 / 1 / 2 / 5'])
                             ->when(
                                 $groupTv == 0,
                                 fn(Grid $grid) => $grid->addArea(
                                     Arr::flatten($tabTvs['slots']),
-                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 9']
+                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 5']
                                 )
                             )
                             ->when(
@@ -354,14 +354,14 @@ class ResourceLayout extends Layout
                                             ->isExpanded(),
                                         $tabTvs['attrs']['data']
                                     ),
-                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 9']
+                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 5']
                                 )
                             )
                             ->when(
                                 $groupTv == 2,
                                 fn(Grid $grid) => $grid->addArea(
                                     $tabTvs,
-                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 9']
+                                    ['sm' => '4', 'xl' => '3 / 1 / 3 / 5']
                                 )
                             ),
                     ]

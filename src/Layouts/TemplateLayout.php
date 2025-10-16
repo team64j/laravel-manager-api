@@ -11,12 +11,12 @@ use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
 use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
-use Team64j\LaravelManagerComponents\Template;
 use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 use Team64j\LaravelManagerComponents\Tree;
@@ -68,8 +68,9 @@ class TemplateLayout extends Layout
         $isBladeFile = file_exists($bladeFile);
         $relativeBladeFile = str_replace([dirname(app_path()), DIRECTORY_SEPARATOR], ['', '/'], $bladeFile);
 
+        /** @var Category $category */
         $category = $model->category()->firstOr(
-            fn() => (new Category())->setAttribute('id', 0)->setAttribute('category', __('global.no_category'))
+            fn() => new Category()->setAttribute('id', 0)->setAttribute('category', __('global.no_category'))
         );
 
         $breadcrumbs = [
@@ -111,66 +112,62 @@ class TemplateLayout extends Layout
                     'default',
                     __('global.settings_general'),
                     slot: [
-                        Template::make()
-                            ->setSlot(
-                                [
-                                    Input::make('data.attributes.templatename')
-                                        ->setLabel(__('global.template_name'))
-                                        ->isRequired()
-                                        ->setRequired(
-                                            config('global.default_template') == $model->getKey() ?
-                                                __('global.defaulttemplate_title') : ''
-                                        ),
+                        Grid::make()
+                            ->setGap('1.25rem')
+                            ->addArea([
+                                Input::make('data.attributes.templatename')
+                                    ->setLabel(__('global.template_name'))
+                                    ->isRequired()
+                                    ->setRequired(
+                                        config('global.default_template') == $model->getKey() ?
+                                            __('global.defaulttemplate_title') : ''
+                                    )
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                    Input::make('data.attributes.templatealias')
-                                        ->setLabel(__('global.alias')),
+                                Input::make('data.attributes.templatealias')
+                                    ->setLabel(__('global.alias'))
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                    Textarea::make('data.attributes.description')
-                                        ->setLabel(__('global.template_desc')),
-                                ]
-                            ),
+                                Textarea::make('data.attributes.description')
+                                    ->setLabel(__('global.template_desc')),
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 2'])
+                            ->addArea([
+                                Select::make('data.attributes.category')
+                                    ->setLabel(__('global.existing_category'))
+                                    ->setUrl('/categories/select')
+                                    ->addOption(
+                                        $category->getKey(),
+                                        $category->category
+                                    )
+                                    ->setNew('')
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                        Template::make()
-                            ->setSlot(
-                                [
-                                    Select::make('data.attributes.category')
-                                        ->setLabel(__('global.existing_category'))
-                                        ->setUrl('/categories/select')
-                                        ->addOption(
-                                            $category->getKey(),
-                                            $category->category
-                                        )
-                                        ->setNew(''),
+                                Checkbox::make('data.attributes.selectable')
+                                    ->setLabel(__('global.template_selectable'))
+                                    ->setCheckedValue(1, 0)
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                    Checkbox::make('data.attributes.selectable')
-                                        ->setLabel(__('global.template_selectable'))
-                                        ->setCheckedValue(1, 0),
+                                Checkbox::make('data.attributes.locked')
+                                    ->setLabel(__('global.lock_template_msg'))
+                                    ->setCheckedValue(1, 0)
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+                            ], ['sm' => '2', 'xl' => '1 / 2 / 1 / 2'])
+                            ->addArea([
+                                ($isBladeFile
+                                    ? '<p class="text-success">' .
+                                    __('global.template_assigned_blade_file') .
+                                    ': ' .
+                                    $relativeBladeFile . '</p>'
+                                    :
+                                    Checkbox::make('data.attributes.createbladefile')
+                                        ->setLabel(__('global.template_create_blade_file'))
+                                        ->setCheckedValue(1, 0)),
 
-                                    Checkbox::make('data.attributes.locked')
-                                        ->setLabel(__('global.lock_template_msg'))
-                                        ->setCheckedValue(1, 0),
-                                ]
-                            ),
-
-                        Template::make()
-                            ->setSlot(
-                                [
-                                    ($isBladeFile
-                                        ? '<p class="text-success">' .
-                                        __('global.template_assigned_blade_file') .
-                                        ': ' .
-                                        $relativeBladeFile . '</p>'
-                                        :
-                                        Checkbox::make('data.attributes.createbladefile')
-                                            ->setLabel(__('global.template_create_blade_file'))
-                                            ->setCheckedValue(1, 0)),
-
-                                    CodeEditor::make('data.attributes.content')
-                                        ->setLabel(__('global.template_code'))
-                                        ->setLanguage('html')
-                                        ->setRows(20),
-                                ]
-                            ),
+                                CodeEditor::make('data.attributes.content')
+                                    ->setLabel(__('global.template_code'))
+                                    ->setLanguage('html')
+                                    ->setRows(20),
+                            ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 3']),
                     ]
                 )
                 ->addTab(

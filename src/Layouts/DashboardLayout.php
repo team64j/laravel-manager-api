@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerComponents\Alert;
+use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Section;
-use Team64j\LaravelManagerComponents\Template;
 
 class DashboardLayout extends Layout
 {
@@ -72,12 +72,14 @@ class DashboardLayout extends Layout
     /**
      * @return array
      */
-    protected function getWidgets(): array
+    protected function getWidgets()
     {
         $user = auth()->user();
 
-        return Template::make()
-            ->setSlot([
+        return Grid::make()
+            ->setGap('1.25rem')
+            ->setAttribute('style', 'padding: 1.25rem')
+            ->addArea([
                 Section::make()
                     ->setIcon('fa fa-home')
                     ->setLabel(__('global.welcome_title'))
@@ -104,7 +106,8 @@ class DashboardLayout extends Layout
                                 ],
                             ])
                     ),
-
+            ], ['sm' => '1', 'xl' => '1 / 1'])
+            ->addArea([
                 Section::make()
                     ->setIcon('fa fa-user')
                     ->setLabel(__('global.onlineusers_title'))
@@ -118,10 +121,10 @@ class DashboardLayout extends Layout
                                 ->setUrl('/users/active'),
                         ]
                     ),
-            ])
+            ], ['sm' => '2', 'xl' => '1 / 2'])
             ->when(
                 auth()->user()->can(['view_document']),
-                fn(Template $template) => $template->putSlot(
+                fn(Grid $grid) => $grid->addArea([
                     Section::make()
                         ->setIcon('fa fa-pencil')
                         ->setLabel(__('global.activity_title'))
@@ -132,12 +135,12 @@ class DashboardLayout extends Layout
                                 ->setUrl(
                                     '/resource?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
                                 )
-                        )
-                )
+                        ),
+                ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 3'])
             )
             ->when(
                 config('global.rss_url_news'),
-                fn(Template $template) => $template->putSlot(
+                fn(Grid $grid) => $grid->addArea([
                     Section::make()
                         ->setIcon('fa fa-rss')
                         ->setLabel(__('global.modx_news'))
@@ -145,12 +148,12 @@ class DashboardLayout extends Layout
                             Panel::make()
                                 ->setId('widgetNews')
                                 ->setUrl('/dashboard/news')
-                        )
-                )
+                        ),
+                ], ['sm' => '4', 'xl' => '1 / 1 / 1 / 2'])
             )
             ->when(
                 config('global.rss_url_security'),
-                fn(Template $template) => $template->putSlot(
+                fn(Grid $grid) => $grid->addArea([
                     Section::make()
                         ->setIcon('fa fa-exclamation-triangle')
                         ->setLabel(__('global.modx_security_notices'))
@@ -158,9 +161,8 @@ class DashboardLayout extends Layout
                             Panel::make()
                                 ->setId('widgetNewsSecurity')
                                 ->setUrl('/dashboard/news-security')
-                        )
-                )
-            )
-            ->toArray();
+                        ),
+                ], ['sm' => '5', 'xl' => '1 / 1 / 1 / 2'])
+            );
     }
 }

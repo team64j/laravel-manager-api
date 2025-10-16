@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Layouts;
 use Team64j\LaravelManagerComponents\Button;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\Input;
-use Team64j\LaravelManagerComponents\Template;
 
 class LoginLayout extends Layout
 {
@@ -30,17 +29,14 @@ class LoginLayout extends Layout
                 ->setInputClass('!bg-transparent input-lg')
                 ->setErrorClass('hidden'),
 
-            Template::make()
-                ->setSlot([
-                    Checkbox::make('remember')
-                        ->setId('remember')
-                        ->setLabel(__('global.remember_username'))
-                        ->setInputClass('input-lg'),
+            Checkbox::make('remember')
+                ->setId('remember')
+                ->setLabel(__('global.remember_username'))
+                ->setInputClass('input-lg'),
 
-                    Button::make()
-                        ->setValue(__('global.login_button'))
-                        ->setInputClass('btn-green btn-lg whitespace-nowrap'),
-                ]),
+            Button::make()
+                ->setValue(__('global.login_button'))
+                ->setInputClass('btn-green btn-lg whitespace-nowrap'),
         ];
     }
 
