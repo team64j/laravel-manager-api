@@ -323,9 +323,9 @@ class SiteContent extends Model
         return $this->belongsTo(SiteContent::class, 'parent', 'id')->with('parents');
     }
 
-    public function children(): HasMany
+    public function children($all = true): HasMany
     {
-        return $this->hasMany(SiteContent::class, 'parent', 'id')->with('children');
+        return $this->hasMany(SiteContent::class, 'parent', 'id')->when($all, fn($query) => $query->with('children'));
     }
 
     public function scopeWithoutProtected($query)

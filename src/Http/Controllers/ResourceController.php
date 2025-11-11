@@ -116,13 +116,13 @@ class ResourceController extends Controller
 
         $columns = $columns->values();
 
-        $result = SiteContent::withTrashed()
-            ->orderBy($order, $dir)
-            ->where($request->only($fields))
-            ->paginate($limit, $fields)
-            ->appends($request->all());
-
-        return JsonResource::collection($result)
+        return JsonResource::collection(
+            SiteContent::withTrashed()
+                ->orderBy($order, $dir)
+                ->where($request->only($fields))
+                ->paginate($limit, $fields)
+                ->appends($request->all())
+        )
             ->meta([
                 'columns' => $columns,
             ]);

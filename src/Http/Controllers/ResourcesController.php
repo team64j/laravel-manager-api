@@ -31,7 +31,7 @@ class ResourcesController extends Controller
             ),
         ]
     )]
-    public function show(ResourcesRequest $request, int $id): JsonResource
+    public function show(ResourcesRequest $request, int $id)
     {
         $order = $request->input('order', 'id');
         $dir = $request->input('dir', 'asc');
@@ -63,26 +63,20 @@ class ResourcesController extends Controller
             $dir = 'asc';
         }
 
+        /** @var SiteContent $result */
         $result = SiteContent::withTrashed()
-            ->select($fields)
-            ->where('parent', $id)
-            ->orderBy($order, $dir)
-            ->paginate(config('global.number_of_results'))
-            ->appends($request->all());
+            ->findOrNew($id, ['pagetitle'])
+            ->setAttribute('id', $id);
 
-        $model = SiteContent::withTrashed()->findOr($id, [
-            'id',
-            'pagetitle',
-        ], fn() => new SiteContent([
-            'id'        => 0,
-            'pagetitle' => 'root',
-        ]));
-
-        return JsonResource::make($result)
-            ->layout($this->layout->default($model))
+        return JsonResource::collection(
+            $result
+                ->children(false)
+                ->orderBy($order, $dir)
+                ->paginate(config('global.number_of_results'))
+                ->appends($request->all())
+        )
+            ->layout($this->layout->default($result))
             ->meta([
-                'title'   => $model->pagetitle,
-                'icon'    => $this->layout->icon(),
                 'sorting' => [
                     'order' => $order,
                     'dir'   => $dir,
