@@ -170,8 +170,6 @@ class UserController extends Controller
             ->layout($this->layout->list())
             ->meta(
                 [
-                    'title'   => $this->layout->titleList(),
-                    'icon'    => $this->layout->iconList(),
                     'sorting' => [
                         'order' => $order,
                         'dir'   => $dir,
@@ -204,11 +202,7 @@ class UserController extends Controller
         }
 
         return JsonResource::make($model)
-            ->layout($this->layout->default($model))
-            ->meta([
-                'title' => $this->layout->title($model->username),
-                'icon'  => $this->layout->icon(),
-            ]);
+            ->layout($this->layout->default($model));
     }
 
     #[OA\Get(

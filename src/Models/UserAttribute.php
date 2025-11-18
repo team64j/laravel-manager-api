@@ -117,7 +117,37 @@ class UserAttribute extends Model
         'comment',
     ];
 
+    public function getDobAttribute($value): string
+    {
+        return $this->convertDateTime($value);
+    }
+
     public function getLastloginAttribute($value): string
+    {
+        return $this->convertDateTime($value);
+    }
+
+    public function getThisloginAttribute($value): string
+    {
+        return $this->convertDateTime($value);
+    }
+
+    public function getBlockeduntilAttribute($value): string
+    {
+        return $this->convertDateTime($value);
+    }
+
+    public function getBlockedafterAttribute($value): string
+    {
+        return $this->convertDateTime($value);
+    }
+
+    public function getCreatedonAttribute($value): string
+    {
+        return $this->convertDateTime($value);
+    }
+
+    public function getEditedonAttribute($value): string
     {
         return $this->convertDateTime($value);
     }

@@ -130,7 +130,7 @@ class TemplateLayout extends Layout
 
                                 Textarea::make('data.attributes.description')
                                     ->setLabel(__('global.template_desc')),
-                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 2'])
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 3'])
                             ->addArea([
                                 Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
@@ -151,7 +151,7 @@ class TemplateLayout extends Layout
                                     ->setLabel(__('global.lock_template_msg'))
                                     ->setCheckedValue(1, 0)
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
-                            ], ['sm' => '2', 'xl' => '1 / 2 / 1 / 2'])
+                            ], ['sm' => '2', 'xl' => '1 / 3 / 1 / 3'])
                             ->addArea([
                                 ($isBladeFile
                                     ? '<p class="text-success">' .
@@ -167,7 +167,7 @@ class TemplateLayout extends Layout
                                     ->setLabel(__('global.template_code'))
                                     ->setLanguage('html')
                                     ->setRows(20),
-                            ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 3']),
+                            ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 4']),
                     ]
                 )
                 ->addTab(

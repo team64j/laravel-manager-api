@@ -6,8 +6,15 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\User;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Checkbox;
+use Team64j\LaravelManagerComponents\DateTime;
+use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Grid;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tabs;
+use Team64j\LaravelManagerComponents\Textarea;
 use Team64j\LaravelManagerComponents\Title;
 
 class UserLayout extends Layout
@@ -54,11 +61,15 @@ class UserLayout extends Layout
     public function default(?User $model = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->title($model->username))
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setCancel(
                     __('global.cancel'),
                     [
-                        'path' => '/users',
+                        'path'  => '/users',
                         'close' => true,
                     ]
                 )
@@ -72,6 +83,119 @@ class UserLayout extends Layout
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
+
+            Tabs::make()
+                ->setId('user')
+                ->addTab('global', slot: [
+                    Grid::make()
+                        ->setGap('1.25rem')
+                        ->addArea([
+                            Input::make('data.username')
+                                ->setLabel(__('global.username'))
+                                ->isRequired()
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.fullname')
+                                ->setLabel(__('global.user_full_name'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.first_name')
+                                ->setLabel(__('global.user_first_name'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.middle_name')
+                                ->setLabel(__('global.user_middle_name'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Select::make('data.attributes.gender')
+                                ->setLabel(__('global.user_gender'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem'])
+                                ->setData([
+                                    [
+                                        'key'   => 0,
+                                        'value' => __('global.user_male'),
+                                    ],
+                                    [
+                                        'key'   => 1,
+                                        'value' => __('global.user_female'),
+                                    ],
+                                ]),
+
+                            DateTime::make('data.attributes.dob')
+                                ->setLabel(__('global.user_dob'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.email')
+                                ->setLabel(__('global.user_email'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Textarea::make('data.attributes.comment')
+                                ->setLabel(__('global.user_comment'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.phone')
+                                ->setLabel(__('global.user_phone'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.mobilephone')
+                                ->setLabel(__('global.user_mobilephone'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.fax')
+                                ->setLabel(__('global.user_fax'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.country')
+                                ->setLabel(__('global.user_country'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.zip')
+                                ->setLabel(__('global.user_zip'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.city')
+                                ->setLabel(__('global.user_city'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.state')
+                                ->setLabel(__('global.user_state'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.street')
+                                ->setLabel(__('global.user_street'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                        ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 3'])
+                        ->addArea([
+                            Input::make('data.attributes.lastlogin')
+                                ->setLabel(__('global.user_lastlogin'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            DateTime::make('data.attributes.thislogin')
+                                ->setLabel(__('global.user_thislogin'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.createdon')
+                                ->setLabel(__('global.user_createdon'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.editedon')
+                                ->setLabel(__('global.user_editedon'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.blockedafter')
+                                ->setLabel(__('global.user_blockedafter'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Input::make('data.attributes.blockeduntil')
+                                ->setLabel(__('global.user_blockeduntil'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                            Checkbox::make('data.attributes.blocked')
+                                ->setLabel(__('global.user_blocked'))
+                                ->setAttribute('style', ['margin-bottom' => '1rem']),
+                        ], ['sm' => '2', 'xl' => '1 / 3 / 1 / 3']),
+                ]),
         ];
     }
 
@@ -81,6 +205,10 @@ class UserLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
                 ->setNew(
                     $this->title(),

@@ -90,7 +90,9 @@ class CategoryLayout extends Layout
                     slot: [
                         Input::make('category')
                             ->setLabel(__('global.cm_category_name'))
-                            ->isRequired(),
+                            ->isRequired()
+                            ->setAttribute('style', ['margin-bottom' => '1rem']),
+
                         Input::make('rank')
                             ->setLabel(__('global.cm_category_position')),
                     ]

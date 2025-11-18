@@ -117,7 +117,7 @@ class SnippetLayout extends Layout
                                     ->setLabel(__('global.parse_docblock'))
                                     ->setHelp(__('global.parse_docblock_msg'))
                                     ->setCheckedValue(1, 0),
-                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 2'])
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 3'])
                             ->addArea([
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
@@ -144,13 +144,13 @@ class SnippetLayout extends Layout
                                 Checkbox::make('locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setCheckedValue(1, 0),
-                            ], ['sm' => '2', 'xl' => '1 / 2 / 1 / 2'])
+                            ], ['sm' => '2', 'xl' => '1 / 3 / 1 / 3'])
                             ->addArea([
                                 CodeEditor::make('snippet')
                                     ->setLabel(__('global.chunk_code'))
                                     ->setRows(25)
                                     ->setLanguage('php'),
-                            ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 3']),
+                            ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 4']),
                     ],
                 )
                 ->addTab(

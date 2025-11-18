@@ -149,7 +149,7 @@ class TvLayout extends Layout
                                     ->setLabel(__('global.tmplvars_default'))
                                     ->setHelp(__('global.tmplvars_binding_msg'))
                                     ->setRows(2),
-                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 2'])
+                            ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 3'])
                             ->addArea([
                                 Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
@@ -196,11 +196,11 @@ class TvLayout extends Layout
                                         ],
                                     ])
                                     ->setEmitInput('inputChangeQuery', 'display'),
-                            ], ['sm' => '2', 'xl' => '1 / 2 / 1 / 2'])
+                            ], ['sm' => '2', 'xl' => '1 / 3 / 1 / 3'])
                             ->when(
                                 $model->display,
                                 fn(Grid $grid) => $grid
-                                    ->addArea($this->display($model->display), ['sm' => '3', 'xl' => '2 / 1 / 2 / 3'])
+                                    ->addArea($this->display($model->display), ['sm' => '3', 'xl' => '2 / 1 / 2 / 4'])
                             ),
                     ]
                 )
