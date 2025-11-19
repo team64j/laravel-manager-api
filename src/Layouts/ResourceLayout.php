@@ -149,7 +149,24 @@ class ResourceLayout extends Layout
                 ->setLabel(__('global.resource_content'))
                 ->setHelp('<b>[*content*]</b>')
                 ->setRows(20)
-                ->setLanguage('html');
+//                ->setLanguage('html')
+                ->setConfig([
+                    [
+                        'active' => true,
+                        'component' => 'Codemirror',
+                        'language' => 'html',
+                        'lang' => 'html',
+                        'name' => 'Codemirror',
+                    ],
+                    [
+                        'component' => 'Textarea',
+                        'name' => 'Textarea',
+                    ],
+//                    [
+//                        'component' => 'TinyMCE',
+//                        'name' => 'TinyMCE',
+//                    ]
+                ]);
 
             $title = $this->title();
         }

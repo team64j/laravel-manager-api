@@ -30,16 +30,16 @@ class BootstrapController extends Controller
                 response: 200,
                 description: 'ok',
                 content: new OA\JsonContent(type: 'object')
-            )
+            ),
         ]
     )]
     public function init(): JsonResource
     {
         return JsonResource::make([
             'languages' => $this->getLanguages(),
-            'config' => [
+            'config'    => [
                 'siteName' => config('global.site_name'),
-                'version' => config('global.settings_version'),
+                'version'  => config('global.settings_version'),
             ],
         ]);
     }
@@ -54,7 +54,7 @@ class BootstrapController extends Controller
                 response: 200,
                 description: 'ok',
                 content: new OA\JsonContent(type: 'object')
-            )
+            ),
         ]
     )]
     public function index(BootstrapRequest $request): JsonResource
@@ -65,43 +65,51 @@ class BootstrapController extends Controller
             'routes' => $this->getRoutes(),
             'assets' => $this->getAssets(),
             'config' => [
-                'siteName' => config('global.site_name'),
+                'siteName'       => config('global.site_name'),
                 'datetimeFormat' => config('global.datetime_format'),
             ],
-            'lang' => [
+            'lang'   => [
                 'warning_not_saved' => __('global.warning_not_saved'),
-                'dayNames' => __('global.dp_dayNames'),
-                'monthNames' => __('global.dp_monthNames'),
-                'startDay' => __('global.dp_startDay'),
+                'dayNames'          => __('global.dp_dayNames'),
+                'monthNames'        => __('global.dp_monthNames'),
+                'startDay'          => __('global.dp_startDay'),
             ],
         ])
             ->layout([
                 [
                     'component' => 'AppMainMenu',
-                    'attrs' => [
-                        'data' => $this->getMenu()[0]['data'],
+                    'attrs'     => [
+                        'data' => $this->getMenu()['primary']['data'],
                     ],
-                    'slot' => 'top.left'
+                    'slot'      => 'top.left',
                 ],
                 [
                     'component' => 'AppMainMenu',
-                    'attrs' => [
-                        'data' => $this->getMenu()[1]['data'],
+                    'attrs'     => [
+                        'data' => $this->getMenu()['secondary']['data'],
                     ],
-                    'slot' => 'top.right'
+                    'slot'      => 'top.right',
                 ],
-//                [
-//                    'component' => 'AppGlobalMenu',
-//                    'attrs' => [
-//                        'data' => $this->getMenu(),
-//                        'class' => 'w-full'
-//                    ],
-//                    'slot' => 'top',
-//                ],
+                //                [
+                //                    'component' => 'AppGlobalMenu',
+                //                    'attrs' => [
+                //                        'data' => $this->getMenu(),
+                //                        'class' => 'w-full'
+                //                    ],
+                //                    'slot' => 'top',
+                //                ],
                 [
                     'component' => 'AppTabsNavigation',
-                    'attrs' => $sidebar['attrs'],
-                    'slot' => 'left.top',
+                    'attrs'     => $sidebar['attrs'],
+                    'slot'      => 'left.top',
+                ],
+                [
+                    'component' => 'AppMainMenu',
+                    'attrs'     => [
+                        'data'       => $this->getMenu()['third']['data'],
+                        'isVertical' => true,
+                    ],
+                    'slot'      => 'left.bottom',
                 ],
                 [
                     ...$sidebar,
@@ -109,7 +117,7 @@ class BootstrapController extends Controller
                 ],
                 [
                     'component' => 'AppGlobalTabs',
-                    'slot' => 'main',
+                    'slot'      => 'main',
                 ],
             ]);
     }
@@ -120,7 +128,7 @@ class BootstrapController extends Controller
             [
                 'path' => '/elements/:path',
                 'meta' => [
-                    'url' => '/:path?groupBy=category',
+                    'url'   => '/:path?groupBy=category',
                     'group' => true,
                 ],
             ],
@@ -139,15 +147,15 @@ class BootstrapController extends Controller
             [
                 'path' => '/modules/exec/:id',
                 'meta' => [
-                    'icon' => 'fa fa-cube',
+                    'icon'     => 'fa fa-cube',
                     'isIframe' => true,
-                    'title' => __('global.run_module'),
+                    'title'    => __('global.run_module'),
                 ],
             ],
             [
                 'path' => '/preview/:id',
                 'meta' => [
-                    'icon' => 'fa fa-desktop',
+                    'icon'     => 'fa fa-desktop',
                     'isIframe' => true,
                 ],
             ],
@@ -166,14 +174,14 @@ class BootstrapController extends Controller
             [
                 'path' => '/:path(.*)/:id(\d+)',
             ],
-//            [
-//                'path' => '/:path(.*)/new',
-//            ],
+            //            [
+            //                'path' => '/:path(.*)/new',
+            //            ],
             [
                 'path' => '/phpinfo',
                 'meta' => [
-                    'icon' => 'fab fa-php',
-                    'title' => 'PHP Info',
+                    'icon'     => 'fab fa-php',
+                    'title'    => 'PHP Info',
                     'isIframe' => true,
                 ],
             ],
@@ -374,7 +382,7 @@ class BootstrapController extends Controller
         $publicFolder = basename(app()->publicPath());
 
         $assets[] = [
-            'rel' => 'manifest',
+            'rel'    => 'manifest',
             'source' => str_replace(
                 ['"' . $publicFolder, '"' . url('/'), '/..'],
                 ['"', '"', url('/')],
@@ -398,117 +406,117 @@ class BootstrapController extends Controller
 
     public function getMenu(bool $edit = false): array
     {
-        if (!$edit && config()->has('global.workspace_topmenu_data') &&
-            config('global.workspace_topmenu_data') != '[]'
+        if (!$edit && config()->has('global.workspace_topmenu_data')
+            && config('global.workspace_topmenu_data') != '[]'
         ) {
             $data = config('global.workspace_topmenu_data');
         } else {
             $data = json_encode([
-                [
-                    'key' => 'primary',
+                'primary' => [
+                    'key'  => 'primary',
                     'data' => [
-//                        [
-//                            'key' => 'sidebarShow',
-//                            'values' => [
-//                                [
-//                                    'value' => true,
-//                                    'icon' => 'fa fa-bars',
-//                                ],
-//                                [
-//                                    'value' => false,
-//                                    'icon' => 'fa fa-ellipsis-vertical',
-//                                ],
-//                            ],
-//                        ],
+                        //                        [
+                        //                            'key' => 'sidebarShow',
+                        //                            'values' => [
+                        //                                [
+                        //                                    'value' => true,
+                        //                                    'icon' => 'fa fa-bars',
+                        //                                ],
+                        //                                [
+                        //                                    'value' => false,
+                        //                                    'icon' => 'fa fa-ellipsis-vertical',
+                        //                                ],
+                        //                            ],
+                        //                        ],
                         [
-                            'key' => 'dashboard',
-                            'icon' => 'https://avatars.githubusercontent.com/u/46722965?s=64&v=4',
-                            'class' => 'line-height-1',
-                            'to' => [
+                            'key'         => 'dashboard',
+                            'icon'        => 'https://avatars.githubusercontent.com/u/46722965?s=64&v=4',
+                            'class'       => 'line-height-1',
+                            'to'          => [
                                 'path' => '/',
                             ],
                             'permissions' => ['home'],
                         ],
                         [
-                            'key' => 'elements',
+                            'key'  => 'elements',
                             'name' => '[%elements%]',
                             'icon' => 'fa fa-th',
                             'data' => [
                                 [
-                                    'key' => 'templates',
-                                    'name' => '[%templates%]',
-                                    'icon' => 'fa fa-newspaper',
-                                    'to' => [
+                                    'key'         => 'templates',
+                                    'name'        => '[%templates%]',
+                                    'icon'        => 'fa fa-newspaper',
+                                    'to'          => [
                                         'path' => '/elements/templates',
                                     ],
-                                    'url' => '/templates/list',
+                                    'url'         => '/templates/list',
                                     'permissions' => ['new_template', 'edit_template'],
                                 ],
                                 [
-                                    'key' => 'tvs',
-                                    'name' => '[%tmplvars%]',
-                                    'icon' => 'fa fa-list-alt',
-                                    'to' => [
+                                    'key'         => 'tvs',
+                                    'name'        => '[%tmplvars%]',
+                                    'icon'        => 'fa fa-list-alt',
+                                    'to'          => [
                                         'path' => '/elements/tvs',
                                     ],
-                                    'url' => '/tvs/list',
+                                    'url'         => '/tvs/list',
                                     'permissions' => ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                                 ],
                                 [
-                                    'key' => 'chunks',
-                                    'name' => '[%htmlsnippets%]',
-                                    'icon' => 'fa fa-th-large',
-                                    'to' => [
+                                    'key'         => 'chunks',
+                                    'name'        => '[%htmlsnippets%]',
+                                    'icon'        => 'fa fa-th-large',
+                                    'to'          => [
                                         'path' => '/elements/chunks',
                                     ],
-                                    'url' => '/chunks/list',
+                                    'url'         => '/chunks/list',
                                     'permissions' => ['edit_chunk'],
                                 ],
                                 [
-                                    'key' => 'snippets',
-                                    'name' => '[%snippets%]',
-                                    'icon' => 'fa fa-code',
-                                    'to' => [
+                                    'key'         => 'snippets',
+                                    'name'        => '[%snippets%]',
+                                    'icon'        => 'fa fa-code',
+                                    'to'          => [
                                         'path' => '/elements/snippets',
                                     ],
-                                    'url' => '/snippets/list',
+                                    'url'         => '/snippets/list',
                                     'permissions' => ['edit_snippet'],
                                 ],
                                 [
-                                    'key' => 'plugins',
-                                    'name' => '[%plugins%]',
-                                    'icon' => 'fa fa-plug',
-                                    'to' => [
+                                    'key'         => 'plugins',
+                                    'name'        => '[%plugins%]',
+                                    'icon'        => 'fa fa-plug',
+                                    'to'          => [
                                         'path' => '/elements/plugins',
                                     ],
-                                    'url' => '/plugins/list',
+                                    'url'         => '/plugins/list',
                                     'permissions' => ['edit_plugin'],
                                 ],
                                 [
-                                    'key' => 'modules',
-                                    'name' => '[%modules%]',
-                                    'icon' => 'fa fa-cubes',
-                                    'to' => [
+                                    'key'         => 'modules',
+                                    'name'        => '[%modules%]',
+                                    'icon'        => 'fa fa-cubes',
+                                    'to'          => [
                                         'path' => '/elements/modules',
                                     ],
-                                    'url' => '/modules/list',
+                                    'url'         => '/modules/list',
                                     'permissions' => ['edit_module'],
                                 ],
                                 [
-                                    'key' => 'categories',
-                                    'name' => '[%category_management%]',
-                                    'icon' => 'fa fa-object-group',
-                                    'to' => [
+                                    'key'         => 'categories',
+                                    'name'        => '[%category_management%]',
+                                    'icon'        => 'fa fa-object-group',
+                                    'to'          => [
                                         'path' => '/elements/categories',
                                     ],
-                                    'url' => '/categories/list',
+                                    'url'         => '/categories/list',
                                     'permissions' => ['category_manager'],
                                 ],
                                 [
-                                    'key' => 'filemanager',
-                                    'name' => '[%settings_misc%]',
-                                    'icon' => 'far fa-folder-open',
-                                    'to' => [
+                                    'key'         => 'filemanager',
+                                    'name'        => '[%settings_misc%]',
+                                    'icon'        => 'far fa-folder-open',
+                                    'to'          => [
                                         'path' => '/filemanager',
                                     ],
                                     'permissions' => ['file_manager'],
@@ -516,41 +524,41 @@ class BootstrapController extends Controller
                             ],
                         ],
                         [
-                            'key' => 'modules',
-                            'name' => '[%modules%]',
-                            'icon' => 'fa fa-cubes',
-                            'url' => '/modules/exec',
+                            'key'         => 'modules',
+                            'name'        => '[%modules%]',
+                            'icon'        => 'fa fa-cubes',
+                            'url'         => '/modules/exec',
                             'permissions' => ['exec_module'],
                         ],
                         [
-                            'key' => 'users',
+                            'key'  => 'users',
                             'name' => '[%users%]',
                             'icon' => 'fa fa-users',
                             'data' => [
                                 [
-                                    'key' => 'managers',
-                                    'name' => '[%users%]',
-                                    'icon' => 'fa fa-user-circle',
-                                    'to' => [
+                                    'key'         => 'managers',
+                                    'name'        => '[%users%]',
+                                    'icon'        => 'fa fa-user-circle',
+                                    'to'          => [
                                         'path' => '/users',
                                     ],
-                                    'url' => '/users/list',
+                                    'url'         => '/users/list',
                                     'permissions' => ['edit_user'],
                                 ],
                                 [
-                                    'key' => 'roles',
-                                    'name' => '[%role_management_title%]',
-                                    'icon' => 'fa fa-legal',
-                                    'to' => [
+                                    'key'         => 'roles',
+                                    'name'        => '[%role_management_title%]',
+                                    'icon'        => 'fa fa-legal',
+                                    'to'          => [
                                         'path' => '/roles/users',
                                     ],
                                     'permissions' => ['edit_role'],
                                 ],
                                 [
-                                    'key' => 'permissions',
-                                    'name' => '[%web_permissions%]',
-                                    'icon' => 'fa fa-male',
-                                    'to' => [
+                                    'key'         => 'permissions',
+                                    'name'        => '[%web_permissions%]',
+                                    'icon'        => 'fa fa-male',
+                                    'to'          => [
                                         'path' => '/permissions/groups',
                                     ],
                                     'permissions' => ['access_permissions'],
@@ -558,15 +566,15 @@ class BootstrapController extends Controller
                             ],
                         ],
                         [
-                            'key' => 'tools',
+                            'key'  => 'tools',
                             'name' => '[%tools%]',
                             'icon' => 'fa fa-wrench',
                             'data' => [
                                 [
-                                    'key' => 'cache',
-                                    'name' => '[%refresh_site%]',
-                                    'icon' => 'fa fa-recycle',
-                                    'to' => [
+                                    'key'         => 'cache',
+                                    'name'        => '[%refresh_site%]',
+                                    'icon'        => 'fa fa-recycle',
+                                    'to'          => [
                                         'path' => '/cache',
                                     ],
                                     'permissions' => ['empty_cache'],
@@ -576,12 +584,12 @@ class BootstrapController extends Controller
                     ],
                 ],
 
-                [
-                    'key' => 'secondary',
+                'secondary' => [
+                    'key'  => 'secondary',
                     'data' => [
                         [
-                            'key' => 'searchShow',
-                            'icon' => 'fa fa-search',
+                            'key'    => 'searchShow',
+                            'icon'   => 'fa fa-search',
                             'values' => [
                                 [
                                     'value' => true,
@@ -592,134 +600,189 @@ class BootstrapController extends Controller
                             ],
                         ],
                         [
-                            'key' => 'siteStatus',
-                            'icon' => 'fa fa-desktop',
-                            'value' => config('global.site_status'),
+                            'key'    => 'siteStatus',
+                            'icon'   => 'fa fa-desktop',
+                            'value'  => config('global.site_status'),
                             'values' => [
                                 [
-                                    'icon' => 'fa fa-desktop relative',
+                                    'icon'  => 'fa fa-desktop relative',
                                     'title' => '[%online%]',
-                                    'value' => '1'
+                                    'value' => '1',
                                 ],
                                 [
-                                    'icon' => 'fa fa-triangle-exclamation text-amber-400',
+                                    'icon'  => 'fa fa-triangle-exclamation text-amber-400',
                                     'title' => config('global.site_unavailable_message'),
-                                    'value' => '0'
+                                    'value' => '0',
                                 ],
                             ],
-                            'href' => url('/'),
+                            'href'   => url('/'),
                             'target' => '_blank',
                         ],
+                        //                        [
+                        //                            'key' => 'account',
+                        //                            'icon' => 'far fa-user-circle',
+                        //                            'image' => '[+user.photo+]',
+                        //                            'name' => '[+user.username+]',
+                        //                            'data' => [
+                        //                                [
+                        //                                    'key' => 'dark',
+                        //                                    'values' => [
+                        //                                        [
+                        //                                            'icon' => 'fa fa-sun fa-fw',
+                        //                                            'name' => 'Light theme',
+                        //                                            'value' => true,
+                        //                                        ],
+                        //                                        [
+                        //                                            'icon' => 'fa fa-moon fa-fw',
+                        //                                            'name' => 'Dark theme',
+                        //                                            'value' => false,
+                        //                                        ],
+                        //                                    ],
+                        //                                ],
+                        //                                [
+                        //                                    'key' => 'workspace',
+                        //                                    'icon' => 'fa fa-eye',
+                        //                                    'name' => '[%settings_ui%]',
+                        //                                    'to' => [
+                        //                                        'path' => '/workspace',
+                        //                                    ],
+                        //                                    'permissions' => ['settings'],
+                        //                                ],
+                        //                                [
+                        //                                    'key' => 'password',
+                        //                                    'icon' => 'fa fa-lock',
+                        //                                    'name' => '[%change_password%]',
+                        //                                    'to' => [
+                        //                                        'path' => '/password',
+                        //                                    ],
+                        //                                    'permissions' => ['change_password'],
+                        //                                ],
+                        //                                [
+                        //                                    'key' => 'logout',
+                        //                                    'icon' => 'fa fa-sign-out',
+                        //                                    'name' => '[%logout%]',
+                        //                                    'to' => [
+                        //                                        'path' => '/auth/logout',
+                        //                                    ],
+                        //                                ],
+                        //                            ],
+                        //                        ],
                         [
-                            'key' => 'account',
-                            'icon' => 'far fa-user-circle',
-                            'image' => '[+user.photo+]',
-                            'name' => '[+user.username+]',
-                            'data' => [
-                                [
-                                    'key' => 'dark',
-                                    'values' => [
-                                        [
-                                            'icon' => 'fa fa-sun fa-fw',
-                                            'name' => 'Light theme',
-                                            'value' => true,
-                                        ],
-                                        [
-                                            'icon' => 'fa fa-moon fa-fw',
-                                            'name' => 'Dark theme',
-                                            'value' => false,
-                                        ],
-                                    ],
-                                ],
-                                [
-                                    'key' => 'workspace',
-                                    'icon' => 'fa fa-eye',
-                                    'name' => '[%settings_ui%]',
-                                    'to' => [
-                                        'path' => '/workspace',
-                                    ],
-                                    'permissions' => ['settings'],
-                                ],
-                                [
-                                    'key' => 'password',
-                                    'icon' => 'fa fa-lock',
-                                    'name' => '[%change_password%]',
-                                    'to' => [
-                                        'path' => '/password',
-                                    ],
-                                    'permissions' => ['change_password'],
-                                ],
-                                [
-                                    'key' => 'logout',
-                                    'icon' => 'fa fa-sign-out',
-                                    'name' => '[%logout%]',
-                                    'to' => [
-                                        'path' => '/auth/logout',
-                                    ],
-                                ],
-                            ],
-                        ],
-                        [
-                            'key' => 'settings',
+                            'key'  => 'settings',
                             'icon' => 'fa fa-cogs',
                             'data' => [
                                 [
-                                    'key' => 'edit_settings',
-                                    'icon' => 'fa fa-sliders',
-                                    'name' => '[%edit_settings%]',
-                                    'to' => [
+                                    'key'         => 'edit_settings',
+                                    'icon'        => 'fa fa-sliders',
+                                    'name'        => '[%edit_settings%]',
+                                    'to'          => [
                                         'path' => '/configuration',
                                     ],
                                     'permissions' => ['settings'],
                                 ],
                                 [
-                                    'key' => 'site_schedule',
-                                    'icon' => 'far fa-calendar',
-                                    'name' => '[%site_schedule%]',
-                                    'to' => [
+                                    'key'         => 'site_schedule',
+                                    'icon'        => 'far fa-calendar',
+                                    'name'        => '[%site_schedule%]',
+                                    'to'          => [
                                         'path' => '/schedule',
                                     ],
                                     'permissions' => ['view_eventlog'],
                                 ],
                                 [
-                                    'key' => 'eventlog_viewer',
-                                    'icon' => 'fa fa-exclamation-triangle',
-                                    'name' => '[%eventlog_viewer%]',
-                                    'to' => [
+                                    'key'         => 'eventlog_viewer',
+                                    'icon'        => 'fa fa-exclamation-triangle',
+                                    'name'        => '[%eventlog_viewer%]',
+                                    'to'          => [
                                         'path' => '/event-log',
                                     ],
                                     'permissions' => ['view_eventlog'],
                                 ],
                                 [
-                                    'key' => 'view_logging',
-                                    'icon' => 'fa fa-user-secret',
-                                    'name' => '[%view_logging%]',
-                                    'to' => [
+                                    'key'         => 'view_logging',
+                                    'icon'        => 'fa fa-user-secret',
+                                    'name'        => '[%view_logging%]',
+                                    'to'          => [
                                         'path' => '/system-log',
                                     ],
                                     'permissions' => ['logs'],
                                 ],
                                 [
-                                    'key' => 'view_sysinfo',
+                                    'key'  => 'view_sysinfo',
                                     'icon' => 'fa fa-info',
                                     'name' => '[%view_sysinfo%]',
-                                    'to' => [
+                                    'to'   => [
                                         'path' => '/system-info',
                                     ],
                                 ],
                                 [
-                                    'key' => 'help',
-                                    'icon' => 'far fa-question-circle',
-                                    'name' => '[%help%]',
-                                    'to' => [
+                                    'key'         => 'help',
+                                    'icon'        => 'far fa-question-circle',
+                                    'name'        => '[%help%]',
+                                    'to'          => [
                                         'path' => '/help',
                                     ],
                                     'permissions' => ['help'],
                                 ],
                                 [
-                                    'key' => 'settings_version',
-                                    'name' => 'Evolution CE [(settings_version)]',
+                                    'key'   => 'settings_version',
+                                    'name'  => 'Evolution CE [(settings_version)]',
                                     'class' => 'text-center text-sm disabled',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+
+                'third' => [
+                    'key'  => 'third',
+                    'data' => [
+                        [
+                            'key'    => 'account',
+                            'icon'   => 'far fa-user-circle',
+                            'image'  => '[+user.photo+]',
+                            'title'  => '[+user.username+]',
+                            'data'   => [
+                                [
+                                    'key'    => 'dark',
+                                    'values' => [
+                                        [
+                                            'icon'  => 'fa fa-sun fa-fw',
+                                            'name'  => 'Light theme',
+                                            'value' => true,
+                                        ],
+                                        [
+                                            'icon'  => 'fa fa-moon fa-fw',
+                                            'name'  => 'Dark theme',
+                                            'value' => false,
+                                        ],
+                                    ],
+                                ],
+                                [
+                                    'key'         => 'workspace',
+                                    'icon'        => 'fa fa-eye',
+                                    'name'        => '[%settings_ui%]',
+                                    'to'          => [
+                                        'path' => '/workspace',
+                                    ],
+                                    'permissions' => ['settings'],
+                                ],
+                                [
+                                    'key'         => 'password',
+                                    'icon'        => 'fa fa-lock',
+                                    'name'        => '[%change_password%]',
+                                    'to'          => [
+                                        'path' => '/password',
+                                    ],
+                                    'permissions' => ['change_password'],
+                                ],
+                                [
+                                    'key'  => 'logout',
+                                    'icon' => 'fa fa-sign-out',
+                                    'name' => '[%logout%]',
+                                    'to'   => [
+                                        'path' => '/auth/logout',
+                                    ],
                                 ],
                             ],
                         ],
@@ -809,9 +872,9 @@ class BootstrapController extends Controller
             $model = auth()->user();
 
             $user = [
-                'name' => $model->username,
+                'name'     => $model->username,
                 'username' => $model->username,
-                'photo' => $model->attributes->photo,
+                'photo'    => $model->attributes->photo,
             ];
 
             foreach ($matches[1] as $match) {
@@ -860,62 +923,62 @@ class BootstrapController extends Controller
                 response: 200,
                 description: 'ok',
                 content: new OA\JsonContent(type: 'object')
-            )
+            ),
         ]
     )]
     public function selectPages(): array
     {
         $data = [
-            '' => '',
-            '{"name":"Dashboard"}' => __('global.home'),
-            '{"name":"Elements"}' => __('global.elements'),
-            '{"name":"Elements","params":{"element":"templates"}}' => __('global.elements') . ' - ' .
+            ''                                                        => '',
+            '{"name":"Dashboard"}'                                    => __('global.home'),
+            '{"name":"Elements"}'                                     => __('global.elements'),
+            '{"name":"Elements","params":{"element":"templates"}}'    => __('global.elements') . ' - ' .
                 __('global.templates'),
-            '{"name":"Elements","params":{"element":"tvs"}}' => __('global.elements') . ' - ' .
+            '{"name":"Elements","params":{"element":"tvs"}}'          => __('global.elements') . ' - ' .
                 __('global.tmplvars'),
-            '{"name":"Elements","params":{"element":"chunks"}}' => __('global.elements') . ' - ' .
+            '{"name":"Elements","params":{"element":"chunks"}}'       => __('global.elements') . ' - ' .
                 __('global.htmlsnippets'),
-            '{"name":"Elements","params":{"element":"snippets"}}' => __('global.elements') . ' - ' .
+            '{"name":"Elements","params":{"element":"snippets"}}'     => __('global.elements') . ' - ' .
                 __('global.snippets'),
-            '{"name":"Elements","params":{"element":"plugins"}}' => __('global.elements') . ' - ' .
+            '{"name":"Elements","params":{"element":"plugins"}}'      => __('global.elements') . ' - ' .
                 __('global.plugins'),
-            '{"name":"Elements","params":{"element":"modules"}}' => __('global.elements') . ' - ' .
+            '{"name":"Elements","params":{"element":"modules"}}'      => __('global.elements') . ' - ' .
                 __('global.modules'),
-            '{"name":"Elements","params":{"element":"categories"}}' => __('global.elements') . ' - ' .
+            '{"name":"Elements","params":{"element":"categories"}}'   => __('global.elements') . ' - ' .
                 __('global.category_management'),
-            '{"name":"ModuleExec"}' => __('global.role_run_module'),
-            '{"name":"User"}' => __('global.users'),
-            '{"name":"Roles","params":{"element":"users"}}' => __('global.role_role_management') . ' - ' .
+            '{"name":"ModuleExec"}'                                   => __('global.role_run_module'),
+            '{"name":"User"}'                                         => __('global.users'),
+            '{"name":"Roles","params":{"element":"users"}}'           => __('global.role_role_management') . ' - ' .
                 __('global.role_role_management'),
-            '{"name":"Roles","params":{"element":"categories"}}' => __('global.role_role_management') . ' - ' .
+            '{"name":"Roles","params":{"element":"categories"}}'      => __('global.role_role_management') . ' - ' .
                 __('global.category_management'),
-            '{"name":"Roles","params":{"element":"permissions"}}' => __('global.role_role_management') . ' - ' .
+            '{"name":"Roles","params":{"element":"permissions"}}'     => __('global.role_role_management') . ' - ' .
                 __('global.manage_permission'),
-            '{"name":"Permissions","params":{"element":"groups"}}' => __('global.manage_permission') . ' - ' .
+            '{"name":"Permissions","params":{"element":"groups"}}'    => __('global.manage_permission') . ' - ' .
                 __('global.access_permissions_user_groups'),
             '{"name":"Permissions","params":{"element":"relations"}}' => __('global.manage_permission') . ' - ' .
                 __('global.access_permissions_resource_groups'),
             '{"name":"Permissions","params":{"element":"resources"}}' => __('global.manage_permission') . ' - ' .
                 __('global.access_permissions_links'),
-            '{"name":"Configuration"}' => __('global.settings_title'),
-            '{"name":"Workspace"}' => __('global.settings_ui'),
-            '{"name":"Schedules"}' => __('global.site_schedule'),
-            '{"name":"EventLogs"}' => __('global.eventlog_viewer'),
-            '{"name":"EventLog"}' => __('global.eventlog'),
-            '{"name":"SystemLog"}' => __('global.mgrlog_view'),
-            '{"name":"SystemInfo"}' => __('global.view_sysinfo'),
-            '{"name":"PhpInfo"}' => 'PHP Version',
-            '{"name":"Help"}' => __('global.help'),
-            '{"name":"Files"}' => __('global.manage_files'),
-            '{"name":"File"}' => __('global.files_management'),
-            '{"name":"Cache"}' => __('global.resource_opt_emptycache'),
-            '{"name":"Password"}' => __('global.change_password'),
-            '{"name":"Logout"}' => __('global.logout'),
+            '{"name":"Configuration"}'                                => __('global.settings_title'),
+            '{"name":"Workspace"}'                                    => __('global.settings_ui'),
+            '{"name":"Schedules"}'                                    => __('global.site_schedule'),
+            '{"name":"EventLogs"}'                                    => __('global.eventlog_viewer'),
+            '{"name":"EventLog"}'                                     => __('global.eventlog'),
+            '{"name":"SystemLog"}'                                    => __('global.mgrlog_view'),
+            '{"name":"SystemInfo"}'                                   => __('global.view_sysinfo'),
+            '{"name":"PhpInfo"}'                                      => 'PHP Version',
+            '{"name":"Help"}'                                         => __('global.help'),
+            '{"name":"Files"}'                                        => __('global.manage_files'),
+            '{"name":"File"}'                                         => __('global.files_management'),
+            '{"name":"Cache"}'                                        => __('global.resource_opt_emptycache'),
+            '{"name":"Password"}'                                     => __('global.change_password'),
+            '{"name":"Logout"}'                                       => __('global.logout'),
         ];
 
         return [
             'data' => array_map(fn($value, $key) => [
-                'key' => $key,
+                'key'   => $key,
                 'value' => $value,
             ], $data, array_keys($data)),
         ];
@@ -937,58 +1000,58 @@ class BootstrapController extends Controller
         } else {
             $data = [
                 [
-                    'lang' => 'manage_documents',
-                    'class' => ResourceLayout::class . '@tree',
+                    'lang'    => 'manage_documents',
+                    'class'   => ResourceLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'templates',
-                    'class' => TemplateLayout::class . '@tree',
+                    'lang'    => 'templates',
+                    'class'   => TemplateLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'tmplvars',
-                    'class' => TvLayout::class . '@tree',
+                    'lang'    => 'tmplvars',
+                    'class'   => TvLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'htmlsnippets',
-                    'class' => ChunkLayout::class . '@tree',
+                    'lang'    => 'htmlsnippets',
+                    'class'   => ChunkLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'snippets',
-                    'class' => SnippetLayout::class . '@tree',
+                    'lang'    => 'snippets',
+                    'class'   => SnippetLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'plugins',
-                    'class' => PluginLayout::class . '@tree',
+                    'lang'    => 'plugins',
+                    'class'   => PluginLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'modules',
-                    'class' => ModuleLayout::class . '@tree',
+                    'lang'    => 'modules',
+                    'class'   => ModuleLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'category_management',
-                    'class' => CategoryLayout::class . '@tree',
+                    'lang'    => 'category_management',
+                    'class'   => CategoryLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
                 [
-                    'lang' => 'files_files',
-                    'class' => FilemanagerLayout::class . '@tree',
+                    'lang'    => 'files_files',
+                    'class'   => FilemanagerLayout::class . '@tree',
                     'enabled' => true,
-                    'custom' => false,
+                    'custom'  => false,
                 ],
             ];
         }
@@ -1000,8 +1063,8 @@ class BootstrapController extends Controller
         foreach ($data as $v) {
             $class = explode('@', (string) $v['class']);
 
-            if (!$v['enabled'] || !$v['class'] || count($class) < 2 ||
-                (class_exists($class[0]) && !method_exists(...$class))
+            if (!$v['enabled'] || !$v['class'] || count($class) < 2
+                || (class_exists($class[0]) && !method_exists(...$class))
             ) {
                 continue;
             }
@@ -1059,12 +1122,12 @@ class BootstrapController extends Controller
 
             if (isset($modx_lang_attribute) && !empty($languages[$modx_lang_attribute])) {
                 $data[] = [
-                    'key' => $modx_lang_attribute,
-                    'value' => $languages[$modx_lang_attribute],
-                    'user' => $lang['username'] ?? null,
+                    'key'      => $modx_lang_attribute,
+                    'value'    => $languages[$modx_lang_attribute],
+                    'user'     => $lang['username'] ?? null,
                     'password' => $lang['password'] ?? null,
                     'remember' => $lang['remember_username'] ?? null,
-                    'login' => $lang['login_button'] ?? null,
+                    'login'    => $lang['login_button'] ?? null,
                 ];
             }
         }
