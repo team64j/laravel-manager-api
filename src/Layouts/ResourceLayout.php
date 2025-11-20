@@ -149,23 +149,23 @@ class ResourceLayout extends Layout
                 ->setLabel(__('global.resource_content'))
                 ->setHelp('<b>[*content*]</b>')
                 ->setRows(20)
-//                ->setLanguage('html')
+                //                ->setLanguage('html')
                 ->setConfig([
                     [
-                        'active' => true,
+                        'active'    => true,
                         'component' => 'Codemirror',
-                        'language' => 'html',
-                        'lang' => 'html',
-                        'name' => 'Codemirror',
+                        'language'  => 'html',
+                        'lang'      => 'html',
+                        'name'      => 'Codemirror',
                     ],
                     [
                         'component' => 'Textarea',
-                        'name' => 'Textarea',
+                        'name'      => 'Textarea',
                     ],
-//                    [
-//                        'component' => 'TinyMCE',
-//                        'name' => 'TinyMCE',
-//                    ]
+                    //                    [
+                    //                        'component' => 'TinyMCE',
+                    //                        'name' => 'TinyMCE',
+                    //                    ]
                 ]);
 
             $title = $this->title();
@@ -256,14 +256,13 @@ class ResourceLayout extends Layout
                                     ->setLabel(__('global.resource_description'))
                                     ->setHelp('<b>[*description*]</b><br>' . __('global.resource_description_help'))
                                     ->setRows(3)
-                                    ->setAttribute('style', ['margin-bottom' => '1rem', 'height' => '10rem']),
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 CodeEditor::make('data.attributes.introtext')
                                     ->setLabel(__('global.resource_summary'))
                                     ->setHelp('<b>[*introtext*]</b><br>' . __('global.resource_summary_help'))
                                     ->setRows(3)
-                                    ->setLanguage('html')
-                                    ->setAttribute('style', ['height' => '10rem']),
+                                    ->setLanguage('html'),
                             ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 4'])
                             ->addArea([
                                 /*Select::make('parent')
@@ -291,7 +290,23 @@ class ResourceLayout extends Layout
                                     ->setEmitClick('inputTreeSelect')
                                     ->isRequired()
                                     ->isReadonly()
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                                Select::make('data.attributes.type')
+                                    ->setLabel(__('global.resource_type'))
+                                    ->setHelp('<b>[*type*]</b><br>' . __('global.resource_type_message'))
+                                    ->setData([
+                                        [
+                                            'key'   => 'document',
+                                            'value' => __('global.resource_type_webpage'),
+                                        ],
+                                        [
+                                            'key'   => 'reference',
+                                            'value' => __('global.resource_type_weblink'),
+                                        ],
+                                    ])
+                                    ->setEmitInput('inputChangeQuery', 'type')
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Select::make('data.attributes.template')
                                     ->setLabel(__('global.page_data_template'))
@@ -306,50 +321,44 @@ class ResourceLayout extends Layout
                                         ],
                                     ])
                                     ->setEmitInput('inputChangeQuery', 'template')
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Checkbox::make('data.attributes.hidemenu')
                                     ->setLabel(__('global.resource_opt_show_menu'))
                                     ->setHelp('<b>[*hidemenu*]</b><br>' . __('global.resource_opt_show_menu_help'))
                                     ->setCheckedValue(0, 1)
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Number::make('data.attributes.menuindex')
-                                    ->setLabel(__('global.resource_opt_menu_index'))
-                                    ->setHelp('<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help'))
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
-
-                                Input::make('data.attributes.menutitle')
-                                    ->setLabel(__('global.resource_opt_menu_title'))
-                                    ->setHelp('<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help'))
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
+                                Grid::make()
+                                    ->setAttribute('style', ['grid-template-columns' => 'minmax(auto, 12rem) 1fr'])
+                                    ->setGap('0.5rem')
+                                    ->addArea([
+                                        Number::make('data.attributes.menuindex')
+                                            ->setLabel(__('global.resource_opt_menu_index'))
+                                            ->setHelp(
+                                                '<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help')
+                                            )
+                                            ->setAttribute('style', ['margin-bottom' => '1rem']),
+                                    ])
+                                    ->addArea([
+                                        Input::make('data.attributes.menutitle')
+                                            ->setLabel(__('global.resource_opt_menu_title'))
+                                            ->setHelp(
+                                                '<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help')
+                                            )
+                                            ->setAttribute('style', ['margin-bottom' => '1rem']),
+                                    ]),
 
                                 Input::make('data.attributes.link_attributes')
                                     ->setLabel(__('global.link_attributes'))
                                     ->setHelp('<b>[*link_attributes*]</b><br>' . __('global.link_attributes_help'))
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Checkbox::make('data.attributes.published')
                                     ->setLabel(__('global.resource_opt_published'))
                                     ->setHelp('<b>[*published*]</b><br>' . __('global.resource_opt_published_help'))
                                     ->setCheckedValue(1, 0)
                                     ->setAttribute('style', ['margin-bottom' => '0.5rem']),
-
-                                DateTime::make('data.attributes.publishedon')
-                                    ->setLabel(__('global.page_data_published'))
-                                    ->isClear()
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
-
-                                DateTime::make('data.attributes.pub_date')
-                                    ->setLabel(__('global.page_data_publishdate'))
-                                    ->setHelp('<b>[*pub_date*]</b><br>' . __('global.page_data_publishdate_help'))
-                                    ->isClear()
-                                    ->setAttribute('style', ['margin-bottom' => '0.5rem']),
-
-                                DateTime::make('data.attributes.unpub_date')
-                                    ->setLabel(__('global.page_data_unpublishdate'))
-                                    ->setHelp('<b>[*unpub_date*]</b><br>' . __('global.page_data_unpublishdate_help'))
-                                    ->isClear(),
                             ], ['sm' => '3', 'xl' => '1 / 4 / 1 / 4'])
                             ->addArea([
                                 $filedContent,
@@ -390,22 +399,6 @@ class ResourceLayout extends Layout
                         Grid::make()
                             ->setGap('1.25rem')
                             ->addArea([
-                                Select::make('data.attributes.type')
-                                    ->setLabel(__('global.resource_type'))
-                                    ->setHelp('<b>[*type*]</b><br>' . __('global.resource_type_message'))
-                                    ->setData([
-                                        [
-                                            'key'   => 'document',
-                                            'value' => __('global.resource_type_webpage'),
-                                        ],
-                                        [
-                                            'key'   => 'reference',
-                                            'value' => __('global.resource_type_weblink'),
-                                        ],
-                                    ])
-                                    ->setEmitInput('inputChangeQuery', 'type')
-                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
-
                                 Select::make('data.attributes.contentType')
                                     ->setLabel(__('global.page_data_contentType'))
                                     ->setHelp('<b>[*contentType*]</b><br>' . __('global.page_data_contentType_help'))
@@ -433,6 +426,22 @@ class ResourceLayout extends Layout
                                         ],
                                     ])
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                                DateTime::make('data.attributes.publishedon')
+                                    ->setLabel(__('global.page_data_published'))
+                                    ->isClear()
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                                DateTime::make('data.attributes.pub_date')
+                                    ->setLabel(__('global.page_data_publishdate'))
+                                    ->setHelp('<b>[*pub_date*]</b><br>' . __('global.page_data_publishdate_help'))
+                                    ->isClear()
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                                DateTime::make('data.attributes.unpub_date')
+                                    ->setLabel(__('global.page_data_unpublishdate'))
+                                    ->setHelp('<b>[*unpub_date*]</b><br>' . __('global.page_data_unpublishdate_help'))
+                                    ->isClear(),
                             ], ['sm' => '1', 'xl' => '1 / 1'])
                             ->addArea([
                                 Checkbox::make('data.attributes.isfolder')
