@@ -97,6 +97,7 @@ class ChunkController extends Controller
                 [
                     'title' => $this->layout->titleList(),
                     'icon'  => $this->layout->icon(),
+                    'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }

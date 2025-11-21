@@ -62,6 +62,7 @@ class CategoryController extends Controller
                 [
                     'title' => __('global.category_management'),
                     'icon'  => $this->layout->icon(),
+                    'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             )
             ->layout($this->layout->list());

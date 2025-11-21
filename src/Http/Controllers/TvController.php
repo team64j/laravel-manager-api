@@ -97,6 +97,7 @@ class TvController extends Controller
                 [
                     'title' => $this->layout->titleList(),
                     'icon'  => $this->layout->iconList(),
+                    'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
     }
