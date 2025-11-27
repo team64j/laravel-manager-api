@@ -261,7 +261,7 @@ class ResourceLayout extends Layout
                                 CodeEditor::make('data.attributes.introtext')
                                     ->setLabel(__('global.resource_summary'))
                                     ->setHelp('<b>[*introtext*]</b><br>' . __('global.resource_summary_help'))
-                                    ->setRows(3)
+                                    ->setRows(5)
                                     ->setLanguage('html'),
                             ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 4'])
                             ->addArea([
@@ -329,25 +329,19 @@ class ResourceLayout extends Layout
                                     ->setCheckedValue(0, 1)
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Grid::make()
-                                    ->setAttribute('style', ['grid-template-columns' => 'minmax(auto, 12rem) 1fr'])
-                                    ->setGap('0.5rem')
-                                    ->addArea([
-                                        Number::make('data.attributes.menuindex')
-                                            ->setLabel(__('global.resource_opt_menu_index'))
-                                            ->setHelp(
-                                                '<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help')
-                                            )
-                                            ->setAttribute('style', ['margin-bottom' => '1rem']),
-                                    ])
-                                    ->addArea([
-                                        Input::make('data.attributes.menutitle')
-                                            ->setLabel(__('global.resource_opt_menu_title'))
-                                            ->setHelp(
-                                                '<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help')
-                                            )
-                                            ->setAttribute('style', ['margin-bottom' => '1rem']),
-                                    ]),
+                                Input::make('data.attributes.menutitle')
+                                    ->setLabel(__('global.resource_opt_menu_title'))
+                                    ->setHelp(
+                                        '<b>[*menutitle*]</b><br>' . __('global.resource_opt_menu_title_help')
+                                    )
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                                Number::make('data.attributes.menuindex')
+                                    ->setLabel(__('global.resource_opt_menu_index'))
+                                    ->setHelp(
+                                        '<b>[*menuindex*]</b><br>' . __('global.resource_opt_menu_index_help')
+                                    )
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Input::make('data.attributes.link_attributes')
                                     ->setLabel(__('global.link_attributes'))
