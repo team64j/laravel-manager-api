@@ -6,7 +6,9 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\EventLog;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
 
 class EventLogLayout extends Layout
@@ -41,6 +43,10 @@ class EventLogLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setClear(__('global.clear_log'), '', 'btn-red', 'fa fa-trash'),
 
@@ -48,26 +54,34 @@ class EventLogLayout extends Layout
                 ->setTitle($this->titleList())
                 ->setIcon($this->icon()),
 
-            Panel::make('data')
-                ->setRoute('/event-log/:id')
-                ->setHistory(true)
-                ->addColumn(
-                    'type',
-                    __('global.type'),
-                    [
-                        'textAlign' => 'center',
-                        'width' => '10rem',
-                    ],
-                    values: [
-                        1 => '<i class="fa fa-info-circle text-blue-500"></i>',
-                        2 => '<i class="fa fa-exclamation-triangle text-amber-400"></i>',
-                        3 => '<i class="fa fa-times-circle text-rose-500"></i>',
+            Tabs::make()
+                ->setId('resource')
+                ->addTab(
+                    'general',
+                    __('global.settings_general'),
+                    slot: [
+                        Panel::make('data')
+                            ->setRoute('/event-log/:id')
+                            ->setHistory(true)
+                            ->addColumn(
+                                'type',
+                                __('global.type'),
+                                [
+                                    'textAlign' => 'center',
+                                    'width'     => '10rem',
+                                ],
+                                values: [
+                                    1 => '<i class="fa fa-info-circle text-blue-500"></i>',
+                                    2 => '<i class="fa fa-exclamation-triangle text-amber-400"></i>',
+                                    3 => '<i class="fa fa-times-circle text-rose-500"></i>',
+                                ]
+                            )
+                            ->addColumn('source', __('global.source'))
+                            ->addColumn('createdon', __('global.date'), ['textAlign' => 'center', 'width' => '20rem'])
+                            ->addColumn('eventid', __('global.event_id'), ['textAlign' => 'center', 'width' => '10rem'])
+                            ->addColumn(['user', 'users.username'], __('global.user'), ['width' => '20rem']),
                     ]
-                )
-                ->addColumn('source', __('global.source'))
-                ->addColumn('createdon', __('global.date'), ['textAlign' => 'center', 'width' => '20rem'])
-                ->addColumn('eventid', __('global.event_id'), ['textAlign' => 'center', 'width' => '10rem'])
-                ->addColumn(['user', 'users.username'], __('global.user'), ['width' => '20rem']),
+                ),
         ];
     }
 
@@ -79,6 +93,10 @@ class EventLogLayout extends Layout
     public function default(?EventLog $model = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setCancel()
                 ->setCancelTo([

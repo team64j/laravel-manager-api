@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\UserRole;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -52,6 +53,10 @@ class RoleUserLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
                 ->setNew(
                     __('global.new_role'),
@@ -107,6 +112,10 @@ class RoleUserLayout extends Layout
     public function default(?UserRole $model = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->title($model->name))
+                ->setIcon($this->icon()),
+
             Title::make()
                 ->setTitle($this->title($model->name))
                 ->setIcon($this->icon()),

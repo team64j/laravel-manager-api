@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -52,6 +53,10 @@ class RoleCategoryLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
                 ->setNew(
                     $this->title(),
@@ -105,6 +110,12 @@ class RoleCategoryLayout extends Layout
     public function default(?PermissionsGroups $model = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle(
+                    $this->title(trans()->has('global.' . $model->lang_key) ? __('global.' . $model->lang_key) : null)
+                )
+                ->setIcon($this->icon()),
+
             Title::make()
                 ->setTitle(
                     $this->title(

@@ -28,10 +28,6 @@ class ScheduleController extends Controller
     public function index(ScheduleRequest $request, ScheduleLayout $layout): JsonResourceCollection
     {
         return JsonResource::collection([])
-            ->layout($layout->default())
-            ->meta([
-                'title' => $layout->title(),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->default());
     }
 }

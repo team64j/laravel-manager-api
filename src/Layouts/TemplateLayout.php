@@ -264,6 +264,10 @@ class TemplateLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
                 ->setNew(
                     $this->title(),

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -35,6 +36,10 @@ class PermissionResourceLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setNew(
                     __('global.create_new'),
@@ -71,9 +76,9 @@ class PermissionResourceLayout extends Layout
                             ['width' => '3rem', 'textAlign' => 'center'],
                             actions: [
                                 'delete' => [
-                                    'icon' => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help' => __('global.delete'),
-                                    'helpFit' => true,
+                                    'icon'      => 'fa fa-trash fa-fw hover:text-rose-600',
+                                    'help'      => __('global.delete'),
+                                    'helpFit'   => true,
                                     'noOpacity' => true,
                                 ],
                             ]
@@ -95,6 +100,10 @@ class PermissionResourceLayout extends Layout
     public function default($model = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($model->name ?? $this->title())
+                ->setIcon($this->icon()),
+
             Title::make()
                 ->setTitle($this->title($model->name))
                 ->setIcon($this->icon()),

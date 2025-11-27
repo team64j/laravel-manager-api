@@ -319,6 +319,10 @@ class TvLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
                 ->setAction('sort', __('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
                 ->setNew(
@@ -445,6 +449,10 @@ class TvLayout extends Layout
     public function sort(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleSort())
+                ->setIcon($this->iconSort()),
+
             Actions::make()
                 ->setCancelTo([
                     'path'  => '/elements/tvs',

@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Illuminate\Database\Eloquent\Collection;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -47,6 +48,10 @@ class PermissionRelationLayout extends Layout
     public function list(?Collection $groups = null, ?Collection $documents = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($model->name ?? $this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setNew(
                     __('global.create_new'),
@@ -77,9 +82,9 @@ class PermissionRelationLayout extends Layout
                     __('global.access_permissions_links'),
                     route: route('manager.api.permissions.relations'),
                     slot: Panel::make('data')
-                    ->setId('relations')
-                    ->setHistory(true)
-                    ->setRoute('/permissions/relations/:id')
+                        ->setId('relations')
+                        ->setHistory(true)
+                        ->setRoute('/permissions/relations/:id')
                         ->addColumn('name', __('global.name'), ['width' => '20rem', 'fontWeight' => 500])
                         ->addColumn('document_groups', __('global.access_permissions_resource_groups'))
                 ),
@@ -94,6 +99,10 @@ class PermissionRelationLayout extends Layout
     public function default($model = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($model->name ?? $this->title())
+                ->setIcon($this->icon()),
+
             Title::make()
                 ->setTitle($this->title($model->name))
                 ->setIcon($this->icon()),

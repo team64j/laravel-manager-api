@@ -63,9 +63,7 @@ class WorkspaceController extends Controller
         return JsonResource::make($data)
             ->layout($this->layout->default())
             ->meta([
-                'title' => $this->layout->title(),
-                'icon'  => $this->layout->icon(),
-                'lang'  => [
+                'lang' => [
                     'save'     => __('global.save'),
                     'stay_new' => __('global.stay_new'),
                     'settings' => __('global.resource_setting'),

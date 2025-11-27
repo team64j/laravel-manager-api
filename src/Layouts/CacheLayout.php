@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Title;
 
 class CacheLayout extends Layout
@@ -15,6 +16,10 @@ class CacheLayout extends Layout
     public function default(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setClear($this->title(), '', 'btn-red', 'fa fa-trash'),
 

@@ -95,8 +95,6 @@ class ChunkController extends Controller
             ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => $this->layout->titleList(),
-                    'icon'  => $this->layout->icon(),
                     'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
@@ -149,11 +147,7 @@ class ChunkController extends Controller
         }
 
         return JsonResource::make($model)
-            ->layout($this->layout->default($model))
-            ->meta([
-                'title' => $model->name ?? $this->layout->title(),
-                'icon'  => $this->layout->icon(),
-            ]);
+            ->layout($this->layout->default($model));
     }
 
     #[OA\Put(

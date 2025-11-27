@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Illuminate\Support\Facades\File;
 use Team64j\LaravelManagerApi\Models\SiteTemplate;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Panel;
@@ -40,6 +41,10 @@ class ConfigurationLayout extends Layout
     public function default(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setCancel()
                 ->setSaveAnd(states: [0, 2]),
@@ -1129,7 +1134,6 @@ class ConfigurationLayout extends Layout
                         'name.help' => __('global.email_sender_method_message'),
                         'key'       => 'email_method',
                         'value'     => Select::make('email_method')
-                            
                             ->setData([
                                 [
                                     'key'   => 'mail',
@@ -1158,7 +1162,6 @@ class ConfigurationLayout extends Layout
                         'name.help' => '',
                         'key'       => 'smtp_secure',
                         'value'     => Select::make('smtp_secure')
-                            
                             ->setData([
                                 [
                                     'key'   => 'none',

@@ -68,11 +68,7 @@ class PermissionController extends Controller
                     })
             )
         )
-            ->layout($layout->list())
-            ->meta([
-                'title' => $layout->title(),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->list());
     }
 
     #[OA\Get(
@@ -100,11 +96,7 @@ class PermissionController extends Controller
         }
 
         return JsonResource::make($model)
-            ->layout($layout->default($model))
-            ->meta([
-                'title' => $layout->title($model->name),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->default($model));
     }
 
     #[OA\Get(
@@ -158,11 +150,7 @@ class PermissionController extends Controller
                     })
             )
         )
-            ->layout($layout->list())
-            ->meta([
-                'title' => $layout->title(),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->list());
     }
 
     #[OA\Get(
@@ -190,11 +178,7 @@ class PermissionController extends Controller
         }
 
         return JsonResource::make($model)
-            ->layout($layout->default($model))
-            ->meta([
-                'title' => $layout->title($model->name),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->default($model));
     }
 
     #[OA\Get(
@@ -219,10 +203,10 @@ class PermissionController extends Controller
             ->orderBy('name')
             ->paginate(config('global.number_of_results'));
 
-        $documents = DocumentgroupName::query()
-            ->with('documents')
-            ->orderBy('name')
-            ->get();
+//        $documents = DocumentgroupName::query()
+//            ->with('documents')
+//            ->orderBy('name')
+//            ->get();
 
         return JsonResource::collection(
             $result->setCollection(
@@ -250,11 +234,7 @@ class PermissionController extends Controller
                     })
             )
         )
-            ->layout($layout->list())
-            ->meta([
-                'title' => $layout->title(),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->list());
     }
 
     #[OA\Get(
@@ -275,18 +255,14 @@ class PermissionController extends Controller
         string $id,
         PermissionRelationLayout $layout
     ): JsonResource {
-        $data = MembergroupName::query()->findOrNew($id);
+        $model = MembergroupName::query()->findOrNew($id);
 
         if (!$model->getKey()) {
             $model->setAttribute($model->getKeyName(), 0);
         }
 
-        return JsonResource::make($data)
-            ->layout($layout->default($data))
-            ->meta([
-                'title' => $layout->title($data->name),
-                'icon'  => $layout->icon(),
-            ]);
+        return JsonResource::make($model)
+            ->layout($layout->default($model));
     }
 
     #[OA\Get(

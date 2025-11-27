@@ -95,8 +95,6 @@ class SnippetController extends Controller
             ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => $this->layout->titleList(),
-                    'icon'  => $this->layout->iconList(),
                     'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
@@ -156,11 +154,7 @@ class SnippetController extends Controller
         $model->setAttribute('analyze', (int) !$model->exists);
 
         return JsonResource::make($model)
-            ->layout($this->layout->default($model))
-            ->meta([
-                'title' => $this->layout->title($model->name),
-                'icon'  => $this->layout->icon(),
-            ]);
+            ->layout($this->layout->default($model));
     }
 
     #[OA\Put(

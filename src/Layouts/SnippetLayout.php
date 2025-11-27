@@ -10,6 +10,7 @@ use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
@@ -74,6 +75,10 @@ class SnippetLayout extends Layout
         ];
 
         return [
+            GlobalTab::make()
+                ->setTitle($this->title($model->name))
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setCancel(
                     __('global.cancel'),
@@ -171,6 +176,10 @@ class SnippetLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
                 ->setNew(
                     $this->title(),

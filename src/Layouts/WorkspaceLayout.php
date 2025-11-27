@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
 
@@ -32,6 +33,10 @@ class WorkspaceLayout extends Layout
     public function default(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setCancel()
                 ->setSave(),
@@ -47,7 +52,7 @@ class WorkspaceLayout extends Layout
                     'Sidebar',
                     slot: [
                         'component' => 'AppTreeBuilder',
-                        'model' => 'data.tree.data',
+                        'model'     => 'data.tree.data',
                     ],
                 )
                 ->addTab(
@@ -55,7 +60,7 @@ class WorkspaceLayout extends Layout
                     'Top menu',
                     slot: [
                         'component' => 'AppMenuBuilder',
-                        'model' => 'data.topmenu.data',
+                        'model'     => 'data.topmenu.data',
                     ],
                 )
                 ->addTab(

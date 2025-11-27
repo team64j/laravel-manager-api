@@ -60,7 +60,7 @@ class FilemanagerController extends Controller
         //            explode(',', config('global.upload_images', '')),
         //            explode(',', config('global.upload_media', '')),
         );
-        $fullTitle = $layout->title();;
+        $fullTitle = $layout->title();
 
         if (file_exists((string) $parentPath)) {
             //$directories = File::directories($parentPath);
@@ -166,11 +166,7 @@ class FilemanagerController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->layout($layout->default())
-            ->meta([
-                'title' => $layout->title(),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->default());
     }
 
     #[OA\Get(

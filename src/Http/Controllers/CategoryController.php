@@ -58,14 +58,12 @@ class CategoryController extends Controller
             ->appends($request->all());
 
         return JsonResource::collection($result)
+            ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => __('global.category_management'),
-                    'icon'  => $this->layout->icon(),
                     'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
-            )
-            ->layout($this->layout->list());
+            );
     }
 
     #[OA\Post(
@@ -115,11 +113,7 @@ class CategoryController extends Controller
         }
 
         return JsonResource::make($model)
-            ->layout($this->layout->default($model))
-            ->meta([
-                'title' => $model->category ?? $this->layout->title(),
-                'icon'  => $this->layout->icon(),
-            ]);
+            ->layout($this->layout->default($model));
     }
 
     #[OA\Put(
@@ -187,11 +181,7 @@ class CategoryController extends Controller
                 ->orderBy('rank')
                 ->get()
         )
-            ->layout($this->layout->sort())
-            ->meta([
-                'title' => __('global.cm_sort_categories'),
-                'icon'  => $this->layout->iconSort(),
-            ]);
+            ->layout($this->layout->sort());
     }
 
     #[OA\Get(

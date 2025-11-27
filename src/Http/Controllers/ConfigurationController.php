@@ -53,11 +53,7 @@ class ConfigurationController extends Controller
                     return $value;
                 }),
         ])
-            ->layout($layout->default())
-            ->meta([
-                'title' => $layout->title(),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->default());
     }
 
     #[OA\Post(

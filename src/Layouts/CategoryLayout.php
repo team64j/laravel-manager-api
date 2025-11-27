@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\Category;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
@@ -56,6 +57,14 @@ class CategoryLayout extends Layout
     }
 
     /**
+     * @return string
+     */
+    public function titleSort(): string
+    {
+        return __('global.cm_sort_categories');
+    }
+
+    /**
      * @param Category|null $model
      *
      * @return array
@@ -63,6 +72,10 @@ class CategoryLayout extends Layout
     public function default(?Category $model = null): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($model->category ?? $this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setCancel(
                     __('global.cancel'),
@@ -79,14 +92,14 @@ class CategoryLayout extends Layout
 
             Title::make('category')
                 ->setTitle(__('global.new_category'))
-                ->setIcon(self::icon())
+                ->setIcon($this->icon())
                 ->setId($model->getKey()),
 
             Tabs::make()
                 ->setId('category')
                 ->addTab(
                     'general',
-                    icon: self::icon(),
+                    icon: $this->icon(),
                     slot: [
                         Input::make('category')
                             ->setLabel(__('global.cm_category_name'))
@@ -106,8 +119,12 @@ class CategoryLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
-                ->setAction('sort', __('global.cm_sort_categories'), '/categories/sort', null, 'fa fa-sort')
+                ->setAction('sort', $this->titleSort(), '/categories/sort', null, 'fa fa-sort')
                 ->setNew(
                     __('global.cm_add_new_category'),
                     '/categories/0',
@@ -227,6 +244,10 @@ class CategoryLayout extends Layout
     public function sort(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleSort())
+                ->setIcon($this->iconSort()),
+
             Actions::make()
                 ->setCancelTo([
                     'path'  => '/elements/categories',
@@ -235,7 +256,7 @@ class CategoryLayout extends Layout
                 ->setSave(),
 
             Title::make()
-                ->setTitle(__('global.cm_sort_categories'))
+                ->setTitle($this->titleSort())
                 ->setIcon('fa fa-sort-numeric-asc'),
 
             Panel::make('data')

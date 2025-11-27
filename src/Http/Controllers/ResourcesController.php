@@ -77,10 +77,7 @@ class ResourcesController extends Controller
         )
             ->layout($this->layout->default($result))
             ->meta([
-                'sorting' => [
-                    'order' => $order,
-                    'dir'   => $dir,
-                ],
+                'sorting' => [$order => $dir],
             ]);
     }
 }

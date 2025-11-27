@@ -10,6 +10,7 @@ use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\CodeEditor;
 use Team64j\LaravelManagerComponents\Crumbs;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
@@ -90,6 +91,10 @@ class PluginLayout extends Layout
         ];
 
         return [
+            GlobalTab::make()
+                ->setTitle($model->name ?? $this->title())
+                ->setIcon($this->icon()),
+
             Actions::make()
                 ->setCancel(
                     __('global.cancel'),
@@ -205,6 +210,10 @@ class PluginLayout extends Layout
     public function list(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
             Actions::make()
                 ->setAction('sort', __('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
                 ->setNew(
@@ -333,6 +342,10 @@ class PluginLayout extends Layout
     public function sort(): array
     {
         return [
+            GlobalTab::make()
+                ->setTitle($this->titleSort())
+                ->setIcon($this->iconSort()),
+
             Actions::make()
                 ->setCancelTo([
                     'path'  => '/elements/plugins',

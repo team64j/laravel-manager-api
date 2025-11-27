@@ -49,11 +49,7 @@ class RoleCategoryController extends Controller
                     })
             )
         )
-            ->layout($layout->list())
-            ->meta([
-                'title' => $layout->titleList(),
-                'icon'  => $layout->iconList(),
-            ]);
+            ->layout($layout->list());
     }
 
     #[OA\Get(
@@ -83,12 +79,6 @@ class RoleCategoryController extends Controller
         }
 
         return JsonResource::make([])
-            ->layout($layout->default($model))
-            ->meta([
-                'title' => $layout->title(
-                    trans()->has('global.' . $model->lang_key) ? __('global.' . $model->lang_key) : null
-                ),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->default($model));
     }
 }

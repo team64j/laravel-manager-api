@@ -95,8 +95,6 @@ class TvController extends Controller
             ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => $this->layout->titleList(),
-                    'icon'  => $this->layout->iconList(),
                     'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
@@ -283,11 +281,7 @@ class TvController extends Controller
             ->paginate(config('global.number_of_results'));
 
         return JsonResource::collection($result)
-            ->layout($this->layout->sort())
-            ->meta([
-                'title' => $this->layout->titleSort(),
-                'icon'  => $this->layout->iconSort(),
-            ]);
+            ->layout($this->layout->sort());
     }
 
     #[OA\Get(

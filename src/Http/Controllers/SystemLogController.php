@@ -181,12 +181,7 @@ class SystemLogController extends Controller
         return JsonResource::collection($result)
             ->layout($this->layout->default())
             ->meta([
-                'title'   => $this->layout->title(),
-                'icon'    => $this->layout->icon(),
-                'sorting' => [
-                    'order' => $order,
-                    'dir'   => $dir,
-                ],
+                'sorting' => [$order => $dir],
                 'filters' => $filters,
             ]);
     }

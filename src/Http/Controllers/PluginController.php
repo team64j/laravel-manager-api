@@ -97,8 +97,6 @@ class PluginController extends Controller
             ->layout($this->layout->list())
             ->meta(
                 [
-                    'title' => $this->layout->titleList(),
-                    'icon'  => $this->layout->iconList(),
                     'sorting' => [$order => $dir],
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );
@@ -159,11 +157,7 @@ class PluginController extends Controller
         $model->setAttribute('events', $model->events->pluck('id'));
 
         return JsonResource::make($model->withoutRelations())
-            ->layout($this->layout->default($model))
-            ->meta([
-                'title' => $this->layout->title($model->name),
-                'icon'  => $this->layout->icon(),
-            ]);
+            ->layout($this->layout->default($model));
     }
 
     #[OA\Put(
@@ -305,11 +299,7 @@ class PluginController extends Controller
                 //->setAttribute('draggable', 'priority')
                 )
         )
-            ->layout($this->layout->sort())
-            ->meta([
-                'title' => $this->layout->titleSort(),
-                'icon'  => $this->layout->iconSort(),
-            ]);
+            ->layout($this->layout->sort());
     }
 
     #[OA\Get(

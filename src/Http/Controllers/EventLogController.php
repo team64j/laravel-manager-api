@@ -148,8 +148,6 @@ class EventLogController extends Controller
         return JsonResource::collection($result)
             ->layout($layout->list())
             ->meta([
-                'title'   => $layout->titleList(),
-                'icon'    => $layout->icon(),
                 'filters' => $filters,
             ]);
     }
@@ -169,16 +167,12 @@ class EventLogController extends Controller
     )]
     public function show(EventLogRequest $request, string $eventlog, EventLogLayout $layout): JsonResource
     {
-        /** @var EventLog $data */
-        $data = EventLog::query()
+        /** @var EventLog $model */
+        $model = EventLog::query()
             ->with('users', fn($query) => $query->select('id', 'username'))
             ->find($eventlog);
 
         return JsonResource::make([])
-            ->layout($layout->default($data))
-            ->meta([
-                'title' => $layout->title(),
-                'icon'  => $layout->icon(),
-            ]);
+            ->layout($layout->default($model));
     }
 }
