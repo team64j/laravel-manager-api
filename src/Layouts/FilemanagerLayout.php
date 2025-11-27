@@ -13,25 +13,16 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class FilemanagerLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.settings_misc');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'far fa-folder-open';
     }
 
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [
@@ -172,9 +163,6 @@ class FilemanagerLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()

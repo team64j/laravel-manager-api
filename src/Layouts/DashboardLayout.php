@@ -11,25 +11,16 @@ use Team64j\LaravelManagerComponents\Section;
 
 class DashboardLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return '';
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-home';
     }
 
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [
@@ -38,9 +29,6 @@ class DashboardLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function getMessages(): array
     {
         $data = [];
@@ -69,9 +57,6 @@ class DashboardLayout extends Layout
         return $data;
     }
 
-    /**
-     * @return array
-     */
     protected function getWidgets()
     {
         $user = auth()->user();

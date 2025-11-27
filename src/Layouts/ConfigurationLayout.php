@@ -19,25 +19,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class ConfigurationLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-sliders';
     }
 
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.settings_title');
     }
 
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [
@@ -65,9 +56,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function columns(): array
     {
         return [
@@ -98,9 +86,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function tab1(): array
     {
         /** @var SiteTemplate $template */
@@ -335,9 +320,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function tab2(): array
     {
         return [
@@ -431,9 +413,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function tab3(): array
     {
         $settings_group_tv_options = explode(',', __('global.settings_group_tv_options'));
@@ -732,9 +711,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function tab4(): array
     {
         return [
@@ -925,9 +901,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function tab5(): array
     {
         return [
@@ -981,9 +954,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function tab6(): array
     {
         return [
@@ -1103,9 +1073,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     protected function tab7(): array
     {
         return [
@@ -1229,11 +1196,6 @@ class ConfigurationLayout extends Layout
         ];
     }
 
-    /**
-     * @param string $algorithm
-     *
-     * @return bool
-     */
     public function checkHashAlgorithm(string $algorithm = ''): bool
     {
         $result = false;
@@ -1276,9 +1238,6 @@ class ConfigurationLayout extends Layout
         return $result;
     }
 
-    /**
-     * @return array
-     */
     protected function getFileBrowsers(): array
     {
         $out = [];

@@ -23,43 +23,26 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class ChunkLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.new_htmlsnippet');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.htmlsnippets');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-th-large';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-th-large';
     }
 
-    /**
-     * @param SiteHtmlSnippet|null $model
-     *
-     * @return array
-     */
     public function default(?SiteHtmlSnippet $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
@@ -154,9 +137,6 @@ class ChunkLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -285,9 +265,6 @@ class ChunkLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()

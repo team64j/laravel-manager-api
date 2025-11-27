@@ -13,33 +13,21 @@ use Team64j\LaravelManagerComponents\Title;
 
 class EventLogLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-exclamation-triangle';
     }
 
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.eventlog');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.eventlog_viewer');
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -85,11 +73,6 @@ class EventLogLayout extends Layout
         ];
     }
 
-    /**
-     * @param EventLog|null $model
-     *
-     * @return array
-     */
     public function default(?EventLog $model = null): array
     {
         return [

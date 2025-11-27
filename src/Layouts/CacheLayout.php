@@ -10,9 +10,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class CacheLayout extends Layout
 {
-    /**
-     * @return array
-     */
+    public function title(): string
+    {
+        return __('global.refresh_site');
+    }
+
+    public function icon(): string
+    {
+        return 'fa fa-recycle';
+    }
+
     public function default(): array
     {
         return [
@@ -27,21 +34,5 @@ class CacheLayout extends Layout
                 ->setTitle($this->title())
                 ->setIcon($this->icon()),
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function title(): string
-    {
-        return __('global.refresh_site');
-    }
-
-    /**
-     * @return string
-     */
-    public function icon(): string
-    {
-        return 'fa fa-recycle';
     }
 }

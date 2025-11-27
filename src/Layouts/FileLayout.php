@@ -14,19 +14,11 @@ use Team64j\LaravelManagerComponents\Title;
 
 class FileLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.new_file');
     }
 
-    /**
-     * @param string|null $type
-     *
-     * @return string
-     */
     public function icon(?string $type = null): string
     {
         return match ($type) {
@@ -42,11 +34,6 @@ class FileLayout extends Layout
         };
     }
 
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
     public function default(array $data = []): array
     {
         return [

@@ -16,59 +16,36 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class CategoryLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-object-group';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-object-group';
     }
 
-    /**
-     * @return string
-     */
     public function iconSort(): string
     {
         return 'fa fa-sort-numeric-asc';
     }
 
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.new_category');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.category_management');
     }
 
-    /**
-     * @return string
-     */
     public function titleSort(): string
     {
         return __('global.cm_sort_categories');
     }
 
-    /**
-     * @param Category|null $model
-     *
-     * @return array
-     */
     public function default(?Category $model = null): array
     {
         return [
@@ -113,9 +90,6 @@ class CategoryLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -238,9 +212,6 @@ class CategoryLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function sort(): array
     {
         return [
@@ -287,9 +258,6 @@ class CategoryLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()
