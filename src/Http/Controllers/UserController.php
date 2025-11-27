@@ -170,10 +170,7 @@ class UserController extends Controller
             ->layout($this->layout->list())
             ->meta(
                 [
-                    'sorting' => [
-                        'order' => $order,
-                        'dir'   => $dir,
-                    ],
+                    'sorting' => [$order => $dir],
                     'filters' => $filters,
                 ] + ($result->isEmpty() ? ['message' => __('global.no_results')] : [])
             );

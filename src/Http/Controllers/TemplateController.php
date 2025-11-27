@@ -362,7 +362,9 @@ class TemplateController extends Controller
             )
         )
             ->meta(
-                $result->isEmpty() ? ['message' => __('global.tmplvars_novars')] : []
+                [
+                    'sorting' => [$order => $dir],
+                ] + ($result->isEmpty() ? ['message' => __('global.tmplvars_novars')] : [])
             );
     }
 

@@ -191,6 +191,7 @@ class PluginLayout extends Layout
                     __('global.settings_properties'),
                     slot: CodeEditor::make('properties')
                         ->setLanguage('json')
+                        ->setRows('full')
                         ->isFullSize()
                 ),
 

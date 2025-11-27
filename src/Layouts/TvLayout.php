@@ -215,7 +215,7 @@ class TvLayout extends Layout
                             'attach',
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
-                            true,
+                            false,
                             selectable: true,
                             component: Checkbox::make('templates')->setKeyValue('id')
                         )
@@ -249,7 +249,7 @@ class TvLayout extends Layout
                             'attach',
                             __('global.role_udperms'),
                             ['width' => '4rem', 'textAlign' => 'center'],
-                            true,
+                            false,
                             selectable: true,
                             component: Checkbox::make('roles')->setKeyValue('id')
                         )
