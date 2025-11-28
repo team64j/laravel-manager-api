@@ -68,19 +68,15 @@ class SnippetController extends Controller
             ->appends($request->all());
 
         if ($groupBy == 'category') {
-            $callbackGroup = function ($group) {
-                return [
-                    'id'   => $group->first()->category,
-                    'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
-                    'data' => $group->map->withoutRelations(),
-                ];
-            };
-
             $result->setCollection(
                 $result
                     ->getCollection()
                     ->groupBy('category')
-                    ->map($callbackGroup)
+                    ->map(fn($group) => [
+                        'id'   => $group->first()->category,
+                        'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
+                        'data' => $group->map->withoutRelations(),
+                    ])
                     ->values()
             );
         } else {
