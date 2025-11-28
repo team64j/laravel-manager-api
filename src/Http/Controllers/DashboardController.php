@@ -15,6 +15,8 @@ use Team64j\LaravelManagerApi\Layouts\DashboardLayout;
 
 class DashboardController extends Controller
 {
+    public function __construct(protected DashboardLayout $layout) {}
+
     #[OA\Get(
         path: '/dashboard',
         summary: 'Получение шаблона для стартовой панели',
@@ -28,12 +30,12 @@ class DashboardController extends Controller
             ),
         ]
     )]
-    public function index(DashboardRequest $request, DashboardLayout $layout): JsonResourceCollection
+    public function index(DashboardRequest $request): JsonResourceCollection
     {
         return JsonResource::collection([
             //'widgetDocuments' => $this->getDocuments(),
         ])
-            ->layout($layout->default());
+            ->layout($this->layout->default());
     }
 
     #[OA\Get(

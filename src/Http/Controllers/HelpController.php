@@ -11,6 +11,8 @@ use Team64j\LaravelManagerApi\Layouts\HelpLayout;
 
 class HelpController extends Controller
 {
+    public function __construct(protected HelpLayout $layout) {}
+
     #[OA\Get(
         path: '/help',
         summary: 'Получение раздела помощи',
@@ -24,9 +26,9 @@ class HelpController extends Controller
             ),
         ]
     )]
-    public function index(HelpRequest $request, HelpLayout $layout): JsonResource
+    public function index(HelpRequest $request): JsonResource
     {
         return JsonResource::make([])
-            ->layout($layout->default());
+            ->layout($this->layout->default());
     }
 }

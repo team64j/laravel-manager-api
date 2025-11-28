@@ -13,6 +13,8 @@ use Team64j\LaravelManagerApi\Models\SystemSetting;
 
 class ConfigurationController extends Controller
 {
+    public function __construct(protected ConfigurationLayout $layout) {}
+
     #[OA\Get(
         path: '/configuration',
         summary: 'Чтение конфигурации',
@@ -26,7 +28,7 @@ class ConfigurationController extends Controller
             )
         ]
     )]
-    public function index(ConfigurationRequest $request, ConfigurationLayout $layout): JsonResource
+    public function index(ConfigurationRequest $request): JsonResource
     {
         $basePath = str_replace(DIRECTORY_SEPARATOR, '/', app()->basePath()) . '/';
 
@@ -53,7 +55,7 @@ class ConfigurationController extends Controller
                     return $value;
                 }),
         ])
-            ->layout($layout->default());
+            ->layout($this->layout->default());
     }
 
     #[OA\Post(

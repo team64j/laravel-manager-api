@@ -10,6 +10,8 @@ use Team64j\LaravelManagerApi\Layouts\CacheLayout;
 
 class CacheController extends Controller
 {
+    public function __construct(protected CacheLayout $layout) {}
+
     #[OA\Get(
         path: '/cache',
         summary: 'Очистка кэша',
@@ -20,12 +22,12 @@ class CacheController extends Controller
                 response: 200,
                 description: 'ok',
                 content: new OA\JsonContent(type: 'object')
-            )
+            ),
         ]
     )]
-    public function index(CacheLayout $layout)
+    public function index()
     {
         return JsonResource::make([])
-            ->layout($layout->default());
+            ->layout($this->layout->default());
     }
 }

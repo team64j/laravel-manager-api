@@ -12,6 +12,8 @@ use Team64j\LaravelManagerApi\Layouts\ScheduleLayout;
 
 class ScheduleController extends Controller
 {
+    public function __construct(protected ScheduleLayout $layout) {}
+
     #[OA\Get(
         path: '/schedule',
         summary: 'Получение расписания',
@@ -25,9 +27,9 @@ class ScheduleController extends Controller
             ),
         ]
     )]
-    public function index(ScheduleRequest $request, ScheduleLayout $layout): JsonResourceCollection
+    public function index(ScheduleRequest $request): JsonResourceCollection
     {
         return JsonResource::collection([])
-            ->layout($layout->default());
+            ->layout($this->layout->default());
     }
 }

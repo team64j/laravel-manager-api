@@ -14,6 +14,8 @@ use Team64j\LaravelManagerApi\Layouts\FileLayout;
 
 class FileController extends Controller
 {
+    public function __construct(protected FileLayout $layout) {}
+
     #[OA\Get(
         path: '/file/{file}',
         summary: 'Получение файла по адресу на сервере',
@@ -27,7 +29,7 @@ class FileController extends Controller
             ),
         ]
     )]
-    public function show(FileRequest $request, string $file, FileLayout $layout): JsonResource
+    public function show(FileRequest $request, string $file): JsonResource
     {
         $data = [];
         $root = realpath(config('global.filemanager_path', app()->basePath()));
@@ -82,7 +84,7 @@ class FileController extends Controller
         }
 
         return JsonResource::make($data)
-            ->layout($layout->default($data));
+            ->layout($this->layout->default($data));
     }
 
     #[OA\Get(

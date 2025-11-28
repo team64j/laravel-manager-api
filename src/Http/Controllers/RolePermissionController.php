@@ -13,6 +13,8 @@ use Team64j\LaravelManagerApi\Models\Permissions;
 
 class RolePermissionController extends Controller
 {
+    public function __construct(protected RolePermissionLayout $layout) {}
+
     #[OA\Get(
         path: '/roles/permissions',
         summary: 'Получение списка прав доступа для юзеров',
@@ -26,7 +28,7 @@ class RolePermissionController extends Controller
             ),
         ]
     )]
-    public function index(RolePermissionRequest $request, RolePermissionLayout $layout): JsonResourceCollection
+    public function index(RolePermissionRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -54,7 +56,7 @@ class RolePermissionController extends Controller
                     )
             )
         )
-            ->layout($layout->list());
+            ->layout($this->layout->list());
     }
 
     #[OA\Get(
@@ -70,11 +72,8 @@ class RolePermissionController extends Controller
             ),
         ]
     )]
-    public function show(
-        RolePermissionRequest $request,
-        string $id,
-        RolePermissionLayout $layout
-    ): JsonResource {
+    public function show(RolePermissionRequest $request, string $id): JsonResource
+    {
         /** @var Permissions $model */
         $model = Permissions::query()->findOrNew($id);
 
@@ -84,6 +83,6 @@ class RolePermissionController extends Controller
         }
 
         return JsonResource::make([])
-            ->layout($layout->default($model));
+            ->layout($this->layout->default($model));
     }
 }

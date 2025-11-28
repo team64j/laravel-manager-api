@@ -14,6 +14,8 @@ use Team64j\LaravelManagerApi\Layouts\FilemanagerLayout;
 
 class FilemanagerController extends Controller
 {
+    public function __construct(protected FilemanagerLayout $layout) {}
+
     #[OA\Get(
         path: '/files',
         summary: 'Получение списка файлов из корневой директории',
@@ -27,9 +29,9 @@ class FilemanagerController extends Controller
             ),
         ]
     )]
-    public function index(FilesRequest $request, FilemanagerLayout $layout): JsonResourceCollection
+    public function index(FilesRequest $request): JsonResourceCollection
     {
-        return $this->show($request, '', $layout);
+        return $this->show($request, '');
     }
 
     #[OA\Get(
@@ -48,7 +50,7 @@ class FilemanagerController extends Controller
             ),
         ]
     )]
-    public function show(FilesRequest $request, string $files, FilemanagerLayout $layout): JsonResourceCollection
+    public function show(FilesRequest $request, string $files): JsonResourceCollection
     {
         $data = [];
         $root = realpath(config('global.rb_base_dir', app()->basePath()));
@@ -60,7 +62,7 @@ class FilemanagerController extends Controller
         //            explode(',', config('global.upload_images', '')),
         //            explode(',', config('global.upload_media', '')),
         );
-        $fullTitle = $layout->title();
+        $fullTitle = $this->layout->title();
 
         if (file_exists((string) $parentPath)) {
             //$directories = File::directories($parentPath);
@@ -166,7 +168,7 @@ class FilemanagerController extends Controller
         }
 
         return JsonResource::collection($data)
-            ->layout($layout->default());
+            ->layout($this->layout->default());
     }
 
     #[OA\Get(

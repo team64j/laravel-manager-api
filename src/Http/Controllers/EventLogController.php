@@ -14,6 +14,8 @@ use Team64j\LaravelManagerApi\Models\EventLog;
 
 class EventLogController extends Controller
 {
+    public function __construct(protected EventLogLayout $layout) {}
+
     #[OA\Get(
         path: '/event-log',
         summary: 'Получение списка лога событий с фильтрацией',
@@ -33,7 +35,7 @@ class EventLogController extends Controller
             ),
         ]
     )]
-    public function index(EventLogRequest $request, EventLogLayout $layout): JsonResourceCollection
+    public function index(EventLogRequest $request): JsonResourceCollection
     {
         $filterType = $request->input('type', '');
         $filterUser = $request->input('user', '');
@@ -146,7 +148,7 @@ class EventLogController extends Controller
         ];
 
         return JsonResource::collection($result)
-            ->layout($layout->list())
+            ->layout($this->layout->list())
             ->meta([
                 'filters' => $filters,
             ]);
@@ -165,14 +167,14 @@ class EventLogController extends Controller
             ),
         ]
     )]
-    public function show(EventLogRequest $request, string $eventlog, EventLogLayout $layout): JsonResource
+    public function show(EventLogRequest $request, int $id): JsonResource
     {
         /** @var EventLog $model */
         $model = EventLog::query()
             ->with('users', fn($query) => $query->select('id', 'username'))
-            ->find($eventlog);
+            ->find($id);
 
         return JsonResource::make([])
-            ->layout($layout->default($model));
+            ->layout($this->layout->default($model));
     }
 }

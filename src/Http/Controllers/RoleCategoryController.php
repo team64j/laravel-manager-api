@@ -13,6 +13,8 @@ use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 
 class RoleCategoryController extends Controller
 {
+    public function __construct(protected RoleCategoryLayout $layout) {}
+
     #[OA\Get(
         path: '/roles/categories',
         summary: 'Получение списка категорий для прав доступа',
@@ -29,7 +31,7 @@ class RoleCategoryController extends Controller
             ),
         ]
     )]
-    public function index(RoleCategoryRequest $request, RoleCategoryLayout $layout): JsonResourceCollection
+    public function index(RoleCategoryRequest $request): JsonResourceCollection
     {
         $filter = $request->get('filter');
 
@@ -49,7 +51,7 @@ class RoleCategoryController extends Controller
                     })
             )
         )
-            ->layout($layout->list());
+            ->layout($this->layout->list());
     }
 
     #[OA\Get(
@@ -65,11 +67,8 @@ class RoleCategoryController extends Controller
             ),
         ]
     )]
-    public function show(
-        RoleCategoryRequest $request,
-        string $id,
-        RoleCategoryLayout $layout
-    ): JsonResource {
+    public function show(RoleCategoryRequest $request, string $id): JsonResource
+    {
         /** @var PermissionsGroups $model */
         $model = PermissionsGroups::query()->findOrNew($id);
 
@@ -79,6 +78,6 @@ class RoleCategoryController extends Controller
         }
 
         return JsonResource::make([])
-            ->layout($layout->default($model));
+            ->layout($this->layout->default($model));
     }
 }

@@ -13,6 +13,8 @@ use Team64j\LaravelManagerApi\Models\UserRole;
 
 class RoleUserController extends Controller
 {
+    public function __construct(protected RoleUserLayout $layout) {}
+
     #[OA\Get(
         path: '/roles/users',
         summary: 'Получение списка ролей для юзеров',
@@ -26,7 +28,7 @@ class RoleUserController extends Controller
             ),
         ]
     )]
-    public function index(RoleUserRequest $request, RoleUserLayout $layout): JsonResourceCollection
+    public function index(RoleUserRequest $request): JsonResourceCollection
     {
         $result = UserRole::query()
             ->when(
@@ -37,7 +39,7 @@ class RoleUserController extends Controller
             ->paginate(config('global.number_of_results'));
 
         return JsonResource::collection($result)
-            ->layout($layout->list());
+            ->layout($this->layout->list());
     }
 
     #[OA\Get(
@@ -53,7 +55,7 @@ class RoleUserController extends Controller
             ),
         ]
     )]
-    public function show(RoleUserRequest $request, string $id, RoleUserLayout $layout): JsonResource
+    public function show(RoleUserRequest $request, string $id): JsonResource
     {
         /** @var UserRole $model */
         $model = UserRole::query()->findOrNew($id);
@@ -64,6 +66,6 @@ class RoleUserController extends Controller
         }
 
         return JsonResource::make([])
-            ->layout($layout->default($model));
+            ->layout($this->layout->default($model));
     }
 }
