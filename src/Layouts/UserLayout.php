@@ -19,45 +19,26 @@ use Team64j\LaravelManagerComponents\Title;
 
 class UserLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-user-circle';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-users';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_user');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.users');
     }
 
-    /**
-     * @param User|null $model
-     *
-     * @return array
-     */
     public function default(?User $model = null): array
     {
         return [
@@ -199,9 +180,6 @@ class UserLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [

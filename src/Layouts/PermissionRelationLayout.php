@@ -13,38 +13,21 @@ use Team64j\LaravelManagerComponents\Title;
 
 class PermissionRelationLayout extends Layout
 {
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.manage_permission');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.manage_permission');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-male';
     }
 
-    /**
-     * @param Collection|null $groups
-     * @param Collection|null $documents
-     *
-     * @return array
-     */
     public function list(?Collection $groups = null, ?Collection $documents = null): array
     {
         return [
@@ -91,11 +74,6 @@ class PermissionRelationLayout extends Layout
         ];
     }
 
-    /**
-     * @param $model
-     *
-     * @return array
-     */
     public function default($model = null): array
     {
         return [

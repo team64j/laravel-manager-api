@@ -11,25 +11,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class SystemInfoLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-info';
     }
 
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.view_sysinfo');
     }
 
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [

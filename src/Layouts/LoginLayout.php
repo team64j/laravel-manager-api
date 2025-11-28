@@ -10,9 +10,6 @@ use Team64j\LaravelManagerComponents\Input;
 
 class LoginLayout extends Layout
 {
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [
@@ -40,17 +37,11 @@ class LoginLayout extends Layout
         ];
     }
 
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return '';
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return '';

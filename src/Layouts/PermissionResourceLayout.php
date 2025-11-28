@@ -12,27 +12,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class PermissionResourceLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-male';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.manage_permission');
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -92,11 +81,6 @@ class PermissionResourceLayout extends Layout
         ];
     }
 
-    /**
-     * @param $model
-     *
-     * @return array
-     */
     public function default($model = null): array
     {
         return [

@@ -34,30 +34,16 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class ResourceLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-edit';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_resource');
     }
 
-    /**
-     * @param $items
-     * @param array $parents
-     *
-     * @return array
-     */
     protected function getParents($items, array &$parents = []): array
     {
         if (!$parents) {
@@ -90,11 +76,6 @@ class ResourceLayout extends Layout
         );
     }
 
-    /**
-     * @param SiteContent|null $model
-     *
-     * @return array
-     */
     public function default(?SiteContent $model = null): array
     {
         /**
@@ -534,11 +515,6 @@ class ResourceLayout extends Layout
         ];
     }
 
-    /**
-     * @param Collection $tvs
-     *
-     * @return Tabs
-     */
     protected function tabTvs(Collection $tvs): Tabs
     {
         $tvTabs = Tabs::make()
@@ -626,11 +602,6 @@ class ResourceLayout extends Layout
         return $tvTabs;
     }
 
-    /**
-     * @param Tabs $tabs
-     *
-     * @return Tabs
-     */
     protected function tabPermissions(Tabs $tabs): Tabs
     {
         return $tabs
@@ -662,9 +633,6 @@ class ResourceLayout extends Layout
             );
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()

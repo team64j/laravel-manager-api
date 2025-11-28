@@ -13,9 +13,6 @@ use Team64j\LaravelManagerComponents\Title;
 
 class RolePermissionLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-user-tag';
@@ -26,27 +23,16 @@ class RolePermissionLayout extends Layout
         return 'fa fa-legal';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_permission');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.role_management_title');
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -110,11 +96,6 @@ class RolePermissionLayout extends Layout
         ];
     }
 
-    /**
-     * @param Permissions|null $model
-     *
-     * @return array
-     */
     public function default(?Permissions $model = null): array
     {
         return [

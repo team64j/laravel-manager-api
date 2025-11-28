@@ -24,45 +24,26 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class ModuleLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-cube';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-cubes';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_module');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.modules');
     }
 
-    /**
-     * @param SiteModule|null $model
-     *
-     * @return array
-     */
     public function default(?SiteModule $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
@@ -207,9 +188,6 @@ class ModuleLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -338,9 +316,6 @@ class ModuleLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()

@@ -11,25 +11,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class WorkspaceLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-eye';
     }
 
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.settings_ui');
     }
 
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [

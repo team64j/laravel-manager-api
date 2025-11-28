@@ -9,25 +9,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class HelpLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.help');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'far fa-question-circle';
     }
 
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [

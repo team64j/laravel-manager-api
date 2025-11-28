@@ -12,27 +12,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class PermissionGroupLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-male';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.manage_permission');
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [

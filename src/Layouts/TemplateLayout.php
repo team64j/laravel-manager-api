@@ -23,45 +23,26 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class TemplateLayout extends Layout
 {
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_template');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.templates');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-newspaper';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-newspaper';
     }
 
-    /**
-     * @param SiteTemplate|null $model
-     *
-     * @return array
-     */
     public function default(?SiteTemplate $model = null): array
     {
         $bladeFile = current(config('view.paths')) . '/' . $model->templatealias . '.blade.php';
@@ -258,9 +239,6 @@ class TemplateLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -392,9 +370,6 @@ class TemplateLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()

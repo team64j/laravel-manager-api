@@ -11,25 +11,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class SystemLogLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return __('global.mgrlog_view');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-user-secret';
     }
 
-    /**
-     * @return array
-     */
     public function default(): array
     {
         return [

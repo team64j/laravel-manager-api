@@ -23,45 +23,26 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class SnippetLayout extends Layout
 {
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_snippet');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.snippets');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-code';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-code';
     }
 
-    /**
-     * @param SiteSnippet|null $model
-     *
-     * @return array
-     */
     public function default(?SiteSnippet $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
@@ -170,9 +151,6 @@ class SnippetLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -301,9 +279,6 @@ class SnippetLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()

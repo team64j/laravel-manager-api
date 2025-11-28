@@ -23,61 +23,36 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class PluginLayout extends Layout
 {
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_plugin');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.plugins');
     }
 
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-plug';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-plug';
     }
 
-    /**
-     * @return string
-     */
     public function iconSort(): string
     {
         return 'fa fa-sort-numeric-asc';
     }
 
-    /**
-     * @return string
-     */
     public function titleSort(): string
     {
         return __('global.plugin_priority_title');
     }
 
-    /**
-     * @param SitePlugin|null $model
-     *
-     * @return array
-     */
     public function default(?SitePlugin $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
@@ -204,9 +179,6 @@ class PluginLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -336,9 +308,6 @@ class PluginLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function sort(): array
     {
         return [
@@ -384,9 +353,6 @@ class PluginLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()

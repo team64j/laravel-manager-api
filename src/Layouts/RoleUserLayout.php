@@ -13,43 +13,26 @@ use Team64j\LaravelManagerComponents\Title;
 
 class RoleUserLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-legal';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-legal';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.role_management_title');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.role_management_title');
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -104,11 +87,6 @@ class RoleUserLayout extends Layout
         ];
     }
 
-    /**
-     * @param UserRole|null $model
-     *
-     * @return array
-     */
     public function default(?UserRole $model = null): array
     {
         return [

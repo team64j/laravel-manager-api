@@ -13,43 +13,26 @@ use Team64j\LaravelManagerComponents\Title;
 
 class RoleCategoryLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-object-group';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-legal';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_category');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.role_management_title');
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -102,11 +85,6 @@ class RoleCategoryLayout extends Layout
         ];
     }
 
-    /**
-     * @param PermissionsGroups|null $model
-     *
-     * @return array
-     */
     public function default(?PermissionsGroups $model = null): array
     {
         return [

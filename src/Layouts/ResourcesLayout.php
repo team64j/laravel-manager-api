@@ -12,27 +12,16 @@ use Team64j\LaravelManagerComponents\Title;
 
 class ResourcesLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-edit';
     }
 
-    /**
-     * @return string
-     */
     public function title(): string
     {
         return '';
     }
 
-    /**
-     * @param SiteContent|null $model
-     *
-     * @return array
-     */
     public function default(?SiteContent $model = null): array
     {
         $title = $model->pagetitle ?? 'root';

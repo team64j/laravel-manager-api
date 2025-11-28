@@ -25,61 +25,36 @@ use Team64j\LaravelManagerComponents\Tree;
 
 class TvLayout extends Layout
 {
-    /**
-     * @return string
-     */
     public function icon(): string
     {
         return 'fa fa-list-alt';
     }
 
-    /**
-     * @return string
-     */
     public function iconList(): string
     {
         return 'fa fa-list-alt';
     }
 
-    /**
-     * @return string
-     */
     public function iconSort(): string
     {
         return 'fa fa-sort-numeric-asc';
     }
 
-    /**
-     * @param string|null $value
-     *
-     * @return string
-     */
     public function title(?string $value = null): string
     {
         return $value ?? __('global.new_tmplvars');
     }
 
-    /**
-     * @return string
-     */
     public function titleList(): string
     {
         return __('global.tmplvars');
     }
 
-    /**
-     * @return string
-     */
     public function titleSort(): string
     {
         return __('global.template_tv_edit_title');
     }
 
-    /**
-     * @param SiteTmplvar|null $model
-     *
-     * @return array
-     */
     public function default(?SiteTmplvar $model = null): array
     {
         $category = $model->category()->firstOr(fn() => new Category());
@@ -313,9 +288,6 @@ class TvLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function list(): array
     {
         return [
@@ -443,9 +415,6 @@ class TvLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function sort(): array
     {
         return [
@@ -492,9 +461,6 @@ class TvLayout extends Layout
         ];
     }
 
-    /**
-     * @return array
-     */
     public function tree(): array
     {
         return Tab::make()
@@ -540,11 +506,6 @@ class TvLayout extends Layout
             ->toArray();
     }
 
-    /**
-     * @param string $name
-     *
-     * @return array
-     */
     public function display(string $name): array
     {
         $name = str($name)->lower()->toString();
@@ -585,11 +546,6 @@ class TvLayout extends Layout
         return $data;
     }
 
-    /**
-     * @param string $params
-     *
-     * @return array
-     */
     protected function parseParams(string $params): array
     {
         $params = array_filter(explode('&', $params));
