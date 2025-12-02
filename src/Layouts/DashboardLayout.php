@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerComponents\Alert;
+use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Grid;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Section;
@@ -24,6 +25,10 @@ class DashboardLayout extends Layout
     public function default(): array
     {
         return [
+            GlobalTab::make()
+                ->isFixed()
+                ->setIcon($this->icon()),
+
             $this->getMessages(),
             $this->getWidgets(),
         ];

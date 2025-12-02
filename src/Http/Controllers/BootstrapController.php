@@ -781,7 +781,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-sign-out',
                                     'name' => '[%logout%]',
                                     'to'   => [
-                                        'path' => '/auth/logout',
+                                        'path' => '/logout',
                                     ],
                                 ],
                             ],
