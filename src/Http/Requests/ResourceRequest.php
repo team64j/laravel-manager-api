@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Team64j\LaravelManagerApi\Models\SiteContent;
 
 class ResourceRequest extends FormRequest
 {
@@ -32,8 +34,13 @@ class ResourceRequest extends FormRequest
     {
         return match ($this->route()->getActionMethod()) {
             'store', 'update' => [
-                'attributes.pagetitle'       => 'string|required',
-                'attributes.alias'           => 'string|required',
+                'id'                         => 'required|integer',
+                'attributes.pagetitle'       => 'required|string',
+                'attributes.alias' => [
+                    'required',
+                    'string',
+                    Rule::unique('site_content', 'alias')->withoutTrashed(SiteContent::DELETED_AT)->ignore($this->id),
+                ],
                 'attributes.alias_visible'   => 'int',
                 'attributes.cacheable'       => 'int',
                 'attributes.content'         => 'string|nullable',
@@ -58,7 +65,7 @@ class ResourceRequest extends FormRequest
                 'attributes.longtitle'       => 'string|nullable',
                 'attributes.menuindex'       => 'int',
                 'attributes.menutitle'       => 'string|nullable',
-                'attributes.parent'          => 'int|required',
+                'attributes.parent'          => 'required|int',
                 'attributes.privatemgr'      => 'int',
                 'attributes.privateweb'      => 'int',
                 'attributes.pub_date'        => 'string|nullable',
@@ -70,6 +77,7 @@ class ResourceRequest extends FormRequest
                 'attributes.template'        => 'int',
                 'attributes.type'            => 'string',
                 'attributes.unpub_date'      => 'string|nullable',
+                'document_groups'            => 'array',
             ],
             default => []
         };

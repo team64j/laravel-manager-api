@@ -167,6 +167,8 @@ class ResourceController extends Controller
             $model->setAttribute('type', $request->input('type'));
         }
 
+        $model->setAttribute('empty_cache', 1);
+
         return ResourceResource::make($model)
             ->layout($this->layout->default($model));
     }
@@ -192,6 +194,10 @@ class ResourceController extends Controller
         /** @var SiteContent $model */
         $model = SiteContent::query()->create($request->all());
 
+        $model->documentGroups()->sync($request->collect('document_groups'));
+
+        $model->setAttribute('empty_cache', 1);
+
         return ResourceResource::make($model)
             ->layout($this->layout->default($model));
     }
@@ -216,7 +222,9 @@ class ResourceController extends Controller
     {
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrFail($id);
-        $model->update($request->input('attributes'));
+        $model->update($request->validated('attributes'));
+
+        $model->documentGroups()->sync($request->collect('document_groups'));
 
         $tvs = $model->getTvs()->keyBy('name');
 
@@ -256,7 +264,15 @@ class ResourceController extends Controller
             }
         }
 
-        return ResourceResource::make($model->refresh())
+        $model->refresh();
+
+        $model->setAttribute('empty_cache', 1);
+
+        if ($request->boolean('attributes.empty_cache')) {
+            evo()->clearCache($model->getKey());
+        }
+
+        return ResourceResource::make($model)
             ->layout($this->layout->default($model));
     }
 
