@@ -68,16 +68,16 @@ class TemplateLayout extends Layout
                 ->setTitle($this->title($model->templatename)),
 
             Actions::make()
-                ->setCancel(
+                /*->setCancel(
                     __('global.cancel'),
                     [
                         'path'  => '/elements/templates',
                         'close' => true,
                     ]
-                )
+                )*/
                 ->when(
                     $model->getKey(),
-                    fn(Actions $component) => $component->setDelete()->setCopy()
+                    fn(Actions $component) => $component->setDelete(class: 'btn-red')->setCopy()
                 )
                 ->setSaveAnd(),
 

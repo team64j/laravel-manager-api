@@ -81,13 +81,12 @@ class EventLogLayout extends Layout
                 ->setIcon($this->icon()),
 
             Actions::make()
-                ->setCancel()
+                /*->setCancel()
                 ->setCancelTo([
                     'name' => 'EventLogs',
                     'close' => true,
-                ])
-                ->setDelete()
-                ->setDeleteClass('btn-red'),
+                ])*/
+                ->setDelete(class: 'btn-red'),
 
             Title::make()
                 ->setTitle($this->title())

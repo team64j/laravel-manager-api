@@ -163,14 +163,10 @@ class ResourceLayout extends Layout
                 ->setTitle($this->title($model->pagetitle)),
 
             Actions::make()
-                ->setCancelTo([
+                /*->setCancelTo([
                     'path'  => '/resources/' . $model->parent,
                     'close' => true,
-                ])
-                ->when(
-                    $model->exists,
-                    fn(Actions $actions): Actions => $actions->setViewTo(['href' => $route['url'] ?? ''])
-                )
+                ])*/
                 ->when(
                     $model->deleted,
                     fn(Actions $component) => $component
@@ -199,6 +195,12 @@ class ResourceLayout extends Layout
                             )
                             ->setCopy(to: ['path' => '/resource/0?id=' . $model->getKey()]),
                     )
+                )
+                ->when(
+                    $model->getKey(),
+                    fn(Actions $actions): Actions => $actions
+                        ->setViewTo(['href' => $route['url'] ?? ''])
+                        ->setViewClass('btn-blue')
                 )
                 ->setSaveAnd(),
 

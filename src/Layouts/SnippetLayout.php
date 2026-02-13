@@ -61,16 +61,16 @@ class SnippetLayout extends Layout
                 ->setIcon($this->icon()),
 
             Actions::make()
-                ->setCancel(
+                /*->setCancel(
                     __('global.cancel'),
                     [
                         'path'  => '/elements/snippets',
                         'close' => true,
                     ]
-                )
+                )*/
                 ->when(
                     $model->getKey(),
-                    fn(Actions $actions) => $actions->setDelete()->setCopy()
+                    fn(Actions $actions) => $actions->setDelete(class: 'btn-red')->setCopy()
                 )
                 ->setSaveAnd(),
 

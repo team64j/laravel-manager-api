@@ -42,10 +42,10 @@ class FileLayout extends Layout
                 ->setTitle($data['basename'] ?? $this->title()),
 
             Actions::make()
-                ->setCancel(__('global.close'))
+                /*->setCancel(__('global.close'))*/
                 ->when(
                     $data['basename'] ?? false,
-                    fn(Actions $actions) => $actions->setDelete()->setCopy()
+                    fn(Actions $actions) => $actions->setDelete(class: 'btn-red')->setCopy()
                 )
                 ->setSaveAnd(),
 

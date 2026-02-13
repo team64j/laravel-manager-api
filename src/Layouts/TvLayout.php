@@ -73,16 +73,16 @@ class TvLayout extends Layout
                 ->setTitle($this->title($model->name)),
 
             Actions::make()
-                ->setCancel(
+                /*->setCancel(
                     __('global.cancel'),
                     [
                         'path'  => '/elements/tvs',
                         'close' => true,
                     ]
-                )
+                )*/
                 ->when(
                     $model->getKey(),
-                    fn(Actions $actions) => $actions->setDelete()->setCopy()
+                    fn(Actions $actions) => $actions->setDelete(class: 'btn-red')->setCopy()
                 )
                 ->setSaveAnd(),
 
