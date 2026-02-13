@@ -195,7 +195,7 @@ class TemplateController extends Controller
         /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrFail($id);
 
-        $model->update($request->input('attributes'));
+        $model->update($request->validated('attributes'));
 
         $model->tvs()->sync($request->collect('tvs'));
 

@@ -120,7 +120,7 @@ class TemplateLayout extends Layout
                                         $category->getKey(),
                                         $category->category
                                     )
-                                    ->setNew('')
+                                    //->setNew('')
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Checkbox::make('data.attributes.selectable')

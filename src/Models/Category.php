@@ -7,7 +7,6 @@ namespace Team64j\LaravelManagerApi\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Config;
 
 /**
  * @property int $id
@@ -33,136 +32,39 @@ class Category extends Model
         'rank',
     ];
 
-    public static function templatesNoCategory(): \Illuminate\Support\Collection
+    public function delete(): void
     {
-        $data = SiteTemplate::query()
-            ->select([
-                'id',
-                'templatename as name',
-                'templatealias as alias',
-                'description',
-                'locked',
-                'category',
-            ])
-            ->where('category', 0)
-            ->paginate(Config::get('global.number_of_results'));
+        throw_if(
+            $this->templates->count(),
+            message: 'Category is used in templates'
+        );
 
-        return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id'   => 0,
-            'name' => __('global.no_category'),
-            'rank' => 0,
-        ])
-            ->merge($data) : collect();
-    }
+        throw_if(
+            $this->tvs->count(),
+            message: 'Category is used in tvs'
+        );
 
-    public static function tvsNoCategory(array $ids = [], bool $not = false): \Illuminate\Support\Collection
-    {
-        $data = SiteTmplvar::query()
-            ->select([
-                'id',
-                'name',
-                'description',
-                'locked',
-                'category',
-            ])
-            ->where(fn($item) => $ids ? ($not ? $item->whereKeyNot($ids) : $item->whereKey($ids)) : null)
-            ->where('category', 0)
-            ->paginate(Config::get('global.number_of_results'));
+        throw_if(
+            $this->chunks->count(),
+            message: 'Category is used in chunks'
+        );
 
-        return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id'   => 0,
-            'name' => __('global.no_category'),
-            'rank' => 0,
-        ])
-            ->merge($data) : collect();
-    }
+        throw_if(
+            $this->snippets->count(),
+            message: 'Category is used in snippets'
+        );
 
-    public static function chunksNoCategory(): \Illuminate\Support\Collection
-    {
-        $data = SiteHtmlSnippet::query()
-            ->select([
-                'id',
-                'name',
-                'description',
-                'locked',
-                'disabled',
-                'category',
-            ])
-            ->where('category', 0)
-            ->paginate(Config::get('global.number_of_results'));
+        throw_if(
+            $this->plugins->count(),
+            message: 'Category is used in plugins'
+        );
 
-        return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id'   => 0,
-            'name' => __('global.no_category'),
-            'rank' => 0,
-        ])
-            ->merge($data) : collect();
-    }
+        throw_if(
+            $this->modules->count(),
+            message: 'Category is used in modules'
+        );
 
-    public static function snippetsNoCategory(): \Illuminate\Support\Collection
-    {
-        $data = SiteSnippet::query()
-            ->select([
-                'id',
-                'name',
-                'description',
-                'locked',
-                'disabled',
-                'category',
-            ])
-            ->where('category', 0)
-            ->paginate(Config::get('global.number_of_results'));
-
-        return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id'   => 0,
-            'name' => __('global.no_category'),
-            'rank' => 0,
-        ])
-            ->merge($data) : collect();
-    }
-
-    public static function pluginsNoCategory(): \Illuminate\Support\Collection
-    {
-        $data = SitePlugin::query()
-            ->select([
-                'id',
-                'name',
-                'description',
-                'locked',
-                'disabled',
-                'category',
-            ])
-            ->where('category', 0)
-            ->paginate(Config::get('global.number_of_results'));
-
-        return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id'   => 0,
-            'name' => __('global.no_category'),
-            'rank' => 0,
-        ])
-            ->merge($data) : collect();
-    }
-
-    public static function modulesNoCategory(): \Illuminate\Support\Collection
-    {
-        $data = SiteModule::query()
-            ->select([
-                'id',
-                'name',
-                'description',
-                'locked',
-                'disabled',
-                'category',
-            ])
-            ->where('category', 0)
-            ->paginate(Config::get('global.number_of_results'));
-
-        return $data->isNotEmpty() ? \Illuminate\Support\Collection::make([
-            'id'   => 0,
-            'name' => __('global.no_category'),
-            'rank' => 0,
-        ])
-            ->merge($data) : collect();
+        parent::delete();
     }
 
     public function templates(): HasMany

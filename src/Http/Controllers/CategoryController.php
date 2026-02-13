@@ -2,7 +2,6 @@
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Response;
 use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\CategoryRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
@@ -154,11 +153,11 @@ class CategoryController extends Controller
             ),
         ]
     )]
-    public function destroy(CategoryRequest $request, int $id): Response
+    public function destroy(CategoryRequest $request, int $id): JsonResource
     {
         Category::query()->findOrFail($id)->delete();
 
-        return response()->noContent();
+        return JsonResource::make([])->meta(['exit' => true]);
     }
 
     #[OA\Get(
@@ -209,10 +208,10 @@ class CategoryController extends Controller
 
         return JsonResource::collection(
             collect()
-                ->add([
-                    'key'   => (string) $request->input('itemNew', 'newcategory'),
-                    'value' => __('global.cm_create_new_category'),
-                ])
+                //                ->add([
+                //                    'key'   => (string) $request->input('itemNew', ''),
+                //                    'value' => __('global.cm_create_new_category'),
+                //                ])
                 ->add([
                     'name' => __('global.category_management'),
                     'data' => collect()
