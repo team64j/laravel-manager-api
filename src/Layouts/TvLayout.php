@@ -373,6 +373,7 @@ class TvLayout extends Layout
                     'tvs',
                     Panel::make('data')
                         ->setId('tvs')
+                        ->setUrl('/elements/:path')
                         ->setRoute('/tvs/:id')
                         ->setHistory(true)
                         ->addColumn(

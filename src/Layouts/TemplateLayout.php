@@ -323,6 +323,7 @@ class TemplateLayout extends Layout
                     'templates',
                     Panel::make('data')
                         ->setId('templates')
+                        ->setUrl('/elements/:path')
                         ->setRoute('/templates/:id')
                         ->setHistory(true)
                         ->addColumn(
