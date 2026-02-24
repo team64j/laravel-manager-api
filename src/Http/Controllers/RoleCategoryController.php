@@ -77,7 +77,19 @@ class RoleCategoryController extends Controller
             $model->setAttribute('name', '');
         }
 
-        return JsonResource::make([])
+        return JsonResource::make($model)
             ->layout($this->layout->default($model));
+    }
+
+    public function select(RoleCategoryRequest $request)
+    {
+        return JsonResource::collection(
+            collect(PermissionsGroups::all())
+                ->map(fn(PermissionsGroups $item) => [
+                    'key'      => $item->getKey(),
+                    'value'    => __('global.' . $item->lang_key),
+                    'selected' => $request->input('selected') == $item->getKey(),
+                ])
+        );
     }
 }

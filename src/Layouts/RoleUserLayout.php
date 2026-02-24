@@ -6,8 +6,11 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\UserRole;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
 
@@ -96,7 +99,26 @@ class RoleUserLayout extends Layout
 
             Title::make()
                 ->setTitle($this->title($model->name))
-                ->setIcon($this->icon()),
+                ->setIcon($this->icon()),            Tabs::make()
+                ->addTab('general', slot: [
+                    Input::make('name')
+                        ->setLabel(__('global.role_name'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Input::make('description')
+                        ->setLabel(__('global.resource_description'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Checkbox::make('edit_doc_metatags')
+                        ->setLabel(__('global.role_edit_doc_metatags'))
+                        ->setCheckedValue(1, 0)
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Checkbox::make('manage_metatags')
+                        ->setLabel(__('global.role_manage_metatags'))
+                        ->setCheckedValue(1, 0)
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+                ]),
         ];
     }
 }

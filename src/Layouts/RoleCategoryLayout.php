@@ -6,8 +6,11 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\PermissionsGroups;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
 
@@ -101,6 +104,17 @@ class RoleCategoryLayout extends Layout
                     )
                 )
                 ->setIcon($this->icon()),
+
+            Tabs::make()
+                ->addTab('general', slot: [
+                    Input::make('name')
+                        ->setLabel(__('global.role_name'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Input::make('lang_key')
+                        ->setLabel(__('global.lang_key_desc'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+                ]),
         ];
     }
 }

@@ -6,8 +6,11 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerApi\Models\Permissions;
 use Team64j\LaravelManagerComponents\Actions;
+use Team64j\LaravelManagerComponents\Checkbox;
 use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
+use Team64j\LaravelManagerComponents\Select;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
 
@@ -112,6 +115,31 @@ class RolePermissionLayout extends Layout
                     )
                 )
                 ->setIcon($this->icon()),
+
+            Tabs::make()
+                ->addTab('general', slot: [
+                    Input::make('name')
+                        ->setLabel(__('global.role_name'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Input::make('key')
+                        ->setLabel(__('global.key_desc'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Input::make('lang_key')
+                        ->setLabel(__('global.lang_key_desc'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Select::make('group_id')
+                        ->setLabel(__('global.existing_category'))
+                        ->setUrl(route('manager.api.roles.categories.select'))
+                        ->isLoad()
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Checkbox::make('disabled')
+                        ->setLabel(__('global.disabled'))
+                        ->setCheckedValue(1, 0),
+                ]),
         ];
     }
 }

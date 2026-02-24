@@ -65,7 +65,7 @@ class RoleUserController extends Controller
             $model->setAttribute('name', '');
         }
 
-        return JsonResource::make([])
+        return JsonResource::make($model)
             ->layout($this->layout->default($model));
     }
 }

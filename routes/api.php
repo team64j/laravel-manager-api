@@ -201,6 +201,7 @@ Route::prefix($apiPath)
             ->name('roles.')
             ->group(fn() => [
                 Route::apiResource('categories', RoleCategoryController::class)->only(['index', 'show']),
+                Route::get('categories/select', [RoleCategoryController::class, 'select'])->name('categories.select'),
                 Route::apiResource('permissions', RolePermissionController::class)->only(['index', 'show']),
                 Route::apiResource('users', RoleUserController::class)->only(['index', 'show']),
             ]),

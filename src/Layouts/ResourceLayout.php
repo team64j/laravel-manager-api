@@ -154,7 +154,7 @@ class ResourceLayout extends Layout
 
         $tvs = $model->tvs;
         $tabTvs = $this->tabTvs($tvs);
-        $groupTv = $tvs->count() ? config('global.group_tvs') : '';
+        $groupTv = intval($tvs->count() ? config('global.group_tvs') : 0);
         $route = URL::getRouteById($model->getKey());
 
         return [
