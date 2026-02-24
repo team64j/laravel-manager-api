@@ -272,7 +272,6 @@ class ModuleLayout extends Layout
                     'modules',
                     Panel::make('data')
                         ->setId('modules')
-                        ->setUrl('/elements/:path')
                         ->setRoute('/modules/:id')
                         ->setHistory(true)
                         ->addColumn(

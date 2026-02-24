@@ -264,7 +264,6 @@ class PluginLayout extends Layout
                     'plugins',
                     Panel::make('data')
                         ->setId('plugins')
-                        ->setUrl('/elements/:path')
                         ->setRoute('/plugins/:id')
                         ->setHistory(true)
                         ->addColumn(

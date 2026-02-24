@@ -235,7 +235,6 @@ class SnippetLayout extends Layout
                     'snippets',
                     Panel::make('data')
                         ->setId('snippets')
-                        ->setUrl('/elements/:path')
                         ->setRoute('/snippets/:id')
                         ->setHistory(true)
                         ->addColumn(
