@@ -46,7 +46,7 @@ class TvController extends Controller
         $order = $request->input('order', 'category');
         $dir = $request->input('dir', 'asc');
         $fields = ['id', 'name', 'type', 'caption', 'locked', 'category', 'rank'];
-        $groupBy = $request->input('groupBy');
+        $groupBy = $request->input('groupBy', $request->is('*/elements/*') ? 'category' : '');
 
         if (!in_array($order, $fields)) {
             $order = 'id';

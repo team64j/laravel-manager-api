@@ -51,7 +51,7 @@ class TemplateController extends Controller
         $dir = $request->input('dir', 'asc');
         $order = $request->input('order', 'category');
         $fields = ['id', 'templatename', 'templatealias', 'description', 'category', 'locked'];
-        $groupBy = $request->input('groupBy');
+        $groupBy = $request->input('groupBy', $request->is('*/elements/*') ? 'category' : '');
 
         if (!in_array($order, $fields)) {
             $order = 'id';

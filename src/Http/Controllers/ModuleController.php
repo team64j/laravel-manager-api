@@ -46,7 +46,7 @@ class ModuleController extends Controller
         $order = $request->input('order', 'category');
         $dir = $request->input('dir', 'asc');
         $fields = ['id', 'name', 'description', 'locked', 'disabled', 'category'];
-        $groupBy = $request->has('groupBy');
+        $groupBy = $request->input('groupBy', $request->is('*/elements/*') ? 'category' : '');
 
         if (!in_array($order, $fields)) {
             $order = 'id';
