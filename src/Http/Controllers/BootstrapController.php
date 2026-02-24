@@ -552,6 +552,7 @@ class BootstrapController extends Controller
                                     'to'          => [
                                         'path' => '/roles/users',
                                     ],
+                                    'url'         => '/roles',
                                     'permissions' => ['edit_role'],
                                 ],
                                 [

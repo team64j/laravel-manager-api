@@ -72,7 +72,7 @@ class PermissionController extends Controller
     }
 
     #[OA\Get(
-        path: '/permissions/group/{id}',
+        path: '/permissions/groups/{id}',
         summary: 'Получение группы пользователей',
         security: [['Api' => []]],
         tags: ['Permissions'],

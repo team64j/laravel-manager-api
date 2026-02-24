@@ -6,6 +6,7 @@ namespace Team64j\LaravelManagerApi\Layouts;
 
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\GlobalTab;
+use Team64j\LaravelManagerComponents\Input;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tabs;
 use Team64j\LaravelManagerComponents\Title;
@@ -93,6 +94,13 @@ class PermissionGroupLayout extends Layout
             Title::make()
                 ->setTitle($this->title($model->name))
                 ->setIcon($this->icon()),
+
+            Tabs::make()
+                ->addTab('general', slot: [
+                    Input::make('name')
+                        ->setLabel(__('global.user_group'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+                ]),
         ];
     }
 }

@@ -262,3 +262,6 @@ Route::prefix($apiPath)
         /** Workspace */
         Route::apiResource('workspace', WorkspaceController::class)->only(['index', 'store']),
     ]);
+
+Route::prefix($apiPath)
+    ->match(['get', 'post', 'put', 'patch', 'delete'], '{any}', fn() => abort(404))->where('any', '(.*)');
