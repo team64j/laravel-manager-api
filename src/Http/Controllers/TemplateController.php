@@ -254,7 +254,7 @@ class TemplateController extends Controller
     )]
     public function list(TemplateRequest $request): JsonResourceCollection
     {
-        $filter = $request->get('filter');
+        $filter = $request->input('filter');
 
         return JsonResource::collection(
             SiteTemplate::withoutLocked()
@@ -271,13 +271,13 @@ class TemplateController extends Controller
                 ->appends($request->all())
         )
             ->meta([
-                'route'   => '/templates/:id',
+                'route'   => route('manager.api.templates.show', [':id']),
                 'prepend' => [
                     [
                         'name' => __('global.new_template'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to'   => [
-                            'path' => '/templates/0',
+                            'path' => route('manager.api.templates.show', ['0']),
                         ],
                     ],
                 ],

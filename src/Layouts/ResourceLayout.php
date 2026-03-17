@@ -153,8 +153,8 @@ class ResourceLayout extends Layout
         }
 
         $tvs = $model->tvs;
-        $tabTvs = $this->tabTvs($tvs);
-        $groupTv = intval($tvs->count() ? config('global.group_tvs') : 0);
+        $tabTvs = $tvs->count() ? $this->tabTvs($tvs)->toArray() : null;
+        $groupTv = $tabTvs ? intval($tvs->count() ? config('global.group_tvs') : 0) : null;
         $route = URL::getRouteById($model->getKey());
 
         return [
@@ -341,14 +341,14 @@ class ResourceLayout extends Layout
                                 $filedContent,
                             ], ['sm' => '2', 'xl' => '2 / 1 / 2 / 5'])
                             ->when(
-                                $groupTv == 0,
+                                $groupTv === 0,
                                 fn(Grid $grid) => $grid->addArea(
                                     Arr::flatten($tabTvs['slots']),
                                     ['sm' => '4', 'xl' => '3 / 1 / 3 / 5']
                                 )
                             )
                             ->when(
-                                $groupTv == 1,
+                                $groupTv === 1,
                                 fn(Grid $grid) => $grid->addArea(
                                     array_map(
                                         fn($slot) => Section::make()
@@ -361,7 +361,7 @@ class ResourceLayout extends Layout
                                 )
                             )
                             ->when(
-                                $groupTv == 2,
+                                $groupTv === 2,
                                 fn(Grid $grid) => $grid->addArea(
                                     $tabTvs,
                                     ['sm' => '4', 'xl' => '3 / 1 / 3 / 5']
@@ -472,7 +472,7 @@ class ResourceLayout extends Layout
                     ]
                 )
                 ->when(
-                    $groupTv == 3,
+                    $groupTv === 3,
                     fn(Tabs $tabs) => $tabs->addTab(
                         'tvs',
                         __('global.settings_templvars'),
@@ -486,7 +486,7 @@ class ResourceLayout extends Layout
                     )
                 )
                 ->when(
-                    $groupTv == 4,
+                    $groupTv === 4,
                     fn(Tabs $tabs) => $tabs->addTab(
                         'tvs',
                         __('global.settings_templvars'),
@@ -494,7 +494,7 @@ class ResourceLayout extends Layout
                     )
                 )
                 ->when(
-                    $groupTv == 5,
+                    $groupTv === 5,
                     function (Tabs $tabs) use ($tabTvs) {
                         array_map(
                             fn($tab) => $tabs->addTab(

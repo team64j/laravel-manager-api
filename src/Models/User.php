@@ -16,6 +16,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * @property string $username
+ * @property UserAttribute $attributes
  */
 class User extends \Illuminate\Foundation\Auth\User implements JWTSubject
 {

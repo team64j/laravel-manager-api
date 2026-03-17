@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Lang;
-use Team64j\LaravelEvolution\Traits\SoftDeletes;
+use Team64j\LaravelEvolution\Database\Eloquent\SoftDeletes;
 use Team64j\LaravelEvolution\Traits\TimeMutatorTrait;
 
 /**

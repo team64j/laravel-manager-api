@@ -9,6 +9,7 @@ use Team64j\LaravelManagerApi\Http\Requests\PermissionRequest;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResourceCollection;
 use Team64j\LaravelManagerApi\Layouts\PermissionGroupLayout;
+use Team64j\LaravelManagerApi\Layouts\PermissionLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionRelationLayout;
 use Team64j\LaravelManagerApi\Layouts\PermissionResourceLayout;
 use Team64j\LaravelManagerApi\Models\DocumentgroupName;
@@ -20,6 +21,60 @@ use Team64j\LaravelManagerApi\Models\User;
 
 class PermissionController extends Controller
 {
+    public function index(PermissionRequest $request, PermissionLayout $layout)
+    {
+        $result = Permissions::query()
+            ->with('groups')
+            ->orderBy('id')
+            ->paginate(config('global.number_of_results'));
+
+        return JsonResource::collection(
+            $result->setCollection(
+                $result
+                    ->getCollection()
+                    ->groupBy('group_id')
+                    ->map(
+                        static fn($group, $key) => [
+                            'id'   => $key,
+                            'name' => $key
+                                ? __('global.' . $group->first()->groups->lang_key)
+                                : __('global.no_category'),
+                            'data' => $group->map(
+                                static fn($item) => $item->setAttribute('name', __('global.' . $item->lang_key))
+                            ),
+                        ]
+                    )
+            )
+        )
+            ->layout($layout->list());
+    }
+
+    public function show(PermissionRequest $request, int $id, PermissionLayout $layout)
+    {
+        $model = Permissions::query()->findOrNew($id);
+
+        return JsonResource::make($model)
+            ->layout($layout->default($model));
+    }
+
+    public function store(PermissionRequest $request, PermissionLayout $layout)
+    {
+        return JsonResource::make([])
+            ->layout($layout->default());
+    }
+
+    public function update(PermissionRequest $request, int $id, PermissionLayout $layout)
+    {
+        return JsonResource::make([])
+            ->layout($layout->default());
+    }
+
+    public function destroy(PermissionRequest $request, int $id, PermissionLayout $layout)
+    {
+        return JsonResource::make([])
+            ->layout($layout->default());
+    }
+
     #[OA\Get(
         path: '/permissions/groups',
         summary: 'Получение списка групп пользователей',
@@ -203,10 +258,10 @@ class PermissionController extends Controller
             ->orderBy('name')
             ->paginate(config('global.number_of_results'));
 
-//        $documents = DocumentgroupName::query()
-//            ->with('documents')
-//            ->orderBy('name')
-//            ->get();
+        //        $documents = DocumentgroupName::query()
+        //            ->with('documents')
+        //            ->orderBy('name')
+        //            ->get();
 
         return JsonResource::collection(
             $result->setCollection(

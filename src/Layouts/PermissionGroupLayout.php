@@ -18,70 +18,19 @@ class PermissionGroupLayout extends Layout
         return 'fa fa-male';
     }
 
-    public function title(?string $value = null): string
+    public function iconList(): string
     {
-        return $value ?? __('global.manage_permission');
+        return 'fa fa-legal';
     }
 
-    public function list(): array
+    public function title(?string $value = null): string
     {
-        return [
-            GlobalTab::make()
-                ->setTitle($this->title())
-                ->setIcon($this->icon()),
+        return $value ?? __('global.new_category');
+    }
 
-            Actions::make()
-                ->setNew(
-                    __('global.create_new'),
-                    '/permissions/groups/0',
-                    'btn-green'
-                ),
-
-            Title::make()
-                ->setTitle($this->title())
-                ->setIcon($this->icon())
-                ->setHelp(__('global.access_permissions_users_tab')),
-
-            Tabs::make()
-                ->setId('permissions')
-                ->setHistory(true)
-                ->addTab(
-                    'groups',
-                    __('global.web_access_permissions_user_groups'),
-                    route: route('manager.api.permissions.groups'),
-                    slot: Panel::make('data')
-                        ->setId('groups')
-                        ->setHistory(true)
-                        ->setRoute('/permissions/groups/:id')
-                        ->addColumn('name', __('global.name'), ['width' => '20rem', 'fontWeight' => 500])
-                        ->addColumn('users', __('global.access_permissions_users_in_group'))
-                        ->addColumn(
-                            'actions',
-                            __('global.mgrlog_action'),
-                            ['width' => '3rem', 'textAlign' => 'center'],
-                            false,
-                            [],
-                            [
-                                'delete' => [
-                                    'icon'      => 'fa fa-trash fa-fw hover:text-rose-600',
-                                    'help'      => __('global.delete'),
-                                    'helpFit'   => true,
-                                    'noOpacity' => true,
-                                ],
-                            ]
-                        )
-                )
-                ->addTab(
-                    'resources',
-                    __('global.access_permissions_resource_groups'),
-                    route: route('manager.api.permissions.resources')
-                )
-                ->addTab(
-                    'relations',
-                    __('global.access_permissions_links'),
-                    route: route('manager.api.permissions.relations')
-                ),
-        ];
+    public function titleList(): string
+    {
+        return __('global.category_heading');
     }
 
     public function default($model = null): array
@@ -98,9 +47,64 @@ class PermissionGroupLayout extends Layout
             Tabs::make()
                 ->addTab('general', slot: [
                     Input::make('name')
-                        ->setLabel(__('global.user_group'))
+                        ->setLabel(__('global.cm_category_name'))
+                        ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                    Input::make('lang_key')
+                        ->setLabel(__('global.lang_key_desc'))
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
                 ]),
+        ];
+    }
+
+    public function list(): array
+    {
+        return [
+            GlobalTab::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
+            Actions::make()
+                ->setNew(
+                    $this->title(),
+                    route('manager.api.permissions-group.show', [0]),
+                    'btn-green'
+                ),
+
+            Title::make()
+                ->setTitle($this->titleList())
+                ->setIcon($this->iconList()),
+
+            Tabs::make()
+                ->setId('userManagement')
+                ->setHistory(true)
+                ->addTab(
+                    'roles',
+                    __('global.role_role_management'),
+                    'fa fa-legal',
+                    route: route('manager.api.roles.index'),
+                )
+                ->addTab(
+                    'permissions',
+                    __('global.manage_permission'),
+                    'fa fa-user-tag',
+                    route: route('manager.api.permissions.index'),
+                )
+                ->addTab(
+                    'categories',
+                    __('global.category_heading'),
+                    'fa fa-object-group',
+                    route: route('manager.api.permissions-group.index'),
+                    slot: Panel::make('data')
+                        ->setId('categories')
+                        ->setRoute(route('manager.api.permissions-group.show', [':id']))
+                        ->addColumn(
+                            'id',
+                            __('global.id'),
+                            ['width' => '5rem', 'textAlign' => 'right', 'fontWeight' => 'bold']
+                        )
+                        ->addColumn('name', __('global.category_heading'), ['fontWeight' => 500])
+                ),
         ];
     }
 }

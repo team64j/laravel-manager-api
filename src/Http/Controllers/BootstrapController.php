@@ -17,6 +17,7 @@ use Team64j\LaravelManagerApi\Layouts\ResourceLayout;
 use Team64j\LaravelManagerApi\Layouts\SnippetLayout;
 use Team64j\LaravelManagerApi\Layouts\TemplateLayout;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
+use Team64j\LaravelManagerApi\Models\User;
 use Team64j\LaravelManagerComponents\Tabs;
 
 class BootstrapController extends Controller
@@ -133,13 +134,25 @@ class BootstrapController extends Controller
                 ],
             ],
             [
-                'path' => '/permissions/:path',
+                'path' => '/roles',
                 'meta' => [
-                    'group' => true,
+                    'group' => 'roles',
                 ],
             ],
             [
-                'path' => '/roles/:path',
+                'path' => '/permissions',
+                'meta' => [
+                    'group' => 'roles',
+                ],
+            ],
+            [
+                'path' => '/permissions-group',
+                'meta' => [
+                    'group' => 'roles',
+                ],
+            ],
+            [
+                'path' => '/permission-access/:path',
                 'meta' => [
                     'group' => true,
                 ],
@@ -542,7 +555,7 @@ class BootstrapController extends Controller
                                     'to'          => [
                                         'path' => '/users',
                                     ],
-                                    'url'         => '/users/list',
+                                    'url'         => route('manager.api.users.list'),
                                     'permissions' => ['edit_user'],
                                 ],
                                 [
@@ -550,9 +563,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%role_management_title%]',
                                     'icon'        => 'fa fa-legal',
                                     'to'          => [
-                                        'path' => '/roles/users',
+                                        'path' => route('manager.api.roles.index'),
                                     ],
-                                    'url'         => '/roles',
+                                    'url'         => route('manager.api.roles.list'),
                                     'permissions' => ['edit_role'],
                                 ],
                                 [
@@ -560,7 +573,7 @@ class BootstrapController extends Controller
                                     'name'        => '[%web_permissions%]',
                                     'icon'        => 'fa fa-male',
                                     'to'          => [
-                                        'path' => '/permissions/groups',
+                                        'path' => route('manager.api.permissions.access.users.show'),
                                     ],
                                     'permissions' => ['access_permissions'],
                                 ],
@@ -739,11 +752,11 @@ class BootstrapController extends Controller
                     'key'  => 'third',
                     'data' => [
                         [
-                            'key'    => 'account',
-                            'icon'   => 'far fa-user-circle',
-                            'image'  => '[+user.photo+]',
-                            'title'  => '[+user.username+]',
-                            'data'   => [
+                            'key'   => 'account',
+                            'icon'  => 'far fa-user-circle',
+                            'image' => '[+user.photo+]',
+                            'title' => '[+user.username+]',
+                            'data'  => [
                                 [
                                     'key'    => 'dark',
                                     'values' => [
@@ -870,6 +883,7 @@ class BootstrapController extends Controller
         preg_match_all('!\[\+user\.(.*)\+]!U', $item, $matches);
 
         if (!empty($matches[1])) {
+            /** @var User $model */
             $model = auth()->user();
 
             $user = [

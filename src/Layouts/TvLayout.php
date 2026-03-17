@@ -218,7 +218,7 @@ class TvLayout extends Layout
                     __('global.role_management_title'),
                     slot: Panel::make('data.roles')
                         ->setId('roles')
-                        ->setUrl('/roles/users')
+                        ->setUrl(route('manager.api.roles.index'))
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
                             'attach',

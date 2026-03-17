@@ -16,13 +16,14 @@ use Team64j\LaravelManagerApi\Http\Controllers\{AuthController,
     ModuleController,
     OpenApiController,
     PasswordController,
+    PermissionAccessController,
     PermissionController,
+    PermissionGroupController,
     PluginController,
     PreviewController,
     ResourceController,
     ResourcesController,
-    RoleCategoryController,
-    RolePermissionController,
+    RoleController,
     RoleUserController,
     ScheduleController,
     SearchController,
@@ -158,18 +159,6 @@ Route::prefix($apiPath)
         /** Password */
         Route::apiResource('password', PasswordController::class)->only(['index', 'store']),
 
-        /** Permissions */
-        Route::prefix('permissions')
-            ->group(fn() => [
-                Route::get('groups', [PermissionController::class, 'groups'])->name('permissions.groups'),
-                Route::get('groups/{id}', [PermissionController::class, 'group'])->name('permissions.group'),
-                Route::get('resources', [PermissionController::class, 'resources'])->name('permissions.resources'),
-                Route::get('resources/{id}', [PermissionController::class, 'resource'])->name('permissions.resource'),
-                Route::get('relations', [PermissionController::class, 'relations'])->name('permissions.relations'),
-                Route::get('relations/{id}', [PermissionController::class, 'relation'])->name('permissions.relation'),
-                Route::get('select', [PermissionController::class, 'select'])->name('permissions.select'),
-            ]),
-
         /** Preview */
         Route::get('preview/{id}', [PreviewController::class, 'index'])->name('preview'),
 
@@ -198,13 +187,64 @@ Route::prefix($apiPath)
 
         /** Roles */
         Route::prefix('roles')
-            ->name('roles.')
             ->group(fn() => [
-                Route::apiResource('categories', RoleCategoryController::class)->only(['index', 'show']),
-                Route::get('categories/select', [RoleCategoryController::class, 'select'])->name('categories.select'),
-                Route::apiResource('permissions', RolePermissionController::class)->only(['index', 'show']),
-                Route::apiResource('users', RoleUserController::class)->only(['index', 'show']),
+                Route::get('list', [RoleController::class, 'list'])->name('roles.list'),
+            ])
+            ->apiResource('roles', RoleController::class),
+
+        /** Permissions */
+        Route::apiResource('permissions', PermissionController::class),
+
+        /** Permissions Group */
+        Route::prefix('permissions-group')
+            ->group(fn() => [
+                Route::get('select', [PermissionGroupController::class, 'select'])->name('permissions.group.select'),
+            ])
+            ->apiResource('permissions-group', PermissionGroupController::class),
+
+        /** Permission Access */
+        Route::prefix('permission-access')
+            ->name('permissions.access.')
+            ->group(fn() => [
+                Route::get('users', [PermissionAccessController::class, 'usersShow'])
+                    ->name('users.show'),
+
+                Route::post('users', [PermissionAccessController::class, 'usersUpdate'])
+                    ->name('users.update'),
+
+                Route::get('resources', [PermissionAccessController::class, 'resourcesShow'])
+                    ->name('resources.show'),
+
+                Route::post('resources', [PermissionAccessController::class, 'resourcesUpdate'])
+                    ->name('resources.update'),
+
+                Route::get('relations', [PermissionAccessController::class, 'relationsShow'])
+                    ->name('relations.show'),
+
+                Route::post('relations', [PermissionAccessController::class, 'relationsUpdate'])
+                    ->name('relations.update'),
             ]),
+
+        //        Route::prefix('roles')
+        //            ->name('roles.')
+        //            ->group(fn() => [
+        //                Route::apiResource('categories', RoleCategoryController::class)->only(['index', 'show']),
+        //                Route::get('categories/select', [RoleCategoryController::class, 'select'])->name('categories.select'),
+        //                Route::apiResource('permissions', RolePermissionController::class)->only(['index', 'show']),
+        //                Route::apiResource('users', RoleUserController::class)->only(['index', 'show']),
+        //            ]),
+
+        /** Permissions */
+        //        Route::prefix('permissions')
+        //            ->group(fn() => [
+        //                Route::get('groups', [PermissionController::class, 'groups'])->name('permissions.groups'),
+        //                Route::get('groups/{id}', [PermissionController::class, 'group'])->name('permissions.group'),
+        //                Route::get('resources', [PermissionController::class, 'resources'])->name('permissions.resources'),
+        //                Route::get('resources/{id}', [PermissionController::class, 'resource'])->name('permissions.resource'),
+        //                Route::get('relations', [PermissionController::class, 'relations'])->name('permissions.relations'),
+        //                Route::get('relations/{id}', [PermissionController::class, 'relation'])->name('permissions.relation'),
+        //                Route::get('select', [PermissionController::class, 'select'])->name('permissions.select'),
+        //            ]),
 
         /** Schedules */
         Route::get('schedule', [ScheduleController::class, 'index'])->name('schedule.index'),
