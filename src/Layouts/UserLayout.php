@@ -190,7 +190,7 @@ class UserLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/users/0',
+                    api_url('users.show', [0]),
                     'btn-green'
                 ),
 
@@ -204,7 +204,7 @@ class UserLayout extends Layout
                     'users',
                     slot: Panel::make('data')
                         ->setId('users')
-                        ->setRoute('/users/:id')
+                        ->setRoute(api_url('users.show', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             'id',

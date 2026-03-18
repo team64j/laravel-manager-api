@@ -60,11 +60,7 @@ class FileController extends Controller
             $data['ext'] = File::extension($path);
             $data['lang'] = $this->getLang($data['ext'], $data['type']);
             $data['size'] = $this->getSize(File::size($path));
-            $data['url'] = str_replace(
-                DIRECTORY_SEPARATOR,
-                '/',
-                url($filename, [], config('global.server_protocol') == 'https')
-            );
+            $data['url'] = api_url('file.content', [$file, 'token' => $request->bearerToken()], true);
 
             $content = File::get($path);
 
@@ -85,6 +81,14 @@ class FileController extends Controller
 
         return JsonResource::make($data)
             ->layout($this->layout->default($data));
+    }
+
+    public function content(FileRequest $request, string $path)
+    {
+        $root = realpath(config('global.filemanager_path', app()->basePath()));
+        $filename = trim(base64_decode(urldecode($path)), '/');
+
+        return File::get($root . DIRECTORY_SEPARATOR . $filename);
     }
 
     #[OA\Get(
@@ -245,7 +249,7 @@ class FileController extends Controller
             $query = $settings;
             $query['after'] = base64_encode($title);
 
-            $next = '/file/tree?' . http_build_query(['settings' => $query]);
+            $next = api_url('file.tree', ['settings' => $query]);
         }
 
         if (count($data) <= $limit) {

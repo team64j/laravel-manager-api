@@ -49,9 +49,9 @@ class ChunkLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id'    => $category->getKey() ?? 0,
+                'id'    => (int) $category->getKey(),
                 'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
-                'to'    => '/elements/chunks?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'to'    => api_url('elements.chunks', ['groupBy' => 'none', 'category' => (int) $category->getKey()]),
             ],
         ];
 
@@ -100,7 +100,7 @@ class ChunkLayout extends Layout
                             ->addArea([
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setUrl('/categories/select')
+                                    ->setUrl(api_url('categories.select'))
                                     ->setNew('')
                                     ->setData([
                                         [
@@ -147,7 +147,7 @@ class ChunkLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/chunks/0',
+                    api_url('chunks.show', [0]),
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -167,7 +167,7 @@ class ChunkLayout extends Layout
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
-                    route('manager.api.elements.templates'),
+                    api_url('elements.templates'),
                 )
                 ->addTab(
                     'tvs',
@@ -175,7 +175,7 @@ class ChunkLayout extends Layout
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route('manager.api.elements.tvs')
+                    api_url('elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -183,7 +183,7 @@ class ChunkLayout extends Layout
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
-                    route('manager.api.elements.chunks')
+                    api_url('elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -191,7 +191,7 @@ class ChunkLayout extends Layout
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets')
+                    api_url('elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -199,7 +199,7 @@ class ChunkLayout extends Layout
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
-                    route('manager.api.elements.plugins')
+                    api_url('elements.plugins')
                 )
                 ->addTab(
                     'modules',
@@ -207,7 +207,7 @@ class ChunkLayout extends Layout
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
-                    route('manager.api.elements.modules')
+                    api_url('elements.modules')
                 )
                 ->addTab(
                     'categories',
@@ -215,13 +215,13 @@ class ChunkLayout extends Layout
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
-                    route('manager.api.elements.categories')
+                    api_url('elements.categories')
                 )
                 ->addSlot(
                     'chunks',
                     Panel::make('data')
                         ->setId('chunks')
-                        ->setRoute('/chunks/:id')
+                        ->setRoute(api_url('chunks.show', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -272,13 +272,13 @@ class ChunkLayout extends Layout
             ->setTitle($this->titleList())
             ->setIcon($this->iconList())
             ->setPermissions('edit_chunk')
-            ->setRoute('/chunks/:id')
+            ->setRoute(api_url('chunks.show', [':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('chunks')
-                    ->setRoute('/chunks/:id')
-                    ->setUrl('/chunks/tree')
+                    ->setRoute(api_url('chunks.show', [':id']))
+                    ->setUrl(api_url('chunks.tree'))
                     ->isCategory()
                     ->setAppends(['id'])
                     ->setAliases([
@@ -299,7 +299,7 @@ class ChunkLayout extends Layout
                                 'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_htmlsnippet'),
                                 'to'    => [
-                                    'path' => '/chunks/0',
+                                    'path' => api_url('chunks.show', [0]),
                                 ],
                             ],
                         ],

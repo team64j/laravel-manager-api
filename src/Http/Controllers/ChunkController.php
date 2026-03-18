@@ -138,8 +138,10 @@ class ChunkController extends Controller
         $model = SiteHtmlSnippet::query()->findOrNew($id);
 
         if (!$model->getKey()) {
-            $model->setAttribute($model->getKeyName(), 0);
-            $model->setAttribute('category', 0);
+            $model->setRawAttributes([
+                $model->getKeyName() => 0,
+                'category' => 0
+            ]);
         }
 
         return JsonResource::make($model)

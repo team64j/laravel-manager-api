@@ -31,6 +31,12 @@ class SiteTemplate extends Model
 
     protected $dateFormat = 'U';
 
+    protected $attributes = [
+        'icon'       => '',
+        'category'   => 0,
+        'selectable' => 1,
+    ];
+
     protected $casts = [
         'editor_type'   => 'int',
         'category'      => 'int',

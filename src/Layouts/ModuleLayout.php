@@ -50,10 +50,9 @@ class ModuleLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id'    => $category->getKey() ?? 0,
-                'title' => __('global.modules') . ': ' .
-                    ($category->category ?? __('global.no_category')),
-                'to'    => '/elements/modules?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'id'    => (int) $category->getKey(),
+                'title' => __('global.modules') . ': ' . ($category->category ?? __('global.no_category')),
+                'to'    => api_url('elements.modules', ['groupBy' => 'none', 'category' => (int) $category->getKey()]),
             ],
         ];
 
@@ -108,7 +107,7 @@ class ModuleLayout extends Layout
                             ->addArea([
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setUrl('/categories/select')
+                                    ->setUrl(api_url('categories.select'))
                                     ->setNew('')
                                     ->setData([
                                         [
@@ -198,7 +197,7 @@ class ModuleLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/modules/0',
+                    api_url('modules.show', [0]),
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -218,7 +217,7 @@ class ModuleLayout extends Layout
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
-                    route('manager.api.elements.templates'),
+                    api_url('elements.templates'),
                 )
                 ->addTab(
                     'tvs',
@@ -226,7 +225,7 @@ class ModuleLayout extends Layout
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route('manager.api.elements.tvs')
+                    api_url('elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -234,7 +233,7 @@ class ModuleLayout extends Layout
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
-                    route('manager.api.elements.chunks')
+                    api_url('elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -242,7 +241,7 @@ class ModuleLayout extends Layout
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets')
+                    api_url('elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -250,7 +249,7 @@ class ModuleLayout extends Layout
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
-                    route('manager.api.elements.plugins')
+                    api_url('elements.plugins')
                 )
                 ->addTab(
                     'modules',
@@ -258,7 +257,7 @@ class ModuleLayout extends Layout
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
-                    route('manager.api.elements.modules')
+                    api_url('elements.modules')
                 )
                 ->addTab(
                     'categories',
@@ -266,13 +265,13 @@ class ModuleLayout extends Layout
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
-                    route('manager.api.elements.categories')
+                    api_url('elements.categories')
                 )
                 ->addSlot(
                     'modules',
                     Panel::make('data')
                         ->setId('modules')
-                        ->setRoute('/modules/:id')
+                        ->setRoute(api_url('modules.show', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -323,13 +322,13 @@ class ModuleLayout extends Layout
             ->setTitle(__('global.modules'))
             ->setIcon($this->iconList())
             ->setPermissions('edit_module')
-            ->setRoute('/modules/:id')
+            ->setRoute(api_url('modules.show', [':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('modules')
-                    ->setRoute('/modules/:id')
-                    ->setUrl('/modules/tree')
+                    ->setRoute(api_url('modules.show', [':id']))
+                    ->setUrl(api_url('modules.tree'))
                     ->isCategory()
                     ->setAppends(['id'])
                     ->setAliases([
@@ -350,7 +349,7 @@ class ModuleLayout extends Layout
                                 'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_module'),
                                 'to'    => [
-                                    'path' => '/modules/0',
+                                    'path' => api_url('modules.show', [0]),
                                 ],
                             ],
                         ],

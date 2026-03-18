@@ -46,7 +46,7 @@ class RolePermissionLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/roles/permissions/0',
+                    api_url('roles.permissions', [0]),
                     'btn-green'
                 ),
 
@@ -61,22 +61,22 @@ class RolePermissionLayout extends Layout
                     'users',
                     __('global.role_role_management'),
                     $this->iconList(),
-                    route: route('manager.api.roles.users.index')
+                    route: api_url('roles.users.index')
                 )
                 ->addTab(
                     'categories',
                     __('global.category_heading'),
                     'fa fa-object-group',
-                    route: route('manager.api.roles.categories.index')
+                    route: api_url('roles.categories.index')
                 )
                 ->addTab(
                     'permissions',
                     __('global.manage_permission'),
                     $this->icon(),
-                    route: route('manager.api.roles.permissions.index'),
+                    route: api_url('roles.permissions.index'),
                     slot: Panel::make('data')
                         ->setId('permissions')
-                        ->setRoute('/roles/permissions/:id')
+                        ->setRoute(api_url('roles.permissions', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             'id',
@@ -132,7 +132,7 @@ class RolePermissionLayout extends Layout
 
                     Select::make('group_id')
                         ->setLabel(__('global.existing_category'))
-                        ->setUrl(route('manager.api.roles.categories.select'))
+                        ->setUrl(api_url('roles.categories.select'))
                         ->isLoad()
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
 

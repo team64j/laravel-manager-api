@@ -38,7 +38,7 @@ class PermissionRelationLayout extends Layout
             Actions::make()
                 ->setNew(
                     __('global.create_new'),
-                    '/permissions/relations/0',
+                    api_url('permission-access.relations.show', [0]),
                     'btn-green'
                 ),
 
@@ -53,21 +53,21 @@ class PermissionRelationLayout extends Layout
                 ->addTab(
                     'groups',
                     __('global.web_access_permissions_user_groups'),
-                    route: route('manager.api.permissions.groups')
+                    route: api_url('permissions.groups')
                 )
                 ->addTab(
                     'resources',
                     __('global.access_permissions_resource_groups'),
-                    route: route('manager.api.permissions.resources')
+                    route: api_url('permissions.resources')
                 )
                 ->addTab(
                     'relations',
                     __('global.access_permissions_links'),
-                    route: route('manager.api.permissions.relations'),
+                    route: api_url('permissions.relations'),
                     slot: Panel::make('data')
                         ->setId('relations')
                         ->setHistory(true)
-                        ->setRoute('/permissions/relations/:id')
+                        ->setRoute(api_url('permission-access.relations.show', [':id']))
                         ->addColumn('name', __('global.name'), ['width' => '20rem', 'fontWeight' => 500])
                         ->addColumn('document_groups', __('global.access_permissions_resource_groups'))
                 ),

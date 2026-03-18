@@ -43,7 +43,7 @@ class ResourcesLayout extends Layout
                     slot: [
                         Panel::make('data')
                             ->setId('resources')
-                            ->setRoute('/resource/:id')
+                            ->setRoute(api_url('resource.show', [':id']))
                             ->setHistory(true)
                             ->addColumn(
                                 'id',

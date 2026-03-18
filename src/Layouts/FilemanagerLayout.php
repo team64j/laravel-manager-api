@@ -30,17 +30,18 @@ class FilemanagerLayout extends Layout
                 ->setTitle($this->title())
                 ->setIcon($this->icon()),
 
-            Main::make([
-                'title' => Title::make()
-                    ->setTitle($this->title())
-                    ->setIcon($this->icon()),
-
-                'sidebar' => [
+            Main::make()
+                ->setSlot('title', [
+                    Title::make()
+                        ->setTitle($this->title())
+                        ->setIcon($this->icon()),
+                ])
+                ->setSlot('sidebar', [
                     Tree::make()
                         ->setId('filemanagerTree')
-                        ->setUrl('/filemanager/tree')
+                        ->setUrl(api_url('filemanager.tree'))
                         ->setRoute([
-                            'path' => '/filemanager/:key',
+                            'path' => api_url('filemanager.show', [':key']),
                         ])
                         ->setIcons([
                             'default-folder'      => 'fa fa-folder',
@@ -50,9 +51,8 @@ class FilemanagerLayout extends Layout
                             'keyId'   => 'key',
                             'history' => 'key',
                         ]),
-                ],
-
-                'main' => [
+                ])
+                ->setSlot('main', [
                     Panel::make('data')
                         ->setId('filemanagerPanel')
                         //->setUrl('/filemanager/:key')
@@ -157,9 +157,7 @@ class FilemanagerLayout extends Layout
                                 ],
                             ],
                         ]),
-
-                ],
-            ]),
+                ]),
         ];
     }
 
@@ -170,13 +168,13 @@ class FilemanagerLayout extends Layout
             ->setIcon($this->icon())
             ->setTitle(__('global.files_files'))
             ->setPermissions(['file_manager'])
-            ->setRoute('/files/:id')
+            ->setRoute(api_url('file.show', [':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('treeFiles')
-                    ->setRoute('/file/:id')
-                    ->setUrl('/file/tree')
+                    ->setRoute(api_url('file.show', [':id']))
+                    ->setUrl(api_url('file.tree'))
                     ->isCategory()
                     ->setIcons([
                         'default'       => 'fa fa-ban',

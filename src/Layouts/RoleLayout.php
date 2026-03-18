@@ -67,7 +67,7 @@ class RoleLayout extends Layout
                     slot: [
                         Panel::make('data.permissions')
                             ->setId('permissions')
-                            ->setUrl(route('manager.api.permissions.index'))
+                            ->setUrl(api_url('permissions.index'))
                             ->addColumn(
                                 'permission',
                                 __('global.role_udperms'),
@@ -105,7 +105,7 @@ class RoleLayout extends Layout
             Actions::make()
                 ->setNew(
                     __('global.new_role'),
-                    route('manager.api.roles.show', [0]),
+                    api_url('roles.show', [0]),
                     'btn-green'
                 ),
 
@@ -121,10 +121,10 @@ class RoleLayout extends Layout
                     'roles',
                     __('global.role_role_management'),
                     'fa fa-legal',
-                    route: route('manager.api.roles.index'),
+                    route: api_url('roles.index'),
                     slot: Panel::make('data')
                         ->setId('roles')
-                        ->setRoute(route('manager.api.roles.show', [':id']))
+                        ->setRoute(api_url('roles.show', [':id']))
                         ->addColumn(
                             'id',
                             __('global.id'),
@@ -137,13 +137,13 @@ class RoleLayout extends Layout
                     'permissions',
                     __('global.manage_permission'),
                     'fa fa-user-tag',
-                    route: route('manager.api.permissions.index'),
+                    route: api_url('permissions.index'),
                 )
                 ->addTab(
                     'categories',
                     __('global.category_heading'),
                     'fa fa-object-group',
-                    route: route('manager.api.permissions-group.index'),
+                    route: api_url('permissions-group.index'),
                 ),
         ];
     }

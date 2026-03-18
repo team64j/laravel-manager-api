@@ -44,7 +44,8 @@ class DashboardLayout extends Layout
                 ->setSlot(
                     __('global.siteunavailable_message_default') .
                     ' ' . __('global.update_settings_from_language') .
-                    '<a href="/configuration" class="btn-sm btn-green ml-2">' . __('global.online') . '</a>'
+                    '<a href="' . api_url('configuration.index') . '" class="btn-sm btn-green ml-2">' .
+                    __('global.online') . '</a>'
                 );
         }
 
@@ -107,8 +108,8 @@ class DashboardLayout extends Layout
 
                             Panel::make()
                                 ->setId('widgetUsers')
-                                ->setRoute('/users/:id')
-                                ->setUrl('/users/active'),
+                                ->setRoute(api_url('users.show', [':id']))
+                                ->setUrl(api_url('users.active')),
                         ]
                     ),
             ], ['sm' => '2', 'xl' => '1 / 2'])
@@ -121,9 +122,14 @@ class DashboardLayout extends Layout
                         ->setSlot(
                             Panel::make()
                                 ->setId('widgetResources')
-                                ->setRoute('/resource/:id')
+                                ->setRoute(api_url('resource.show', [':id']))
                                 ->setUrl(
-                                    '/resource?order=createdon&dir=desc&limit=10&columns=id,pagetitle,longtitle,createdon'
+                                    api_url('resource.index', [
+                                        'order'   => 'createdon',
+                                        'dir'     => 'desc',
+                                        'limit'   => 10,
+                                        'columns' => 'id,pagetitle,longtitle,createdon',
+                                    ])
                                 )
                         ),
                 ], ['sm' => '3', 'xl' => '2 / 1 / 2 / 3'])
@@ -137,7 +143,7 @@ class DashboardLayout extends Layout
                         ->setSlot(
                             Panel::make()
                                 ->setId('widgetNews')
-                                ->setUrl('/dashboard/news')
+                                ->setUrl(api_url('dashboard.news'))
                         ),
                 ], ['sm' => '4', 'xl' => '1 / 1 / 1 / 2'])
             )
@@ -150,7 +156,7 @@ class DashboardLayout extends Layout
                         ->setSlot(
                             Panel::make()
                                 ->setId('widgetNewsSecurity')
-                                ->setUrl('/dashboard/news-security')
+                                ->setUrl(api_url('dashboard.news-security'))
                         ),
                 ], ['sm' => '5', 'xl' => '1 / 1 / 1 / 2'])
             );

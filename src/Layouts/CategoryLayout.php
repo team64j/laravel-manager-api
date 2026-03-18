@@ -98,10 +98,10 @@ class CategoryLayout extends Layout
                 ->setIcon($this->iconList()),
 
             Actions::make()
-                ->setAction('sort', $this->titleSort(), '/categories/sort', null, 'fa fa-sort')
+                ->setAction('sort', $this->titleSort(), api_url('categories.sort'), null, 'fa fa-sort')
                 ->setNew(
                     __('global.cm_add_new_category'),
-                    '/categories/0',
+                    api_url('categories.show', [0]),
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -120,7 +120,7 @@ class CategoryLayout extends Layout
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
-                    route('manager.api.elements.templates'),
+                    api_url('elements.templates'),
                 )
                 ->addTab(
                     'tvs',
@@ -128,7 +128,7 @@ class CategoryLayout extends Layout
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route('manager.api.elements.tvs')
+                    api_url('elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -136,7 +136,7 @@ class CategoryLayout extends Layout
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
-                    route('manager.api.elements.chunks')
+                    api_url('elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -144,7 +144,7 @@ class CategoryLayout extends Layout
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets')
+                    api_url('elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -152,7 +152,7 @@ class CategoryLayout extends Layout
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
-                    route('manager.api.elements.plugins')
+                    api_url('elements.plugins')
                 )
                 ->addTab(
                     'modules',
@@ -160,7 +160,7 @@ class CategoryLayout extends Layout
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
-                    route('manager.api.elements.modules')
+                    api_url('elements.modules')
                 )
                 ->addTab(
                     'categories',
@@ -168,13 +168,13 @@ class CategoryLayout extends Layout
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
-                    route('manager.api.elements.categories')
+                    api_url('elements.categories')
                 )
                 ->addSlot(
                     'categories',
                     Panel::make('data')
                         ->setId('categories')
-                        ->setRoute('/categories/:id')
+                        ->setRoute(api_url('categories.show', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             '#',
@@ -221,7 +221,7 @@ class CategoryLayout extends Layout
 
             Actions::make()
                 ->setCancelTo([
-                    'path'  => '/elements/categories',
+                    'path'  => api_url('elements.categories'),
                     'close' => true,
                 ])
                 ->setSave(),
@@ -265,13 +265,13 @@ class CategoryLayout extends Layout
             ->setIcon($this->iconList())
             ->setTitle($this->titleList())
             ->setPermissions(['category_manager'])
-            ->setRoute('/categories/:id')
+            ->setRoute(api_url('categories.show', [':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('categories')
-                    ->setRoute('/categories/:id')
-                    ->setUrl('/categories/tree')
+                    ->setRoute(api_url('categories.show', [':id']))
+                    ->setUrl(api_url('categories.tree'))
                     ->isCategory()
                     ->setAppends(['id'])
                     ->setIcons([
@@ -288,7 +288,7 @@ class CategoryLayout extends Layout
                                 'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_category'),
                                 'to'    => [
-                                    'path' => '/categories/0',
+                                    'path' => api_url('categories.show', [0]),
                                 ],
                             ],
                         ],

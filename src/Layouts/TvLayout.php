@@ -61,9 +61,9 @@ class TvLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id'    => $category->getKey() ?? 0,
+                'id'    => (int) $category->getKey(),
                 'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
-                'to'    => '/elements/tvs?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'to'    => api_url('elements.tvs', ['groupBy' => 'none', 'category' => (int) $category->getKey()]),
             ],
         ];
 
@@ -128,7 +128,7 @@ class TvLayout extends Layout
                             ->addArea([
                                 Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setUrl('/categories/select')
+                                    ->setUrl(api_url('categories.select'))
                                     ->setNew('')
                                     ->setData([
                                         [
@@ -143,7 +143,7 @@ class TvLayout extends Layout
 
                                 Select::make('data.attributes.type')
                                     ->setLabel(__('global.tmplvars_type'))
-                                    ->setUrl('/tvs/types')
+                                    ->setUrl(api_url('tvs.types'))
                                     ->setData([
                                         [
                                             'key'   => $model->type,
@@ -163,7 +163,7 @@ class TvLayout extends Layout
 
                                 Select::make('data.attributes.display')
                                     ->setLabel(__('global.tmplvars_widget'))
-                                    ->setUrl('/tvs/display')
+                                    ->setUrl(api_url('tvs.display'))
                                     ->setData([
                                         [
                                             'key'   => $model->display,
@@ -184,7 +184,7 @@ class TvLayout extends Layout
                     __('global.templates'),
                     slot: Panel::make('data.templates')
                         ->setId('templates')
-                        ->setUrl('/templates?groupBy=category')
+                        ->setUrl(api_url('templates.index', ['groupBy' => 'category']))
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_tmpl_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
@@ -218,7 +218,7 @@ class TvLayout extends Layout
                     __('global.role_management_title'),
                     slot: Panel::make('data.roles')
                         ->setId('roles')
-                        ->setUrl(route('manager.api.roles.index'))
+                        ->setUrl(api_url('roles.index'))
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
@@ -296,10 +296,10 @@ class TvLayout extends Layout
                 ->setIcon($this->iconList()),
 
             Actions::make()
-                ->setAction('sort', __('global.template_tv_edit'), '/tvs/sort', null, 'fa fa-sort')
+                ->setAction('sort', __('global.template_tv_edit'), api_url('tvs.sort'), null, 'fa fa-sort')
                 ->setNew(
                     __('global.new_tmplvars'),
-                    '/tvs/0',
+                    api_url('tvs.show', ['tv' => 0]),
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -319,7 +319,7 @@ class TvLayout extends Layout
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
-                    route('manager.api.elements.templates'),
+                    api_url('elements.templates'),
                 )
                 ->addTab(
                     'tvs',
@@ -327,7 +327,7 @@ class TvLayout extends Layout
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route('manager.api.elements.tvs')
+                    api_url('elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -335,7 +335,7 @@ class TvLayout extends Layout
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
-                    route('manager.api.elements.chunks')
+                    api_url('elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -343,7 +343,7 @@ class TvLayout extends Layout
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets')
+                    api_url('elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -351,7 +351,7 @@ class TvLayout extends Layout
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
-                    route('manager.api.elements.plugins')
+                    api_url('elements.plugins')
                 )
                 ->addTab(
                     'modules',
@@ -359,7 +359,7 @@ class TvLayout extends Layout
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
-                    route('manager.api.elements.modules')
+                    api_url('elements.modules')
                 )
                 ->addTab(
                     'categories',
@@ -367,13 +367,13 @@ class TvLayout extends Layout
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
-                    route('manager.api.elements.categories')
+                    api_url('elements.categories')
                 )
                 ->addSlot(
                     'tvs',
                     Panel::make('data')
                         ->setId('tvs')
-                        ->setRoute('/tvs/:id')
+                        ->setRoute(api_url('tvs.show', ['tv' => ':id']))
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -424,7 +424,7 @@ class TvLayout extends Layout
 
             Actions::make()
                 ->setCancelTo([
-                    'path'  => '/elements/tvs',
+                    'path'  => api_url('elements.tvs'),
                     'close' => true,
                 ])
                 ->setSave(),
@@ -468,13 +468,13 @@ class TvLayout extends Layout
             ->setTitle($this->titleList())
             ->setIcon($this->iconList())
             ->setPermissions(['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'])
-            ->setRoute('/tvs/:id')
+            ->setRoute(api_url('tvs.show', ['tv' => ':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('tvs')
-                    ->setRoute('/tvs/:id')
-                    ->setUrl('/tvs/tree')
+                    ->setRoute(api_url('tvs.show', ['tv' => ':id']))
+                    ->setUrl(api_url('tvs.tree'))
                     ->isCategory()
                     ->setAppends(['id'])
                     ->setAliases([
@@ -494,7 +494,7 @@ class TvLayout extends Layout
                                 'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_tmplvars'),
                                 'to'    => [
-                                    'path' => '/tvs/0',
+                                    'path' => api_url('tvs.show', ['tv' => '0']),
                                 ],
                             ],
                         ],

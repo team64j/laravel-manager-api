@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
+use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Resources\JsonResource;
 use Team64j\LaravelManagerApi\Layouts\CacheLayout;
@@ -25,8 +26,10 @@ class CacheController extends Controller
             ),
         ]
     )]
-    public function index()
+    public function index(Request $request)
     {
+        evo()->clearCache('full');
+
         return JsonResource::make([])
             ->layout($this->layout->default());
     }

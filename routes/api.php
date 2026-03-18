@@ -58,6 +58,7 @@ Route::prefix($apiPath)
                     ]),
 
                 Route::post('refresh', [AuthController::class, 'refresh'])->name('auth.refresh'),
+                Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout'),
             ]),
 
         /** Boostrap */
@@ -100,7 +101,7 @@ Route::prefix($apiPath)
         /** Chunks */
         Route::prefix('chunks')
             ->group(fn() => [
-                Route::get('tree', [ChunkController::class, 'tree'])->name('chunks.news'),
+                Route::get('tree', [ChunkController::class, 'tree'])->name('chunks.tree'),
                 Route::get('list', [ChunkController::class, 'list'])->name('chunks.list'),
             ])
             ->apiResource('chunks', ChunkController::class),
@@ -120,16 +121,13 @@ Route::prefix($apiPath)
             ->apiResource('dashboard', DashboardController::class)->only(['index']),
 
         /** Event Logs */
-        Route::prefix('event-log')
-            ->group(fn() => [
-
-            ])
-            ->apiResource('event-log', EventLogController::class)->only(['index', 'show']),
+        Route::apiResource('event-log', EventLogController::class)->only(['index', 'show']),
 
         /** Files */
         Route::prefix('file')
             ->group(fn() => [
                 Route::get('tree', [FileController::class, 'tree'])->name('file.tree'),
+                Route::get('content/{path}', [FileController::class, 'content'])->name('file.content'),
             ])
             ->apiResource('file', FileController::class)->only(['show']),
 
@@ -264,11 +262,10 @@ Route::prefix($apiPath)
         Route::get('phpinfo', [SystemInfoController::class, 'phpinfo'])->name('phpinfo'),
 
         /** System Info */
-        Route::prefix('system-info')
-            ->apiResource('system-info', SystemInfoController::class)->only(['index']),
+        Route::get('system-info', [SystemInfoController::class, 'index'])->name('system-info'),
 
         /** System Logs */
-        Route::get('system-log', [SystemLogController::class, 'index'])->name('system-log.phpinfo'),
+        Route::get('system-log', [SystemLogController::class, 'index'])->name('system-log'),
 
         /** Templates */
         Route::prefix('templates')

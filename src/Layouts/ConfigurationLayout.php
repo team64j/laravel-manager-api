@@ -189,7 +189,7 @@ class ConfigurationLayout extends Layout
                         'key'       => 'default_template',
                         'value'     => Select::make('default_template')
                             ->setData([$defaultTemplate])
-                            ->setUrl('/templates/select'),
+                            ->setUrl(api_url('templates.select')),
                     ],
                     [
                         'name'      => __('global.defaulttemplate_logic_title'),
@@ -488,7 +488,7 @@ class ConfigurationLayout extends Layout
                         'key'       => 'login_logo',
                         'value'     => \Team64j\LaravelManagerComponents\File::make('login_logo')
                             ->setEmitClick('modal:component')
-                            ->setUrl(route('manager.api.filemanager.index', ['type' => 'images'])),
+                            ->setUrl(api_url('filemanager.index', ['type' => 'images'])),
                     ],
                     [
                         'name'      => __('global.login_bg_title'),
@@ -496,7 +496,7 @@ class ConfigurationLayout extends Layout
                         'key'       => 'login_bg',
                         'value'     => \Team64j\LaravelManagerComponents\File::make('login_bg')
                             ->setEmitClick('modal:component')
-                            ->setUrl(route('manager.api.filemanager.index', ['type' => 'images'])),
+                            ->setUrl(api_url('filemanager.index', ['type' => 'images'])),
                     ],
                     [
                         'name'  => __('global.login_form_position_title'),

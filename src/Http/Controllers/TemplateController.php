@@ -271,13 +271,13 @@ class TemplateController extends Controller
                 ->appends($request->all())
         )
             ->meta([
-                'route'   => route('manager.api.templates.show', [':id']),
+                'route'   => api_url('templates.show', [':id']),
                 'prepend' => [
                     [
                         'name' => __('global.new_template'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to'   => [
-                            'path' => route('manager.api.templates.show', ['0']),
+                            'path' => api_url('templates.show', [0]),
                         ],
                     ],
                 ],

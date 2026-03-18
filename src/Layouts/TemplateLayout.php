@@ -56,9 +56,12 @@ class TemplateLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id'    => $category->getKey(),
+                'id'    => (int) $category->getKey(),
                 'title' => $this->titleList() . ': ' . $category->category,
-                'to'    => '/elements/templates?groupBy=none&category=' . $category->getKey(),
+                'to'    => api_url(
+                    'elements.templates',
+                    ['groupBy' => 'none', 'category' => (int) $category->getKey()]
+                ),
             ],
         ];
 
@@ -83,7 +86,7 @@ class TemplateLayout extends Layout
 
             Title::make('data.attributes.templatename')
                 ->setHelp(__('global.template_msg'))
-                ->setId($model->getKey())
+                ->setId((int) $model->getKey())
                 ->setIcon($this->icon())
                 ->setTitle($this->title()),
 
@@ -115,7 +118,7 @@ class TemplateLayout extends Layout
                             ->addArea([
                                 Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setUrl('/categories/select')
+                                    ->setUrl(api_url('categories.select'))
                                     ->addOption(
                                         $category->getKey(),
                                         $category->category
@@ -140,7 +143,7 @@ class TemplateLayout extends Layout
                                     ': ' .
                                     $relativeBladeFile . '</p>'
                                     :
-                                    Checkbox::make('data.attributes.createbladefile')
+                                    Checkbox::make('data.createbladefile')
                                         ->setLabel(__('global.template_create_blade_file'))
                                         ->setCheckedValue(1, 0)),
 
@@ -156,7 +159,7 @@ class TemplateLayout extends Layout
                     __('global.template_assignedtv_tab'),
                     slot: Panel::make('tvs')
                         ->setId('tvs')
-                        ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=true')
+                        ->setUrl(api_url('templates.tvs', ['id' => (int) $model->getKey(), 'attach' => true]))
                         ->addColumn(
                             'attach',
                             __('global.role_udperms'),
@@ -194,7 +197,7 @@ class TemplateLayout extends Layout
                     __('global.template_notassigned_tv'),
                     slot: Panel::make('tvs')
                         ->setId('available')
-                        ->setUrl('/templates/' . intval($model->getKey()) . '/tvs?attach=false')
+                        ->setUrl(api_url('templates.tvs', ['id' => (int) $model->getKey(), 'attach' => false]))
                         ->addColumn(
                             'attach',
                             __('global.role_udperms'),
@@ -249,7 +252,7 @@ class TemplateLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/templates/0',
+                    api_url('templates.show', ['template' => 0]),
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -269,7 +272,7 @@ class TemplateLayout extends Layout
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
-                    route('manager.api.elements.templates'),
+                    api_url('elements.templates'),
                 )
                 ->addTab(
                     'tvs',
@@ -277,7 +280,7 @@ class TemplateLayout extends Layout
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route('manager.api.elements.tvs')
+                    api_url('elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -285,7 +288,7 @@ class TemplateLayout extends Layout
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
-                    route('manager.api.elements.chunks')
+                    api_url('elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -293,7 +296,7 @@ class TemplateLayout extends Layout
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets')
+                    api_url('elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -301,7 +304,7 @@ class TemplateLayout extends Layout
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
-                    route('manager.api.elements.plugins')
+                    api_url('elements.plugins')
                 )
                 ->addTab(
                     'modules',
@@ -309,7 +312,7 @@ class TemplateLayout extends Layout
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
-                    route('manager.api.elements.modules')
+                    api_url('elements.modules')
                 )
                 ->addTab(
                     'categories',
@@ -317,13 +320,13 @@ class TemplateLayout extends Layout
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
-                    route('manager.api.elements.categories')
+                    api_url('elements.categories')
                 )
                 ->addSlot(
                     'templates',
                     Panel::make('data')
                         ->setId('templates')
-                        ->setRoute('/templates/:id')
+                        ->setRoute(api_url('templates.show', ['template' => ':id']))
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -377,13 +380,13 @@ class TemplateLayout extends Layout
             ->setTitle($this->titleList())
             ->setIcon($this->iconList())
             ->setPermissions('edit_template')
-            ->setRoute('/templates/:id')
+            ->setRoute(api_url('templates.show', ['template' => ':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('templates')
-                    ->setRoute('/templates/:id')
-                    ->setUrl('/templates/tree')
+                    ->setRoute(api_url('templates.show', ['template' => ':id']))
+                    ->setUrl(api_url('templates.tree'))
                     ->isCategory()
                     ->setAppends(['id'])
                     ->setAliases([
@@ -404,7 +407,7 @@ class TemplateLayout extends Layout
                                 'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_template'),
                                 'to'    => [
-                                    'path' => '/templates/0',
+                                    'path' => api_url('templates.show', ['template' => '0']),
                                 ],
                             ],
                         ],

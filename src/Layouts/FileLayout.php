@@ -56,12 +56,13 @@ class FileLayout extends Layout
             Tabs::make()
                 ->addTab(
                     'default',
+                    class: '!p-0',
                     slot: [
-                        stripos($data['type'], 'image/') !== false ? Media::make('path')->setData($data) : null,
+                        stripos($data['type'], 'image/') !== false ? Media::make('url')->setData($data) : null,
                         isset($data['content']) ? CodeEditor::make('content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
-                            ->setInputClass('h-full') : null,
+                            ->setClass('h-full') : null,
                     ],
                 ),
 

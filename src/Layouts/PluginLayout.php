@@ -59,9 +59,9 @@ class PluginLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id'    => $category->getKey() ?? 0,
+                'id'    => (int) $category->getKey(),
                 'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
-                'to'    => '/elements/plugins?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'to'    => api_url('elements.plugins', ['groupBy' => 'none', 'category' => (int) $category->getKey()]),
             ],
         ];
 
@@ -116,7 +116,7 @@ class PluginLayout extends Layout
                             ->addArea([
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setUrl('/categories/select')
+                                    ->setUrl(api_url('categories.select'))
                                     ->setNew('')
                                     ->setData([
                                         [
@@ -154,7 +154,7 @@ class PluginLayout extends Layout
                     slot: [
                         Panel::make('events')
                             ->setSlotTop('<div class="p-5 w-full">' . __('global.plugin_event_msg') . '</div>')
-                            ->setUrl('/plugins/events')
+                            ->setUrl(api_url('plugins.events'))
                             ->addColumn(
                                 'checked',
                                 style: ['width' => '1%'],
@@ -187,10 +187,10 @@ class PluginLayout extends Layout
                 ->setIcon($this->iconList()),
 
             Actions::make()
-                ->setAction('sort', __('global.plugin_priority'), '/plugins/sort', null, 'fa fa-sort')
+                ->setAction('sort', __('global.plugin_priority'), api_url('plugins.sort'), null, 'fa fa-sort')
                 ->setNew(
                     $this->title(),
-                    '/plugins/0',
+                    api_url('plugins.show', [0]),
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -210,7 +210,7 @@ class PluginLayout extends Layout
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
-                    route('manager.api.elements.templates'),
+                    api_url('elements.templates'),
                 )
                 ->addTab(
                     'tvs',
@@ -218,7 +218,7 @@ class PluginLayout extends Layout
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route('manager.api.elements.tvs')
+                    api_url('elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -226,7 +226,7 @@ class PluginLayout extends Layout
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
-                    route('manager.api.elements.chunks')
+                    api_url('elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -234,7 +234,7 @@ class PluginLayout extends Layout
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets')
+                    api_url('elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -242,7 +242,7 @@ class PluginLayout extends Layout
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
-                    route('manager.api.elements.plugins')
+                    api_url('elements.plugins')
                 )
                 ->addTab(
                     'modules',
@@ -250,7 +250,7 @@ class PluginLayout extends Layout
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
-                    route('manager.api.elements.modules')
+                    api_url('elements.modules')
                 )
                 ->addTab(
                     'categories',
@@ -258,13 +258,13 @@ class PluginLayout extends Layout
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
-                    route('manager.api.elements.categories')
+                    api_url('elements.categories')
                 )
                 ->addSlot(
                     'plugins',
                     Panel::make('data')
                         ->setId('plugins')
-                        ->setRoute('/plugins/:id')
+                        ->setRoute(api_url('plugins.show', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -317,7 +317,7 @@ class PluginLayout extends Layout
 
             Actions::make()
                 ->setCancelTo([
-                    'path'  => '/elements/plugins',
+                    'path'  => api_url('elements.plugins'),
                     'close' => true,
                 ])
                 ->setSave(),
@@ -360,13 +360,13 @@ class PluginLayout extends Layout
             ->setTitle($this->titleList())
             ->setIcon($this->iconList())
             ->setPermissions('edit_plugin')
-            ->setRoute('/plugins/:id')
+            ->setRoute(api_url('plugins.show', [':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('plugins')
-                    ->setRoute('/plugins/:id')
-                    ->setUrl('/plugins/tree')
+                    ->setRoute(api_url('plugins.show', [':id']))
+                    ->setUrl(api_url('plugins.tree'))
                     ->isCategory()
                     ->setAppends(['id'])
                     ->setAliases([
@@ -387,7 +387,7 @@ class PluginLayout extends Layout
                                 'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_plugin'),
                                 'to'    => [
-                                    'path' => '/plugins/0',
+                                    'path' => api_url('plugins.show', [0]),
                                 ],
                             ],
                         ],

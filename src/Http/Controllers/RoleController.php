@@ -75,13 +75,13 @@ class RoleController extends Controller
             UserRole::query()->paginate(config('global.number_of_results'))
         )
             ->meta([
-                'route'   => route('manager.api.roles.show', ['role' => ':id']),
+                'route'   => api_url('roles.show', [':id']),
                 'prepend' => [
                     [
                         'name' => __('global.new_role'),
                         'icon' => 'fa fa-plus-circle',
                         'to'   => [
-                            'path' => route('manager.api.roles.show', [0]),
+                            'path' => api_url('roles.show', [0]),
                         ],
                     ],
                 ],

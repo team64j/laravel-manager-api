@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,10 +26,11 @@ use Team64j\LaravelEvolution\Traits\LockedTrait;
  * @property string $elements
  * @property string $display
  * @property string $display_params
+ * @property array $properties
  * @property Category $categories
- * @property array|UserRole[] $roles
- * @property array|SiteTemplate[] $templates
- * @property array|DocumentgroupName[] $permissions
+ * @property Collection<UserRole> $roles
+ * @property Collection<SiteTemplate> $templates
+ * @property Collection<DocumentgroupName> $permissions
  */
 class SiteTmplvar extends Model
 {
@@ -38,6 +40,12 @@ class SiteTmplvar extends Model
     public const UPDATED_AT = 'editedon';
 
     protected $dateFormat = 'U';
+
+    protected $attributes = [
+        'type' => 'text',
+        'category' => 0,
+        'rank' => 0,
+    ];
 
     protected $casts = [
         'editor_type' => 'int',

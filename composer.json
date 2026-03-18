@@ -25,7 +25,10 @@
   "autoload": {
     "psr-4": {
       "Team64j\\LaravelManagerApi\\": "src"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "scripts": {
     "post-package-install": [

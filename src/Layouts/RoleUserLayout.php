@@ -46,7 +46,7 @@ class RoleUserLayout extends Layout
             Actions::make()
                 ->setNew(
                     __('global.new_role'),
-                    '/roles/users/0',
+                    api_url('roles.users', [0]),
                     'btn-green'
                 ),
 
@@ -62,10 +62,10 @@ class RoleUserLayout extends Layout
                     'users',
                     __('global.role_role_management'),
                     $this->iconList(),
-                    route: route('manager.api.roles.users.index'),
+                    route: api_url('roles.users.index'),
                     slot: Panel::make('data')
                         ->setId('users')
-                        ->setRoute('/roles/users/:id')
+                        ->setRoute(api_url('roles.users', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             'id',
@@ -79,13 +79,13 @@ class RoleUserLayout extends Layout
                     'categories',
                     __('global.category_heading'),
                     'fa fa-object-group',
-                    route: route('manager.api.roles.categories.index')
+                    route: api_url('roles.categories.index')
                 )
                 ->addTab(
                     'permissions',
                     __('global.manage_permission'),
                     'fa fa-user-tag',
-                    route: route('manager.api.roles.permissions.index')
+                    route: api_url('roles.permissions.index')
                 ),
         ];
     }

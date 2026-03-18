@@ -49,9 +49,9 @@ class SnippetLayout extends Layout
 
         $breadcrumbs = [
             [
-                'id'    => $category->getKey() ?? 0,
+                'id'    => (int) $category->getKey(),
                 'title' => $this->titleList() . ': ' . ($category->category ?? __('global.no_category')),
-                'to'    => '/elements/snippets?groupBy=none&category=' . ($category->getKey() ?? 0),
+                'to'    => api_url('elements.snippets', ['groupBy' => 'none', 'category' => (int) $category->getKey()]),
             ],
         ];
 
@@ -107,7 +107,7 @@ class SnippetLayout extends Layout
                             ->addArea([
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
-                                    ->setUrl('/categories/select')
+                                    ->setUrl(api_url('categories.select'))
                                     ->setNew('')
                                     ->setData([
                                         [
@@ -161,7 +161,7 @@ class SnippetLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    '/snippets/0',
+                    api_url('snippets.show', [0]),
                     'btn-green',
                     'fa fa-plus'
                 ),
@@ -181,7 +181,7 @@ class SnippetLayout extends Layout
                     'fa fa-newspaper',
                     '',
                     ['edit_template'],
-                    route('manager.api.elements.templates'),
+                    api_url('elements.templates'),
                 )
                 ->addTab(
                     'tvs',
@@ -189,7 +189,7 @@ class SnippetLayout extends Layout
                     'fa fa-list-alt',
                     '',
                     ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
-                    route('manager.api.elements.tvs')
+                    api_url('elements.tvs')
                 )
                 ->addTab(
                     'chunks',
@@ -197,7 +197,7 @@ class SnippetLayout extends Layout
                     'fa fa-th-large',
                     '',
                     ['edit_chunk'],
-                    route('manager.api.elements.chunks')
+                    api_url('elements.chunks')
                 )
                 ->addTab(
                     'snippets',
@@ -205,7 +205,7 @@ class SnippetLayout extends Layout
                     'fa fa-code',
                     '',
                     ['edit_snippet'],
-                    route('manager.api.elements.snippets')
+                    api_url('elements.snippets')
                 )
                 ->addTab(
                     'plugins',
@@ -213,7 +213,7 @@ class SnippetLayout extends Layout
                     'fa fa-plug',
                     '',
                     ['edit_plugin'],
-                    route('manager.api.elements.plugins')
+                    api_url('elements.plugins')
                 )
                 ->addTab(
                     'modules',
@@ -221,7 +221,7 @@ class SnippetLayout extends Layout
                     'fa fa-cubes',
                     '',
                     ['edit_module'],
-                    route('manager.api.elements.modules')
+                    api_url('elements.modules')
                 )
                 ->addTab(
                     'categories',
@@ -229,13 +229,13 @@ class SnippetLayout extends Layout
                     'fa fa-object-group',
                     '',
                     ['category_manager'],
-                    route('manager.api.elements.categories')
+                    api_url('elements.categories')
                 )
                 ->addSlot(
                     'snippets',
                     Panel::make('data')
                         ->setId('snippets')
-                        ->setRoute('/snippets/:id')
+                        ->setRoute(api_url('snippets.show', [':id']))
                         ->setHistory(true)
                         ->addColumn(
                             ['#', 'locked'],
@@ -286,13 +286,13 @@ class SnippetLayout extends Layout
             ->setTitle($this->titleList())
             ->setIcon($this->icon())
             ->setPermissions('edit_snippet')
-            ->setRoute('/snippets/:id')
+            ->setRoute(api_url('snippets.show', [':id']))
             ->isNeedUpdate()
             ->setSlot(
                 Tree::make()
                     ->setId('snippets')
-                    ->setRoute('/snippets/:id')
-                    ->setUrl('/snippets/tree')
+                    ->setRoute(api_url('snippets.show', [':id']))
+                    ->setUrl(api_url('snippets.tree'))
                     ->isCategory()
                     ->setAppends(['id'])
                     ->setAliases([
@@ -313,7 +313,7 @@ class SnippetLayout extends Layout
                                 'icon'  => 'fa fa-circle-plus',
                                 'title' => __('global.new_snippet'),
                                 'to'    => [
-                                    'path' => '/snippets/0',
+                                    'path' => api_url('snippets.show', [0]),
                                 ],
                             ],
                         ],

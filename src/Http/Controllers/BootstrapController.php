@@ -460,9 +460,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%templates%]',
                                     'icon'        => 'fa fa-newspaper',
                                     'to'          => [
-                                        'path' => '/elements/templates',
+                                        'path' => api_url('elements.templates'),
                                     ],
-                                    'url'         => '/templates/list',
+                                    'url'         => api_url('templates.list'),
                                     'permissions' => ['new_template', 'edit_template'],
                                 ],
                                 [
@@ -470,9 +470,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%tmplvars%]',
                                     'icon'        => 'fa fa-list-alt',
                                     'to'          => [
-                                        'path' => '/elements/tvs',
+                                        'path' => api_url('elements.tvs'),
                                     ],
-                                    'url'         => '/tvs/list',
+                                    'url'         => api_url('tvs.list'),
                                     'permissions' => ['edit_template', 'edit_snippet', 'edit_chunk', 'edit_plugin'],
                                 ],
                                 [
@@ -480,9 +480,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%htmlsnippets%]',
                                     'icon'        => 'fa fa-th-large',
                                     'to'          => [
-                                        'path' => '/elements/chunks',
+                                        'path' => api_url('elements.chunks'),
                                     ],
-                                    'url'         => '/chunks/list',
+                                    'url'         => api_url('chunks.list'),
                                     'permissions' => ['edit_chunk'],
                                 ],
                                 [
@@ -490,9 +490,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%snippets%]',
                                     'icon'        => 'fa fa-code',
                                     'to'          => [
-                                        'path' => '/elements/snippets',
+                                        'path' => api_url('elements.snippets'),
                                     ],
-                                    'url'         => '/snippets/list',
+                                    'url'         => api_url('snippets.list'),
                                     'permissions' => ['edit_snippet'],
                                 ],
                                 [
@@ -500,9 +500,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%plugins%]',
                                     'icon'        => 'fa fa-plug',
                                     'to'          => [
-                                        'path' => '/elements/plugins',
+                                        'path' => api_url('elements.plugins'),
                                     ],
-                                    'url'         => '/plugins/list',
+                                    'url'         => api_url('plugins.list'),
                                     'permissions' => ['edit_plugin'],
                                 ],
                                 [
@@ -510,9 +510,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%modules%]',
                                     'icon'        => 'fa fa-cubes',
                                     'to'          => [
-                                        'path' => '/elements/modules',
+                                        'path' => api_url('elements.modules'),
                                     ],
-                                    'url'         => '/modules/list',
+                                    'url'         => api_url('modules.list'),
                                     'permissions' => ['edit_module'],
                                 ],
                                 [
@@ -520,9 +520,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%category_management%]',
                                     'icon'        => 'fa fa-object-group',
                                     'to'          => [
-                                        'path' => '/elements/categories',
+                                        'path' => api_url('elements.categories'),
                                     ],
-                                    'url'         => '/categories/list',
+                                    'url'         => api_url('categories.list'),
                                     'permissions' => ['category_manager'],
                                 ],
                                 [
@@ -530,7 +530,7 @@ class BootstrapController extends Controller
                                     'name'        => '[%settings_misc%]',
                                     'icon'        => 'far fa-folder-open',
                                     'to'          => [
-                                        'path' => '/filemanager',
+                                        'path' => api_url('filemanager.index'),
                                     ],
                                     'permissions' => ['file_manager'],
                                 ],
@@ -540,7 +540,7 @@ class BootstrapController extends Controller
                             'key'         => 'modules',
                             'name'        => '[%modules%]',
                             'icon'        => 'fa fa-cubes',
-                            'url'         => '/modules/exec',
+                            'url'         => api_url('modules.exec'),
                             'permissions' => ['exec_module'],
                         ],
                         [
@@ -553,9 +553,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%users%]',
                                     'icon'        => 'fa fa-user-circle',
                                     'to'          => [
-                                        'path' => '/users',
+                                        'path' => api_url('users.index'),
                                     ],
-                                    'url'         => route('manager.api.users.list'),
+                                    'url'         => api_url('users.list'),
                                     'permissions' => ['edit_user'],
                                 ],
                                 [
@@ -563,9 +563,9 @@ class BootstrapController extends Controller
                                     'name'        => '[%role_management_title%]',
                                     'icon'        => 'fa fa-legal',
                                     'to'          => [
-                                        'path' => route('manager.api.roles.index'),
+                                        'path' => api_url('roles.index'),
                                     ],
-                                    'url'         => route('manager.api.roles.list'),
+                                    'url'         => api_url('roles.list'),
                                     'permissions' => ['edit_role'],
                                 ],
                                 [
@@ -573,7 +573,7 @@ class BootstrapController extends Controller
                                     'name'        => '[%web_permissions%]',
                                     'icon'        => 'fa fa-male',
                                     'to'          => [
-                                        'path' => route('manager.api.permissions.access.users.show'),
+                                        'path' => api_url('permissions.access.users.show'),
                                     ],
                                     'permissions' => ['access_permissions'],
                                 ],
@@ -589,7 +589,7 @@ class BootstrapController extends Controller
                                     'name'        => '[%refresh_site%]',
                                     'icon'        => 'fa fa-recycle',
                                     'to'          => [
-                                        'path' => '/cache',
+                                        'path' => api_url('cache.index'),
                                     ],
                                     'permissions' => ['empty_cache'],
                                 ],
@@ -690,7 +690,7 @@ class BootstrapController extends Controller
                                     'icon'        => 'fa fa-sliders',
                                     'name'        => '[%edit_settings%]',
                                     'to'          => [
-                                        'path' => '/configuration',
+                                        'path' => api_url('configuration.index'),
                                     ],
                                     'permissions' => ['settings'],
                                 ],
@@ -699,7 +699,7 @@ class BootstrapController extends Controller
                                     'icon'        => 'far fa-calendar',
                                     'name'        => '[%site_schedule%]',
                                     'to'          => [
-                                        'path' => '/schedule',
+                                        'path' => api_url('schedule.index'),
                                     ],
                                     'permissions' => ['view_eventlog'],
                                 ],
@@ -708,7 +708,7 @@ class BootstrapController extends Controller
                                     'icon'        => 'fa fa-exclamation-triangle',
                                     'name'        => '[%eventlog_viewer%]',
                                     'to'          => [
-                                        'path' => '/event-log',
+                                        'path' => api_url('event-log.index'),
                                     ],
                                     'permissions' => ['view_eventlog'],
                                 ],
@@ -717,7 +717,7 @@ class BootstrapController extends Controller
                                     'icon'        => 'fa fa-user-secret',
                                     'name'        => '[%view_logging%]',
                                     'to'          => [
-                                        'path' => '/system-log',
+                                        'path' => api_url('system-log'),
                                     ],
                                     'permissions' => ['logs'],
                                 ],
@@ -726,7 +726,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-info',
                                     'name' => '[%view_sysinfo%]',
                                     'to'   => [
-                                        'path' => '/system-info',
+                                        'path' => api_url('system-info'),
                                     ],
                                 ],
                                 [
@@ -734,7 +734,7 @@ class BootstrapController extends Controller
                                     'icon'        => 'far fa-question-circle',
                                     'name'        => '[%help%]',
                                     'to'          => [
-                                        'path' => '/help',
+                                        'path' => api_url('help'),
                                     ],
                                     'permissions' => ['help'],
                                 ],
@@ -777,7 +777,7 @@ class BootstrapController extends Controller
                                     'icon'        => 'fa fa-eye',
                                     'name'        => '[%settings_ui%]',
                                     'to'          => [
-                                        'path' => '/workspace',
+                                        'path' => api_url('workspace.index'),
                                     ],
                                     'permissions' => ['settings'],
                                 ],
@@ -786,7 +786,7 @@ class BootstrapController extends Controller
                                     'icon'        => 'fa fa-lock',
                                     'name'        => '[%change_password%]',
                                     'to'          => [
-                                        'path' => '/password',
+                                        'path' => api_url('password.index'),
                                     ],
                                     'permissions' => ['change_password'],
                                 ],
@@ -795,7 +795,7 @@ class BootstrapController extends Controller
                                     'icon' => 'fa fa-sign-out',
                                     'name' => '[%logout%]',
                                     'to'   => [
-                                        'path' => '/logout',
+                                        'path' => api_url('auth.logout'),
                                     ],
                                 ],
                             ],

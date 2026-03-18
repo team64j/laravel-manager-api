@@ -67,7 +67,7 @@ class PermissionGroupLayout extends Layout
             Actions::make()
                 ->setNew(
                     $this->title(),
-                    route('manager.api.permissions-group.show', [0]),
+                    api_url('permissions-group.show', [0]),
                     'btn-green'
                 ),
 
@@ -82,22 +82,22 @@ class PermissionGroupLayout extends Layout
                     'roles',
                     __('global.role_role_management'),
                     'fa fa-legal',
-                    route: route('manager.api.roles.index'),
+                    route: api_url('roles.index'),
                 )
                 ->addTab(
                     'permissions',
                     __('global.manage_permission'),
                     'fa fa-user-tag',
-                    route: route('manager.api.permissions.index'),
+                    route: api_url('permissions.index'),
                 )
                 ->addTab(
                     'categories',
                     __('global.category_heading'),
                     'fa fa-object-group',
-                    route: route('manager.api.permissions-group.index'),
+                    route: api_url('permissions-group.index'),
                     slot: Panel::make('data')
                         ->setId('categories')
-                        ->setRoute(route('manager.api.permissions-group.show', [':id']))
+                        ->setRoute(api_url('permissions-group.show', [':id']))
                         ->addColumn(
                             'id',
                             __('global.id'),

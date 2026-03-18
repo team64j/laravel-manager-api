@@ -49,7 +49,7 @@ class EventLogLayout extends Layout
                     __('global.settings_general'),
                     slot: [
                         Panel::make('data')
-                            ->setRoute('/event-log/:id')
+                            ->setRoute(api_url('event-log.show', [':id']))
                             ->setHistory(true)
                             ->addColumn(
                                 'type',

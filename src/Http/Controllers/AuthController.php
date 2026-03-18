@@ -56,6 +56,14 @@ class AuthController extends Controller
         ]);
     }
 
+    public function logout()
+    {
+        return JsonResource::make([])
+            ->meta([
+                'to' => '/logout',
+            ]);
+    }
+
     #[OA\Get(
         path: '/auth',
         summary: 'Форма авторизации',

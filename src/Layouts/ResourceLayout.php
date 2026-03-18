@@ -52,7 +52,7 @@ class ResourceLayout extends Layout
                 'parent' => null,
                 'title'  => 'root',
                 'to'     => [
-                    'path' => '/resources/0',
+                    'path' => api_url('resources', [0]),
                 ],
             ];
         }
@@ -68,7 +68,7 @@ class ResourceLayout extends Layout
                     'parent' => $item['parent'],
                     'title'  => $item['pagetitle'],
                     'to'     => [
-                        'path' => '/resource/' . $item['id'],
+                        'path' => api_url('resource.show', [$item['id']]),
                     ],
                 ];
             },
@@ -102,7 +102,7 @@ class ResourceLayout extends Layout
                         'id'      => $item->getKey(),
                         'parent'  => $item->parent,
                         'name'    => $item->pagetitle,
-                        'to'      => '/resource/' . $item->getKey(),
+                        'to'      => api_url('resource.show', [$item->getKey()]),
                         'tooltip' => 'ID: ' . $item->getKey() . '<br>' . $item->pagetitle,
                     ],
                     $model->parents ? iterator_to_array(flatten([$model->parents])) : []
@@ -112,7 +112,7 @@ class ResourceLayout extends Layout
                         'id'      => 0,
                         'parent'  => null,
                         'name'    => 'root',
-                        'to'      => '/resources/0',
+                        'to'      => api_url('resources', [0]),
                         'tooltip' => 'ID: 0<br>root',
                     ],
                 ]
@@ -193,7 +193,12 @@ class ResourceLayout extends Layout
                                 'btn-red',
                                 'fa fa-trash-alt'
                             )
-                            ->setCopy(to: ['path' => '/resource/0?id=' . $model->getKey()]),
+                            ->setCopy(to: [
+                                'path' => api_url(
+                                    'resource.show',
+                                    [0, $model->getKeyName() => $model->getKey()]
+                                ),
+                            ]),
                     )
                 )
                 ->when(
@@ -294,7 +299,7 @@ class ResourceLayout extends Layout
                                 Select::make('data.attributes.template')
                                     ->setLabel(__('global.page_data_template'))
                                     ->setHelp('<b>[*template*]</b><br>' . __('global.page_data_template_help'))
-                                    ->setUrl('/templates/select')
+                                    ->setUrl(api_url('templates.select'))
                                     ->setData([
                                         [
                                             'key'      => $model->template ?? 0,
@@ -594,7 +599,7 @@ class ResourceLayout extends Layout
                             in_array($tv->type, ['file', 'image']),
                             fn(Field $field) => $field
                                 ->setEmitClick('modal:component')
-                                ->setUrl(route('manager.api.filemanager.index', ['type' => $tv->type]))
+                                ->setUrl(api_url('filemanager.index', ['type' => $tv->type]))
                         )
                         ->setAttribute('style', ['margin-bottom' => '1rem'])
                 );
@@ -642,13 +647,13 @@ class ResourceLayout extends Layout
             ->setTitle(__('global.manage_documents'))
             ->setIcon('fa fa-sitemap')
             ->setPermissions('edit_document,view_document')
-            ->setRoute('/resource/:id')
+            ->setRoute(api_url('resource.show', [':id']))
             ->setSlot(
                 Tree::make()
                     ->setId('resources')
-                    ->setRoute('/resource/:id')
+                    ->setRoute(api_url('resource.show', [':id']))
                     ->setRouteList('Resources')
-                    ->setUrl('/resource/tree')
+                    ->setUrl(api_url('resource.tree'))
                     ->setAppends(['id'])
                     ->setAliases([
                         'selected' => 'hidemenu:0',
@@ -682,7 +687,7 @@ class ResourceLayout extends Layout
                                 'title' => __('global.create_resource_here'),
                                 'icon'  => 'fa fa-file',
                                 'to'    => [
-                                    'path'  => '/resource/0',
+                                    'path'  => api_url('resource.show', [0]),
                                     'query' => [
                                         'type'   => 'resource',
                                         'parent' => ':id',
@@ -693,7 +698,7 @@ class ResourceLayout extends Layout
                                 'title' => __('global.create_weblink_here'),
                                 'icon'  => 'fa fa-link',
                                 'to'    => [
-                                    'path'  => '/resource/0',
+                                    'path'  => api_url('resource.show', [0]),
                                     'query' => [
                                         'type'   => 'reference',
                                         'parent' => ':id',
@@ -704,7 +709,7 @@ class ResourceLayout extends Layout
                                 'title' => __('global.edit'),
                                 'icon'  => 'fa fa-edit',
                                 'to'    => [
-                                    'path' => '/resource/:id',
+                                    'path' => api_url('resource.show', [':id']),
                                 ],
                             ],
                             [
@@ -760,14 +765,14 @@ class ResourceLayout extends Layout
                                 'title' => __('global.resource_overview'),
                                 'icon'  => 'fa fa-info',
                                 'to'    => [
-                                    'path' => '/resources/:id',
+                                    'path' => api_url('resources', [':id']),
                                 ],
                             ],
                             [
                                 'title' => __('global.preview'),
                                 'icon'  => 'fa fa-eye',
                                 'to'    => [
-                                    'path'   => '/preview/:id',
+                                    'path'   => api_url('preview', [':id']),
                                     'target' => '_blank',
                                 ],
                             ],
@@ -784,7 +789,7 @@ class ResourceLayout extends Layout
                                 'icon'  => 'fa fa-file-circle-plus',
                                 'title' => __('global.new_resource'),
                                 'to'    => [
-                                    'path'  => '/resource/0',
+                                    'path'  => api_url('resource.show', [0]),
                                     'query' => [
                                         'type' => 'document',
                                     ],
@@ -794,7 +799,7 @@ class ResourceLayout extends Layout
                                 'icon'  => 'fa fa-link',
                                 'title' => __('global.add_weblink'),
                                 'to'    => [
-                                    'path'  => '/resource/0',
+                                    'path'  => api_url('resource.show', [0]),
                                     'query' => [
                                         'type' => 'reference',
                                     ],

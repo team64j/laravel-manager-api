@@ -45,7 +45,7 @@ class PermissionAccessLayout extends Layout
                 ->addTab(
                     'users',
                     __('global.access_permissions_user_groups'),
-                    route: route('manager.api.permissions.access.users.show'),
+                    route: api_url('permissions.access.users.show'),
                     slot: [
                         Panel::make('data')
                             ->setId('data')
@@ -130,12 +130,12 @@ class PermissionAccessLayout extends Layout
                 ->addTab(
                     'resources',
                     __('global.access_permissions_resource_groups'),
-                    route: route('manager.api.permissions.access.resources.show')
+                    route: api_url('permissions.access.resources.show')
                 )
                 ->addTab(
                     'relations',
                     __('global.access_permissions_links'),
-                    route: route('manager.api.permissions.access.relations.show')
+                    route: api_url('permissions.access.relations.show')
                 ),
         ];
     }
@@ -158,12 +158,12 @@ class PermissionAccessLayout extends Layout
                 ->addTab(
                     'users',
                     __('global.access_permissions_user_groups'),
-                    route: route('manager.api.permissions.access.users.show')
+                    route: api_url('permissions.access.users.show')
                 )
                 ->addTab(
                     'resources',
                     __('global.access_permissions_resource_groups'),
-                    route: route('manager.api.permissions.access.resources.show'),
+                    route: api_url('permissions.access.resources.show'),
                     slot: [
                         '<div class="app-alert app-alert__warning">' . __('global.access_permissions_resources_tab')
                         . '</div>',
@@ -172,7 +172,7 @@ class PermissionAccessLayout extends Layout
                 ->addTab(
                     'relations',
                     __('global.access_permissions_links'),
-                    route: route('manager.api.permissions.access.relations.show')
+                    route: api_url('permissions.access.relations.show')
                 ),
         ];
     }
@@ -195,17 +195,17 @@ class PermissionAccessLayout extends Layout
                 ->addTab(
                     'users',
                     __('global.access_permissions_user_groups'),
-                    route: route('manager.api.permissions.access.users.show')
+                    route: api_url('permissions.access.users.show')
                 )
                 ->addTab(
                     'resources',
                     __('global.access_permissions_resource_groups'),
-                    route: route('manager.api.permissions.access.resources.show')
+                    route: api_url('permissions.access.resources.show')
                 )
                 ->addTab(
                     'relations',
                     __('global.access_permissions_links'),
-                    route: route('manager.api.permissions.access.relations.show'),
+                    route: api_url('permissions.access.relations.show'),
                     slot: [
                         '<div class="app-alert app-alert__warning">' . __('global.access_permissions_links_tab')
                         . '</div>',

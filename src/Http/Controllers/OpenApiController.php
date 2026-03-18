@@ -26,7 +26,7 @@ class OpenApiController extends Controller
 
             $openapi->servers = [
                 [
-                    'url' => route('manager.api'),
+                    'url' => api_url(),
                 ],
             ];
 

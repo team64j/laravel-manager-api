@@ -208,27 +208,18 @@ class CategoryController extends Controller
 
         return JsonResource::collection(
             collect()
-                //                ->add([
-                //                    'key'   => (string) $request->input('itemNew', ''),
-                //                    'value' => __('global.cm_create_new_category'),
-                //                ])
-                ->add([
-                    'name' => __('global.category_management'),
-                    'data' => collect()
-                        ->add(
-                            new Category([
-                                'key'      => 0,
-                                'category' => __('global.no_category'),
-                            ])
-                        )
-                        ->merge(
-                            Category::all()
-                        )
-                        ->map(fn(Category $category) => [
-                            'key'      => $category->id ?: 0,
-                            'value'    => $category->category,
-                            'selected' => $selected->contains($category->id ?: 0),
-                        ]),
+                ->add(
+                    new Category([
+                        'category' => __('global.no_category'),
+                    ])
+                )
+                ->merge(
+                    Category::all()
+                )
+                ->map(fn(Category $category) => [
+                    'key'      => (int) $category->getKey(),
+                    'value'    => $category->category,
+                    'selected' => $selected->contains((int) $category->getKey()),
                 ])
         );
     }
@@ -310,13 +301,13 @@ class CategoryController extends Controller
                 ])
         )
             ->meta([
-                'route'   => '/categories/:id',
+                'route'   => api_url('categories.show', [':id']),
                 'prepend' => [
                     [
                         'name' => __('global.new_category'),
                         'icon' => 'fa fa-plus-circle text-green-500',
                         'to'   => [
-                            'path' => '/categories/0',
+                            'path' => api_url('categories.show', [0]),
                         ],
                     ],
                 ],

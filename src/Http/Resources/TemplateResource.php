@@ -14,14 +14,6 @@ class TemplateResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        if (!$this->resource->exists) {
-            $this->resource->setRawAttributes([
-                'icon'       => '',
-                'category'   => 0,
-                'selectable' => 1,
-            ]);
-        }
-
         $bladeFile = current(config('view.paths')) . '/' . $this->resource->templatealias . '.blade.php';
 
         if (($request->input('createbladefile') || file_exists($bladeFile)) && $this->resource->templatealias) {
@@ -29,7 +21,7 @@ class TemplateResource extends JsonResource
         }
 
         return [
-            'id'              => $this->resource->getKey(),
+            'id'              => (int) $this->resource->getKey(),
             'attributes'      => $this->resource->attributesToArray(),
             'tvs'             => $this->resource->tvs->pluck('id'),
             'createbladefile' => 0,
