@@ -8,6 +8,7 @@ use Team64j\LaravelManagerApi\Models\Category;
 use Team64j\LaravelManagerComponents\Actions;
 use Team64j\LaravelManagerComponents\GlobalTab;
 use Team64j\LaravelManagerComponents\Input;
+use Team64j\LaravelManagerComponents\Number;
 use Team64j\LaravelManagerComponents\Panel;
 use Team64j\LaravelManagerComponents\Tab;
 use Team64j\LaravelManagerComponents\Tabs;
@@ -83,7 +84,7 @@ class CategoryLayout extends Layout
                             ->isRequired()
                             ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                        Input::make('rank')
+                        Number::make('rank')
                             ->setLabel(__('global.cm_category_position')),
                     ]
                 ),

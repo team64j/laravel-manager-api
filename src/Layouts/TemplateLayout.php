@@ -138,7 +138,7 @@ class TemplateLayout extends Layout
                             ], ['sm' => '2', 'xl' => '1 / 3 / 1 / 3'])
                             ->addArea([
                                 ($isBladeFile
-                                    ? '<p class="text-success">' .
+                                    ? '<p class="text-green">' .
                                     __('global.template_assigned_blade_file') .
                                     ': ' .
                                     $relativeBladeFile . '</p>'

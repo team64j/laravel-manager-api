@@ -205,6 +205,8 @@ class CategoryController extends Controller
     public function select(CategoryRequest $request): JsonResourceCollection
     {
         $selected = $request->collect('selected');
+        $result = Category::query()->orderBy('category')->get();
+        $found = $result->search(fn($category) => $selected->contains((int) $category->getKey()));
 
         return JsonResource::collection(
             collect()
@@ -213,13 +215,11 @@ class CategoryController extends Controller
                         'category' => __('global.no_category'),
                     ])
                 )
-                ->merge(
-                    Category::all()
-                )
+                ->merge($result)
                 ->map(fn(Category $category) => [
                     'key'      => (int) $category->getKey(),
                     'value'    => $category->category,
-                    'selected' => $selected->contains((int) $category->getKey()),
+                    'selected' => $selected->contains((int) $category->getKey()) || !$category->getKey() && !$found,
                 ])
         );
     }

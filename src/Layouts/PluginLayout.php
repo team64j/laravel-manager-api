@@ -55,7 +55,7 @@ class PluginLayout extends Layout
 
     public function default(?SitePlugin $model = null): array
     {
-        $category = $model->category()->firstOr(fn() => new Category());
+        $category = $model->categories()->firstOr(fn() => new Category());
 
         $breadcrumbs = [
             [
@@ -117,15 +117,12 @@ class PluginLayout extends Layout
                                 Select::make('category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setUrl(api_url('categories.select'))
-                                    ->setNew('')
                                     ->setData([
                                         [
                                             'key'      => $model->category,
-                                            'value'    => $model->categories
+                                            'value'    => $model->category
                                                 ? $model->categories->category
-                                                : __(
-                                                    'global.no_category'
-                                                ),
+                                                : __('global.no_category'),
                                             'selected' => true,
                                         ],
                                     ])

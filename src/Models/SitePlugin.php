@@ -57,7 +57,7 @@ class SitePlugin extends Model
         'moduleguid',
     ];
 
-    public function category(): BelongsTo
+    public function categories(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');
     }
