@@ -23,6 +23,10 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (!request()->is('/laravel-manager-api/*')) {
+            return;
+        }
+
         $this->bootMixin();
 
         if (!$this->app->runningInConsole()) {
@@ -38,6 +42,10 @@ class ApiServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        if (!request()->is('/laravel-manager-api/*')) {
+            return;
+        }
+
         $this->mergeConfig();
         $this->registerRoutes();
         $this->registerMiddlewares();
