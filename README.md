@@ -1,1 +1,3 @@
-# laravel-manager-api
+# Панель управления
+
+### [Demo](https://team64j.github.io/laravel-manager-admin/)
