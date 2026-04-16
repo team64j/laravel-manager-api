@@ -61,7 +61,7 @@ class PluginController extends Controller
         /** @var LengthAwarePaginator $result */
         $result = SitePlugin::withoutLocked()
             ->select($fields)
-            ->with('category')
+            ->with('categories')
             ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
@@ -76,7 +76,7 @@ class PluginController extends Controller
                     ->groupBy('category')
                     ->map(fn($group) => [
                         'id'   => $group->first()->category,
-                        'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
+                        'name' => $group->first()->getRelation('categories')->category ?? __('global.no_category'),
                         'data' => $group->map->withoutRelations(),
                     ])
                     ->values()

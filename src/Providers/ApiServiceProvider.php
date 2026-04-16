@@ -23,7 +23,7 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (!request()->is('/laravel-manager-api/*')) {
+        if (!request()->is('laravel-manager-api/*')) {
             return;
         }
 
@@ -42,7 +42,7 @@ class ApiServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        if (!request()->is('/laravel-manager-api/*')) {
+        if (!request()->is('laravel-manager-api/*')) {
             return;
         }
 

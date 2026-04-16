@@ -6,7 +6,7 @@ namespace Team64j\LaravelManagerApi\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Team64j\LaravelEvolution\Traits\LockedTrait;
+use Team64j\LaravelManagerApi\Traits\LockedTrait;
 
 /**
  * @property Category $categories

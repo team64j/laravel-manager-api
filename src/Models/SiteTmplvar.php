@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use SplFileInfo;
 use Symfony\Component\Finder\Finder;
-use Team64j\LaravelEvolution\Traits\LockedTrait;
+use Team64j\LaravelManagerApi\Traits\LockedTrait;
 
 /**
  * @property int $id

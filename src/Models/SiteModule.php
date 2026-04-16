@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Team64j\LaravelEvolution\Traits\LockedTrait;
+use Team64j\LaravelManagerApi\Traits\LockedTrait;
 
 /**
  * @property int $category

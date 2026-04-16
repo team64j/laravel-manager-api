@@ -6,7 +6,7 @@ namespace Team64j\LaravelManagerApi\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Team64j\LaravelEvolution\Traits\TimeMutatorTrait;
+use Team64j\LaravelManagerApi\Traits\TimeMutatorTrait;
 
 class ActiveUserSession extends Model
 {

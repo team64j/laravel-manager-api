@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Team64j\LaravelEvolution\Traits\TimeMutatorTrait;
+use Team64j\LaravelManagerApi\Traits\TimeMutatorTrait;
 
 /**
  * @property int $action
