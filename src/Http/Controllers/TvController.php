@@ -13,6 +13,7 @@ use Team64j\LaravelManagerApi\Http\Resources\TvResource;
 use Team64j\LaravelManagerApi\Layouts\TvLayout;
 use Team64j\LaravelManagerApi\Models\Category;
 use Team64j\LaravelManagerApi\Models\SiteTmplvar;
+use Team64j\LaravelManagerApi\Models\UserRole;
 
 class TvController extends Controller
 {
@@ -151,9 +152,9 @@ class TvController extends Controller
         /** @var SiteTmplvar $model */
         $model = SiteTmplvar::query()->create($data);
 
-        $model->permissions()->sync($data['permissions'] ?? []);
-        $model->templates()->sync($data['templates'] ?? []);
-        $model->roles()->sync($data['roles'] ?? []);
+        $model->permissions()->sync($request->collect('permissions'));
+        $model->templates()->sync($request->collect('templates'));
+        $model->roles()->sync($request->collect('roles'));
 
         return $this->show($request, $model->getKey());
     }
@@ -438,5 +439,13 @@ class TvController extends Controller
 
         return JsonResource::collection($result)
             ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
+    }
+
+    public function roles(TvRequest $request) {
+        $result = UserRole::query()->paginate(config('global.number_of_results'));
+
+        return JsonResource::collection(
+            $result
+        );
     }
 }

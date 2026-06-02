@@ -157,7 +157,7 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'tvs',
                     __('global.template_assignedtv_tab'),
-                    slot: Panel::make('tvs')
+                    slot: Panel::make('data')
                         ->setId('tvs')
                         ->setUrl(api_url('templates.tvs', ['id' => (int) $model->getKey(), 'attach' => true]))
                         ->addColumn(
@@ -195,7 +195,7 @@ class TemplateLayout extends Layout
                 ->addTab(
                     'available',
                     __('global.template_notassigned_tv'),
-                    slot: Panel::make('tvs')
+                    slot: Panel::make('data')
                         ->setId('available')
                         ->setUrl(api_url('templates.tvs', ['id' => (int) $model->getKey(), 'attach' => false]))
                         ->addColumn(

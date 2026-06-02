@@ -381,7 +381,7 @@ class PluginController extends Controller
         if ($showFromCategory) {
             /** @var LengthAwarePaginator $result */
             $result = SitePlugin::withoutLocked()
-                ->with('category')
+                ->with('categories')
                 ->select($fields)
                 ->where('category', $category)->orderBy('name')
                 ->paginate(config('global.number_of_results'))

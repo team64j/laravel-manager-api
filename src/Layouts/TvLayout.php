@@ -182,7 +182,7 @@ class TvLayout extends Layout
                 ->addTab(
                     'templates',
                     __('global.templates'),
-                    slot: Panel::make('data.templates')
+                    slot: Panel::make('data')
                         ->setId('templates')
                         ->setUrl(api_url('templates.index', ['groupBy' => 'category']))
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_tmpl_access_msg') . '</p>')
@@ -216,9 +216,9 @@ class TvLayout extends Layout
                 ->addTab(
                     'roles',
                     __('global.role_management_title'),
-                    slot: Panel::make('data.roles')
+                    slot: Panel::make('data')
                         ->setId('roles')
-                        ->setUrl(api_url('roles.index'))
+                        ->setUrl(api_url('tvs.roles'))
                         ->setSlotTop('<p class="p-5">' . __('global.tmplvar_roles_access_msg') . '</p>')
                         ->addColumn(
                             'attach',
@@ -256,13 +256,13 @@ class TvLayout extends Layout
                             slot: [
                                 __('global.access_permissions_docs_message') . '<br/><br/>',
 
-                                Checkbox::make('data.attributes.is_document_group')
+                                Checkbox::make('data.is_document_group')
                                     ->setLabel(__('global.all_doc_groups'))
                                     ->setCheckedValue(true, false)
-                                    ->setRelation('data.attributes.document_groups', [], [], true)
+                                    ->setRelation('data.document_groups', [], [], true)
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Checkbox::make('data.attributes.document_groups')
+                                Checkbox::make('data.document_groups')
                                     ->setLabel(__('global.access_permissions_resource_groups'))
                                     ->setData(
                                         DocumentgroupName::all()
@@ -272,7 +272,7 @@ class TvLayout extends Layout
                                             ])
                                             ->toArray()
                                     )
-                                    ->setRelation('data.attributes.is_document_group', false, true),
+                                    ->setRelation('data.is_document_group', false, true),
                             ]
                         )
                 )
