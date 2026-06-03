@@ -112,15 +112,15 @@ class SnippetController extends Controller
             ),
         ]
     )]
-    public function store(SnippetRequest $request): JsonResource
+    public function store(SnippetRequest $request)
     {
         $data = $request->validated();
 
         $data['snippet'] = str($data['snippet'] ?? '')->replaceFirst('<?php', '');
 
-        $model = SiteSnippet::query()->create($data);
+        SiteSnippet::query()->create($data);
 
-        return $this->show($request, $model->getKey());
+        return ['meta' => ['reload' => true]];
     }
 
     #[OA\Get(
@@ -196,14 +196,14 @@ class SnippetController extends Controller
             ),
         ]
     )]
-    public function destroy(SnippetRequest $request, int $id): Response
+    public function destroy(SnippetRequest $request, int $id)
     {
         /** @var SiteSnippet $model */
         $model = SiteSnippet::query()->findOrFail($id);
 
         $model->delete();
 
-        return response()->noContent();
+        return ['meta' => ['exit' => true]];
     }
 
     #[OA\Get(

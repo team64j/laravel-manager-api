@@ -45,7 +45,7 @@ class ChunkLayout extends Layout
 
     public function default(?SiteHtmlSnippet $model = null): array
     {
-        $category = $model->category()->firstOr(fn() => new Category());
+        $category = $model->categories()->firstOr(fn() => new Category(['category' => __('global.no_category')]));
 
         $breadcrumbs = [
             [
@@ -89,16 +89,17 @@ class ChunkLayout extends Layout
                         Grid::make()
                             ->setGap('1.25rem')
                             ->addArea([
-                                Input::make('name')
+                                Input::make('data.attributes.name')
                                     ->setLabel(__('global.tmplvars_name'))
                                     ->isRequired()
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
-                                Textarea::make('description')
+
+                                Textarea::make('data.attributes.description')
                                     ->setLabel(__('global.tmplvars_description'))
                                     ->setRows(2),
                             ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 3'])
                             ->addArea([
-                                Select::make('category')
+                                Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setUrl(api_url('categories.select'))
                                     ->setNew('')
@@ -115,17 +116,17 @@ class ChunkLayout extends Layout
                                     ])
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Checkbox::make('disabled')
+                                Checkbox::make('data.attributes.disabled')
                                     ->setLabel(__('global.disabled'))
                                     ->setCheckedValue(1, 0)
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Checkbox::make('locked')
+                                Checkbox::make('data.attributes.locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setCheckedValue(1, 0),
                             ], ['sm' => '2', 'xl' => '1 / 3 / 1 / 3'])
                             ->addArea([
-                                CodeEditor::make('snippet')
+                                CodeEditor::make('data.attributes.snippet')
                                     ->setLabel(__('global.chunk_code'))
                                     ->setRows(25)
                                     ->setLanguage('html'),

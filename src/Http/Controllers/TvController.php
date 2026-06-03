@@ -112,12 +112,7 @@ class TvController extends Controller
     )]
     public function show(TvRequest $request, int $id): JsonResource
     {
-        /** @var SiteTmplvar $model */
         $model = SiteTmplvar::query()->findOrNew($id);
-
-        if (!$model->getKey()) {
-            $model->setAttribute($model->getKeyName(), 0);
-        }
 
         if ($request->has('display')) {
             $model->setAttribute('display', $request->string('display'));
@@ -145,12 +140,7 @@ class TvController extends Controller
     )]
     public function store(TvRequest $request): JsonResource
     {
-        $data = $request->all();
-
-        $data['properties'] = json_decode($data['properties'] ?? '[]') ?: null;
-
-        /** @var SiteTmplvar $model */
-        $model = SiteTmplvar::query()->create($data);
+        $model = SiteTmplvar::query()->create($request->validated('attributes'));
 
         $model->permissions()->sync($request->collect('permissions'));
         $model->templates()->sync($request->collect('templates'));
@@ -178,7 +168,7 @@ class TvController extends Controller
     public function update(TvRequest $request, int $id): JsonResource
     {
         $model = SiteTmplvar::query()->findOrFail($id);
-        $model->update($request->validated());
+        $model->update($request->validated('attributes'));
 
         $model->permissions()->sync($request->collect('permissions'));
         $model->templates()->sync($request->collect('templates'));
@@ -225,7 +215,7 @@ class TvController extends Controller
     )]
     public function list(TvRequest $request): JsonResourceCollection
     {
-        $filter = $request->get('filter');
+        $filter = $request->input('filter');
 
         $result = SiteTmplvar::withoutLocked()
             ->where(fn($query) => $filter ? $query->where('name', 'like', '%' . $filter . '%') : null)
@@ -441,11 +431,10 @@ class TvController extends Controller
             ->meta($result->isEmpty() ? ['message' => __('global.no_results')] : []);
     }
 
-    public function roles(TvRequest $request) {
-        $result = UserRole::query()->paginate(config('global.number_of_results'));
-
+    public function roles(TvRequest $request)
+    {
         return JsonResource::collection(
-            $result
+            UserRole::query()->paginate(config('global.number_of_results'))
         );
     }
 }

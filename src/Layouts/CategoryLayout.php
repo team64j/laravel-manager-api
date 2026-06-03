@@ -68,7 +68,7 @@ class CategoryLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make('category')
+            Title::make('data.category')
                 ->setTitle(__('global.new_category'))
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),
@@ -79,12 +79,12 @@ class CategoryLayout extends Layout
                     'general',
                     icon: $this->icon(),
                     slot: [
-                        Input::make('category')
+                        Input::make('data.category')
                             ->setLabel(__('global.cm_category_name'))
                             ->isRequired()
                             ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                        Number::make('rank')
+                        Number::make('data.rank')
                             ->setLabel(__('global.cm_category_position')),
                     ]
                 ),

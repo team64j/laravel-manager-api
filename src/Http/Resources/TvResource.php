@@ -14,10 +14,9 @@ class TvResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $this->resource->properties = $this->resource->properties ? json_encode(
-            $this->resource->properties,
-            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
-        ) : '[]';
+        if (!$this->resource->properties) {
+            $this->resource->properties = '[]';
+        }
 
         $params = array_filter(explode('&', $this->resource->display_params ?? ''));
         $displayParamsData = [];
@@ -28,7 +27,7 @@ class TvResource extends JsonResource
         }
 
         return [
-            'id'                  => $this->resource->getKey(),
+            'id'                  => (int) $this->resource->getKey(),
             'attributes'          => $this->resource->attributesToArray(),
             'permissions'         => $this->resource->permissions->pluck('id'),
             'templates'           => $this->resource->templates->pluck('id'),

@@ -130,12 +130,7 @@ class TemplateController extends Controller
     )]
     public function show(int $id): JsonResource
     {
-        /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrNew($id);
-
-        if (!$model->getKey()) {
-            $model->setAttribute($model->getKeyName(), 0);
-        }
 
         return TemplateResource::make($model)
             ->layout($this->layout->default($model));
@@ -159,8 +154,7 @@ class TemplateController extends Controller
     )]
     public function store(TemplateRequest $request): JsonResource
     {
-        /** @var SiteTemplate $model */
-        $model = SiteTemplate::query()->create($request->input('attributes'));
+        $model = SiteTemplate::query()->create($request->validated('attributes'));
 
         $model->tvs()->sync($request->collect('tvs'));
 
@@ -192,7 +186,6 @@ class TemplateController extends Controller
     )]
     public function update(TemplateRequest $request, int $id): JsonResource
     {
-        /** @var SiteTemplate $model */
         $model = SiteTemplate::query()->findOrFail($id);
 
         $model->update($request->validated('attributes'));

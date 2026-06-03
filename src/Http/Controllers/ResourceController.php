@@ -151,10 +151,6 @@ class ResourceController extends Controller
         /** @var SiteContent $model */
         $model = SiteContent::withTrashed()->findOrNew($id);
 
-        if (!$model->getKey()) {
-            $model->setAttribute($model->getKeyName(), 0);
-        }
-
         if ($request->has('template')) {
             $model->setAttribute('template', $request->input('template'));
         }

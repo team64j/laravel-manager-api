@@ -27,6 +27,10 @@ class SiteHtmlSnippet extends Model
 
     protected $dateFormat = 'U';
 
+    protected $attributes = [
+        'category' => 0,
+    ];
+
     protected $casts = [
         'editor_type' => 'int',
         'category'    => 'int',
@@ -49,7 +53,7 @@ class SiteHtmlSnippet extends Model
         'disabled',
     ];
 
-    public function category(): BelongsTo
+    public function categories(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');
     }

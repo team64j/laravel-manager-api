@@ -33,6 +33,7 @@ class TemplateRequest extends FormRequest
                 'attributes.content'       => 'string|nullable',
                 'attributes.locked'        => 'int',
                 'attributes.selectable'    => 'int',
+                'attributes.properties'    => 'string|nullable',
             ],
             default => []
         };

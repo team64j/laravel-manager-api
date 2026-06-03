@@ -14,6 +14,10 @@ class TemplateResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        if (!$this->resource->properties) {
+            $this->resource->properties = '[]';
+        }
+
         $bladeFile = current(config('view.paths')) . '/' . $this->resource->templatealias . '.blade.php';
 
         if (($request->input('createbladefile') || file_exists($bladeFile)) && $this->resource->templatealias) {

@@ -29,6 +29,7 @@ class TvRequest extends FormRequest
                 'attributes.display'        => 'string|nullable',
                 'attributes.locked'         => 'int',
                 'attributes.rank'           => 'int',
+                'attributes.properties'     => 'string|nullable',
             ],
             default => []
         };

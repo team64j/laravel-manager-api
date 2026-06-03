@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\ChunkRequest;
@@ -59,7 +58,7 @@ class ChunkController extends Controller
         /** @var LengthAwarePaginator $result */
         $result = SiteHtmlSnippet::withoutLocked()
             ->select($fields)
-            ->with('category')
+            ->with('categories')
             ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
@@ -74,7 +73,7 @@ class ChunkController extends Controller
                     ->groupBy('category')
                     ->map(fn($group) => [
                         'id'   => $group->first()->category,
-                        'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
+                        'name' => $group->first()->getRelation('categories')->category ?? __('global.no_category'),
                         'data' => $group->map->withoutRelations(),
                     ])
                     ->values()
@@ -114,7 +113,7 @@ class ChunkController extends Controller
     )]
     public function store(ChunkRequest $request): JsonResource
     {
-        $model = SiteHtmlSnippet::query()->create($request->validated());
+        $model = SiteHtmlSnippet::query()->create($request->validated('attributes'));
 
         return $this->show($request, $model->getKey());
     }
@@ -134,17 +133,12 @@ class ChunkController extends Controller
     )]
     public function show(ChunkRequest $request, int $id): JsonResource
     {
-        /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrNew($id);
 
-        if (!$model->getKey()) {
-            $model->setRawAttributes([
-                $model->getKeyName() => 0,
-                'category' => 0
-            ]);
-        }
-
-        return JsonResource::make($model)
+        return JsonResource::make([
+            'id'         => $model->getKey() ?: 0,
+            'attributes' => $model->withoutRelations(),
+        ])
             ->layout($this->layout->default($model));
     }
 
@@ -166,10 +160,9 @@ class ChunkController extends Controller
     )]
     public function update(ChunkRequest $request, int $id): JsonResource
     {
-        /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrFail($id);
 
-        $model->update($request->validated());
+        $model->update($request->validated('attributes'));
 
         return $this->show($request, $model->getKey());
     }
@@ -187,14 +180,13 @@ class ChunkController extends Controller
             ),
         ]
     )]
-    public function destroy(ChunkRequest $request, int $id): Response
+    public function destroy(ChunkRequest $request, int $id)
     {
-        /** @var SiteHtmlSnippet $model */
         $model = SiteHtmlSnippet::query()->findOrFail($id);
 
         $model->delete();
 
-        return response()->noContent();
+        return ['meta' => ['exit' => true]];
     }
 
     #[OA\Get(
@@ -286,7 +278,7 @@ class ChunkController extends Controller
         if ($showFromCategory) {
             /** @var LengthAwarePaginator $result */
             $result = SiteHtmlSnippet::withoutLocked()
-                ->with('category')
+                ->with('categories')
                 ->select($fields)
                 ->where('category', $category)->orderBy('name')
                 ->paginate(config('global.number_of_results'))

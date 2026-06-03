@@ -65,7 +65,7 @@ class RoleLayout extends Layout
                     'permissions',
                     __('global.access_permissions'),
                     slot: [
-                        Panel::make('data.permissions')
+                        Panel::make('data')
                             ->setId('permissions')
                             ->setUrl(api_url('permissions.index'))
                             ->addColumn(
@@ -73,7 +73,7 @@ class RoleLayout extends Layout
                                 __('global.role_udperms'),
                                 ['width' => '4rem', 'textAlign' => 'center'],
                                 selectable: true,
-                                component: Checkbox::make('selected_permissions')->setKeyValue('id')
+                                component: Checkbox::make('permissions')->setKeyValue('id')
                             )
                             ->addColumn(
                                 'id',

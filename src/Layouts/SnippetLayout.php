@@ -89,23 +89,23 @@ class SnippetLayout extends Layout
                         Grid::make()
                             ->setGap('1.25rem')
                             ->addArea([
-                                Input::make('name')
+                                Input::make('data.name')
                                     ->setLabel(__('global.tmplvars_name'))
                                     ->isRequired()
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Textarea::make('description')
+                                Textarea::make('data.description')
                                     ->setLabel(__('global.tmplvars_description'))
                                     ->setRows(2)
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Checkbox::make('analyze')
+                                Checkbox::make('data.data.analyze')
                                     ->setLabel(__('global.parse_docblock'))
                                     ->setHelp(__('global.parse_docblock_msg'))
                                     ->setCheckedValue(1, 0),
                             ], ['sm' => '1', 'xl' => '1 / 1 / 1 / 3'])
                             ->addArea([
-                                Select::make('category')
+                                Select::make('data.category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setUrl(api_url('categories.select'))
                                     ->setNew('')
@@ -122,17 +122,17 @@ class SnippetLayout extends Layout
                                     ])
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Checkbox::make('disabled')
+                                Checkbox::make('data.disabled')
                                     ->setLabel(__('global.disabled'))
                                     ->setCheckedValue(1, 0)
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Checkbox::make('locked')
+                                Checkbox::make('data.locked')
                                     ->setLabel(__('global.lock_tmplvars_msg'))
                                     ->setCheckedValue(1, 0),
                             ], ['sm' => '2', 'xl' => '1 / 3 / 1 / 3'])
                             ->addArea([
-                                CodeEditor::make('snippet')
+                                CodeEditor::make('data.snippet')
                                     ->setLabel(__('global.chunk_code'))
                                     ->setRows(25)
                                     ->setLanguage('php'),
@@ -142,7 +142,7 @@ class SnippetLayout extends Layout
                 ->addTab(
                     'settings',
                     __('global.settings_properties'),
-                    slot: CodeEditor::make('properties')
+                    slot: CodeEditor::make('data.properties')
                         ->setLanguage('json')
                         ->isFullSize()
                 ),

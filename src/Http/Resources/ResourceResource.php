@@ -15,7 +15,7 @@ class ResourceResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'         => $this->resource->getKey(),
+            'id'         => (int) $this->resource->getKey(),
             'attributes' => $this->resource->attributesToArray(),
             'tvs'        => $this->resource->tvs->pluck('value', 'name'),
             $this->mergeWhen(

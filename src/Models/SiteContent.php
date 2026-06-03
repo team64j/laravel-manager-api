@@ -417,7 +417,7 @@ class SiteContent extends Model
                 $tvValueModel->getTable(),
                 fn(JoinClause $join) => $join
                     ->on($tvValueModel->qualifyColumn('tmplvarid'), $tvModel->qualifyColumn('id'))
-                    ->on($tvValueModel->qualifyColumn('contentid'), DB::raw($this->getKey()))
+                    ->on($tvValueModel->qualifyColumn('contentid'), DB::raw($this->getKey() ?: 0))
             )
             ->select([
                 $tvModel->qualifyColumn('*'),

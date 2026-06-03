@@ -60,7 +60,7 @@ class UserLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make('username')
+            Title::make('data.username')
                 ->setTitle($this->title())
                 ->setIcon($this->icon())
                 ->setId($model->getKey()),

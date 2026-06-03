@@ -23,12 +23,12 @@ class ChunkRequest extends FormRequest
     {
         return match ($this->route()->getActionMethod()) {
             'store', 'update' => [
-                'name'        => 'string|required',
-                'snippet'     => 'string|nullable',
-                'description' => 'string|nullable',
-                'locked'      => 'int',
-                'category'    => 'int',
-                'disabled'    => 'int',
+                'attributes.name'        => 'string|required',
+                'attributes.snippet'     => 'string|nullable',
+                'attributes.description' => 'string|nullable',
+                'attributes.locked'      => 'int',
+                'attributes.category'    => 'int',
+                'attributes.disabled'    => 'int',
             ],
             default => []
         };
