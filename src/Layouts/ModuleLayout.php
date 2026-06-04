@@ -108,7 +108,7 @@ class ModuleLayout extends Layout
                                 Select::make('data.category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setUrl(api_url('categories.select'))
-                                    ->setNew('')
+                                    ->setNew()
                                     ->setData([
                                         [
                                             'key'      => $model->category,

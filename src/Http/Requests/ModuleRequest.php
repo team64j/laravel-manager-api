@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Team64j\LaravelManagerApi\Models\Category;
 
 class ModuleRequest extends FormRequest
 {
@@ -41,5 +42,20 @@ class ModuleRequest extends FormRequest
             ],
             default => []
         };
+    }
+
+    public function validationData(): array
+    {
+        if (is_string($this->input('category'))) {
+            $this->merge(
+                [
+                    'category' => Category::query()->firstOrCreate([
+                        'category' => $this->input('category'),
+                    ])->getKey(),
+                ]
+            );
+        }
+
+        return parent::validationData();
     }
 }

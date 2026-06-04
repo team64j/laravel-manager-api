@@ -129,7 +129,7 @@ class TvLayout extends Layout
                                 Select::make('data.attributes.category')
                                     ->setLabel(__('global.existing_category'))
                                     ->setUrl(api_url('categories.select'))
-                                    ->setNew('')
+                                    ->setNew()
                                     ->setData([
                                         [
                                             'key'      => $model->category,

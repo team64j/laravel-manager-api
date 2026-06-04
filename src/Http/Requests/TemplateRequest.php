@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Team64j\LaravelManagerApi\Models\Category;
 
 class TemplateRequest extends FormRequest
 {
@@ -48,5 +49,20 @@ class TemplateRequest extends FormRequest
             'attributes.content'       => '"' . __('global.template_code') . '"',
             'attributes.category'      => '"' . __('global.existing_category') . '"',
         ];
+    }
+
+    public function validationData(): array
+    {
+        if (is_string($this->input('attributes.category'))) {
+            $this->merge(
+                [
+                    'attributes.category' => Category::query()->firstOrCreate([
+                        'category' => $this->input('attributes.category'),
+                    ])->getKey(),
+                ]
+            );
+        }
+
+        return parent::validationData();
     }
 }

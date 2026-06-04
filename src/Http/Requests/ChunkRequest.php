@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Team64j\LaravelManagerApi\Models\Category;
 
 class ChunkRequest extends FormRequest
 {
@@ -27,10 +28,25 @@ class ChunkRequest extends FormRequest
                 'attributes.snippet'     => 'string|nullable',
                 'attributes.description' => 'string|nullable',
                 'attributes.locked'      => 'int',
-                'attributes.category'    => 'int',
+                'attributes.category'    => 'required|int',
                 'attributes.disabled'    => 'int',
             ],
             default => []
         };
+    }
+
+    public function validationData(): array
+    {
+        if (is_string($this->input('attributes.category'))) {
+            $this->merge(
+                [
+                    'attributes.category' => Category::query()->firstOrCreate([
+                        'category' => $this->input('attributes.category'),
+                    ])->getKey(),
+                ]
+            );
+        }
+
+        return parent::validationData();
     }
 }

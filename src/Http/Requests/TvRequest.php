@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Team64j\LaravelManagerApi\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Team64j\LaravelManagerApi\Models\Category;
 
 class TvRequest extends FormRequest
 {
@@ -33,5 +34,20 @@ class TvRequest extends FormRequest
             ],
             default => []
         };
+    }
+
+    public function validationData(): array
+    {
+        if (is_string($this->input('attributes.category'))) {
+            $this->merge(
+                [
+                    'attributes.category' => Category::query()->firstOrCreate([
+                        'category' => $this->input('attributes.category'),
+                    ])->getKey(),
+                ]
+            );
+        }
+
+        return parent::validationData();
     }
 }

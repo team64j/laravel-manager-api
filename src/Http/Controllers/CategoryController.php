@@ -190,9 +190,6 @@ class CategoryController extends Controller
         tags: ['Category'],
         parameters: [
             new OA\Parameter(name: 'selected', in: 'query', schema: new OA\Schema(type: 'integer')),
-            new OA\Parameter(
-                name: 'itemNew', in: 'query', schema: new OA\Schema(type: 'string', default: 'newcategory')
-            ),
         ],
         responses: [
             new OA\Response(
