@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Team64j\LaravelManagerApi\Http\Controllers;
 
-use Illuminate\Http\Response;
 use Illuminate\Pagination\LengthAwarePaginator;
 use OpenApi\Attributes as OA;
 use Team64j\LaravelManagerApi\Http\Requests\SnippetRequest;
@@ -75,7 +74,9 @@ class SnippetController extends Controller
                     ->map(fn($group) => [
                         'id'   => $group->first()->category,
                         'name' => $group->first()->getRelation('category')->category ?? __('global.no_category'),
-                        'data' => $group->map->withoutRelations(),
+                        'data' => $group->map
+                            ->withoutRelations()
+                            ->map(fn($item) => $item->setAttribute('@deleted', $item->disabled)),
                     ])
                     ->values()
             );

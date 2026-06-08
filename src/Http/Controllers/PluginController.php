@@ -77,7 +77,9 @@ class PluginController extends Controller
                     ->map(fn($group) => [
                         'id'   => $group->first()->category,
                         'name' => $group->first()->getRelation('categories')->category ?? __('global.no_category'),
-                        'data' => $group->map->withoutRelations(),
+                        'data' => $group->map
+                            ->withoutRelations()
+                            ->map(fn($item) => $item->setAttribute('@deleted', $item->disabled)),
                     ])
                     ->values()
             );
