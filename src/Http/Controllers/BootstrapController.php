@@ -69,11 +69,15 @@ class BootstrapController extends Controller
                 'siteName'       => config('global.site_name'),
                 'datetimeFormat' => config('global.datetime_format'),
             ],
-            'lang'   => [
-                'warning_not_saved' => __('global.warning_not_saved'),
-                'dayNames'          => __('global.dp_dayNames'),
-                'monthNames'        => __('global.dp_monthNames'),
-                'startDay'          => __('global.dp_startDay'),
+            'lexicon' => [
+                'messages' => [
+                    'warning' => [
+                        'notSaved' => __('global.warning_not_saved'),
+                    ],
+                ],
+                'days'     => __('global.dp_dayNames'),
+                'months'   => __('global.dp_monthNames'),
+                'firstDay' => __('global.dp_startDay'),
             ],
         ])
             ->layout([
