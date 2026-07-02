@@ -23,29 +23,20 @@ class ApiServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (!request()->is('laravel-manager-api/*')) {
-            return;
+        if (request()->is(config('manager-api.uri') . '/*')) {
+            header('Access-Control-Allow-Origin: *');
+            header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
+            header('Access-Control-Allow-Methods: GET, PUT, POST, PATCH, DELETE');
         }
 
         $this->bootMixin();
-
-        if (!$this->app->runningInConsole()) {
-            header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN'] ?? '*'));
-            header('Access-Control-Allow-Headers: Accept, Authorization, X-Requested-With, Content-type');
-            header('Access-Control-Allow-Methods: GET, PUT, POST, PATCH, DELETE, OPTIONS');
-
-            $this->registerConfig();
-            $this->registerLang();
-            $this->registerPermissions();
-        }
+        $this->registerConfig();
+        $this->registerLang();
+        $this->registerPermissions();
     }
 
     public function register(): void
     {
-        if (!request()->is('laravel-manager-api/*')) {
-            return;
-        }
-
         $this->mergeConfig();
         $this->registerRoutes();
         $this->registerMiddlewares();
@@ -104,7 +95,7 @@ class ApiServiceProvider extends ServiceProvider
 
     protected function registerPermissions(): void
     {
-        Permissions::all()->map(function ($permission) {
+        Permissions::all()->map(function (Permissions $permission) {
             Gate::define($permission->key, fn(User $user) => $user->hasPermission($permission));
         });
     }
