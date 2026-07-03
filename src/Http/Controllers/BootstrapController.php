@@ -67,7 +67,7 @@ class BootstrapController extends Controller
             'assets' => $this->getAssets(),
             'config' => [
                 'siteName'       => config('global.site_name'),
-                'datetimeFormat' => config('global.datetime_format'),
+                'dateFormat' => config('global.datetime_format'),
             ],
             'lexicon' => [
                 'messages' => [

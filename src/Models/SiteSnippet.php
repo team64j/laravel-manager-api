@@ -12,6 +12,7 @@ use Team64j\LaravelManagerApi\Traits\LockedTrait;
  * @property int $category
  * @property int $locked
  * @property int $disabled
+ * @property string $name
  * @property string $description
  * @property string $snippet
  * @property string $properties
@@ -49,7 +50,7 @@ class SiteSnippet extends Model
         'disabled',
     ];
 
-    public function category(): BelongsTo
+    public function categories(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'category', 'id');
     }

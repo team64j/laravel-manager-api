@@ -58,7 +58,7 @@ class SnippetController extends Controller
         /** @var LengthAwarePaginator $result */
         $result = SiteSnippet::withoutLocked()
             ->select($fields)
-            ->with('category')
+            ->with('categories')
             ->when($filter, fn($query) => $query->where('name', 'like', '%' . $filter . '%'))
             ->when($filterName, fn($query) => $query->where('name', 'like', '%' . $filterName . '%'))
             ->when($category >= 0, fn($query) => $query->where('category', $category))
@@ -297,7 +297,7 @@ class SnippetController extends Controller
         if ($showFromCategory) {
             /** @var LengthAwarePaginator $result */
             $result = SiteSnippet::withoutLocked()
-                ->with('category')
+                ->with('categories')
                 ->select($fields)
                 ->where('category', $category)->orderBy('name')
                 ->paginate(config('global.number_of_results'))

@@ -45,7 +45,7 @@ class SnippetLayout extends Layout
 
     public function default(?SiteSnippet $model = null): array
     {
-        $category = $model->category()->firstOr(fn() => new Category());
+        $category = $model->categories()->firstOr(fn() => new Category());
 
         $breadcrumbs = [
             [
@@ -74,7 +74,7 @@ class SnippetLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make('name')
+            Title::make('data.name')
                 ->setTitle($this->title())
                 ->setHelp(__('global.snippet_msg'))
                 ->setIcon($this->icon())
@@ -99,7 +99,7 @@ class SnippetLayout extends Layout
                                     ->setRows(2)
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Checkbox::make('data.data.analyze')
+                                Checkbox::make('data.analyze')
                                     ->setLabel(__('global.parse_docblock'))
                                     ->setHelp(__('global.parse_docblock_msg'))
                                     ->setCheckedValue(1, 0),

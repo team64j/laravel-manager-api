@@ -46,11 +46,11 @@ class PermissionGroupLayout extends Layout
 
             Tabs::make()
                 ->addTab('general', slot: [
-                    Input::make('name')
+                    Input::make('data.name')
                         ->setLabel(__('global.cm_category_name'))
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                    Input::make('lang_key')
+                    Input::make('data.lang_key')
                         ->setLabel(__('global.lang_key_desc'))
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
                 ]),

@@ -52,11 +52,11 @@ class RoleLayout extends Layout
                     'general',
                     __('global.role'),
                     slot: [
-                        Input::make('name')
+                        Input::make('data.name')
                             ->setLabel(__('global.role_name'))
                             ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                        Input::make('description')
+                        Input::make('data.description')
                             ->setLabel(__('global.resource_description'))
                             ->setAttribute('style', ['margin-bottom' => '1rem']),
                     ]

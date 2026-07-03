@@ -55,25 +55,25 @@ class PermissionLayout extends Layout
 
             Tabs::make()
                 ->addTab('general', slot: [
-                    Input::make('name')
+                    Input::make('data.name')
                         ->setLabel(__('global.role_name'))
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                    Input::make('key')
+                    Input::make('data.key')
                         ->setLabel(__('global.key_desc'))
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                    Input::make('lang_key')
+                    Input::make('data.lang_key')
                         ->setLabel(__('global.lang_key_desc'))
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                    Select::make('group_id')
+                    Select::make('data.group_id')
                         ->setLabel(__('global.existing_category'))
                         ->setUrl(api_url('permissions.group.select'))
                         ->isLoad()
                         ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                    Checkbox::make('disabled')
+                    Checkbox::make('data.disabled')
                         ->setLabel(__('global.disabled'))
                         ->setCheckedValue(1, 0),
                 ]),
