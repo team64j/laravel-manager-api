@@ -487,7 +487,7 @@ class ConfigurationLayout extends Layout
                         'name.help' => __('global.login_logo_message'),
                         'key'       => 'login_logo',
                         'value'     => \Team64j\LaravelManagerComponents\File::make('login_logo')
-                            ->setEmitClick('modal:component')
+                            ->setEmitClick('modal:show')
                             ->setUrl(api_url('filemanager.index', ['type' => 'images'])),
                     ],
                     [
@@ -495,7 +495,7 @@ class ConfigurationLayout extends Layout
                         'name.help' => __('global.login_bg_message'),
                         'key'       => 'login_bg',
                         'value'     => \Team64j\LaravelManagerComponents\File::make('login_bg')
-                            ->setEmitClick('modal:component')
+                            ->setEmitClick('modal:show')
                             ->setUrl(api_url('filemanager.index', ['type' => 'images'])),
                     ],
                     [

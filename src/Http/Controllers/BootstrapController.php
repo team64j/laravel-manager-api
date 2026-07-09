@@ -529,15 +529,15 @@ class BootstrapController extends Controller
                                     'url'         => api_url('categories.list'),
                                     'permissions' => ['category_manager'],
                                 ],
-                                [
-                                    'key'         => 'filemanager',
-                                    'name'        => '[%settings_misc%]',
-                                    'icon'        => 'far fa-folder-open',
-                                    'to'          => [
-                                        'path' => api_url('filemanager.index'),
-                                    ],
-                                    'permissions' => ['file_manager'],
-                                ],
+//                                [
+//                                    'key'         => 'filemanager',
+//                                    'name'        => '[%settings_misc%]',
+//                                    'icon'        => 'far fa-folder-open',
+//                                    'to'          => [
+//                                        'path' => api_url('filemanager.index'),
+//                                    ],
+//                                    'permissions' => ['file_manager'],
+//                                ],
                             ],
                         ],
                         [

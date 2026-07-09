@@ -31,11 +31,11 @@ class FilemanagerLayout extends Layout
                 ->setIcon($this->icon()),
 
             Main::make()
-                ->setSlot('title', [
-                    Title::make()
-                        ->setTitle($this->title())
-                        ->setIcon($this->icon()),
-                ])
+                //                ->setSlot('title', [
+                //                    Title::make()
+                //                        ->setTitle($this->title())
+                //                        ->setIcon($this->icon()),
+                //                ])
                 ->setSlot('sidebar', [
                     Tree::make()
                         ->setId('filemanagerTree')
