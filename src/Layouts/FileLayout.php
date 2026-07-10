@@ -49,7 +49,7 @@ class FileLayout extends Layout
                 )
                 ->setSaveAnd(),
 
-            Title::make('basename')
+            Title::make('data.basename')
                 ->setIcon($this->icon($data['ext'] ?? 'default'))
                 ->setId($data['size'] ?? null),
 
@@ -58,8 +58,8 @@ class FileLayout extends Layout
                     'default',
                     class: '!p-0',
                     slot: [
-                        stripos($data['type'], 'image/') !== false ? Media::make('url')->setData($data) : null,
-                        isset($data['content']) ? CodeEditor::make('content')
+                        stripos($data['type'], 'image/') !== false ? Media::make('data.url')->setData($data) : null,
+                        isset($data['content']) ? CodeEditor::make('data.content')
                             ->setLanguage($data['lang'])
                             ->setRows('auto')
                             ->setClass('h-full') : null,
