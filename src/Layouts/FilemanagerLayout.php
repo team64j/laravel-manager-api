@@ -40,9 +40,7 @@ class FilemanagerLayout extends Layout
                     Tree::make()
                         ->setId('filemanagerTree')
                         ->setUrl(api_url('filemanager.tree'))
-                        ->setRoute([
-                            'path' => api_url('filemanager.show', [':key']),
-                        ])
+                        ->setRoute(api_url('filemanager.show', [':key']))
                         ->setIcons([
                             'default-folder'      => 'fa fa-folder',
                             'default-folder-open' => $this->icon(),
