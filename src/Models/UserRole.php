@@ -33,7 +33,7 @@ class UserRole extends Model
         return $this
             ->belongsToMany(
                 SiteTmplvar::class,
-                new UserRoleVar()->getTable(),
+                (new UserRoleVar())->getTable(),
                 'roleid',
                 'tmplvarid'
             )->withPivot('rank')

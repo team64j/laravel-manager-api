@@ -51,7 +51,7 @@ class TemplateLayout extends Layout
 
         /** @var Category $category */
         $category = $model->category()->firstOr(
-            fn() => new Category()->setAttribute('id', 0)->setAttribute('category', __('global.no_category'))
+            fn() => (new Category())->setAttribute('id', 0)->setAttribute('category', __('global.no_category'))
         );
 
         $breadcrumbs = [
