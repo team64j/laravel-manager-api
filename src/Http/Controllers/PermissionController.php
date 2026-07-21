@@ -25,7 +25,7 @@ class PermissionController extends Controller
     {
         $result = Permissions::query()
             ->with('groups')
-            ->orderBy('id')
+            ->orderBy('group_id')
             ->paginate(config('global.number_of_results'));
 
         return JsonResource::collection(

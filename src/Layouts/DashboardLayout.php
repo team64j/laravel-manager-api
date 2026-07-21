@@ -41,6 +41,7 @@ class DashboardLayout extends Layout
         if (!config('global.site_status')) {
             $data[] = Alert::make()
                 ->setType('warning')
+                ->setAttribute('class', ['m-4'])
                 ->setSlot(
                     __('global.siteunavailable_message_default') .
                     ' ' . __('global.update_settings_from_language') .
@@ -52,6 +53,7 @@ class DashboardLayout extends Layout
         if (is_dir(base_path('install'))) {
             $data[] = Alert::make()
                 ->setType('warning')
+                ->setAttribute('class', ['m-4'])
                 ->setSlot(
                     '<strong>' . __('global.configcheck_warning') . '</strong>' .
                     '<br>' . __('global.configcheck_installer') .

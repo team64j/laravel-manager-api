@@ -33,7 +33,6 @@ class SystemInfoLayout extends Layout
                 ->setIcon($this->icon()),
 
             Tabs::make()
-                ->setId('resource')
                 ->addTab(
                     'general',
                     __('global.settings_general'),
