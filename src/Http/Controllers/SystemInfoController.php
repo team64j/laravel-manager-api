@@ -123,15 +123,23 @@ class SystemInfoController extends Controller
         $info = ob_get_contents();
         ob_get_clean();
 
-        $path = url('/') . str_replace([app()->basePath(), DIRECTORY_SEPARATOR], ['', '/'], dirname(__DIR__, 3));
+        $path = dirname(__DIR__, 3);
 
-        $style = '
-        <script src="' . $path . '/resources/js/message.js?v=1.1.1"></script>
-        <link rel="stylesheet" href="' . $path . '/resources/css/phpinfo-reset.css?v=1.1.1">
-        <link rel="stylesheet" href="' . $path . '/resources/css/phpinfo-main.css?v=1.1.1">
-        ';
+        $style = '';
 
-        return (string) preg_replace('/<head>(.*?)<\/head>/s', '$1' . $style, $info);
+        if (file_exists($file = $path . '/resources/js/message.js')) {
+            $style .= "\n<script>\n" . file_get_contents($file) . "\n</script>";
+        }
+
+        if (file_exists($file = $path . '/resources/css/phpinfo-reset.css')) {
+            $style .= "\n<style>\n" . file_get_contents($file) . "\n</style>";
+        }
+
+        if (file_exists($file = $path . '/resources/css/phpinfo-main.css')) {
+            $style .= "\n<style>\n" . file_get_contents($file) . "\n</style>";
+        }
+
+        return (string) str_replace('</head>', $style . '</head>', $info);
     }
 
     protected function resolveCharset()

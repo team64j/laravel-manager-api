@@ -229,12 +229,6 @@ class ResourceLayout extends Layout
                                     ->isRequired()
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
-                                Input::make('data.attributes.alias')
-                                    ->setLabel(__('global.resource_alias'))
-                                    ->setHelp('<b>[*alias*]</b><br>' . __('global.resource_alias_help'))
-                                    ->isRequired()
-                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
-
                                 Input::make('data.attributes.longtitle')
                                     ->setLabel(__('global.long_title'))
                                     ->setHelp('<b>[*longtitle*]</b><br>' . __('global.resource_long_title_help'))
@@ -267,6 +261,12 @@ class ResourceLayout extends Layout
                                     ])
                                     ->setEmitInput('inputChangeQuery'),*/
 
+                                Input::make('data.attributes.alias')
+                                    ->setLabel(__('global.resource_alias'))
+                                    ->setHelp('<b>[*alias*]</b><br>' . __('global.resource_alias_help'))
+                                    ->isRequired()
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
                                 Input::make('data.attributes.parent')
                                     ->setLabel(__('global.import_parent_resource'))
                                     ->setHelp('<b>[*parent*]</b><br>' . __('global.resource_parent_help'))
@@ -278,37 +278,6 @@ class ResourceLayout extends Layout
                                     ->setEmitClick('inputTreeSelect')
                                     ->isRequired()
                                     ->isReadonly()
-                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
-
-                                Select::make('data.attributes.type')
-                                    ->setLabel(__('global.resource_type'))
-                                    ->setHelp('<b>[*type*]</b><br>' . __('global.resource_type_message'))
-                                    ->setData([
-                                        [
-                                            'key'   => 'document',
-                                            'value' => __('global.resource_type_webpage'),
-                                        ],
-                                        [
-                                            'key'   => 'reference',
-                                            'value' => __('global.resource_type_weblink'),
-                                        ],
-                                    ])
-                                    ->setEmitInput('inputChangeQuery', 'type')
-                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
-
-                                Select::make('data.attributes.template')
-                                    ->setLabel(__('global.page_data_template'))
-                                    ->setHelp('<b>[*template*]</b><br>' . __('global.page_data_template_help'))
-                                    ->setUrl(api_url('templates.select'))
-                                    ->setData([
-                                        [
-                                            'key'      => $model->template ?? 0,
-                                            'value'    => ($model->tpl->templatename ?? 'blank') . ' (' .
-                                                ($model->template ?? 0) . ')',
-                                            'selected' => true,
-                                        ],
-                                    ])
-                                    ->setEmitInput('inputChangeQuery', 'template')
                                     ->setAttribute('style', ['margin-bottom' => '1rem']),
 
                                 Checkbox::make('data.attributes.hidemenu')
@@ -381,6 +350,37 @@ class ResourceLayout extends Layout
                         Grid::make()
                             ->setGap('1.25rem')
                             ->addArea([
+                                Select::make('data.attributes.template')
+                                    ->setLabel(__('global.page_data_template'))
+                                    ->setHelp('<b>[*template*]</b><br>' . __('global.page_data_template_help'))
+                                    ->setUrl(api_url('templates.select'))
+                                    ->setData([
+                                        [
+                                            'key'      => $model->template ?? 0,
+                                            'value'    => ($model->tpl->templatename ?? 'blank') . ' (' .
+                                                ($model->template ?? 0) . ')',
+                                            'selected' => true,
+                                        ],
+                                    ])
+                                    ->setEmitInput('inputChangeQuery', 'template')
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
+                                Select::make('data.attributes.type')
+                                    ->setLabel(__('global.resource_type'))
+                                    ->setHelp('<b>[*type*]</b><br>' . __('global.resource_type_message'))
+                                    ->setData([
+                                        [
+                                            'key'   => 'document',
+                                            'value' => __('global.resource_type_webpage'),
+                                        ],
+                                        [
+                                            'key'   => 'reference',
+                                            'value' => __('global.resource_type_weblink'),
+                                        ],
+                                    ])
+                                    ->setEmitInput('inputChangeQuery', 'type')
+                                    ->setAttribute('style', ['margin-bottom' => '1rem']),
+
                                 Select::make('data.attributes.contentType')
                                     ->setLabel(__('global.page_data_contentType'))
                                     ->setHelp('<b>[*contentType*]</b><br>' . __('global.page_data_contentType_help'))

@@ -4,8 +4,10 @@ html {
 }
 body {
     margin: 0;
-    padding: 0 1rem;
+    padding: 0;
     font-size: 1rem;
+    background: #fff;
+    color: #333;
 }
 .h {
     background-color: #99c;
@@ -56,9 +58,16 @@ table td, table th {
     font-size: 100%;
 }
 table {
+    margin: 0 !important;
     width: 100%;
-    border-radius: .125rem;
+    border-radius: .25rem;
     overflow: hidden;
+}
+table + table {
+    margin-top: 1.25rem !important;
+}
+body > div {
+    margin: 1.25rem;
 }
 body > div > table:first-of-type h1 {
     font-size: 1.5rem;
